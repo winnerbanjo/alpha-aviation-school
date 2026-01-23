@@ -19,9 +19,35 @@ const app = express();
 global.dbConnected = false;
 global.useMockData = false;
 
-// Middleware - CORS configured for frontend
+// Middleware - CORS configured for frontend (development and production)
+const allowedOrigins = [
+  'http://localhost:5173', // Vite dev server
+  'http://localhost:3000', // Alternative dev port
+  'https://alpha-aviation-school.vercel.app', // Production Vercel URL
+  process.env.FRONTEND_URL // Allow custom frontend URL from environment variable
+].filter(Boolean); // Remove any undefined values
+
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests) - only in development
+    if (!origin) {
+      return callback(null, process.env.NODE_ENV !== 'production');
+    }
+    
+    // Check if origin is in allowed list
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      // In development, be more permissive; in production, strict
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`⚠️  CORS: Allowing origin ${origin} (development mode)`);
+        callback(null, true);
+      } else {
+        console.log(`❌ CORS: Blocked origin ${origin}`);
+        callback(new Error('Not allowed by CORS'));
+      }
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']

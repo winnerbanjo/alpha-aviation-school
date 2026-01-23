@@ -66,10 +66,11 @@ export function AdminDashboard() {
       const customEvent = e as CustomEvent
       if (customEvent.detail && ['overview', 'students', 'revenue'].includes(customEvent.detail)) {
         setActiveTab(customEvent.detail as AdminTab)
+        sessionStorage.setItem('adminTab', customEvent.detail) // Ensure sessionStorage is updated
       }
     }
-    window.addEventListener('tabChange', handleTabChange)
-    return () => window.removeEventListener('tabChange', handleTabChange)
+    window.addEventListener('adminTabChange', handleTabChange)
+    return () => window.removeEventListener('adminTabChange', handleTabChange)
   }, [])
 
   useEffect(() => {
@@ -254,9 +255,10 @@ export function AdminDashboard() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      key={activeTab}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
       className="space-y-8 p-6"
     >
       {/* Header */}

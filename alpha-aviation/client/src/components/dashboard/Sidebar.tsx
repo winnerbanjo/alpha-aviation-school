@@ -103,14 +103,15 @@ export function Sidebar({ role }: SidebarProps) {
                       const storageKey = role === 'admin' ? 'adminTab' : 'activeTab'
                       sessionStorage.setItem(storageKey, item.tab)
                       // Trigger a custom event to notify dashboard component
-                      window.dispatchEvent(new CustomEvent('tabChange', { detail: item.tab }))
+                      const eventName = role === 'admin' ? 'adminTabChange' : 'studentTabChange'
+                      window.dispatchEvent(new CustomEvent(eventName, { detail: item.tab }))
                     }
                   }}
                   className={({ isActive: navIsActive }) =>
                     `flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
                       navIsActive || active
-                        ? 'bg-[#0061FF]/20 text-white border-l-2 border-[#0061FF]'
-                        : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                        ? 'bg-[#0061FF]/20 text-white border-l-2 border-[#0061FF] font-semibold'
+                        : 'text-slate-300 hover:bg-slate-800 hover:text-white hover:scale-[1.02]'
                     }`
                   }
                 >
