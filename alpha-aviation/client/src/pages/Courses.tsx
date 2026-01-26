@@ -188,30 +188,33 @@ export function Courses() {
               Licensed Courses
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {licensedCourses.map((course, index) => (
-                <motion.div
-                  key={course}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
-                >
-                  <Card className="border-slate-200/50 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                    <CardContent className="p-6">
-                      <div className="flex items-start gap-3">
-                        <div className="p-2 bg-[#0061FF]/10 rounded-lg flex-shrink-0">
-                          <Plane className="w-5 h-5 text-[#0061FF]" />
+              {licensedCourses?.map((course, index) => {
+                if (!course) return null
+                return (
+                  <motion.div
+                    key={course || index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1, duration: 0.5 }}
+                  >
+                    <Card className="border-slate-200/50 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                      <CardContent className="p-6">
+                        <div className="flex items-start gap-3">
+                          <div className="p-2 bg-[#0061FF]/10 rounded-lg flex-shrink-0">
+                            <Plane className="w-5 h-5 text-[#0061FF]" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-lg font-semibold tracking-tight text-slate-900">
+                              {course || ''}
+                            </h3>
+                          </div>
                         </div>
-                        <div className="flex-1">
-                          <h3 className="text-lg font-semibold tracking-tight text-slate-900">
-                            {course}
-                          </h3>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                )
+              })}
             </div>
           </motion.div>
 
@@ -227,11 +230,13 @@ export function Courses() {
               Professional Courses
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {professionalCourses.map((course, index) => {
-                const Icon = course.icon
+              {professionalCourses?.map((course, index) => {
+                if (!course) return null
+                const Icon = course?.icon
+                if (!Icon) return null
                 return (
                   <motion.div
-                    key={course.id}
+                    key={course?.id || index}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -247,11 +252,11 @@ export function Courses() {
                           </div>
                           <div className="flex-1">
                             <CardTitle className="text-lg font-bold tracking-tight text-slate-900 mb-2">
-                              {course.title}
+                              {course?.title || ''}
                             </CardTitle>
                             <div className="flex items-center gap-2">
                               <span className="px-2.5 py-1 bg-[#0061FF]/10 text-[#0061FF] text-xs font-semibold rounded-full">
-                                {course.duration}
+                                {course?.duration || ''}
                               </span>
                             </div>
                           </div>
@@ -260,19 +265,19 @@ export function Courses() {
                       <CardContent className="space-y-4 flex-1 flex flex-col">
                         <div>
                           <button
-                            onClick={() => toggleCourse(course.id)}
+                            onClick={() => toggleCourse(course?.id || '')}
                             className="w-full flex items-center justify-between p-4 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors group"
                           >
                             <span className="text-sm font-bold text-slate-900">View Syllabus</span>
                             <ChevronDown 
                               className={`w-5 h-5 text-slate-600 transition-transform duration-200 ${
-                                expandedCourse === course.id ? 'rotate-180' : ''
+                                expandedCourse === course?.id ? 'rotate-180' : ''
                               }`}
                             />
                           </button>
                           
                           <AnimatePresence>
-                            {expandedCourse === course.id && (
+                            {expandedCourse === course?.id && course?.outline && (
                               <motion.div
                                 initial={{ height: 0, opacity: 0 }}
                                 animate={{ height: 'auto', opacity: 1 }}
@@ -284,7 +289,7 @@ export function Courses() {
                                   {course.outline.map((item, idx) => (
                                     <li key={idx} className="text-sm text-content text-slate-600 flex items-start gap-3">
                                       <span className="w-1.5 h-1.5 bg-[#0061FF] rounded-full flex-shrink-0 mt-2" />
-                                      <span>{item}</span>
+                                      <span>{item || ''}</span>
                                     </li>
                                   ))}
                                 </ul>

@@ -132,11 +132,13 @@ export function About() {
               Our Core Values
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {values.map((value, index) => {
-                const Icon = value.icon
+              {values?.map((value, index) => {
+                if (!value) return null
+                const Icon = value?.icon
+                if (!Icon) return null
                 return (
                   <motion.div
-                    key={value.title}
+                    key={value?.title || index}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 + index * 0.1, duration: 0.5 }}
@@ -150,10 +152,10 @@ export function About() {
                           </div>
                         </div>
                         <h3 className="text-xl font-bold tracking-tight text-slate-900 mb-3">
-                          {value.title}
+                          {value?.title || ''}
                         </h3>
                         <p className="text-content text-slate-600 text-sm">
-                          {value.description}
+                          {value?.description || ''}
                         </p>
                       </CardContent>
                     </Card>
