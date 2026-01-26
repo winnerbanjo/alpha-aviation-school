@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion'
 import { TopBar } from '@/components/TopBar'
 import { Navbar } from '@/components/Navbar'
-import { Footer } from '@/components/Footer'
 import { Card, CardContent } from '@/components/ui/card'
 import { Award, Target, Globe, Users } from 'lucide-react'
 
@@ -35,56 +34,68 @@ export function About() {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="relative py-24 px-4 sm:px-6">
+      <section className="relative py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
-            <h1 className="text-5xl sm:text-6xl font-semibold tracking-tighter text-slate-900 mb-4">
+            <h1 className="heading-xl text-slate-900 mb-6">
               About Alpha Step Links Aviation School
             </h1>
-            <p className="text-xl text-slate-500 max-w-3xl mx-auto">
-              Alpha Step Links Aviation School is a certified and fast-growing aviation training institution dedicated to nurturing the next generation of aviation professionals. With a presence in Nigeria, the United Kingdom, and Canada, we specialize in high-quality programs including Aviation & Travel Training, Ticketing & Reservation, Cabin Crew Courses, IATA-aligned curricula, Youth Empowerment initiatives, International Internship Pathways, and Franchise & Licensing Programs like Classroom-in-a-Box. Our experienced instructors, state-of-the-art facilities, and curriculum aligned with international standards ensure students gain practical skills in air transport, safety, operations, and aviation management. Committed to innovation and excellence, we prepare graduates for thriving careers in airlines, airports, and aviation services worldwide.
-            </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Mission & Vision */}
-      <section className="py-16 px-4 sm:px-6">
+      {/* Bento Grid: About Us, Mission & Vision */}
+      <section className="py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-20">
+            {/* Large About Us Card */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+              className="lg:col-span-2 premium-card border-slate-200 glass-text p-10"
+            >
+              <h2 className="heading-lg text-slate-900 mb-6">About Us</h2>
+              <p className="text-content text-slate-600 text-base sm:text-lg max-w-2xl">
+                Alpha Step Links Aviation School is a certified and fast-growing aviation training institution dedicated to nurturing the next generation of aviation professionals. With a presence in Nigeria, the United Kingdom, and Canada, we specialize in high-quality programs including Aviation & Travel Training, Ticketing & Reservation, Cabin Crew Courses, IATA-aligned curricula, Youth Empowerment initiatives, International Internship Pathways, and Franchise & Licensing Programs like Classroom-in-a-Box. Our experienced instructors, state-of-the-art facilities, and curriculum aligned with international standards ensure students gain practical skills in air transport, safety, operations, and aviation management. Committed to innovation and excellence, we prepare graduates for thriving careers in airlines, airports, and aviation services worldwide.
+              </p>
+            </motion.div>
+            
+            {/* Mission Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
             >
-              <Card className="border-slate-200/50 h-full">
-                <CardContent className="p-8">
-                  <h2 className="heading-lg text-slate-900 mb-4">
+              <Card className="premium-card border-slate-200 h-full">
+                <CardContent className="p-10">
+                  <h2 className="heading-lg text-slate-900 mb-6 text-2xl sm:text-3xl">
                     Mission
                   </h2>
-                  <p className="text-content text-slate-600">
+                  <p className="text-content text-slate-600 text-lg font-medium max-w-xl">
                     To deliver world-class aviation training that meets global standards, empowers learners with essential practical skills, and equips them for successful, impactful careers in the dynamic aviation industry.
                   </p>
                 </CardContent>
               </Card>
             </motion.div>
 
+            {/* Vision Card */}
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
             >
-              <Card className="border-slate-200/50 h-full">
-                <CardContent className="p-8">
-                  <h2 className="heading-lg text-slate-900 mb-4">
+              <Card className="premium-card border-slate-200 h-full">
+                <CardContent className="p-10">
+                  <h2 className="heading-lg text-slate-900 mb-6 text-2xl sm:text-3xl">
                     Vision
                   </h2>
-                  <p className="text-content text-slate-600">
+                  <p className="text-content text-slate-600 text-lg font-medium max-w-xl">
                     To become the premier global leader in aviation education, expanding our reach to inspire and train aviation professionals across continents, fostering innovation and safety in the skies for generations to come.
                   </p>
                 </CardContent>
@@ -97,14 +108,14 @@ export function About() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="mb-16"
+            className="mb-20"
           >
-            <Card className="border-slate-200/50">
+            <Card className="premium-card border-slate-200">
               <CardContent className="p-8 md:p-12">
                 <h2 className="heading-lg text-slate-900 mb-6">
                   Legacy
                 </h2>
-                <p className="text-content text-slate-600 text-base sm:text-lg">
+                <p className="text-content text-slate-600 text-base sm:text-lg max-w-4xl mx-auto">
                   Founded as part of the broader Alpha Step Links Ltd., which offers integrated services in travel, education, and logistics, Alpha Step Links Aviation School has quickly established itself as a beacon of excellence in aviation training. From our roots in Nigeria, we've expanded internationally to the UK and Canada, building a legacy of producing highly skilled graduates who contribute to the aviation sector's growth. Our commitment to youth empowerment and innovative programs, such as international internships and franchise opportunities, has created lasting impact, with ongoing expansions in 2026 solidifying our role in shaping the future of aviation.
                 </p>
               </CardContent>
@@ -153,7 +164,6 @@ export function About() {
           </motion.div>
         </div>
       </section>
-      <Footer />
     </div>
   )
 }

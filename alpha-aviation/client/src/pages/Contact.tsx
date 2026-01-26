@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { TopBar } from '@/components/TopBar'
 import { Navbar } from '@/components/Navbar'
-import { Footer } from '@/components/Footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { MapPin, Phone, Mail, Send } from 'lucide-react'
@@ -201,7 +200,6 @@ export function Contact() {
           </div>
         </div>
       </section>
-      <Footer />
     </div>
   )
 }

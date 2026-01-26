@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { TopBar } from '@/components/TopBar'
 import { Navbar } from '@/components/Navbar'
-import { Footer } from '@/components/Footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Plane, Globe, Ticket, Headphones, Building2, FileText, TrendingUp, ChevronDown } from 'lucide-react'
@@ -157,7 +156,7 @@ export function Courses() {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="relative py-24 px-4 sm:px-6">
+      <section className="relative py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -176,7 +175,7 @@ export function Courses() {
       </section>
 
       {/* Licensed Courses Section */}
-      <section className="py-16 px-4 sm:px-6">
+      <section className="py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -264,7 +263,7 @@ export function Courses() {
                             onClick={() => toggleCourse(course.id)}
                             className="w-full flex items-center justify-between p-4 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors group"
                           >
-                            <span className="text-sm font-bold text-slate-900">COURSE OUTLINE</span>
+                            <span className="text-sm font-bold text-slate-900">View Syllabus</span>
                             <ChevronDown 
                               className={`w-5 h-5 text-slate-600 transition-transform duration-200 ${
                                 expandedCourse === course.id ? 'rotate-180' : ''
@@ -308,7 +307,6 @@ export function Courses() {
           </motion.div>
         </div>
       </section>
-      <Footer />
     </div>
   )
 }

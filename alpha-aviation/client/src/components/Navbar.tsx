@@ -19,11 +19,7 @@ export function Navbar({ scrolled = false }: NavbarProps) {
   return (
     <>
       <nav 
-        className={`sticky top-0 z-50 transition-all duration-300 ${
-          scrolled 
-            ? 'bg-white/80 backdrop-blur-md border-b border-slate-200/50 shadow-sm' 
-            : 'bg-transparent border-b border-transparent'
-        }`}
+        className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/50 shadow-sm transition-all duration-300"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">

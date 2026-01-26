@@ -7,7 +7,6 @@ import { TopBar } from '@/components/TopBar'
 import { Navbar } from '@/components/Navbar'
 import { login as loginAPI } from '@/api'
 import { Shield, Lock, Building2 } from 'lucide-react'
-import { Footer } from '@/components/Footer'
 import { Link } from 'react-router-dom'
 
 export function AdminLogin() {
@@ -217,7 +216,6 @@ export function AdminLogin() {
             </div>
           </motion.div>
         </div>
-        <Footer />
       </div>
     </div>
   )

@@ -4,7 +4,6 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { TopBar } from '@/components/TopBar'
 import { Navbar } from '@/components/Navbar'
-import { Footer } from '@/components/Footer'
 import { 
   Plane, 
   Shield, 
@@ -37,7 +36,7 @@ export function Landing() {
       <Navbar scrolled={scrolled} />
       
       {/* Hero Section - Two Column Layout */}
-      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 lg:py-32">
+      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left: Text & CTAs - Shows first on mobile */}
           <motion.div
@@ -98,7 +97,7 @@ export function Landing() {
       </section>
 
       {/* Our Standard Section - Bento Grid */}
-      <section id="about" className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 lg:py-32">
+      <section id="about" className="max-w-7xl mx-auto px-4 sm:px-6 py-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -128,7 +127,7 @@ export function Landing() {
               <Plane className="w-10 h-10 text-[#0061FF] mb-4" />
               <h3 className="heading-lg text-slate-900 mb-4">About Us</h3>
             </div>
-            <p className="text-content text-slate-600 text-base sm:text-lg">
+            <p className="text-content text-slate-600 text-base sm:text-lg max-w-4xl mx-auto">
               Alpha Step Links Aviation School is a certified and fast-growing aviation training institution dedicated to nurturing the next generation of aviation professionals. With a presence in Nigeria, the United Kingdom, and Canada, we specialize in high-quality programs including Aviation & Travel Training, Ticketing & Reservation, Cabin Crew Courses, IATA-aligned curricula, Youth Empowerment initiatives, International Internship Pathways, and Franchise & Licensing Programs like Classroom-in-a-Box. Our experienced instructors, state-of-the-art facilities, and curriculum aligned with international standards ensure students gain practical skills in air transport, safety, operations, and aviation management. Committed to innovation and excellence, we prepare graduates for thriving careers in airlines, airports, and aviation services worldwide.
             </p>
           </motion.div>
@@ -145,7 +144,7 @@ export function Landing() {
               <Shield className="w-10 h-10 text-[#0061FF] mb-4" />
               <h3 className="heading-lg text-slate-900 mb-4">Mission</h3>
             </div>
-            <p className="text-content text-slate-600 text-base">
+            <p className="text-content text-slate-600 text-lg font-medium max-w-2xl">
               To deliver world-class aviation training that meets global standards, empowers learners with essential practical skills, and equips them for successful, impactful careers in the dynamic aviation industry.
             </p>
           </motion.div>
@@ -162,7 +161,7 @@ export function Landing() {
               <Globe className="w-10 h-10 text-[#0061FF] mb-4" />
               <h3 className="heading-lg text-slate-900 mb-4">Vision</h3>
             </div>
-            <p className="text-content text-slate-600 text-base">
+            <p className="text-content text-slate-600 text-lg font-medium max-w-2xl">
               To become the premier global leader in aviation education, expanding our reach to inspire and train aviation professionals across continents, fostering innovation and safety in the skies for generations to come.
             </p>
           </motion.div>
@@ -174,7 +173,7 @@ export function Landing() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-12 sm:mt-16"
+          className="mt-20"
         >
           <div className="relative premium-card p-8 sm:p-12 overflow-hidden">
             {/* Subtle map/timeline background element */}
@@ -198,7 +197,7 @@ export function Landing() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-12 sm:mt-16"
+          className="mt-20"
         >
           <h3 className="heading-lg text-slate-900 mb-10 text-center">Our Core Values</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -255,7 +254,7 @@ export function Landing() {
       </section>
 
       {/* Training Courses Section */}
-      <section id="courses" className="bg-white py-16 sm:py-24 lg:py-32">
+      <section id="courses" className="bg-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -452,67 +451,6 @@ export function Landing() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer id="contact" className="border-t border-slate-200/50 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-            {/* Column 1: About */}
-            <div>
-              <h4 className="text-sm font-semibold tracking-tighter text-slate-900 mb-4">About</h4>
-              <p className="text-sm text-slate-500 leading-relaxed">
-                Alpha Step Links Aviation School is a certified aviation training institution dedicated to 
-                excellence in aviation education.
-              </p>
-            </div>
-
-            {/* Column 2: Quick Links */}
-            <div>
-              <h4 className="text-sm font-semibold tracking-tighter text-slate-900 mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-sm text-slate-500">
-                <li><a href="#about" className="hover:text-slate-900 transition-colors">About Us</a></li>
-                <li><a href="#courses" className="hover:text-slate-900 transition-colors">Training Courses</a></li>
-                <li><Link to="/login" className="hover:text-slate-900 transition-colors">Student Portal</Link></li>
-                <li><Link to="/enroll" className="hover:text-slate-900 transition-colors">Enroll Now</Link></li>
-              </ul>
-            </div>
-
-            {/* Column 3: Contact */}
-            <div>
-              <h4 className="text-sm font-semibold tracking-tighter text-slate-900 mb-4">Contact</h4>
-              <ul className="space-y-2 text-sm text-slate-500">
-                <li>7 Chief Tajudeen Odubiyi St Lagos, Nigeria</li>
-                <li>02013306373</li>
-                <li>info@alphasteplinksaviationschool.com</li>
-              </ul>
-            </div>
-
-            {/* Column 4: Follow Us */}
-            <div>
-              <h4 className="text-sm font-semibold tracking-tighter text-slate-900 mb-4">Follow Us</h4>
-              <div className="flex flex-wrap gap-3">
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">Facebook</a>
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">Instagram</a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">Twitter</a>
-                <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">Tiktok</a>
-              </div>
-              <div className="mt-3">
-                <a href="https://wa.me" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">Chat us Via WhatsApp</a>
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-8 border-t border-slate-200/50">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <p className="text-sm text-slate-500">
-                © 2024 Alpha Step Links Aviation School. All rights reserved.
-              </p>
-              <p className="text-sm text-slate-400">
-                Designed by <span className="text-slate-600">Nasio Themes</span> || Powered by <span className="text-slate-600">WordPress</span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </footer>
       <Footer />
     </div>
   )
