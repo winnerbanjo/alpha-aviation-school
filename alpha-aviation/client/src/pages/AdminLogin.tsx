@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuthStore } from '@/store/authStore'
 import { Button } from '@/components/ui/button'
-import { TopBar } from '@/components/TopBar'
-import { Navbar } from '@/components/Navbar'
 import { login as loginAPI } from '@/api'
 import { Shield, Lock, Building2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
@@ -115,9 +113,6 @@ export function AdminLogin() {
       </div>
 
       <div className="relative z-10">
-        <TopBar />
-        <Navbar />
-
         <div className="flex items-center justify-center min-h-[calc(100vh-140px)] px-4 sm:px-6 py-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

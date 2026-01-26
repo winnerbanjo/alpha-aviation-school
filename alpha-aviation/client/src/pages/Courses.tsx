@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { TopBar } from '@/components/TopBar'
-import { Navbar } from '@/components/Navbar'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Plane, Globe, Ticket, Headphones, Building2, FileText, TrendingUp, ChevronDown } from 'lucide-react'
@@ -151,10 +149,7 @@ export function Courses() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA]">
-      <TopBar />
-      <Navbar />
-      
+    <>
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
@@ -175,7 +170,7 @@ export function Courses() {
       </section>
 
       {/* Licensed Courses Section */}
-      <section className="py-20 px-4 sm:px-6">
+      <section id="licensed-courses" className="py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -230,6 +225,7 @@ export function Courses() {
 
           {/* Professional Courses Section */}
           <motion.div
+            id="professional-courses"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -287,7 +283,7 @@ export function Courses() {
                                   }}
                                   className="w-full flex items-center justify-between p-4 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors group"
                                 >
-                                  <span className="text-sm font-bold text-slate-900">View Syllabus</span>
+                                  <span className="text-sm font-bold text-slate-900">View Full Curriculum</span>
                                   <ChevronDown 
                                     className={`w-5 h-5 text-slate-600 transition-transform duration-200 ${
                                       expandedCourse === course?.id ? 'rotate-180' : ''
@@ -343,6 +339,6 @@ export function Courses() {
           </motion.div>
         </div>
       </section>
-    </div>
+    </>
   )
 }

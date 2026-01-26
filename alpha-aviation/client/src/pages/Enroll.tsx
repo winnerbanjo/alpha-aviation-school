@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { TopBar } from '@/components/TopBar'
-import { Navbar } from '@/components/Navbar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { register } from '@/api'
@@ -46,10 +44,7 @@ export function Enroll() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA]">
-      <TopBar />
-      <Navbar />
-      
+    <>
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-24">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -394,6 +389,6 @@ export function Enroll() {
           </Card>
         </motion.div>
       </div>
-    </div>
+    </>
   )
 }

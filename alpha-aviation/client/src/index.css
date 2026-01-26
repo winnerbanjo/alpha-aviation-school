@@ -42,10 +42,19 @@
     line-height: 1.6;
   }
   
-  /* Premium typography for long-form content */
+  /* Premium typography for long-form content - Google Standard */
+  p {
+    line-height: 1.8;
+  }
+  
   .text-content {
     line-height: 1.8;
     letter-spacing: -0.01em;
+  }
+  
+  /* Muted gray for secondary text */
+  .text-muted {
+    @apply text-slate-500;
   }
   
   /* Large headings */

@@ -2,8 +2,6 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuthStore } from '@/store/authStore'
 import { Button } from '@/components/ui/button'
-import { TopBar } from '@/components/TopBar'
-import { Navbar } from '@/components/Navbar'
 import { login as loginAPI } from '@/api'
 import { motion } from 'framer-motion'
 import { GraduationCap } from 'lucide-react'
@@ -158,9 +156,6 @@ export function Login() {
       <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px]" />
 
       <div className="relative z-10">
-        <TopBar />
-        <Navbar />
-
         <div className="flex items-center justify-center min-h-[calc(100vh-140px)] px-4 sm:px-6 py-24">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}

@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion'
-import { Navbar } from '@/components/Navbar'
 import { Card, CardContent } from '@/components/ui/card'
 import { Award, Target, Globe, Users } from 'lucide-react'
 
@@ -28,9 +27,7 @@ const values = [
 
 export function About() {
   return (
-    <div className="min-h-screen bg-[#FAFAFA]">
-      <Navbar />
-      
+    <>
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
@@ -129,7 +126,7 @@ export function About() {
             <h2 className="heading-lg text-slate-900 mb-10 text-center">
               Our Core Values
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {values?.map((value, index) => {
                 if (!value) return null
                 const Icon = value?.icon
@@ -142,8 +139,8 @@ export function About() {
                     transition={{ delay: 0.6 + index * 0.1, duration: 0.5 }}
                     whileHover={{ y: -4 }}
                   >
-                    <Card className="premium-card h-full">
-                      <CardContent className="p-8">
+                    <Card className="premium-card h-full border-slate-200">
+                      <CardContent className="p-10">
                         <div className="flex justify-center mb-4">
                           <div className="p-3 bg-[#0061FF]/10 rounded-lg">
                             <Icon className="w-8 h-8 text-[#0061FF]" />
@@ -164,6 +161,6 @@ export function About() {
           </motion.div>
         </div>
       </section>
-    </div>
+    </>
   )
 }

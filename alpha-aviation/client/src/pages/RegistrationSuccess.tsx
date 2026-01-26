@@ -2,16 +2,11 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { TopBar } from '@/components/TopBar'
-import { Navbar } from '@/components/Navbar'
 import { CheckCircle2, ArrowRight, CreditCard } from 'lucide-react'
 
 export function RegistrationSuccess() {
   return (
-    <div className="min-h-screen bg-[#FAFAFA]">
-      <TopBar />
-      <Navbar />
-      
+    <>
       <div className="flex items-center justify-center min-h-[calc(100vh-140px)] px-4 sm:px-6 py-24">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -104,6 +99,6 @@ export function RegistrationSuccess() {
           </Card>
         </motion.div>
       </div>
-    </div>
+    </>
   )
 }

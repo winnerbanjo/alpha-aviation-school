@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { TopBar } from '@/components/TopBar'
-import { Navbar } from '@/components/Navbar'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { MapPin, Phone, Mail, Send } from 'lucide-react'
@@ -27,10 +25,7 @@ export function Contact() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA]">
-      <TopBar />
-      <Navbar />
-      
+    <>
       {/* Hero Section */}
       <section className="relative py-24 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
@@ -200,6 +195,6 @@ export function Contact() {
           </div>
         </div>
       </section>
-    </div>
+    </>
   )
 }
