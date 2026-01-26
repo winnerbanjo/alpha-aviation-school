@@ -9,7 +9,6 @@ import { Courses } from './pages/Courses'
 import { About } from './pages/About'
 import { Contact } from './pages/Contact'
 import { ProtectedRoute } from './components/ProtectedRoute'
-import { Footer } from './components/Footer'
 
 function Layout() {
   // Hooks MUST be called at the top level, never inside conditions or try-catch
@@ -18,6 +17,18 @@ function Layout() {
   
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Hard-coded Top Bar - Direct Implementation */}
+      <div className="bg-slate-900 border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5">
+          <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-2 sm:gap-4 text-xs text-slate-300">
+            <span>📍 7 Chief Tajudeen Odubiyi St, Ilasamaja, Lagos 102214</span>
+            <span className="hidden sm:inline">|</span>
+            <span>📞 02013306373</span>
+            <span className="hidden sm:inline">|</span>
+            <span>📧 info@alphasteplinksaviationschool.com</span>
+          </div>
+        </div>
+      </div>
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<Landing />} />
@@ -65,7 +76,6 @@ function Layout() {
           />
         </Routes>
       </main>
-      {!isDashboardRoute && Footer && <Footer />}
     </div>
   )
 }

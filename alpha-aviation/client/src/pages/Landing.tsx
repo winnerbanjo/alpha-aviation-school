@@ -474,8 +474,6 @@ export function Landing() {
           </div>
         </div>
       </section>
-
-      <Footer />
     </div>
   )
 }
