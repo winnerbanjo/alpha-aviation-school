@@ -62,7 +62,13 @@ export function About() {
             >
               <h2 className="heading-lg text-slate-900 mb-6">About Us</h2>
               <p className="text-content text-slate-600 text-base sm:text-lg max-w-2xl">
-                Alpha Step Links Aviation School is a certified and fast-growing aviation training institution dedicated to nurturing the next generation of aviation professionals. With a presence in Nigeria, the United Kingdom, and Canada, we specialize in high-quality programs including Aviation & Travel Training, Ticketing & Reservation, Cabin Crew Courses, IATA-aligned curricula, Youth Empowerment initiatives, International Internship Pathways, and Franchise & Licensing Programs like Classroom-in-a-Box. Our experienced instructors, state-of-the-art facilities, and curriculum aligned with international standards ensure students gain practical skills in air transport, safety, operations, and aviation management. Committed to innovation and excellence, we prepare graduates for thriving careers in airlines, airports, and aviation services worldwide.
+                {(() => {
+                  try {
+                    return 'Alpha Step Links Aviation School is a certified and fast-growing aviation training institution dedicated to nurturing the next generation of aviation professionals. With a presence in Nigeria, the United Kingdom, and Canada, we specialize in high-quality programs including Aviation & Travel Training, Ticketing & Reservation, Cabin Crew Courses, IATA-aligned curricula, Youth Empowerment initiatives, International Internship Pathways, and Franchise & Licensing Programs like Classroom-in-a-Box. Our experienced instructors, state-of-the-art facilities, and curriculum aligned with international standards ensure students gain practical skills in air transport, safety, operations, and aviation management. Committed to innovation and excellence, we prepare graduates for thriving careers in airlines, airports, and aviation services worldwide.'
+                  } catch (e) {
+                    return 'Alpha Step Links Aviation School - Certified Excellence in Aviation Training'
+                  }
+                })()}
               </p>
             </motion.div>
             
@@ -78,7 +84,13 @@ export function About() {
                     Mission
                   </h2>
                   <p className="text-content text-slate-600 text-lg font-medium max-w-xl">
-                    To deliver world-class aviation training that meets global standards, empowers learners with essential practical skills, and equips them for successful, impactful careers in the dynamic aviation industry.
+                    {(() => {
+                      try {
+                        return 'To deliver world-class aviation training that meets global standards, empowers learners with essential practical skills, and equips them for successful, impactful careers in the dynamic aviation industry.'
+                      } catch (e) {
+                        return 'Delivering world-class aviation training.'
+                      }
+                    })()}
                   </p>
                 </CardContent>
               </Card>
@@ -96,7 +108,13 @@ export function About() {
                     Vision
                   </h2>
                   <p className="text-content text-slate-600 text-lg font-medium max-w-xl">
-                    To become the premier global leader in aviation education, expanding our reach to inspire and train aviation professionals across continents, fostering innovation and safety in the skies for generations to come.
+                    {(() => {
+                      try {
+                        return 'To become the premier global leader in aviation education, expanding our reach to inspire and train aviation professionals across continents, fostering innovation and safety in the skies for generations to come.'
+                      } catch (e) {
+                        return 'Becoming the premier global leader in aviation education.'
+                      }
+                    })()}
                   </p>
                 </CardContent>
               </Card>
@@ -116,7 +134,13 @@ export function About() {
                   Legacy
                 </h2>
                 <p className="text-content text-slate-600 text-base sm:text-lg max-w-4xl mx-auto">
-                  Founded as part of the broader Alpha Step Links Ltd., which offers integrated services in travel, education, and logistics, Alpha Step Links Aviation School has quickly established itself as a beacon of excellence in aviation training. From our roots in Nigeria, we've expanded internationally to the UK and Canada, building a legacy of producing highly skilled graduates who contribute to the aviation sector's growth. Our commitment to youth empowerment and innovative programs, such as international internships and franchise opportunities, has created lasting impact, with ongoing expansions in 2026 solidifying our role in shaping the future of aviation.
+                  {(() => {
+                    try {
+                      return 'Founded as part of the broader Alpha Step Links Ltd., which offers integrated services in travel, education, and logistics, Alpha Step Links Aviation School has quickly established itself as a beacon of excellence in aviation training. From our roots in Nigeria, we\'ve expanded internationally to the UK and Canada, building a legacy of producing highly skilled graduates who contribute to the aviation sector\'s growth. Our commitment to youth empowerment and innovative programs, such as international internships and franchise opportunities, has created lasting impact, with ongoing expansions in 2026 solidifying our role in shaping the future of aviation.'
+                    } catch (e) {
+                      return 'Alpha Step Links Aviation School - Building a legacy of excellence in aviation training.'
+                    }
+                  })()}
                 </p>
               </CardContent>
             </Card>

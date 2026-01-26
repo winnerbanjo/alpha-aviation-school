@@ -188,33 +188,43 @@ export function Courses() {
               Licensed Courses
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {licensedCourses?.map((course, index) => {
-                if (!course) return null
-                return (
-                  <motion.div
-                    key={course || index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1, duration: 0.5 }}
-                  >
-                    <Card className="border-slate-200/50 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                      <CardContent className="p-6">
-                        <div className="flex items-start gap-3">
-                          <div className="p-2 bg-[#0061FF]/10 rounded-lg flex-shrink-0">
-                            <Plane className="w-5 h-5 text-[#0061FF]" />
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="text-lg font-semibold tracking-tight text-slate-900">
-                              {course || ''}
-                            </h3>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                )
-              })}
+              {(() => {
+                try {
+                  return licensedCourses?.map((course, index) => {
+                    if (!course) return null
+                    try {
+                      return (
+                        <motion.div
+                          key={course || index}
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: index * 0.1, duration: 0.5 }}
+                        >
+                          <Card className="border-slate-200/50 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                            <CardContent className="p-6">
+                              <div className="flex items-start gap-3">
+                                <div className="p-2 bg-[#0061FF]/10 rounded-lg flex-shrink-0">
+                                  <Plane className="w-5 h-5 text-[#0061FF]" />
+                                </div>
+                                <div className="flex-1">
+                                  <h3 className="text-lg font-semibold tracking-tight text-slate-900">
+                                    {course || ''}
+                                  </h3>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      )
+                    } catch (e) {
+                      return null
+                    }
+                  }) || []
+                } catch (e) {
+                  return []
+                }
+              })()}
             </div>
           </motion.div>
 
@@ -230,84 +240,105 @@ export function Courses() {
               Professional Courses
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {professionalCourses?.map((course, index) => {
-                if (!course) return null
-                const Icon = course?.icon
-                if (!Icon) return null
-                return (
-                  <motion.div
-                    key={course?.id || index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1, duration: 0.5 }}
-                    whileHover={{ y: -4 }}
-                    className="h-full"
-                  >
-                    <Card className="premium-card h-full flex flex-col">
-                      <CardHeader className="flex-1">
-                        <div className="flex items-start gap-3 mb-4">
-                          <div className="p-3 bg-[#0061FF]/10 rounded-lg flex-shrink-0">
-                            <Icon className="w-6 h-6 text-[#0061FF]" />
-                          </div>
-                          <div className="flex-1">
-                            <CardTitle className="text-lg font-bold tracking-tight text-slate-900 mb-2">
-                              {course?.title || ''}
-                            </CardTitle>
-                            <div className="flex items-center gap-2">
-                              <span className="px-2.5 py-1 bg-[#0061FF]/10 text-[#0061FF] text-xs font-semibold rounded-full">
-                                {course?.duration || ''}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="space-y-4 flex-1 flex flex-col">
-                        <div>
-                          <button
-                            onClick={() => toggleCourse(course?.id || '')}
-                            className="w-full flex items-center justify-between p-4 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors group"
-                          >
-                            <span className="text-sm font-bold text-slate-900">View Syllabus</span>
-                            <ChevronDown 
-                              className={`w-5 h-5 text-slate-600 transition-transform duration-200 ${
-                                expandedCourse === course?.id ? 'rotate-180' : ''
-                              }`}
-                            />
-                          </button>
-                          
-                          <AnimatePresence>
-                            {expandedCourse === course?.id && course?.outline && (
-                              <motion.div
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: 'auto', opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.3 }}
-                                className="overflow-hidden"
-                              >
-                                <ul className="space-y-2.5 pt-4 px-4 pb-2">
-                                  {course.outline.map((item, idx) => (
-                                    <li key={idx} className="text-sm text-content text-slate-600 flex items-start gap-3">
-                                      <span className="w-1.5 h-1.5 bg-[#0061FF] rounded-full flex-shrink-0 mt-2" />
-                                      <span>{item || ''}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </div>
-                        
-                        <Link to="/enroll" className="mt-auto">
-                          <Button className="action-button w-full">
-                            Enroll Now
-                          </Button>
-                        </Link>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                )
-              })}
+              {(() => {
+                try {
+                  return professionalCourses?.map((course, index) => {
+                    if (!course) return null
+                    try {
+                      const Icon = course?.icon
+                      if (!Icon) return null
+                      return (
+                        <motion.div
+                          key={course?.id || index}
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: index * 0.1, duration: 0.5 }}
+                          whileHover={{ y: -4 }}
+                          className="h-full"
+                        >
+                          <Card className="premium-card h-full flex flex-col">
+                            <CardHeader className="flex-1">
+                              <div className="flex items-start gap-3 mb-4">
+                                <div className="p-3 bg-[#0061FF]/10 rounded-lg flex-shrink-0">
+                                  <Icon className="w-6 h-6 text-[#0061FF]" />
+                                </div>
+                                <div className="flex-1">
+                                  <CardTitle className="text-lg font-bold tracking-tight text-slate-900 mb-2">
+                                    {course?.title || ''}
+                                  </CardTitle>
+                                  <div className="flex items-center gap-2">
+                                    <span className="px-2.5 py-1 bg-[#0061FF]/10 text-[#0061FF] text-xs font-semibold rounded-full">
+                                      {course?.duration || ''}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </CardHeader>
+                            <CardContent className="space-y-4 flex-1 flex flex-col">
+                              <div>
+                                <button
+                                  onClick={() => {
+                                    try {
+                                      toggleCourse(course?.id || '')
+                                    } catch (e) {
+                                      console.error('Toggle error:', e)
+                                    }
+                                  }}
+                                  className="w-full flex items-center justify-between p-4 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors group"
+                                >
+                                  <span className="text-sm font-bold text-slate-900">View Syllabus</span>
+                                  <ChevronDown 
+                                    className={`w-5 h-5 text-slate-600 transition-transform duration-200 ${
+                                      expandedCourse === course?.id ? 'rotate-180' : ''
+                                    }`}
+                                  />
+                                </button>
+                                
+                                <AnimatePresence>
+                                  {expandedCourse === course?.id && course?.outline && (
+                                    <motion.div
+                                      initial={{ height: 0, opacity: 0 }}
+                                      animate={{ height: 'auto', opacity: 1 }}
+                                      exit={{ height: 0, opacity: 0 }}
+                                      transition={{ duration: 0.3 }}
+                                      className="overflow-hidden"
+                                    >
+                                      <ul className="space-y-2.5 pt-4 px-4 pb-2">
+                                        {course?.outline?.map((item, idx) => {
+                                          if (!item) return null
+                                          return (
+                                            <li key={idx} className="text-sm text-content text-slate-600 flex items-start gap-3">
+                                              <span className="w-1.5 h-1.5 bg-[#0061FF] rounded-full flex-shrink-0 mt-2" />
+                                              <span>{item || ''}</span>
+                                            </li>
+                                          )
+                                        }) || []}
+                                      </ul>
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
+                              </div>
+                              
+                              <Link to="/enroll" className="mt-auto">
+                                <Button className="action-button w-full">
+                                  Enroll Now
+                                </Button>
+                              </Link>
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      )
+                    } catch (e) {
+                      console.error('Course render error:', e)
+                      return null
+                    }
+                  }) || []
+                } catch (e) {
+                  console.error('Courses mapping error:', e)
+                  return []
+                }
+              })()}
             </div>
           </motion.div>
         </div>
