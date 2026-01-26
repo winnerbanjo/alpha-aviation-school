@@ -12,10 +12,11 @@ import { ProtectedRoute } from './components/ProtectedRoute'
 import { Footer } from './components/Footer'
 
 function Layout() {
+  // Hooks MUST be called at the top level, never inside conditions or try-catch
+  const location = useLocation()
+  const isDashboardRoute = location?.pathname?.includes('/dashboard') || false
+  
   try {
-    const location = useLocation()
-    const isDashboardRoute = location?.pathname?.includes('/dashboard') || false
-    
     return (
       <div className="min-h-screen flex flex-col">
         <main className="flex-1">
