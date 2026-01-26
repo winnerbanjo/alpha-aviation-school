@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { TopBar } from '@/components/TopBar'
 import { Navbar } from '@/components/Navbar'
 import { 
   Plane, 
@@ -32,7 +31,6 @@ export function Landing() {
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
-      <TopBar />
       <Navbar scrolled={scrolled} />
       
       {/* Hero Section - Two Column Layout */}

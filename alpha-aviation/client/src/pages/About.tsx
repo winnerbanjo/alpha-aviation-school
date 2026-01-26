@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion'
-import { TopBar } from '@/components/TopBar'
 import { Navbar } from '@/components/Navbar'
 import { Card, CardContent } from '@/components/ui/card'
 import { Award, Target, Globe, Users } from 'lucide-react'
@@ -30,7 +29,6 @@ const values = [
 export function About() {
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
-      <TopBar />
       <Navbar />
       
       {/* Hero Section */}
