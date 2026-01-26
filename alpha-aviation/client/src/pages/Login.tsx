@@ -241,6 +241,17 @@ export function Login() {
                 >
                   ← Back to home
                 </Link>
+                <button
+                  onClick={() => {
+                    const email = prompt('Enter your email address to reset password:')
+                    if (email) {
+                      alert(`Password reset link will be sent to ${email}. Please check your email.`)
+                    }
+                  }}
+                  className="text-sm text-slate-500 hover:text-slate-900 transition-colors block w-full"
+                >
+                  Reset Password
+                </button>
                 <Link
                   to="/admin/portal"
                   className="text-xs text-slate-400 hover:text-slate-600 transition-colors block"

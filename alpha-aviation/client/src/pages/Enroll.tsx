@@ -15,6 +15,8 @@ export function Enroll() {
     email: '',
     password: '',
     enrolledCourse: '',
+    paymentMethod: [] as string[],
+    trainingMethod: [] as string[],
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -140,13 +142,140 @@ export function Enroll() {
                     required
                   >
                     <option value="">Select a course</option>
-                    <option>Aviation Fundamentals & Strategy</option>
-                    <option>Elite Cabin Crew & Safety Operations</option>
-                    <option>Travel & Tourism Management</option>
-                    <option>Airline Customer Service & Passenger Handling</option>
-                    <option>Aviation Safety & Security Awareness</option>
-                    <option>Ticketing & Reservation Systems (GDS Training)</option>
+                    <option>Airline Cabin Crew Training</option>
+                    <option>Airline Customer Service</option>
+                    <option>Airport Operations Fundamental</option>
+                    <option>Cargo Introductory Course</option>
+                    <option>Foundation in Travel & Tourism with Galileo</option>
+                    <option>Air Ticketing & Reservation Management</option>
+                    <option>Customer Service & Communication in Aviation</option>
+                    <option>Hospitality & Tourism Management</option>
+                    <option>Travel Agency Operations</option>
+                    <option>Visa Processing & Documentation</option>
+                    <option>Hotel & Front Office Management</option>
+                    <option>Tourism Marketing & Entrepreneurship</option>
                   </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-900 mb-3">
+                    Payment Method
+                  </label>
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.paymentMethod.includes('Full Payment')}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setFormData({
+                              ...formData,
+                              paymentMethod: [...formData.paymentMethod, 'Full Payment']
+                            })
+                          } else {
+                            setFormData({
+                              ...formData,
+                              paymentMethod: formData.paymentMethod.filter(m => m !== 'Full Payment')
+                            })
+                          }
+                        }}
+                        className="w-4 h-4 text-[#0061FF] border-slate-300 rounded focus:ring-[#0061FF]"
+                      />
+                      <span className="text-sm text-slate-700">Course fee (Full Payment)</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.paymentMethod.includes('Installmental Payment')}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setFormData({
+                              ...formData,
+                              paymentMethod: [...formData.paymentMethod, 'Installmental Payment']
+                            })
+                          } else {
+                            setFormData({
+                              ...formData,
+                              paymentMethod: formData.paymentMethod.filter(m => m !== 'Installmental Payment')
+                            })
+                          }
+                        }}
+                        className="w-4 h-4 text-[#0061FF] border-slate-300 rounded focus:ring-[#0061FF]"
+                      />
+                      <span className="text-sm text-slate-700">Course fee (installmental payment)</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-900 mb-3">
+                    Training Method
+                  </label>
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.trainingMethod.includes('Physical')}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setFormData({
+                              ...formData,
+                              trainingMethod: [...formData.trainingMethod, 'Physical']
+                            })
+                          } else {
+                            setFormData({
+                              ...formData,
+                              trainingMethod: formData.trainingMethod.filter(m => m !== 'Physical')
+                            })
+                          }
+                        }}
+                        className="w-4 h-4 text-[#0061FF] border-slate-300 rounded focus:ring-[#0061FF]"
+                      />
+                      <span className="text-sm text-slate-700">Physical</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.trainingMethod.includes('Virtual')}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setFormData({
+                              ...formData,
+                              trainingMethod: [...formData.trainingMethod, 'Virtual']
+                            })
+                          } else {
+                            setFormData({
+                              ...formData,
+                              trainingMethod: formData.trainingMethod.filter(m => m !== 'Virtual')
+                            })
+                          }
+                        }}
+                        className="w-4 h-4 text-[#0061FF] border-slate-300 rounded focus:ring-[#0061FF]"
+                      />
+                      <span className="text-sm text-slate-700">Virtual</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.trainingMethod.includes('Distance Learning')}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setFormData({
+                              ...formData,
+                              trainingMethod: [...formData.trainingMethod, 'Distance Learning']
+                            })
+                          } else {
+                            setFormData({
+                              ...formData,
+                              trainingMethod: formData.trainingMethod.filter(m => m !== 'Distance Learning')
+                            })
+                          }
+                        }}
+                        className="w-4 h-4 text-[#0061FF] border-slate-300 rounded focus:ring-[#0061FF]"
+                      />
+                      <span className="text-sm text-slate-700">Distance Learning</span>
+                    </label>
+                  </div>
                 </div>
 
                 <Button

@@ -1,7 +1,8 @@
+import { useState, useEffect } from 'react'
 import { Modal } from '@/components/ui/modal'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { User, Mail, Phone, Calendar, DollarSign, BookOpen, MessageCircle } from 'lucide-react'
+import { User, Mail, Phone, Calendar, DollarSign, BookOpen, MessageCircle, CheckCircle2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 interface Student {
@@ -15,6 +16,7 @@ interface Student {
   amountPaid?: number
   enrollmentDate?: string
   phone?: string
+  adminClearance?: boolean
 }
 
 interface StudentProfileModalProps {
@@ -23,6 +25,7 @@ interface StudentProfileModalProps {
   student: Student | null
   onMarkAsPaid?: (studentId: string) => void
   onWhatsAppReminder?: (student: Student) => void
+  onAdminClearanceChange?: (studentId: string, cleared: boolean) => void
 }
 
 export function StudentProfileModal({
@@ -30,9 +33,25 @@ export function StudentProfileModal({
   onClose,
   student,
   onMarkAsPaid,
-  onWhatsAppReminder
+  onWhatsAppReminder,
+  onAdminClearanceChange
 }: StudentProfileModalProps) {
+  const [adminClearance, setAdminClearance] = useState(student?.adminClearance || false)
+
+  useEffect(() => {
+    if (student) {
+      setAdminClearance(student.adminClearance || false)
+    }
+  }, [student])
+
   if (!student) return null
+
+  const handleAdminClearanceToggle = (checked: boolean) => {
+    setAdminClearance(checked)
+    if (onAdminClearanceChange) {
+      onAdminClearanceChange(student._id, checked)
+    }
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Student Profile">
@@ -124,6 +143,29 @@ export function StudentProfileModal({
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Admin Clearance Section */}
+        <div className="pt-4 border-t border-slate-200">
+          <label className="flex items-center gap-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 transition-colors">
+            <input
+              type="checkbox"
+              checked={adminClearance}
+              onChange={(e) => handleAdminClearanceToggle(e.target.checked)}
+              className="w-5 h-5 text-[#0061FF] border-slate-300 rounded focus:ring-[#0061FF]"
+            />
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className={`w-4 h-4 ${adminClearance ? 'text-green-600' : 'text-slate-400'}`} />
+                <span className="text-sm font-medium text-slate-900">Admin Clearance for Certification</span>
+              </div>
+              <p className="text-xs text-slate-500 mt-1">
+                {adminClearance 
+                  ? 'Student is cleared to download certificate' 
+                  : 'Check this box to allow student to download certificate'}
+              </p>
+            </div>
+          </label>
         </div>
 
         {/* Actions */}

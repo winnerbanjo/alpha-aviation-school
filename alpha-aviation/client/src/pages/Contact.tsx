@@ -159,8 +159,7 @@ export function Contact() {
                       <div>
                         <h3 className="text-sm font-medium text-slate-900 mb-1">Address</h3>
                         <p className="text-slate-500">
-                          7 Chief Tajudeen Odubiyi St<br />
-                          Lagos, Nigeria
+                          7 Chief Tajudeen Odubiyi St Lagos, Nigeria
                         </p>
                       </div>
                     </div>
@@ -169,8 +168,8 @@ export function Contact() {
                         <Phone className="w-5 h-5 text-[#0061FF]" />
                       </div>
                       <div>
-                        <h3 className="text-sm font-medium text-slate-900 mb-1">Phone</h3>
-                        <p className="text-slate-500">+234 XXX XXX XXXX</p>
+                        <h3 className="text-sm font-medium text-slate-900 mb-1">Phone No</h3>
+                        <p className="text-slate-500">02013306373</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
@@ -179,7 +178,7 @@ export function Contact() {
                       </div>
                       <div>
                         <h3 className="text-sm font-medium text-slate-900 mb-1">Email</h3>
-                        <p className="text-slate-500">info@alphasteplinks.com</p>
+                        <p className="text-slate-500">info@alphasteplinksaviationschool.com</p>
                       </div>
                     </div>
                   </div>
@@ -193,7 +192,7 @@ export function Contact() {
                     <div className="text-center">
                       <MapPin className="w-12 h-12 text-slate-400 mx-auto mb-2" />
                       <p className="text-sm text-slate-500">Map Integration</p>
-                      <p className="text-xs text-slate-400 mt-1">7 Chief Tajudeen Odubiyi St, Lagos</p>
+                      <p className="text-xs text-slate-400 mt-1">7 Chief Tajudeen Odubiyi St Lagos, Nigeria</p>
                     </div>
                   </div>
                 </CardContent>

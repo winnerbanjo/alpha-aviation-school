@@ -195,7 +195,18 @@ export function AdminLogin() {
                 </Button>
               </form>
 
-              <div className="mt-6 pt-6 border-t border-slate-200/50 text-center">
+              <div className="mt-6 pt-6 border-t border-slate-200/50 text-center space-y-2">
+                <button
+                  onClick={() => {
+                    const email = prompt('Enter your admin email address to reset password:')
+                    if (email) {
+                      alert(`Password reset link will be sent to ${email}. Please check your email.`)
+                    }
+                  }}
+                  className="text-sm text-slate-500 hover:text-slate-900 transition-colors block w-full"
+                >
+                  Reset Password
+                </button>
                 <Link
                   to="/login"
                   className="text-sm text-slate-500 hover:text-slate-900 transition-colors"

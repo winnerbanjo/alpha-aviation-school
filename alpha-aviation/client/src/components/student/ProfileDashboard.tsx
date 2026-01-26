@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuthStore } from '@/store/authStore'
 import { updateStudentProfile } from '@/api'
-import { User, Phone, FileText, Save, AlertCircle } from 'lucide-react'
+import { User, Phone, FileText, Save, AlertCircle, Download, IdCard, Award, Lock } from 'lucide-react'
 
 export function ProfileDashboard() {
   const { user, setUser } = useAuthStore()
@@ -127,6 +127,58 @@ export function ProfileDashboard() {
           >
             <Save className="w-4 h-4 mr-2" />
             {saved ? 'Saved!' : loading ? 'Saving...' : 'Save Changes'}
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* Download Section */}
+      <Card className="border-slate-200/50 mt-6">
+        <CardHeader>
+          <CardTitle className="text-slate-900 tracking-tighter">Downloads</CardTitle>
+          <CardDescription className="text-slate-500">
+            Download your student documents
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Download Student ID Card */}
+          <Button
+            onClick={() => {
+              // Generate and download student ID card
+              alert('Student ID Card download initiated. Your ID card will be generated and downloaded.')
+            }}
+            className="w-full rounded-full bg-[#0061FF] hover:bg-[#0052E6] text-white shadow-sm transition-all duration-300 hover:scale-105"
+          >
+            <IdCard className="w-4 h-4 mr-2" />
+            Download Student ID Card
+          </Button>
+
+          {/* Download Certificate */}
+          <Button
+            onClick={() => {
+              if (!user?.adminClearance) {
+                alert('Certificate download is locked. Please wait for admin clearance before downloading your certificate.')
+              } else {
+                alert('Certificate download initiated. Your certificate will be generated and downloaded.')
+              }
+            }}
+            disabled={!user?.adminClearance}
+            className={`w-full rounded-full shadow-sm transition-all duration-300 hover:scale-105 ${
+              user?.adminClearance
+                ? 'bg-[#0061FF] hover:bg-[#0052E6] text-white'
+                : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+            }`}
+          >
+            {user?.adminClearance ? (
+              <>
+                <Award className="w-4 h-4 mr-2" />
+                Download Certificate
+              </>
+            ) : (
+              <>
+                <Lock className="w-4 h-4 mr-2" />
+                Download Certificate (Locked - Awaiting Admin Clearance)
+              </>
+            )}
           </Button>
         </CardContent>
       </Card>

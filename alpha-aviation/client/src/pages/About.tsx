@@ -9,22 +9,22 @@ const values = [
   {
     icon: Award,
     title: 'Excellence',
-    description: 'We maintain the highest standards in aviation training, ensuring our graduates are industry-ready.'
+    description: 'We strive for the highest standards in every aspect of our training, from curriculum design to instructor expertise, ensuring our graduates are equipped to excel in competitive aviation environments.'
   },
   {
     icon: Target,
     title: 'Precision',
-    description: 'Every module is carefully crafted to meet international aviation benchmarks and regulations.'
+    description: 'Accuracy and attention to detail are at the heart of aviation; we instill these principles through rigorous, hands-on programs that emphasize safety protocols, operational efficiency, and technical mastery.'
   },
   {
     icon: Globe,
     title: 'Global Reach',
-    description: 'Our curriculum is designed to prepare students for careers anywhere in the world.'
+    description: 'With operations spanning Nigeria, the UK, and Canada, we connect students to international opportunities, including internships and IATA-aligned certifications, bridging local talent with worldwide aviation demands.'
   },
   {
     icon: Users,
     title: 'Community',
-    description: 'Join a network of aviation professionals and alumni who support each other\'s success.'
+    description: 'We are dedicated to giving back through youth empowerment initiatives, fostering inclusive education, and supporting local communities in Lagos and beyond to build a stronger, more diverse aviation workforce.'
   }
 ]
 
@@ -44,10 +44,10 @@ export function About() {
             className="text-center mb-16"
           >
             <h1 className="text-5xl sm:text-6xl font-semibold tracking-tighter text-slate-900 mb-4">
-              Global Excellence in Aviation Education
+              About Alpha Step Links Aviation School
             </h1>
             <p className="text-xl text-slate-500 max-w-3xl mx-auto">
-              Alpha Step Links Aviation School is a certified aviation training institution dedicated to shaping the next generation of aviation professionals.
+              Alpha Step Links Aviation School is a certified and fast-growing aviation training institution dedicated to nurturing the next generation of aviation professionals. With a presence in Nigeria, the United Kingdom, and Canada, we specialize in high-quality programs including Aviation & Travel Training, Ticketing & Reservation, Cabin Crew Courses, IATA-aligned curricula, Youth Empowerment initiatives, International Internship Pathways, and Franchise & Licensing Programs like Classroom-in-a-Box. Our experienced instructors, state-of-the-art facilities, and curriculum aligned with international standards ensure students gain practical skills in air transport, safety, operations, and aviation management. Committed to innovation and excellence, we prepare graduates for thriving careers in airlines, airports, and aviation services worldwide.
             </p>
           </motion.div>
         </div>
@@ -65,12 +65,10 @@ export function About() {
               <Card className="border-slate-200/50 h-full">
                 <CardContent className="p-8">
                   <h2 className="text-3xl font-semibold tracking-tighter text-slate-900 mb-4">
-                    Our Mission
+                    Mission
                   </h2>
                   <p className="text-slate-500 leading-relaxed">
-                    To provide world-class aviation training that combines global safety standards with hands-on precision. 
-                    We are committed to launching the next generation of pilots, cabin crew, and aviation leaders through 
-                    comprehensive, industry-aligned programs that meet international aviation benchmarks.
+                    To deliver world-class aviation training that meets global standards, empowers learners with essential practical skills, and equips them for successful, impactful careers in the dynamic aviation industry.
                   </p>
                 </CardContent>
               </Card>
@@ -84,12 +82,10 @@ export function About() {
               <Card className="border-slate-200/50 h-full">
                 <CardContent className="p-8">
                   <h2 className="text-3xl font-semibold tracking-tighter text-slate-900 mb-4">
-                    Our Vision
+                    Vision
                   </h2>
                   <p className="text-slate-500 leading-relaxed">
-                    To become West Africa's premier aviation academy, recognized globally for excellence in training, 
-                    safety standards, and graduate success. We envision a future where every student who walks through 
-                    our doors emerges as a confident, skilled aviation professional ready to excel in the global aviation industry.
+                    To become the premier global leader in aviation education, expanding our reach to inspire and train aviation professionals across continents, fostering innovation and safety in the skies for generations to come.
                   </p>
                 </CardContent>
               </Card>
@@ -106,24 +102,11 @@ export function About() {
             <Card className="border-slate-200/50">
               <CardContent className="p-8 md:p-12">
                 <h2 className="text-3xl font-semibold tracking-tighter text-slate-900 mb-6">
-                  The Alpha Step Links Legacy
+                  Legacy
                 </h2>
-                <div className="space-y-4 text-slate-500 leading-relaxed">
-                  <p>
-                    Alpha Step Links Aviation School stands as a beacon of excellence in aviation education. 
-                    Our curriculum isn't just taught; it's engineered by industry veterans to meet international 
-                    aviation benchmarks.
-                  </p>
-                  <p>
-                    We combine global safety standards with hands-on precision to launch the next generation of 
-                    pilots, cabin crew, and aviation leaders. Our programs are designed to provide comprehensive 
-                    training that prepares students for real-world aviation challenges.
-                  </p>
-                  <p>
-                    With a commitment to excellence and a focus on student success, Alpha Step Links continues to 
-                    set the standard for aviation training in West Africa and beyond.
-                  </p>
-                </div>
+                <p className="text-slate-500 leading-relaxed">
+                  Founded as part of the broader Alpha Step Links Ltd., which offers integrated services in travel, education, and logistics, Alpha Step Links Aviation School has quickly established itself as a beacon of excellence in aviation training. From our roots in Nigeria, we've expanded internationally to the UK and Canada, building a legacy of producing highly skilled graduates who contribute to the aviation sector's growth. Our commitment to youth empowerment and innovative programs, such as international internships and franchise opportunities, has created lasting impact, with ongoing expansions in 2026 solidifying our role in shaping the future of aviation.
+                </p>
               </CardContent>
             </Card>
           </motion.div>

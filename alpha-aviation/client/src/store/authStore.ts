@@ -16,6 +16,7 @@ interface User {
   emergencyContact?: string
   bio?: string
   documentUrl?: string
+  adminClearance?: boolean
 }
 
 interface AuthState {

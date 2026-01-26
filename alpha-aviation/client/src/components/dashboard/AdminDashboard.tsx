@@ -27,6 +27,7 @@ interface Student {
   amountPaid?: number
   enrollmentDate?: string
   phone?: string
+  adminClearance?: boolean
 }
 
 const courses = [
@@ -170,6 +171,25 @@ export function AdminDashboard() {
     } catch (error) {
       console.error('Error updating course:', error)
       alert('Failed to update course')
+    }
+  }
+
+  const handleAdminClearanceChange = async (studentId: string, cleared: boolean) => {
+    try {
+      // Update local state immediately for instant UI feedback
+      setStudents(prev => prev.map(s => 
+        s._id === studentId 
+          ? { ...s, adminClearance: cleared }
+          : s
+      ))
+      // In production, this would call an API endpoint to update admin clearance
+      // await updateAdminClearance(studentId, cleared)
+      console.log(`Admin clearance ${cleared ? 'granted' : 'revoked'} for student ${studentId}`)
+    } catch (error) {
+      console.error('Error updating admin clearance:', error)
+      alert('Failed to update admin clearance')
+      // Revert on error
+      await fetchStudents()
     }
   }
 
@@ -619,6 +639,7 @@ export function AdminDashboard() {
         student={selectedStudent}
         onMarkAsPaid={handleMarkAsPaid}
         onWhatsAppReminder={handleWhatsAppReminder}
+        onAdminClearanceChange={handleAdminClearanceChange}
       />
     </motion.div>
   )

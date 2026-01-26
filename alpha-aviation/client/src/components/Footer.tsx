@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { MapPin, Phone, Mail } from 'lucide-react'
+import { MapPin, Phone, Mail, Facebook, Instagram, Twitter } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -51,23 +51,49 @@ export function Footer() {
             <h4 className="text-sm font-semibold tracking-tighter text-white mb-4">
               Contact Information
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-3 mb-6">
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
                 <span className="text-sm text-slate-400">
-                  7 Chief Tajudeen Odubiyi St<br />
-                  Lagos, Nigeria
+                  7 Chief Tajudeen Odubiyi St Lagos, Nigeria
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                <span className="text-sm text-slate-400">+234 XXX XXX XXXX</span>
+                <span className="text-sm text-slate-400">02013306373</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                <span className="text-sm text-slate-400">info@alphasteplinks.com</span>
+                <span className="text-sm text-slate-400">info@alphasteplinksaviationschool.com</span>
               </li>
             </ul>
+            <div>
+              <h4 className="text-sm font-semibold tracking-tighter text-white mb-3">
+                Follow Us
+              </h4>
+              <div className="flex flex-wrap gap-3 mb-4">
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-white transition-colors flex items-center gap-2">
+                  <Facebook className="w-4 h-4" />
+                  Facebook
+                </a>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-white transition-colors flex items-center gap-2">
+                  <Instagram className="w-4 h-4" />
+                  Instagram
+                </a>
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-white transition-colors flex items-center gap-2">
+                  <Twitter className="w-4 h-4" />
+                  Twitter
+                </a>
+                <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-white transition-colors">
+                  Tiktok
+                </a>
+              </div>
+              <div>
+                <a href="https://wa.me" target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-white transition-colors">
+                  Chat us Via WhatsApp
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
