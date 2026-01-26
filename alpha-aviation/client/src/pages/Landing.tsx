@@ -8,16 +8,53 @@ import {
   Award,
   Target,
   Users,
-  GraduationCap,
-  Briefcase
+  Ticket,
+  Headphones,
+  Building2,
+  FileText,
+  TrendingUp
 } from 'lucide-react'
 
-export function Landing() {
-  const scrollToSection = (id: string) => {
-    // Navigate to courses page with hash
-    window.location.href = `/courses#${id}`
+const professionalCourses = [
+  {
+    id: 'air-ticketing',
+    title: 'Air Ticketing & Reservation Management',
+    icon: Ticket,
+    duration: '4 weeks'
+  },
+  {
+    id: 'customer-service',
+    title: 'Customer Service & Communication in Aviation',
+    icon: Headphones,
+    duration: '4 weeks'
+  },
+  {
+    id: 'hospitality',
+    title: 'Hospitality & Tourism Management',
+    icon: Building2,
+    duration: '4 weeks'
+  },
+  {
+    id: 'travel-agency',
+    title: 'Travel Agency Operations',
+    icon: Globe,
+    duration: '4 weeks'
+  },
+  {
+    id: 'visa-processing',
+    title: 'Visa Processing & Documentation',
+    icon: FileText,
+    duration: '4 weeks'
+  },
+  {
+    id: 'tourism-marketing',
+    title: 'Tourism Marketing & Entrepreneurship',
+    icon: TrendingUp,
+    duration: '4 weeks'
   }
+]
 
+export function Landing() {
   return (
     <>
       {/* 1. Hero Section - Certified Excellence with Background */}
@@ -115,7 +152,7 @@ export function Landing() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
               whileHover={{ y: -4 }}
-              className="premium-card p-10 border-slate-200"
+              className="premium-card p-10 border-slate-200 transition-all duration-300"
             >
               <div className="mb-6">
                 <Award className="w-10 h-10 text-[#0061FF] mb-4" />
@@ -132,7 +169,7 @@ export function Landing() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
               whileHover={{ y: -4 }}
-              className="premium-card p-10 border-slate-200"
+              className="premium-card p-10 border-slate-200 transition-all duration-300"
             >
               <div className="mb-6">
                 <Target className="w-10 h-10 text-[#0061FF] mb-4" />
@@ -149,7 +186,7 @@ export function Landing() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3 }}
               whileHover={{ y: -4 }}
-              className="premium-card p-10 border-slate-200"
+              className="premium-card p-10 border-slate-200 transition-all duration-300"
             >
               <div className="mb-6">
                 <Globe className="w-10 h-10 text-[#0061FF] mb-4" />
@@ -166,7 +203,7 @@ export function Landing() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.4 }}
               whileHover={{ y: -4 }}
-              className="premium-card p-10 border-slate-200"
+              className="premium-card p-10 border-slate-200 transition-all duration-300"
             >
               <div className="mb-6">
                 <Users className="w-10 h-10 text-[#0061FF] mb-4" />
@@ -180,7 +217,7 @@ export function Landing() {
         </div>
       </section>
 
-      {/* 4. Course Categories - Visual Split */}
+      {/* 4. Professional Courses - Original Card Design */}
       <section id="courses" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div
@@ -198,151 +235,83 @@ export function Landing() {
             </p>
           </motion.div>
 
-          {/* Category Cards Side-by-Side */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-            {/* Licensed Courses Category */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              onClick={() => scrollToSection('licensed-courses')}
-              className="premium-card p-12 cursor-pointer group hover:shadow-xl transition-all duration-300"
-            >
-              <div className="flex items-start gap-6 mb-6">
-                <div className="p-4 bg-[#0061FF]/10 rounded-xl">
-                  <GraduationCap className="w-12 h-12 text-[#0061FF]" />
-                </div>
-                <div>
-                  <h3 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
-                    Licensed Courses
-                  </h3>
-                  <p className="text-content text-slate-600">
-                    Industry-certified programs that meet international aviation standards
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 text-[#0061FF] font-semibold group-hover:gap-4 transition-all">
-                <span>View Courses</span>
-                <span>→</span>
-              </div>
-            </motion.div>
-
-            {/* Professional Courses Category */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              onClick={() => scrollToSection('professional-courses')}
-              className="premium-card p-12 cursor-pointer group hover:shadow-xl transition-all duration-300"
-            >
-              <div className="flex items-start gap-6 mb-6">
-                <div className="p-4 bg-[#0061FF]/10 rounded-xl">
-                  <Briefcase className="w-12 h-12 text-[#0061FF]" />
-                </div>
-                <div>
-                  <h3 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
-                    Professional Courses
-                  </h3>
-                  <p className="text-content text-slate-600">
-                    Specialized training programs for career advancement in aviation and travel
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 text-[#0061FF] font-semibold group-hover:gap-4 transition-all">
-                <span>View Courses</span>
-                <span>→</span>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Quick Course Links */}
-          <div className="text-center">
-            <Link to="/courses">
-              <Button 
-                size="lg" 
-                className="rounded-full px-8 py-6 text-base bg-[#0061FF] hover:bg-[#0052E6] text-white shadow-lg transition-all duration-300 hover:scale-105"
-              >
-                View All Courses
-              </Button>
-            </Link>
+          {/* Original Course Cards - Title + Duration + View Full Curriculum */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {professionalCourses?.map((course, index) => {
+              if (!course) return null
+              const Icon = course?.icon
+              if (!Icon) return null
+              return (
+                <motion.div
+                  key={course?.id || index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  whileHover={{ y: -4 }}
+                  className="premium-card p-8 border-slate-200 transition-all duration-300"
+                >
+                  <div className="mb-6">
+                    <div className="p-3 bg-[#0061FF]/10 rounded-lg w-fit mb-4">
+                      <Icon className="w-8 h-8 text-[#0061FF]" />
+                    </div>
+                    <h3 className="text-xl font-bold tracking-tight text-slate-900 mb-3">
+                      {course?.title || ''}
+                    </h3>
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="px-3 py-1 bg-[#0061FF]/10 text-[#0061FF] text-sm font-semibold rounded-full">
+                        {course?.duration || ''}
+                      </span>
+                    </div>
+                  </div>
+                  <Link to="/courses" className="block">
+                    <Button 
+                      variant="outline"
+                      className="w-full border-slate-200 hover:border-[#0061FF] hover:text-[#0061FF] transition-all duration-300"
+                    >
+                      View Full Curriculum →
+                    </Button>
+                  </Link>
+                </motion.div>
+              )
+            })}
           </div>
         </div>
       </section>
 
-      {/* 5. About/Legacy - Bento Grid Layout */}
-      <section id="about" className="py-20 bg-[#FAFAFA]">
+      {/* 5. About Us - Shortened with Read More */}
+      <section className="py-20 bg-[#FAFAFA]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            className="max-w-4xl mx-auto"
           >
-            <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-slate-900 mb-4">
-              About Alpha Step Links
-            </h2>
-          </motion.div>
-
-          {/* Bento Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Large About Us Card - 2/3 width */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="lg:col-span-2 premium-card p-10 glass-text"
-            >
+            <div className="premium-card p-12 bg-white">
               <div className="mb-6">
                 <Plane className="w-10 h-10 text-[#0061FF] mb-4" />
                 <h3 className="text-3xl font-bold tracking-tight text-slate-900 mb-6">About Us</h3>
               </div>
-              <p className="text-content text-slate-600 text-base sm:text-lg max-w-3xl mx-auto text-center">
-                Alpha Step Links Aviation School is a certified and fast-growing aviation training institution dedicated to nurturing the next generation of aviation professionals. With a presence in Nigeria, the United Kingdom, and Canada, we specialize in high-quality programs including Aviation & Travel Training, Ticketing & Reservation, Cabin Crew Courses, IATA-aligned curricula, Youth Empowerment initiatives, International Internship Pathways, and Franchise & Licensing Programs like Classroom-in-a-Box. Our experienced instructors, state-of-the-art facilities, and curriculum aligned with international standards ensure students gain practical skills in air transport, safety, operations, and aviation management. Committed to innovation and excellence, we prepare graduates for thriving careers in airlines, airports, and aviation services worldwide.
+              <p className="text-content text-slate-600 text-lg mb-6 max-w-3xl mx-auto text-center">
+                Alpha Step Links Aviation School is a certified and fast-growing aviation training institution dedicated to nurturing the next generation of aviation professionals. With a presence in Nigeria, the United Kingdom, and Canada, we specialize in high-quality programs including Aviation & Travel Training, Ticketing & Reservation, Cabin Crew Courses, IATA-aligned curricula, Youth Empowerment initiatives, International Internship Pathways, and Franchise & Licensing Programs like Classroom-in-a-Box.
               </p>
-            </motion.div>
-
-            {/* Mission Card - 1/3 width */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="premium-card p-10 bg-gradient-to-br from-[#0061FF]/5 to-white"
-            >
-              <div className="mb-6">
-                <Shield className="w-10 h-10 text-[#0061FF] mb-4" />
-                <h3 className="text-2xl font-bold tracking-tight text-slate-900 mb-6">Mission</h3>
+              <div className="text-center">
+                <Link 
+                  to="/about" 
+                  className="inline-flex items-center gap-2 text-[#0061FF] font-semibold hover:gap-4 transition-all duration-300 group"
+                >
+                  <span>Read Our Full Story</span>
+                  <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+                </Link>
               </div>
-              <p className="text-content text-slate-600 text-lg font-medium max-w-3xl mx-auto text-center">
-                To deliver world-class aviation training that meets global standards, empowers learners with essential practical skills, and equips them for successful, impactful careers in the dynamic aviation industry.
-              </p>
-            </motion.div>
-
-            {/* Vision Card - 1/3 width */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="premium-card p-10 bg-gradient-to-br from-slate-50 to-white"
-            >
-              <div className="mb-6">
-                <Globe className="w-10 h-10 text-[#0061FF] mb-4" />
-                <h3 className="text-2xl font-bold tracking-tight text-slate-900 mb-6">Vision</h3>
-              </div>
-              <p className="text-content text-slate-600 text-lg font-medium max-w-3xl mx-auto text-center">
-                To become the premier global leader in aviation education, expanding our reach to inspire and train aviation professionals across continents, fostering innovation and safety in the skies for generations to come.
-              </p>
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* 6. Legacy Section - Footer Pre */}
+      {/* 6. Legacy Section - Shortened with Read More */}
       <section className="py-20 bg-slate-50 border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div
@@ -356,9 +325,18 @@ export function Landing() {
               <h3 className="text-3xl font-bold tracking-tight text-slate-900 mb-6 text-center">
                 Legacy
               </h3>
-              <p className="text-content text-slate-600 text-base sm:text-lg max-w-3xl mx-auto text-center">
-                Founded as part of the broader Alpha Step Links Ltd., which offers integrated services in travel, education, and logistics, Alpha Step Links Aviation School has quickly established itself as a beacon of excellence in aviation training. From our roots in Nigeria, we've expanded internationally to the UK and Canada, building a legacy of producing highly skilled graduates who contribute to the aviation sector's growth. Our commitment to youth empowerment and innovative programs, such as international internships and franchise opportunities, has created lasting impact, with ongoing expansions in 2026 solidifying our role in shaping the future of aviation.
+              <p className="text-content text-slate-600 text-lg mb-6 max-w-3xl mx-auto text-center">
+                Founded as part of the broader Alpha Step Links Ltd., which offers integrated services in travel, education, and logistics, Alpha Step Links Aviation School has quickly established itself as a beacon of excellence in aviation training. From our roots in Nigeria, we've expanded internationally to the UK and Canada, building a legacy of producing highly skilled graduates who contribute to the aviation sector's growth.
               </p>
+              <div className="text-center">
+                <Link 
+                  to="/about" 
+                  className="inline-flex items-center gap-2 text-[#0061FF] font-semibold hover:gap-4 transition-all duration-300 group"
+                >
+                  <span>Discover Our Legacy</span>
+                  <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+                </Link>
+              </div>
             </div>
           </motion.div>
         </div>
