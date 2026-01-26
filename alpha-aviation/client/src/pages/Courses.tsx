@@ -4,7 +4,7 @@ import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Plane, Users, Briefcase, Shield, Globe, CreditCard, Ticket, Headphones, Building2, FileText, MapPin, TrendingUp } from 'lucide-react'
+import { Plane, Globe, Ticket, Headphones, Building2, FileText, TrendingUp } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const licensedCourses = [

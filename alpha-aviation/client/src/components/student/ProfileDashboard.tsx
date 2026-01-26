@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuthStore } from '@/store/authStore'
 import { updateStudentProfile } from '@/api'
-import { User, Phone, FileText, Save, AlertCircle, Download, IdCard, Award, Lock } from 'lucide-react'
+import { User, Phone, FileText, Save, AlertCircle, Contact, Award, Lock } from 'lucide-react'
 
 export function ProfileDashboard() {
   const { user, setUser } = useAuthStore()
@@ -148,7 +148,7 @@ export function ProfileDashboard() {
             }}
             className="w-full rounded-full bg-[#0061FF] hover:bg-[#0052E6] text-white shadow-sm transition-all duration-300 hover:scale-105"
           >
-            <IdCard className="w-4 h-4 mr-2" />
+            <Contact className="w-4 h-4 mr-2" />
             Download Student ID Card
           </Button>
 
