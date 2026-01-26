@@ -16,67 +16,58 @@ function Layout() {
   const location = useLocation()
   const isDashboardRoute = location?.pathname?.includes('/dashboard') || false
   
-  try {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <main className="flex-1">
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/courses" element={<Courses />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/admin/portal" element={<AdminPortal />} />
-            <Route path="/enroll" element={<Enroll />} />
-            <Route path="/registration-success" element={<RegistrationSuccess />} />
-            {/* Student Dashboard - Default /dashboard route */}
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            {/* Admin Dashboard - /admin/dashboard route */}
-            <Route
-              path="/admin/dashboard"
-              element={
-                <ProtectedRoute adminOnly>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            {/* Legacy routes for backward compatibility */}
-            <Route
-              path="/dashboard/admin"
-              element={
-                <ProtectedRoute adminOnly>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard/student"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </main>
-        {!isDashboardRoute && <Footer />}
-      </div>
-    )
-  } catch (error) {
-    console.error('Layout error:', error)
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-slate-500">Loading...</p>
-      </div>
-    )
-  }
+  return (
+    <div className="min-h-screen flex flex-col">
+      <main className="flex-1">
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/courses" element={<Courses />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/admin/portal" element={<AdminPortal />} />
+          <Route path="/enroll" element={<Enroll />} />
+          <Route path="/registration-success" element={<RegistrationSuccess />} />
+          {/* Student Dashboard - Default /dashboard route */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          {/* Admin Dashboard - /admin/dashboard route */}
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute adminOnly>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          {/* Legacy routes for backward compatibility */}
+          <Route
+            path="/dashboard/admin"
+            element={
+              <ProtectedRoute adminOnly>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/student"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </main>
+      {!isDashboardRoute && Footer && <Footer />}
+    </div>
+  )
 }
 
 function App() {

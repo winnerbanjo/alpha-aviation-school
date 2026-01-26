@@ -2,9 +2,8 @@ import { Link } from 'react-router-dom'
 import { MapPin, Phone, Mail, Facebook, Instagram, Twitter } from 'lucide-react'
 
 export function Footer() {
-  try {
-    return (
-      <footer className="bg-slate-900 text-slate-300 border-t border-slate-800">
+  return (
+    <footer className="bg-slate-900 text-slate-300 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Brand Section */}
@@ -156,25 +155,8 @@ export function Footer() {
           </div>
         </div>
       </div>
-      </footer>
-    )
-  } catch (error) {
-    console.error('Footer error:', error)
-    return (
-      <footer className="bg-slate-900 text-slate-300 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-          <div className="text-center">
-            <p className="text-sm text-slate-400 mb-2">7 Chief Tajudeen Odubiyi St, Ilasamaja, Lagos</p>
-            <p className="text-sm text-slate-400 mb-2">02013306373</p>
-            <p className="text-sm text-slate-400">info@alphasteplinksaviationschool.com</p>
-            <p className="text-xs text-slate-500 mt-6">
-              © {new Date().getFullYear()} Alpha Step Links Aviation School. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
-    )
-  }
+    </footer>
+  )
 }
 
 // Default export for compatibility
