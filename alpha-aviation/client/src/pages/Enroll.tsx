@@ -158,11 +158,11 @@ export function Enroll() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-900 mb-3">
+                  <label className="block text-sm font-semibold text-slate-900 mb-4">
                     Payment Method
                   </label>
-                  <div className="space-y-2">
-                    <label className="flex items-center gap-2 cursor-pointer">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <label className="tile-checkbox">
                       <input
                         type="checkbox"
                         checked={formData.paymentMethod.includes('Full Payment')}
@@ -179,11 +179,30 @@ export function Enroll() {
                             })
                           }
                         }}
-                        className="w-4 h-4 text-[#0061FF] border-slate-300 rounded focus:ring-[#0061FF]"
+                        className="sr-only"
                       />
-                      <span className="text-sm text-slate-700">Course fee (Full Payment)</span>
+                      <div className={`tile-content w-full p-6 rounded-xl border-2 transition-all ${
+                        formData.paymentMethod.includes('Full Payment')
+                          ? 'border-[#0061FF] bg-[#0061FF]/10'
+                          : 'border-slate-200 bg-white'
+                      }`}>
+                        <div className="text-center">
+                          <div className={`w-5 h-5 rounded border-2 mx-auto mb-3 ${
+                            formData.paymentMethod.includes('Full Payment')
+                              ? 'border-[#0061FF] bg-[#0061FF]'
+                              : 'border-slate-300'
+                          }`}>
+                            {formData.paymentMethod.includes('Full Payment') && (
+                              <svg className="w-full h-full text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                          <span className="text-sm font-semibold text-slate-900">Course fee (Full Payment)</span>
+                        </div>
+                      </div>
                     </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
+                    <label className="tile-checkbox">
                       <input
                         type="checkbox"
                         checked={formData.paymentMethod.includes('Installmental Payment')}
@@ -200,19 +219,38 @@ export function Enroll() {
                             })
                           }
                         }}
-                        className="w-4 h-4 text-[#0061FF] border-slate-300 rounded focus:ring-[#0061FF]"
+                        className="sr-only"
                       />
-                      <span className="text-sm text-slate-700">Course fee (installmental payment)</span>
+                      <div className={`tile-content w-full p-6 rounded-xl border-2 transition-all ${
+                        formData.paymentMethod.includes('Installmental Payment')
+                          ? 'border-[#0061FF] bg-[#0061FF]/10'
+                          : 'border-slate-200 bg-white'
+                      }`}>
+                        <div className="text-center">
+                          <div className={`w-5 h-5 rounded border-2 mx-auto mb-3 ${
+                            formData.paymentMethod.includes('Installmental Payment')
+                              ? 'border-[#0061FF] bg-[#0061FF]'
+                              : 'border-slate-300'
+                          }`}>
+                            {formData.paymentMethod.includes('Installmental Payment') && (
+                              <svg className="w-full h-full text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                          <span className="text-sm font-semibold text-slate-900">Course fee (installmental payment)</span>
+                        </div>
+                      </div>
                     </label>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-900 mb-3">
+                  <label className="block text-sm font-semibold text-slate-900 mb-4">
                     Training Method
                   </label>
-                  <div className="space-y-2">
-                    <label className="flex items-center gap-2 cursor-pointer">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <label className="tile-checkbox">
                       <input
                         type="checkbox"
                         checked={formData.trainingMethod.includes('Physical')}
@@ -229,11 +267,30 @@ export function Enroll() {
                             })
                           }
                         }}
-                        className="w-4 h-4 text-[#0061FF] border-slate-300 rounded focus:ring-[#0061FF]"
+                        className="sr-only"
                       />
-                      <span className="text-sm text-slate-700">Physical</span>
+                      <div className={`tile-content w-full p-6 rounded-xl border-2 transition-all ${
+                        formData.trainingMethod.includes('Physical')
+                          ? 'border-[#0061FF] bg-[#0061FF]/10'
+                          : 'border-slate-200 bg-white'
+                      }`}>
+                        <div className="text-center">
+                          <div className={`w-5 h-5 rounded border-2 mx-auto mb-3 ${
+                            formData.trainingMethod.includes('Physical')
+                              ? 'border-[#0061FF] bg-[#0061FF]'
+                              : 'border-slate-300'
+                          }`}>
+                            {formData.trainingMethod.includes('Physical') && (
+                              <svg className="w-full h-full text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                          <span className="text-sm font-semibold text-slate-900">Physical</span>
+                        </div>
+                      </div>
                     </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
+                    <label className="tile-checkbox">
                       <input
                         type="checkbox"
                         checked={formData.trainingMethod.includes('Virtual')}
@@ -250,11 +307,30 @@ export function Enroll() {
                             })
                           }
                         }}
-                        className="w-4 h-4 text-[#0061FF] border-slate-300 rounded focus:ring-[#0061FF]"
+                        className="sr-only"
                       />
-                      <span className="text-sm text-slate-700">Virtual</span>
+                      <div className={`tile-content w-full p-6 rounded-xl border-2 transition-all ${
+                        formData.trainingMethod.includes('Virtual')
+                          ? 'border-[#0061FF] bg-[#0061FF]/10'
+                          : 'border-slate-200 bg-white'
+                      }`}>
+                        <div className="text-center">
+                          <div className={`w-5 h-5 rounded border-2 mx-auto mb-3 ${
+                            formData.trainingMethod.includes('Virtual')
+                              ? 'border-[#0061FF] bg-[#0061FF]'
+                              : 'border-slate-300'
+                          }`}>
+                            {formData.trainingMethod.includes('Virtual') && (
+                              <svg className="w-full h-full text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                          <span className="text-sm font-semibold text-slate-900">Virtual</span>
+                        </div>
+                      </div>
                     </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
+                    <label className="tile-checkbox">
                       <input
                         type="checkbox"
                         checked={formData.trainingMethod.includes('Distance Learning')}
@@ -271,9 +347,28 @@ export function Enroll() {
                             })
                           }
                         }}
-                        className="w-4 h-4 text-[#0061FF] border-slate-300 rounded focus:ring-[#0061FF]"
+                        className="sr-only"
                       />
-                      <span className="text-sm text-slate-700">Distance Learning</span>
+                      <div className={`tile-content w-full p-6 rounded-xl border-2 transition-all ${
+                        formData.trainingMethod.includes('Distance Learning')
+                          ? 'border-[#0061FF] bg-[#0061FF]/10'
+                          : 'border-slate-200 bg-white'
+                      }`}>
+                        <div className="text-center">
+                          <div className={`w-5 h-5 rounded border-2 mx-auto mb-3 ${
+                            formData.trainingMethod.includes('Distance Learning')
+                              ? 'border-[#0061FF] bg-[#0061FF]'
+                              : 'border-slate-300'
+                          }`}>
+                            {formData.trainingMethod.includes('Distance Learning') && (
+                              <svg className="w-full h-full text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                          <span className="text-sm font-semibold text-slate-900">Distance Learning</span>
+                        </div>
+                      </div>
                     </label>
                   </div>
                 </div>

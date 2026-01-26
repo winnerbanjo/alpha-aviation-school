@@ -1,10 +1,11 @@
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { TopBar } from '@/components/TopBar'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Plane, Globe, Ticket, Headphones, Building2, FileText, TrendingUp } from 'lucide-react'
+import { Plane, Globe, Ticket, Headphones, Building2, FileText, TrendingUp, ChevronDown } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const licensedCourses = [
@@ -144,6 +145,12 @@ const professionalCourses = [
 ]
 
 export function Courses() {
+  const [expandedCourse, setExpandedCourse] = useState<string | null>(null)
+
+  const toggleCourse = (courseId: string) => {
+    setExpandedCourse(expandedCourse === courseId ? null : courseId)
+  }
+
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       <TopBar />
@@ -233,9 +240,9 @@ export function Courses() {
                     whileHover={{ y: -4 }}
                     className="h-full"
                   >
-                    <Card className="border-slate-200/50 h-full hover:shadow-xl transition-all duration-300 flex flex-col">
+                    <Card className="premium-card h-full flex flex-col">
                       <CardHeader className="flex-1">
-                        <div className="flex items-start gap-3 mb-3">
+                        <div className="flex items-start gap-3 mb-4">
                           <div className="p-3 bg-[#0061FF]/10 rounded-lg flex-shrink-0">
                             <Icon className="w-6 h-6 text-[#0061FF]" />
                           </div>
@@ -243,27 +250,52 @@ export function Courses() {
                             <CardTitle className="text-lg font-bold tracking-tight text-slate-900 mb-2">
                               {course.title}
                             </CardTitle>
-                            <CardDescription className="text-slate-600">
-                              Course duration: {course.duration}
-                            </CardDescription>
+                            <div className="flex items-center gap-2">
+                              <span className="px-2.5 py-1 bg-[#0061FF]/10 text-[#0061FF] text-xs font-semibold rounded-full">
+                                {course.duration}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </CardHeader>
                       <CardContent className="space-y-4 flex-1 flex flex-col">
                         <div>
-                          <p className="text-sm font-bold text-slate-900 mb-3">COURSE OUTLINE</p>
-                          <ul className="space-y-2">
-                            {course.outline.map((item, idx) => (
-                              <li key={idx} className="text-sm text-slate-600 flex items-start gap-2">
-                                <span className="w-1.5 h-1.5 bg-[#0061FF] rounded-full flex-shrink-0 mt-1.5" />
-                                <span>{item}</span>
-                              </li>
-                            ))}
-                          </ul>
+                          <button
+                            onClick={() => toggleCourse(course.id)}
+                            className="w-full flex items-center justify-between p-4 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors group"
+                          >
+                            <span className="text-sm font-bold text-slate-900">COURSE OUTLINE</span>
+                            <ChevronDown 
+                              className={`w-5 h-5 text-slate-600 transition-transform duration-200 ${
+                                expandedCourse === course.id ? 'rotate-180' : ''
+                              }`}
+                            />
+                          </button>
+                          
+                          <AnimatePresence>
+                            {expandedCourse === course.id && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="overflow-hidden"
+                              >
+                                <ul className="space-y-2.5 pt-4 px-4 pb-2">
+                                  {course.outline.map((item, idx) => (
+                                    <li key={idx} className="text-sm text-content text-slate-600 flex items-start gap-3">
+                                      <span className="w-1.5 h-1.5 bg-[#0061FF] rounded-full flex-shrink-0 mt-2" />
+                                      <span>{item}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </div>
                         
                         <Link to="/enroll" className="mt-auto">
-                          <Button className="w-full rounded-lg bg-[#0061FF] hover:bg-[#0052E6] text-white transition-all duration-300 hover:scale-105 hover:shadow-lg">
+                          <Button className="action-button w-full">
                             Enroll Now
                           </Button>
                         </Link>

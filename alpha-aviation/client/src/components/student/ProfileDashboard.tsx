@@ -146,7 +146,7 @@ export function ProfileDashboard() {
               // Generate and download student ID card
               alert('Student ID Card download initiated. Your ID card will be generated and downloaded.')
             }}
-            className="w-full rounded-full bg-[#0061FF] hover:bg-[#0052E6] text-white shadow-sm transition-all duration-300 hover:scale-105"
+            className="action-button w-full"
           >
             <Contact className="w-4 h-4 mr-2" />
             Download Student ID Card
@@ -162,10 +162,10 @@ export function ProfileDashboard() {
               }
             }}
             disabled={!user?.adminClearance}
-            className={`w-full rounded-full shadow-sm transition-all duration-300 hover:scale-105 ${
+            className={`w-full rounded-full shadow-sm transition-all duration-300 ${
               user?.adminClearance
-                ? 'bg-[#0061FF] hover:bg-[#0052E6] text-white'
-                : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                ? 'action-button'
+                : 'bg-slate-200 text-slate-400 cursor-not-allowed hover:scale-100'
             }`}
           >
             {user?.adminClearance ? (
