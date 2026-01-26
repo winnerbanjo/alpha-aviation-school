@@ -158,7 +158,7 @@ export function Contact() {
                       <div>
                         <h3 className="text-sm font-medium text-slate-900 mb-1">Address</h3>
                         <p className="text-slate-500">
-                          7 Chief Tajudeen Odubiyi St Lagos, Nigeria
+                          7 Chief Tajudeen Odubiyi St, Ilasamaja, Lagos 102214, Lagos
                         </p>
                       </div>
                     </div>
@@ -191,7 +191,7 @@ export function Contact() {
                     <div className="text-center">
                       <MapPin className="w-12 h-12 text-slate-400 mx-auto mb-2" />
                       <p className="text-sm text-slate-500">Map Integration</p>
-                      <p className="text-xs text-slate-400 mt-1">7 Chief Tajudeen Odubiyi St Lagos, Nigeria</p>
+                      <p className="text-xs text-slate-400 mt-1">7 Chief Tajudeen Odubiyi St, Ilasamaja, Lagos 102214, Lagos</p>
                     </div>
                   </div>
                 </CardContent>

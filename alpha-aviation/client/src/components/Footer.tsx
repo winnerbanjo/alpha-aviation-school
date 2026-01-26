@@ -58,7 +58,7 @@ export function Footer() {
                   <div>
                     <p className="text-xs text-slate-400 mb-1">Address</p>
                     <p className="text-sm text-white">
-                      7 Chief Tajudeen Odubiyi St Lagos, Nigeria
+                      7 Chief Tajudeen Odubiyi St, Ilasamaja, Lagos 102214, Lagos
                     </p>
                   </div>
                 </div>
