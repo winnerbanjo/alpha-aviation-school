@@ -2,12 +2,16 @@ import axios from 'axios'
 
 // Determine API base URL based on environment
 const getApiBaseURL = () => {
-  // In production (Vercel), use environment variable or Render backend URL
-  if (import.meta.env.PROD) {
-    return import.meta.env.VITE_API_URL || 'https://alpha-aviation-school.onrender.com/api'
+  // Use Render backend URL
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL
   }
-  // In development, use localhost
-  return import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+  // Production: Use Render backend
+  if (import.meta.env.PROD) {
+    return 'https://bugawheels.onrender.com/api'
+  }
+  // Development: Use localhost
+  return 'http://localhost:5000/api'
 }
 
 // Create axios instance
@@ -16,6 +20,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 })
 
 // Request interceptor to attach JWT token
@@ -82,6 +87,8 @@ export const register = async (userData: {
   lastName?: string
   enrolledCourse?: string
   amountDue?: number
+  paymentMethod?: string[]
+  trainingMethod?: string[]
 }) => {
   const response = await api.post('/auth/register', userData)
   return response.data

@@ -25,20 +25,49 @@ export function Enroll() {
     setError('')
 
     try {
-      await register({
+      // Validate required fields
+      if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || !formData.enrolledCourse) {
+        setError('Please fill in all required fields')
+        setLoading(false)
+        return
+      }
+
+      // Validate payment method
+      if (!formData.paymentMethod || formData.paymentMethod.length === 0) {
+        setError('Please select a payment method')
+        setLoading(false)
+        return
+      }
+
+      // Validate training method
+      if (!formData.trainingMethod || formData.trainingMethod.length === 0) {
+        setError('Please select a training method')
+        setLoading(false)
+        return
+      }
+
+      const response = await register({
         email: formData.email,
         password: formData.password,
         firstName: formData.firstName,
         lastName: formData.lastName,
         enrolledCourse: formData.enrolledCourse,
+        paymentMethod: formData.paymentMethod,
+        trainingMethod: formData.trainingMethod,
         role: 'student',
       })
       
       // Redirect to registration success page
       navigate('/registration-success')
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.')
-    } finally {
+      // Only show error message if server sends 400 or 500 error
+      if (err.response?.status === 400 || err.response?.status === 500) {
+        setError(err.response?.data?.message || 'Registration failed. Please check your information and try again.')
+      } else {
+        // For other errors (network, etc.), don't show error message but log for debugging
+        console.error('Registration error:', err)
+        // Still reset loading state
+      }
       setLoading(false)
     }
   }

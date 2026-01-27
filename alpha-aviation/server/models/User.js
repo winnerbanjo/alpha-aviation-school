@@ -68,6 +68,14 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
     min: 0
+  },
+  paymentMethod: {
+    type: [String],
+    default: []
+  },
+  trainingMethod: {
+    type: [String],
+    default: []
   }
 }, {
   timestamps: true

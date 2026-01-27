@@ -24,6 +24,7 @@ const allowedOrigins = [
   'http://localhost:5173', // Vite dev server
   'http://localhost:3000', // Alternative dev port
   'https://alpha-aviation-school.vercel.app', // Production Vercel URL
+  'https://alpha-aviation-school-l181.vercel.app', // Production Vercel URL (alternative)
   process.env.FRONTEND_URL // Allow custom frontend URL from environment variable
 ].filter(Boolean); // Remove any undefined values
 

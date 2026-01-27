@@ -14,7 +14,7 @@ exports.register = async (req, res, next) => {
   try {
     if (global.useMockData) {
       // In mock mode, just return success with mock user
-      const { email, firstName, lastName, enrolledCourse } = req.body;
+      const { email, firstName, lastName, enrolledCourse, paymentMethod, trainingMethod } = req.body;
       const mockUser = {
         id: `mock-${Date.now()}`,
         email: email || 'student@alpha.com',
@@ -29,7 +29,9 @@ exports.register = async (req, res, next) => {
         phone: '',
         emergencyContact: '',
         bio: '',
-        documentUrl: ''
+        documentUrl: '',
+        paymentMethod: paymentMethod || [],
+        trainingMethod: trainingMethod || []
       };
 
       const token = generateToken(mockUser.id);
@@ -44,7 +46,7 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    const { email, password, role, firstName, lastName, enrolledCourse, amountDue } = req.body;
+    const { email, password, role, firstName, lastName, enrolledCourse, amountDue, paymentMethod, trainingMethod } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -65,7 +67,9 @@ exports.register = async (req, res, next) => {
       enrolledCourse: enrolledCourse || '',
       paymentStatus: 'Pending',
       amountDue: amountDue || 0,
-      enrollmentDate: new Date()
+      enrollmentDate: new Date(),
+      paymentMethod: paymentMethod || [],
+      trainingMethod: trainingMethod || []
     });
 
     // Generate token
@@ -90,7 +94,9 @@ exports.register = async (req, res, next) => {
           emergencyContact: user.emergencyContact,
           bio: user.bio,
           documentUrl: user.documentUrl,
-          amountPaid: user.amountPaid
+          amountPaid: user.amountPaid,
+          paymentMethod: user.paymentMethod || [],
+          trainingMethod: user.trainingMethod || []
         }
       }
     });
@@ -217,7 +223,9 @@ exports.login = async (req, res, next) => {
           emergencyContact: user.emergencyContact,
           bio: user.bio,
           documentUrl: user.documentUrl,
-          amountPaid: user.amountPaid
+          amountPaid: user.amountPaid,
+          paymentMethod: user.paymentMethod || [],
+          trainingMethod: user.trainingMethod || []
         }
       }
     });
@@ -289,6 +297,8 @@ exports.getProfile = async (req, res, next) => {
           bio: user.bio,
           documentUrl: user.documentUrl,
           amountPaid: user.amountPaid,
+          paymentMethod: user.paymentMethod || [],
+          trainingMethod: user.trainingMethod || [],
           createdAt: user.createdAt
         }
       }
