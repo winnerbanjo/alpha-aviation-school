@@ -44,6 +44,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.6;
+    transition: opacity 0.2s ease-in-out;
   }
   
   /* Premium typography for long-form content - Google Standard */

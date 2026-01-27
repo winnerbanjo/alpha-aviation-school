@@ -13,7 +13,8 @@ import {
   Building2,
   FileText,
   TrendingUp,
-  ChevronRight
+  ChevronRight,
+  ArrowRight
 } from 'lucide-react'
 
 const professionalCourses = [
@@ -126,7 +127,7 @@ export function Landing() {
         </div>
       </section>
 
-      {/* 2. Training Courses - Original Grid (White Background) */}
+      {/* 2. Training Courses - iOS App Store Style */}
       <section id="courses" className="bg-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div
@@ -144,7 +145,7 @@ export function Landing() {
             </p>
           </motion.div>
 
-          {/* Course Cards Grid - Only Titles */}
+          {/* iOS App Store Style Course Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {professionalCourses?.map((course, index) => {
               if (!course) return null
@@ -157,16 +158,23 @@ export function Landing() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ y: -2 }}
-                  className="bg-white border border-slate-200 rounded-lg p-6 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                  whileHover={{ y: -4, scale: 1.02 }}
+                  className="relative bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-xl transition-all duration-300 cursor-pointer group overflow-hidden"
                   onClick={() => window.location.href = '/courses'}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="p-2 bg-[#0061FF]/10 rounded-lg flex-shrink-0">
-                      <Icon className="w-6 h-6 text-[#0061FF]" />
+                  {/* Plus/Arrow Icon in Corner */}
+                  <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="p-2 bg-[#0061FF]/10 rounded-full">
+                      <ArrowRight className="w-4 h-4 text-[#0061FF]" />
                     </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-bold tracking-tight text-slate-900 mb-2">
+                  </div>
+                  
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-[#0061FF]/10 rounded-xl flex-shrink-0 group-hover:bg-[#0061FF]/20 transition-colors duration-300">
+                      <Icon className="w-7 h-7 text-[#0061FF]" />
+                    </div>
+                    <div className="flex-1 pt-1">
+                      <h3 className="text-lg font-bold tracking-tight text-slate-900 mb-1 group-hover:text-[#0061FF] transition-colors duration-300">
                         {course?.title || ''}
                       </h3>
                     </div>
@@ -178,91 +186,140 @@ export function Landing() {
         </div>
       </section>
 
-      {/* 3. About Us - First 3 Lines with Read More */}
-      <section className="bg-white py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+      {/* 3. About Us - Asymmetric Modern (Image Left, Text Right) */}
+      <section className="bg-white py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="bg-white border border-slate-200 rounded-lg p-8 sm:p-10"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center"
           >
-            <div className="flex items-start gap-4 mb-6">
-              <Plane className="w-8 h-8 text-[#0061FF] flex-shrink-0" />
-              <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">About Us</h3>
-            </div>
-            <div className="space-y-4">
-              <p className="text-content text-slate-600 text-lg">
-                {aboutExpanded ? aboutUsText : getFirstThreeLines(aboutUsText)}
-              </p>
-              {!aboutExpanded && (
-                <button
-                  onClick={() => setAboutExpanded(true)}
-                  className="inline-flex items-center gap-2 text-[#0061FF] font-semibold hover:gap-3 transition-all duration-300 group"
-                >
-                  <span>Read More</span>
-                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              )}
-              {aboutExpanded && (
-                <div className="pt-4">
-                  <Link 
-                    to="/about" 
+            {/* Left: Image */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative order-2 lg:order-1"
+            >
+              <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+                <img
+                  src="/clean-airplane-interior.jpg"
+                  alt="Aviation training facility"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </motion.div>
+
+            {/* Right: Text Content */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="space-y-6 order-1 lg:order-2"
+            >
+              <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-slate-900">
+                About Us
+              </h2>
+              <div className="space-y-4">
+                <p className="text-content text-slate-600 text-lg leading-relaxed">
+                  {aboutExpanded ? aboutUsText : getFirstThreeLines(aboutUsText)}
+                </p>
+                {!aboutExpanded && (
+                  <button
+                    onClick={() => setAboutExpanded(true)}
                     className="inline-flex items-center gap-2 text-[#0061FF] font-semibold hover:gap-3 transition-all duration-300 group"
                   >
-                    <span>Read Our Full Story</span>
+                    <span>Read More</span>
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                )}
+                {aboutExpanded && (
+                  <Link 
+                    to="/about"
+                    className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#0061FF] text-[#0061FF] rounded-lg font-semibold hover:bg-[#0061FF] hover:text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+                  >
+                    <span>Read Our Full Story</span>
+                    <ChevronRight className="w-4 h-4" />
                   </Link>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* 4. Legacy - First 3 Lines with Read More */}
-      <section className="bg-white py-20 border-t border-slate-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+      {/* 4. Legacy - Alternating Side-by-Side (Text Left, Image Right) */}
+      <section className="bg-[#F9FAFB] py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="bg-white border border-slate-200 rounded-lg p-8 sm:p-10"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center"
           >
-            <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 mb-6">Legacy</h3>
-            <div className="space-y-4">
-              <p className="text-content text-slate-600 text-lg">
-                {legacyExpanded ? legacyText : getFirstThreeLines(legacyText)}
-              </p>
-              {!legacyExpanded && (
-                <button
-                  onClick={() => setLegacyExpanded(true)}
-                  className="inline-flex items-center gap-2 text-[#0061FF] font-semibold hover:gap-3 transition-all duration-300 group"
-                >
-                  <span>Read More</span>
-                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              )}
-              {legacyExpanded && (
-                <div className="pt-4">
-                  <Link 
-                    to="/about" 
+            {/* Left: Text Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="space-y-6"
+            >
+              <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-slate-900">
+                Legacy
+              </h2>
+              <div className="space-y-4">
+                <p className="text-content text-slate-600 text-lg leading-relaxed">
+                  {legacyExpanded ? legacyText : getFirstThreeLines(legacyText)}
+                </p>
+                {!legacyExpanded && (
+                  <button
+                    onClick={() => setLegacyExpanded(true)}
                     className="inline-flex items-center gap-2 text-[#0061FF] font-semibold hover:gap-3 transition-all duration-300 group"
                   >
-                    <span>Discover Our Legacy</span>
+                    <span>Read More</span>
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                )}
+                {legacyExpanded && (
+                  <Link 
+                    to="/about"
+                    className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#0061FF] text-[#0061FF] rounded-lg font-semibold hover:bg-[#0061FF] hover:text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+                  >
+                    <span>Discover Our Legacy</span>
+                    <ChevronRight className="w-4 h-4" />
                   </Link>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            </motion.div>
+
+            {/* Right: Image */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="relative"
+            >
+              <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+                <img
+                  src="/smiling-female-staff-standing.jpg"
+                  alt="Global aviation education"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* 5. Core Values - Clean Cards */}
-      <section className="bg-white py-20 border-t border-slate-200">
+      <section className="bg-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
