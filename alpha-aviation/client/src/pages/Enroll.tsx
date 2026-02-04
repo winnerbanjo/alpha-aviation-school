@@ -4,9 +4,11 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { register } from '@/api'
+import { useAuthStore } from '@/store/authStore'
 
 export function Enroll() {
   const navigate = useNavigate()
+  const { login } = useAuthStore()
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -57,8 +59,44 @@ export function Enroll() {
         role: 'student',
       })
       
-      // Redirect to registration success page
-      navigate('/registration-success')
+      // Auto-login: Save token and user data, then redirect to dashboard
+      if (response?.data?.token && response?.data?.user) {
+        const { token, user } = response.data
+        
+        // Save to auth store (which persists to localStorage)
+        login(
+          {
+            id: user.id,
+            email: user.email,
+            role: user.role,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            enrolledCourse: user.enrolledCourse,
+            paymentStatus: user.paymentStatus,
+            amountDue: user.amountDue,
+            amountPaid: user.amountPaid,
+            enrollmentDate: user.enrollmentDate,
+            phone: user.phone,
+            emergencyContact: user.emergencyContact,
+            bio: user.bio,
+            documentUrl: user.documentUrl,
+            paymentMethod: user.paymentMethod,
+            trainingMethod: user.trainingMethod,
+            status: user.status,
+          },
+          token
+        )
+        
+        // Explicitly save token to localStorage for API interceptor
+        localStorage.setItem('token', token)
+        localStorage.setItem('user', JSON.stringify(user))
+        
+        // Redirect immediately to dashboard
+        navigate('/dashboard', { replace: true })
+      } else {
+        // Fallback: redirect to registration success if response structure is unexpected
+        navigate('/registration-success')
+      }
     } catch (err: any) {
       // Only show error message if server sends 400 or 500 error
       if (err.response?.status === 400 || err.response?.status === 500) {

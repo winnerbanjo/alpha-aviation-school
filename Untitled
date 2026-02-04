@@ -1,1 +1,0 @@
-find public -name "*.jpg" ! -name "hero*" -delete

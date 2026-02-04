@@ -17,6 +17,10 @@ interface User {
   bio?: string
   documentUrl?: string
   adminClearance?: boolean
+  paymentMethod?: string[]
+  trainingMethod?: string[]
+  status?: string
+  paymentReceiptUrl?: string
 }
 
 interface AuthState {

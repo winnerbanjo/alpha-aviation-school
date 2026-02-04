@@ -31,7 +31,9 @@ exports.register = async (req, res, next) => {
         bio: '',
         documentUrl: '',
         paymentMethod: paymentMethod || [],
-        trainingMethod: trainingMethod || []
+        trainingMethod: trainingMethod || [],
+        status: 'Pending Payment',
+        paymentReceiptUrl: ''
       };
 
       const token = generateToken(mockUser.id);
@@ -69,7 +71,8 @@ exports.register = async (req, res, next) => {
       amountDue: amountDue || 0,
       enrollmentDate: new Date(),
       paymentMethod: paymentMethod || [],
-      trainingMethod: trainingMethod || []
+      trainingMethod: trainingMethod || [],
+      status: 'Pending Payment'
     });
 
     // Generate token
@@ -96,7 +99,9 @@ exports.register = async (req, res, next) => {
           documentUrl: user.documentUrl,
           amountPaid: user.amountPaid,
           paymentMethod: user.paymentMethod || [],
-          trainingMethod: user.trainingMethod || []
+          trainingMethod: user.trainingMethod || [],
+          status: user.status || 'Pending Payment',
+          paymentReceiptUrl: user.paymentReceiptUrl || ''
         }
       }
     });
@@ -171,7 +176,11 @@ exports.login = async (req, res, next) => {
               phone: mockStudent.phone || '',
               emergencyContact: '',
               bio: '',
-              documentUrl: ''
+              documentUrl: '',
+              paymentMethod: mockStudent.paymentMethod || [],
+              trainingMethod: mockStudent.trainingMethod || [],
+              status: mockStudent.status || 'Pending Payment',
+              paymentReceiptUrl: mockStudent.paymentReceiptUrl || ''
             }
           }
         });
@@ -225,7 +234,9 @@ exports.login = async (req, res, next) => {
           documentUrl: user.documentUrl,
           amountPaid: user.amountPaid,
           paymentMethod: user.paymentMethod || [],
-          trainingMethod: user.trainingMethod || []
+          trainingMethod: user.trainingMethod || [],
+          status: user.status || 'Pending Payment',
+          paymentReceiptUrl: user.paymentReceiptUrl || ''
         }
       }
     });
@@ -264,6 +275,10 @@ exports.getProfile = async (req, res, next) => {
             emergencyContact: '',
             bio: '',
             documentUrl: '',
+            paymentMethod: mockUser.paymentMethod || [],
+            trainingMethod: mockUser.trainingMethod || [],
+            status: mockUser.status || 'Pending Payment',
+            paymentReceiptUrl: mockUser.paymentReceiptUrl || '',
             createdAt: new Date()
           }
         }

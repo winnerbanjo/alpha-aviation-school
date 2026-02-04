@@ -21,14 +21,15 @@ export function Logo({ className = '', showText = true, size = 'md' }: LogoProps
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       {/* Stylized Aircraft Wing Icon */}
-      <div className="relative">
-        <div className={`${sizeClasses[size]} relative`}>
+      <div className="relative bg-transparent">
+        <div className={`${sizeClasses[size]} relative bg-transparent`}>
           {/* Flight Path SVG */}
           <svg
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className={`${sizeClasses[size]} text-[#0061FF]`}
+            className={`${sizeClasses[size]} text-[#0061FF] bg-transparent`}
+            style={{ background: 'transparent' }}
           >
             {/* Aircraft Wing Shape */}
             <path

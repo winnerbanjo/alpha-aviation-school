@@ -76,6 +76,15 @@ const userSchema = new mongoose.Schema({
   trainingMethod: {
     type: [String],
     default: []
+  },
+  status: {
+    type: String,
+    enum: ['Pending Payment', 'Payment Received', 'Active', 'Completed'],
+    default: 'Pending Payment'
+  },
+  paymentReceiptUrl: {
+    type: String,
+    trim: true
   }
 }, {
   timestamps: true

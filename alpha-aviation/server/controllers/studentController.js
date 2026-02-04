@@ -117,3 +117,65 @@ exports.uploadDocument = async (req, res, next) => {
     next(error);
   }
 };
+
+// Upload payment receipt
+exports.uploadPaymentReceipt = async (req, res, next) => {
+  try {
+    const { receiptUrl } = req.body;
+    const userId = req.user.userId;
+
+    if (!receiptUrl) {
+      return res.status(400).json({
+        success: false,
+        message: 'Receipt URL is required'
+      });
+    }
+
+    if (global.useMockData) {
+      const student = mockStudents.find(s => s._id === userId) || mockStudents[0];
+      student.paymentReceiptUrl = receiptUrl;
+      student.status = 'Payment Received';
+
+      return res.status(200).json({
+        success: true,
+        message: 'Payment receipt uploaded successfully (Mock Mode)',
+        data: {
+          paymentReceiptUrl: student.paymentReceiptUrl,
+          status: student.status
+        }
+      });
+    }
+
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    if (user.role !== 'student') {
+      return res.status(403).json({
+        success: false,
+        message: 'Only students can upload payment receipts'
+      });
+    }
+
+    user.paymentReceiptUrl = receiptUrl;
+    // Update status to Payment Received (admin will verify and activate)
+    user.status = 'Payment Received';
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Payment receipt uploaded successfully. Our team will verify your payment shortly.',
+      data: {
+        paymentReceiptUrl: user.paymentReceiptUrl,
+        status: user.status
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -10,19 +10,22 @@ import {
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useAuthStore } from '@/store/authStore'
-import { CreditCard, AlertCircle, CheckCircle2, Calendar, BookOpen, User, FileText, Download, DollarSign } from 'lucide-react'
+import { CreditCard, AlertCircle, CheckCircle2, Calendar, BookOpen, User, FileText, Download, DollarSign, Upload, CheckCircle } from 'lucide-react'
 import { CurriculumTimeline } from '@/components/student/CurriculumTimeline'
 import { ProfileDashboard } from '@/components/student/ProfileDashboard'
 import { DocumentUploader } from '@/components/student/DocumentUploader'
 import { ResourceLibrary } from '@/components/student/ResourceLibrary'
 import { PaymentModal } from '@/components/PaymentModal'
+import { uploadPaymentReceipt } from '@/api'
 
 type TabType = 'overview' | 'curriculum' | 'profile' | 'resources' | 'documents'
 
 export function StudentDashboard() {
-  const { user } = useAuthStore()
+  const { user, setUser } = useAuthStore()
   const [activeTab, setActiveTab] = useState<TabType>('overview')
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
+  const [uploadingReceipt, setUploadingReceipt] = useState(false)
+  const [receiptUploaded, setReceiptUploaded] = useState(false)
 
   // Initialize tab from sessionStorage
   useEffect(() => {
@@ -59,6 +62,42 @@ export function StudentDashboard() {
         day: 'numeric' 
       })
     : null
+  
+  // Check if student needs to upload payment receipt (status is Pending Payment and no receipt uploaded)
+  const needsPaymentReceipt = user?.status === 'Pending Payment' && !user?.paymentReceiptUrl
+
+  const handleReceiptUpload = async (file: File) => {
+    if (!file.type.startsWith('image/') && !file.type.includes('pdf')) {
+      alert('Please upload an image file (JPG, PNG) or PDF')
+      return
+    }
+
+    try {
+      setUploadingReceipt(true)
+      // In production, upload to cloud storage (S3, Cloudinary, etc.)
+      // For now, we'll create a mock URL
+      const mockUrl = URL.createObjectURL(file)
+      
+      const response = await uploadPaymentReceipt(mockUrl)
+      
+      // Update user in store
+      if (user && response?.data) {
+        setUser({ 
+          ...user, 
+          paymentReceiptUrl: response.data.paymentReceiptUrl,
+          status: response.data.status || 'Payment Received'
+        })
+      }
+      
+      setReceiptUploaded(true)
+      setTimeout(() => setReceiptUploaded(false), 5000)
+    } catch (error: any) {
+      console.error('Error uploading receipt:', error)
+      alert(error.response?.data?.message || 'Failed to upload receipt. Please try again.')
+    } finally {
+      setUploadingReceipt(false)
+    }
+  }
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Calendar },
@@ -107,6 +146,73 @@ export function StudentDashboard() {
       {/* Tab Content */}
       {activeTab === 'overview' && (
         <div className="space-y-6">
+          {/* Action Required: Payment Receipt Upload */}
+          {needsPaymentReceipt && (
+            <Card className="border-2 border-[#0061FF] bg-gradient-to-br from-[#0061FF]/5 to-blue-50">
+              <CardHeader>
+                <div className="flex items-start gap-3">
+                  <div className="p-2 bg-[#0061FF] rounded-lg">
+                    <AlertCircle className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-slate-900 mb-1">Action Required</CardTitle>
+                    <CardDescription className="text-slate-600">
+                      Welcome to Alpha Step Links! To finalize your enrollment, please upload your Bank Transfer Receipt.
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {receiptUploaded ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="p-4 bg-green-50 border border-green-200 rounded-lg text-center"
+                  >
+                    <CheckCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                    <p className="text-sm font-medium text-green-900 mb-1">
+                      Receipt Uploaded Successfully!
+                    </p>
+                    <p className="text-xs text-green-700">
+                      Our team will verify your payment shortly. You'll receive a confirmation email once processed.
+                    </p>
+                  </motion.div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="p-4 bg-white border border-slate-200 rounded-lg">
+                      <label className="block">
+                        <input
+                          type="file"
+                          accept="image/*,.pdf"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0]
+                            if (file) {
+                              handleReceiptUpload(file)
+                            }
+                          }}
+                          className="hidden"
+                          disabled={uploadingReceipt}
+                        />
+                        <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:border-[#0061FF] transition-colors">
+                          <Upload className="w-10 h-10 text-slate-400 mb-3" />
+                          <p className="text-sm font-medium text-slate-900 mb-1">
+                            {uploadingReceipt ? 'Uploading...' : 'Click to upload Bank Transfer Receipt'}
+                          </p>
+                          <p className="text-xs text-slate-500">
+                            JPG, PNG, or PDF (Max 5MB)
+                          </p>
+                        </div>
+                      </label>
+                    </div>
+                    <p className="text-xs text-slate-500 text-center">
+                      After completing your bank transfer, upload the receipt here for verification.
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
           {/* Enrollment Info Card */}
           {user?.enrolledCourse && (
             <Card className="border-slate-200/50">
@@ -166,14 +272,14 @@ export function StudentDashboard() {
                         ${amountDue.toLocaleString()}.00
                       </span>
                     </div>
-                    <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div className="p-4 bg-[#007bff] border border-[#007bff] rounded-lg">
                       <div className="flex items-start gap-3">
-                        <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5" />
+                        <AlertCircle className="w-5 h-5 text-white mt-0.5" />
                         <div className="flex-1">
-                          <p className="text-sm font-medium text-yellow-900 mb-1">
+                          <p className="text-sm font-medium text-white mb-1">
                             Payment Required
                           </p>
-                          <p className="text-sm text-yellow-700">
+                          <p className="text-sm text-white">
                             Please complete your payment to continue your training program.
                           </p>
                         </div>

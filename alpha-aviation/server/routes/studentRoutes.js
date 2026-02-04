@@ -8,5 +8,6 @@ router.use(protect);
 
 router.patch('/profile', studentController.updateProfile);
 router.post('/upload-document', studentController.uploadDocument);
+router.post('/upload-payment-receipt', studentController.uploadPaymentReceipt);
 
 module.exports = router;

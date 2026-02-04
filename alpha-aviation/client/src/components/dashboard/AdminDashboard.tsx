@@ -334,8 +334,8 @@ export function AdminDashboard() {
                     ${displayPendingRevenue.toLocaleString()}
                   </p>
                 </div>
-                <div className="p-3 bg-yellow-100 rounded-lg">
-                  <DollarSign className="w-6 h-6 text-yellow-600" />
+                <div className="p-3 bg-[#007bff] rounded-lg">
+                  <DollarSign className="w-6 h-6 text-white" />
                 </div>
               </div>
             </CardContent>
@@ -401,7 +401,7 @@ export function AdminDashboard() {
                 onClick={() => setPaymentFilter('Pending')}
                 className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
                   paymentFilter === 'Pending'
-                    ? 'bg-yellow-100 text-yellow-900'
+                    ? 'bg-[#007bff] text-white'
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
@@ -598,8 +598,8 @@ export function AdminDashboard() {
                     ${displayPendingRevenue.toLocaleString()}
                   </p>
                 </div>
-                <div className="p-3 bg-yellow-100 rounded-lg">
-                  <DollarSign className="w-6 h-6 text-yellow-600" />
+                <div className="p-3 bg-[#007bff] rounded-lg">
+                  <DollarSign className="w-6 h-6 text-white" />
                 </div>
               </div>
               <p className="text-xs text-slate-500">
@@ -620,9 +620,9 @@ export function AdminDashboard() {
                     {students.filter(s => s.paymentStatus === 'Paid').length}
                   </p>
                 </div>
-                <div className="p-4 bg-yellow-50 rounded-lg">
-                  <p className="text-sm text-slate-500 mb-1">Pending Payments</p>
-                  <p className="text-2xl font-bold text-yellow-600">
+                <div className="p-4 bg-[#007bff] rounded-lg">
+                  <p className="text-sm text-white mb-1">Pending Payments</p>
+                  <p className="text-2xl font-bold text-white">
                     {students.filter(s => s.paymentStatus === 'Pending').length}
                   </p>
                 </div>

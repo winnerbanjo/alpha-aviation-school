@@ -81,7 +81,7 @@ export function Landing() {
                   Our Standard
                 </h2>
                 <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-slate-900 mb-6 leading-tight">
-                  Certified Excellence
+                  We Fuel Your Ambition: Your Journey to Success Starts Here
                 </h1>
                 <p className="text-lg sm:text-xl text-slate-600 leading-relaxed max-w-xl">
                   Our curriculum isn't just taught; it's engineered by industry veterans to meet international aviation benchmarks.

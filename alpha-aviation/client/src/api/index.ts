@@ -110,6 +110,11 @@ export const uploadDocument = async (documentUrl: string) => {
   return response.data
 }
 
+export const uploadPaymentReceipt = async (receiptUrl: string) => {
+  const response = await api.post('/student/upload-payment-receipt', { receiptUrl })
+  return response.data
+}
+
 // Admin API calls
 export const getAllStudents = async () => {
   try {

@@ -21,7 +21,7 @@ export function Layout({ children }: LayoutProps) {
   }, [])
   
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAFAFA]">
+    <div className="min-h-screen flex flex-col bg-white">
       {/* Single Clean Top Bar */}
       <div className="bg-slate-900 border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5">
