@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 require('dotenv').config();
 
 // Import routes
@@ -14,19 +15,32 @@ const errorHandler = require('./middleware/errorHandler');
 // Initialize Express app
 const app = express();
 
-// CORS – first middleware: reflect request origin so browser allows credentials
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  res.setHeader('Access-Control-Allow-Origin', origin || '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
+// 1. Define allowed origins exactly
+const allowedOrigins = [
+  'https://www.aslaviationschool.co',
+  'https://aslaviationschool.co',
+  'https://alpha-aviation-school-l181.vercel.app'
+];
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  next();
-});
+// 2. Configure CORS with specific origin matching
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS blocked: Origin not allowed'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// 3. Handle the 'Preflight' (the check that is currently failing)
+app.options('*', cors());
 
 // Global flag to track DB connection status
 global.dbConnected = false;
