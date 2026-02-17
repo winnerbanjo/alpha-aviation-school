@@ -29,7 +29,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   handleReset = () => {
     this.setState({ hasError: false, error: null })
-    window.location.href = '/'
+    // TEMPORARILY DISABLED so errors stay visible for debugging: window.location.href = '/'
   }
 
   render() {
@@ -58,12 +58,12 @@ export class ErrorBoundary extends Component<Props, State> {
                   Try Again
                 </Button>
                 <Button
-                  onClick={() => window.location.href = '/'}
+                  onClick={() => { this.setState({ hasError: false, error: null }) }}
                   variant="outline"
                   className="w-full rounded-lg border-slate-200/50"
                 >
                   <Home className="w-4 h-4 mr-2" />
-                  Return Home
+                  Dismiss
                 </Button>
               </div>
             </CardContent>

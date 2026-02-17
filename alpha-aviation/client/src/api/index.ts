@@ -32,12 +32,10 @@ api.interceptors.response.use(
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       localStorage.removeItem('auth-storage')
-      const isAdminRoute = window.location.pathname.includes('/admin')
-      if (isAdminRoute) {
-        window.location.href = '/admin/portal?session_expired=1'
-      } else if (!window.location.pathname.includes('/login')) {
-        window.location.href = '/login?session_expired=1'
-      }
+      // TEMPORARILY DISABLED so errors stay on screen for debugging (re-enable when stable)
+      // const isAdminRoute = window.location.pathname.includes('/admin')
+      // if (isAdminRoute) { window.location.href = '/admin/portal?session_expired=1' }
+      // else if (!window.location.pathname.includes('/login')) { window.location.href = '/login?session_expired=1' }
     }
     if (!error.response && error.request) {
       // network error – let callers handle
@@ -108,6 +106,7 @@ export const getAdminTest = async () => {
   return response.data;
 };
 
+// Uses baseURL https://asl-aviation-server.onrender.com/api → GET /admin/students (no bugawheels)
 export const getAllStudents = async () => {
   try {
     const response = await api.get('/admin/students')

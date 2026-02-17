@@ -84,24 +84,25 @@ export function AdminDashboard() {
   }, [])
 
   // Calculate stats from students array (fallback if API doesn't return data)
-  const calculatedTotalRevenue = students
+  const safeStudents = Array.isArray(students) ? students : []
+  const calculatedTotalRevenue = safeStudents
     .filter(s => s.paymentStatus === 'Paid')
     .reduce((sum, s) => sum + (s.amountPaid || s.amountDue || 0), 0)
   
-  const calculatedPendingRevenue = students
+  const calculatedPendingRevenue = safeStudents
     .filter(s => s.paymentStatus === 'Pending')
     .reduce((sum, s) => sum + (s.amountDue || 0), 0)
 
   // Use calculated values if API values are 0 but we have students
-  const displayTotalRevenue = totalRevenue > 0 || students.length === 0 ? totalRevenue : calculatedTotalRevenue
-  const displayPendingRevenue = totalRevenuePendingCalc > 0 || students.length === 0 ? totalRevenuePendingCalc : calculatedPendingRevenue
+  const displayTotalRevenue = totalRevenue > 0 || safeStudents.length === 0 ? totalRevenue : calculatedTotalRevenue
+  const displayPendingRevenue = totalRevenuePendingCalc > 0 || safeStudents.length === 0 ? totalRevenuePendingCalc : calculatedPendingRevenue
 
   // Update API values when students array changes (if API didn't return data)
   useEffect(() => {
-    if (students.length > 0 && totalRevenue === 0) {
+    if (safeStudents.length > 0 && totalRevenue === 0) {
       setTotalRevenue(calculatedTotalRevenue)
     }
-    if (students.length > 0 && totalRevenuePendingCalc === 0) {
+    if (safeStudents.length > 0 && totalRevenuePendingCalc === 0) {
       setTotalRevenuePendingCalc(calculatedPendingRevenue)
     }
   }, [students, calculatedTotalRevenue, calculatedPendingRevenue, totalRevenue, totalRevenuePendingCalc])
@@ -110,6 +111,7 @@ export function AdminDashboard() {
     setLoading(true)
     setError(null)
     try {
+      // Admin students: strictly https://asl-aviation-server.onrender.com/api/admin/students (no bugawheels)
       const response = await getAllStudents()
       console.log('Admin Data:', response)
       console.log('Backend Response:', response?.data)
@@ -119,7 +121,7 @@ export function AdminDashboard() {
       setLastUpdated(new Date())
     } catch (err: any) {
       console.error('Error fetching students:', err)
-      const msg = err?.response?.data?.message || err?.message || 'Failed to load students from server.'
+      const msg = err?.response?.data?.message ?? err?.message ?? 'Failed to load students from server.'
       setError(msg)
     } finally {
       setLoading(false)
@@ -155,8 +157,8 @@ export function AdminDashboard() {
     try {
       await updatePaymentStatus(studentId)
       // Update local state immediately for instant UI feedback
-      setStudents(prev => prev.map(s => 
-        s._id === studentId 
+      setStudents(prev => (Array.isArray(prev) ? prev : []).map(s =>
+        s._id === studentId
           ? { ...s, paymentStatus: s.paymentStatus === 'Pending' ? 'Paid' : 'Pending', amountPaid: s.amountDue, amountDue: 0 }
           : s
       ))
@@ -204,10 +206,8 @@ export function AdminDashboard() {
   const handleAdminClearanceChange = async (studentId: string, cleared: boolean) => {
     try {
       // Update local state immediately for instant UI feedback
-      setStudents(prev => prev.map(s => 
-        s._id === studentId 
-          ? { ...s, adminClearance: cleared }
-          : s
+      setStudents(prev => (Array.isArray(prev) ? prev : []).map(s =>
+        s._id === studentId ? { ...s, adminClearance: cleared } : s
       ))
       // In production, this would call an API endpoint to update admin clearance
       // await updateAdminClearance(studentId, cleared)
@@ -263,11 +263,10 @@ export function AdminDashboard() {
     }
   }
 
-  // Calculate stats
-  const enrolledStudents = students.length
+  // Calculate stats (use safe list to avoid crash)
+  const enrolledStudents = safeStudents.length
 
   // Filter students based on search and payment status (guarantee array to prevent crash)
-  const safeStudents = Array.isArray(students) ? students : []
   const filteredStudents = safeStudents.filter((student) => {
     // Payment status filter
     if (paymentFilter !== 'all' && student.paymentStatus !== paymentFilter) {
@@ -316,6 +315,11 @@ export function AdminDashboard() {
       transition={{ duration: 0.3, ease: 'easeOut' }}
       className="space-y-8 p-6"
     >
+      {error && (
+        <div style={{ color: 'red' }} className="p-3 bg-red-50 border border-red-200 rounded-lg">
+          Server Error: {error}
+        </div>
+      )}
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -364,7 +368,7 @@ export function AdminDashboard() {
       )}
 
       {/* No-data message when server returned empty list */}
-      {students.length === 0 && (
+      {safeStudents.length === 0 && (
         <div className="p-4 rounded-lg bg-slate-100 border border-slate-200/50 text-slate-700">
           <p className="font-medium">No students registered yet. Waiting for first enrollment...</p>
           <p className="text-sm text-slate-500 mt-1">Data is loaded from the server. Use &quot;Refresh&quot; or &quot;Test Connection&quot; to verify.</p>
@@ -541,21 +545,25 @@ export function AdminDashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {!(filteredStudents && filteredStudents.length > 0) ? (
+              {!(filteredStudents && Array.isArray(filteredStudents) && filteredStudents.length > 0) ? (
                 <TableRow>
                   <TableCell colSpan={5} className="py-16">
-                    <EmptyState
-                      type="students"
-                      message={
-                        searchQuery || paymentFilter !== 'all'
-                          ? 'No students found matching your filters. Try adjusting your search or filter settings.'
-                          : 'No students registered yet. Waiting for first enrollment...'
-                      }
-                    />
+                    {filteredStudents && Array.isArray(filteredStudents) ? (
+                      <EmptyState
+                        type="students"
+                        message={
+                          searchQuery || paymentFilter !== 'all'
+                            ? 'No students found matching your filters. Try adjusting your search or filter settings.'
+                            : 'No students registered yet. Waiting for first enrollment...'
+                        }
+                      />
+                    ) : (
+                      <p className="text-slate-500 text-center py-4">No student data available.</p>
+                    )}
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredStudents.map((student) => (
+                (filteredStudents && Array.isArray(filteredStudents) ? filteredStudents : []).map((student) => (
                   <TableRow 
                     key={student?._id ?? student?.id ?? Math.random()}
                     className="cursor-pointer hover:bg-slate-50 transition-colors"
@@ -579,7 +587,7 @@ export function AdminDashboard() {
                         onChange={(e) => {
                           handleCourseChange(student._id, e.target.value)
                           // Update local state immediately
-                          setStudents(prev => prev.map(s => 
+                          setStudents(prev => (Array.isArray(prev) ? prev : []).map(s =>
                             s._id === student._id ? { ...s, enrolledCourse: e.target.value } : s
                           ))
                         }}
@@ -660,7 +668,7 @@ export function AdminDashboard() {
                 </div>
               </div>
               <p className="text-xs text-slate-500">
-                From {students.filter(s => s.paymentStatus === 'Paid').length} paid students
+                From {safeStudents.filter(s => s.paymentStatus === 'Paid').length} paid students
               </p>
             </CardContent>
           </Card>
@@ -679,7 +687,7 @@ export function AdminDashboard() {
                 </div>
               </div>
               <p className="text-xs text-slate-500">
-                From {students.filter(s => s.paymentStatus === 'Pending').length} pending payments
+                From {safeStudents.filter(s => s.paymentStatus === 'Pending').length} pending payments
               </p>
             </CardContent>
           </Card>
@@ -693,13 +701,13 @@ export function AdminDashboard() {
                 <div className="p-4 bg-green-50 rounded-lg">
                   <p className="text-sm text-slate-500 mb-1">Paid Students</p>
                   <p className="text-2xl font-bold text-green-600">
-                    {students.filter(s => s.paymentStatus === 'Paid').length}
+                    {safeStudents.filter(s => s.paymentStatus === 'Paid').length}
                   </p>
                 </div>
                 <div className="p-4 bg-[#007bff] rounded-lg">
                   <p className="text-sm text-white mb-1">Pending Payments</p>
                   <p className="text-2xl font-bold text-white">
-                    {students.filter(s => s.paymentStatus === 'Pending').length}
+                    {safeStudents.filter(s => s.paymentStatus === 'Pending').length}
                   </p>
                 </div>
               </div>
