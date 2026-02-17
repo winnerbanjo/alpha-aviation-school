@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-// Exact backend URL, no trailing slash; paths use /api/auth/... to match backend
-const RENDER_API_BASE = 'https://bugawheels.onrender.com'
+// ASL server on Render – no trailing slash; paths use /api/auth/... to match backend
+const RENDER_API_BASE = 'https://asl-aviation-server.onrender.com'
 
 const getApiBaseURL = () => {
   if (import.meta.env.VITE_API_URL) {
