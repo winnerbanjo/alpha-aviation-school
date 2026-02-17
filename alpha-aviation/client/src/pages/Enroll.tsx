@@ -98,14 +98,16 @@ export function Enroll() {
         navigate('/registration-success')
       }
     } catch (err: any) {
-      // Only show error message if server sends 400 or 500 error
-      if (err.response?.status === 400 || err.response?.status === 500) {
+      if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
+        setError('Request timed out. The server took too long to respond. Please try again.')
+      } else if (err.response?.status === 400 || err.response?.status === 500) {
         setError(err.response?.data?.message || 'Registration failed. Please check your information and try again.')
+      } else if (err.message?.includes('Network Error')) {
+        setError('Cannot reach the server. Please check your connection and try again.')
       } else {
-        // For other errors (network, etc.), don't show error message but log for debugging
-        console.error('Registration error:', err)
-        // Still reset loading state
+        setError(err.response?.data?.message || 'Registration failed. Please try again.')
       }
+    } finally {
       setLoading(false)
     }
   }

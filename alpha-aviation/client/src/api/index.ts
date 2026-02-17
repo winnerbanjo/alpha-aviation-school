@@ -1,26 +1,26 @@
 import axios from 'axios'
 
-// Determine API base URL based on environment
+// Explicit Render backend URL for production (aslaviationschool.co on Vercel)
+const RENDER_API_BASE = 'https://bugawheels.onrender.com/api'
+
 const getApiBaseURL = () => {
-  // Use Render backend URL
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL
   }
-  // Production: Use Render backend
   if (import.meta.env.PROD) {
-    return 'https://bugawheels.onrender.com/api'
+    return RENDER_API_BASE
   }
-  // Development: Use localhost
   return 'http://localhost:5000/api'
 }
 
-// Create axios instance
+// Create axios instance with timeout and CORS credentials
 const api = axios.create({
   baseURL: getApiBaseURL(),
+  timeout: 10000, // 10s - unfreeze UI if server doesn't respond
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,
+  withCredentials: true, // required for Vercel (.co) <-> Render cross-origin
 })
 
 // Request interceptor to attach JWT token

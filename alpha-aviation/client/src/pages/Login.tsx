@@ -123,8 +123,9 @@ export function Login() {
       // Navigate to student dashboard
       navigate('/dashboard')
     } catch (err: any) {
-      // Detailed error handling
-      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
+      if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
+        setError('Request timed out. The server took too long to respond. Please try again.')
+      } else if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
         setError('Server Unreachable: Cannot connect to backend. Check if server is running.')
       } else if (err.response?.status === 400) {
         setError('Invalid Email: Please check your email format.')
@@ -142,6 +143,7 @@ export function Login() {
       } else {
         setError(err.response?.data?.message || 'Login failed. Please check your credentials and try again.')
       }
+    } finally {
       setLoading(false)
     }
   }

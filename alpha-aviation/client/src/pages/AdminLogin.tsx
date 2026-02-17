@@ -96,7 +96,13 @@ export function AdminLogin() {
 
       navigate('/admin/dashboard')
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.')
+      if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
+        setError('Request timed out. The server took too long to respond. Please try again.')
+      } else if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
+        setError('Server unreachable. Please check your connection and try again.')
+      } else {
+        setError(err.response?.data?.message || 'Login failed. Please try again.')
+      }
     } finally {
       setLoading(false)
     }
