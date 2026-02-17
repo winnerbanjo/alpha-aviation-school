@@ -15,25 +15,10 @@ const errorHandler = require('./middleware/errorHandler');
 // Initialize Express app
 const app = express();
 
-const allowedOrigins = [
-  'https://www.aslaviationschool.co',
-  'https://aslaviationschool.co'
-];
-
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      return callback(new Error('CORS Policy Block'), false);
-    }
-    return callback(null, true);
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  origin: ['https://www.aslaviationschool.co', 'https://aslaviationschool.co'],
+  credentials: true
 }));
-
-// Handle Preflight OPTIONS requests
 app.options('*', cors());
 
 // Global flag to track DB connection status
@@ -43,8 +28,7 @@ global.useMockData = false;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Root greeting (so GET / returns success instead of 404)
-app.get('/', (req, res) => res.json({ message: 'ASL Aviation Server is Live' }));
+app.get('/', (req, res) => res.send('Server is Up'));
 
 // Routes
 app.use('/api/auth', authRoutes);

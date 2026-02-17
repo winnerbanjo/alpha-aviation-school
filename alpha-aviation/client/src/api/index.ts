@@ -1,26 +1,15 @@
 import axios from 'axios'
 
-// ASL server on Render – no trailing slash; paths use /api/auth/... to match backend
-const RENDER_API_BASE = 'https://asl-aviation-server.onrender.com'
+// Hardcoded ASL server – no env override so live site cannot point to old URL
+const API_URL = 'https://asl-aviation-server.onrender.com/api'
 
-const getApiBaseURL = () => {
-  if (import.meta.env.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL
-  }
-  if (import.meta.env.PROD) {
-    return RENDER_API_BASE
-  }
-  return 'http://localhost:5000'
-}
-
-// Create axios instance with timeout and CORS credentials
 const api = axios.create({
-  baseURL: getApiBaseURL(),
-  timeout: 30000, // 30s - allow Render cold start to wake without showing timeout
+  baseURL: import.meta.env.PROD ? API_URL : 'http://localhost:5000/api',
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true, // required for Vercel (.co) <-> Render cross-origin
+  withCredentials: true,
 })
 
 // Request interceptor to attach JWT token
@@ -62,7 +51,7 @@ api.interceptors.response.use(
 // Auth API calls
 export const login = async (email: string, password: string) => {
   try {
-    const response = await api.post('/api/auth/login', { email, password })
+    const response = await api.post('/auth/login', { email, password })
     return response.data
   } catch (error: any) {
     // Re-throw with more context for better error handling
@@ -90,35 +79,35 @@ export const register = async (userData: {
   paymentMethod?: string[]
   trainingMethod?: string[]
 }) => {
-  const response = await api.post('/api/auth/register', userData)
+  const response = await api.post('/auth/register', userData)
   return response.data
 }
 
 export const getProfile = async () => {
-  const response = await api.get('/api/auth/profile')
+  const response = await api.get('/auth/profile')
   return response.data
 }
 
 // Student API calls
 export const updateStudentProfile = async (phone?: string, bio?: string, emergencyContact?: string) => {
-  const response = await api.patch('/api/student/profile', { phone, bio, emergencyContact })
+  const response = await api.patch('/student/profile', { phone, bio, emergencyContact })
   return response.data
 }
 
 export const uploadDocument = async (documentUrl: string) => {
-  const response = await api.post('/api/student/upload-document', { documentUrl })
+  const response = await api.post('/student/upload-document', { documentUrl })
   return response.data
 }
 
 export const uploadPaymentReceipt = async (receiptUrl: string) => {
-  const response = await api.post('/api/student/upload-payment-receipt', { receiptUrl })
+  const response = await api.post('/student/upload-payment-receipt', { receiptUrl })
   return response.data
 }
 
 // Admin API calls
 export const getAllStudents = async () => {
   try {
-    const response = await api.get('/api/admin/students')
+    const response = await api.get('/admin/students')
     return response.data
   } catch (error: any) {
     // Mock fallback disabled for launch – surface real error
@@ -129,7 +118,7 @@ export const getAllStudents = async () => {
 
 export const getFinancialStats = async () => {
   try {
-    const response = await api.get('/api/admin/financial-stats')
+    const response = await api.get('/admin/financial-stats')
     return response.data
   } catch (error: any) {
     // Mock fallback disabled for launch – surface real error
@@ -138,23 +127,23 @@ export const getFinancialStats = async () => {
 }
 
 export const updatePaymentStatus = async (studentId: string) => {
-  const response = await api.patch(`/api/admin/students/${studentId}`)
+  const response = await api.patch(`/admin/students/${studentId}`)
   return response.data
 }
 
 export const batchUpdatePaymentStatus = async (studentIds: string[]) => {
-  const response = await api.patch('/api/admin/students/batch-payment', { studentIds })
+  const response = await api.patch('/admin/students/batch-payment', { studentIds })
   return response.data
 }
 
 export const updateStudentCourse = async (studentId: string, enrolledCourse: string) => {
-  const response = await api.patch(`/api/admin/students/${studentId}/course`, { enrolledCourse })
+  const response = await api.patch(`/admin/students/${studentId}/course`, { enrolledCourse })
   return response.data
 }
 
 // Payment API calls
 export const getPayments = async () => {
-  const response = await api.get('/api/payments')
+  const response = await api.get('/payments')
   return response.data
 }
 
@@ -163,7 +152,7 @@ export const createPayment = async (paymentData: {
   description?: string
   paymentMethod?: string
 }) => {
-  const response = await api.post('/api/payments', paymentData)
+  const response = await api.post('/payments', paymentData)
   return response.data
 }
 
