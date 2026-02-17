@@ -55,6 +55,7 @@ export function AdminDashboard() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
   const [testConnectionStatus, setTestConnectionStatus] = useState<string | null>(null)
   const [testingConnection, setTestingConnection] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   // Initialize tab from sessionStorage
   useEffect(() => {
@@ -108,11 +109,14 @@ export function AdminDashboard() {
   const fetchStudents = async () => {
     try {
       setLoading(true)
+      setError(null)
       const response = await getAllStudents()
       setStudents(response.data.students || [])
       setLastUpdated(new Date())
-    } catch (error) {
-      console.error('Error fetching students:', error)
+    } catch (err: any) {
+      console.error('Error fetching students:', err)
+      const msg = err?.response?.data?.message || err?.message || 'Failed to load students from server.'
+      setError(msg)
     } finally {
       setLoading(false)
     }
@@ -137,8 +141,9 @@ export function AdminDashboard() {
       const response = await getFinancialStats()
       setTotalRevenue(response.data.totalRevenue || 0)
       setTotalRevenuePendingCalc(response.data.revenuePending || 0)
-    } catch (error) {
-      console.error('Error fetching financial stats:', error)
+    } catch (err: any) {
+      console.error('Error fetching financial stats:', err)
+      if (!error) setError(err?.response?.data?.message || err?.message || 'Failed to load financial stats.')
     }
   }
 
@@ -276,17 +281,24 @@ export function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="space-y-8 p-6">
-        <div className="space-y-4">
-          <div className="h-8 w-64 bg-slate-200 rounded animate-pulse" />
-          <div className="h-4 w-48 bg-slate-200 rounded animate-pulse" />
+      <div className="flex flex-col items-center justify-center min-h-[40vh] p-6 text-slate-600">
+        <div className="animate-pulse rounded-full h-10 w-10 border-2 border-[#0061FF] border-t-transparent mb-4" />
+        <p className="text-lg font-medium">Loading Student Data...</p>
+        <p className="text-sm text-slate-400 mt-1">Fetching from ASL server</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6 p-6">
+        <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="font-medium text-red-800">Error loading dashboard</p>
+          <p className="text-sm text-red-600 mt-1">Error: {error}</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-32 bg-slate-200 rounded-lg animate-pulse" />
-          ))}
-        </div>
-        <div className="h-96 bg-slate-200 rounded-lg animate-pulse" />
+        <Button onClick={() => { setError(null); setLoading(true); fetchStudents(); fetchFinancialStats(); }} className="rounded-full bg-[#0061FF] text-white">
+          Retry
+        </Button>
       </div>
     )
   }

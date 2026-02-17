@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Landing } from './pages/Landing'
 import { Login } from './pages/Login'
 import { AdminPortal } from './pages/AdminPortal'
@@ -21,6 +21,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/admin" element={<Navigate to="/admin/portal" replace />} />
           <Route path="/admin/portal" element={<AdminPortal />} />
           <Route path="/enroll" element={<Enroll />} />
           <Route path="/registration-success" element={<RegistrationSuccess />} />

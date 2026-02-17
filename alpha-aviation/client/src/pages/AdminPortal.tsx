@@ -94,7 +94,7 @@ export function AdminPortal() {
             <div>
               <label htmlFor="admin-password" className="block text-sm font-medium text-slate-900 mb-2 flex items-center gap-2">
                 <Lock className="w-4 h-4" />
-                Admin Password
+                Master Access Key
               </label>
               <input
                 id="admin-password"
@@ -102,7 +102,7 @@ export function AdminPortal() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 border border-slate-200/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900/20 focus:border-slate-900 text-slate-900 transition-all bg-white"
-                placeholder="Enter admin password"
+                placeholder="e.g. alphaadmin2026"
                 required
                 autoFocus
               />
