@@ -11,8 +11,8 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { getAllStudents, getFinancialStats, updatePaymentStatus, batchUpdatePaymentStatus, updateStudentCourse } from '@/api'
-import { Users, DollarSign, CheckCircle2, Search, MessageCircle, Send, Filter } from 'lucide-react'
+import { getAllStudents, getFinancialStats, getAdminTest, updatePaymentStatus, batchUpdatePaymentStatus, updateStudentCourse } from '@/api'
+import { Users, DollarSign, CheckCircle2, Search, MessageCircle, Send, Filter, RefreshCw, Wifi } from 'lucide-react'
 import { StudentProfileModal } from './StudentProfileModal'
 import { EmptyState } from '@/components/EmptyState'
 
@@ -52,6 +52,9 @@ export function AdminDashboard() {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null)
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<AdminTab>('overview')
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+  const [testConnectionStatus, setTestConnectionStatus] = useState<string | null>(null)
+  const [testingConnection, setTestingConnection] = useState(false)
 
   // Initialize tab from sessionStorage
   useEffect(() => {
@@ -107,10 +110,25 @@ export function AdminDashboard() {
       setLoading(true)
       const response = await getAllStudents()
       setStudents(response.data.students || [])
+      setLastUpdated(new Date())
     } catch (error) {
       console.error('Error fetching students:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleTestConnection = async () => {
+    setTestingConnection(true)
+    setTestConnectionStatus(null)
+    try {
+      const res = await getAdminTest()
+      const count = res?.data?.totalStudents ?? res?.totalStudents ?? '—'
+      setTestConnectionStatus(`Connected: ${count} students in database`)
+    } catch (err: any) {
+      setTestConnectionStatus(err?.response?.data?.message || err?.message || 'Connection failed')
+    } finally {
+      setTestingConnection(false)
     }
   }
 
@@ -282,18 +300,51 @@ export function AdminDashboard() {
       className="space-y-8 p-6"
     >
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
-          {activeTab === 'overview' && 'Command Center'}
-          {activeTab === 'students' && 'Student Management'}
-          {activeTab === 'revenue' && 'Revenue Analytics'}
-        </h1>
-        <p className="text-slate-500">
-          {activeTab === 'overview' && 'Manage students and track payments'}
-          {activeTab === 'students' && 'View and manage all enrolled students'}
-          {activeTab === 'revenue' && 'Track revenue and payment analytics'}
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
+            {activeTab === 'overview' && 'Command Center'}
+            {activeTab === 'students' && 'Student Management'}
+            {activeTab === 'revenue' && 'Revenue Analytics'}
+          </h1>
+          <p className="text-slate-500">
+            {activeTab === 'overview' && 'Manage students and track payments'}
+            {activeTab === 'students' && 'View and manage all enrolled students'}
+            {activeTab === 'revenue' && 'Track revenue and payment analytics'}
+          </p>
+          {lastUpdated && (
+            <p className="text-xs text-slate-400 mt-1">
+              Last updated: {lastUpdated.toLocaleString()}
+            </p>
+          )}
+        </div>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleTestConnection}
+            disabled={testingConnection}
+            className="rounded-full border-slate-200/50"
+          >
+            <Wifi className="w-4 h-4 mr-2" />
+            {testingConnection ? 'Testing…' : 'Test Connection'}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => { fetchStudents(); fetchFinancialStats(); }}
+            className="rounded-full"
+          >
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Refresh
+          </Button>
+        </div>
       </div>
+      {testConnectionStatus && (
+        <p className={`text-sm ${testConnectionStatus.startsWith('Connected') ? 'text-green-600' : 'text-red-600'}`}>
+          {testConnectionStatus}
+        </p>
+      )}
 
       {/* Stats Cards - Show only on Overview */}
       {activeTab === 'overview' && (

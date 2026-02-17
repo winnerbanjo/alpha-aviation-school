@@ -105,6 +105,11 @@ export const uploadPaymentReceipt = async (receiptUrl: string) => {
 }
 
 // Admin API calls
+export const getAdminTest = async () => {
+  const response = await api.get('/admin/test');
+  return response.data;
+};
+
 export const getAllStudents = async () => {
   try {
     const response = await api.get('/admin/students')

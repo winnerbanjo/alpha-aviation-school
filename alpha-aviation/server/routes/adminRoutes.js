@@ -8,6 +8,7 @@ const { adminOnly } = require('../middleware/adminOnly');
 router.use(protect);
 router.use(adminOnly);
 
+router.get('/test', adminController.getTest);
 router.get('/students', adminController.getAllStudents);
 router.get('/financial-stats', adminController.getFinancialStats);
 router.patch('/students/:id', adminController.updatePaymentStatus);

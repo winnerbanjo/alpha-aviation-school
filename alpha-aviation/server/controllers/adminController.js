@@ -1,6 +1,22 @@
 const User = require('../models/User');
 const { mockStudents, getMockFinancialStats } = require('../utils/mockData');
 
+// Test connection: returns total student count from MongoDB (Admin Only)
+exports.getTest = async (req, res, next) => {
+  try {
+    const totalStudents = global.useMockData
+      ? mockStudents.length
+      : await User.countDocuments({ role: 'student' });
+    res.status(200).json({
+      success: true,
+      message: 'Connection active',
+      data: { totalStudents }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Get all students (Admin Only)
 exports.getAllStudents = async (req, res, next) => {
   try {
