@@ -107,11 +107,12 @@ export function AdminDashboard() {
   }, [students, calculatedTotalRevenue, calculatedPendingRevenue, totalRevenue, totalRevenuePendingCalc])
 
   const fetchStudents = async () => {
+    setLoading(true)
+    setError(null)
     try {
-      setLoading(true)
-      setError(null)
       const response = await getAllStudents()
       console.log('Admin Data:', response)
+      console.log('Backend Response:', response?.data)
       const raw = response?.data?.students ?? response?.students
       const list = Array.isArray(raw) ? raw : []
       setStudents(list)
@@ -265,8 +266,9 @@ export function AdminDashboard() {
   // Calculate stats
   const enrolledStudents = students.length
 
-  // Filter students based on search and payment status
-  const filteredStudents = students.filter((student) => {
+  // Filter students based on search and payment status (guarantee array to prevent crash)
+  const safeStudents = Array.isArray(students) ? students : []
+  const filteredStudents = safeStudents.filter((student) => {
     // Payment status filter
     if (paymentFilter !== 'all' && student.paymentStatus !== paymentFilter) {
       return false
@@ -539,7 +541,7 @@ export function AdminDashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredStudents.length === 0 ? (
+              {!(filteredStudents && filteredStudents.length > 0) ? (
                 <TableRow>
                   <TableCell colSpan={5} className="py-16">
                     <EmptyState
@@ -555,7 +557,7 @@ export function AdminDashboard() {
               ) : (
                 filteredStudents.map((student) => (
                   <TableRow 
-                    key={student._id}
+                    key={student?._id ?? student?.id ?? Math.random()}
                     className="cursor-pointer hover:bg-slate-50 transition-colors"
                     onClick={() => handleStudentClick(student)}
                   >

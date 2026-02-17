@@ -15,6 +15,7 @@ const errorHandler = require('./middleware/errorHandler');
 // Initialize Express app
 const app = express();
 
+// CORS: credentials true required for cookies/auth; exact origins (no wildcard)
 app.use(cors({
   origin: ['https://www.aslaviationschool.co', 'https://aslaviationschool.co'],
   credentials: true

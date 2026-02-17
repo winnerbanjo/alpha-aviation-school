@@ -12,7 +12,7 @@ const api = axios.create({
   withCredentials: true,
 })
 
-// Request interceptor to attach JWT token
+// Request interceptor: Bearer token (required for admin/student API)
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token')
@@ -21,28 +21,26 @@ api.interceptors.request.use(
     }
     return config
   },
-  (error) => {
-    return Promise.reject(error)
-  }
+  (error) => Promise.reject(error)
 )
 
-// Response interceptor for error handling
+// Response interceptor: 401 = session expired; send to portal with message (no immediate redirect for admin)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Unauthorized - clear auth and redirect to login
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       localStorage.removeItem('auth-storage')
-      // Only redirect if not already on login page
-      if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/admin/portal')) {
-        window.location.href = '/login'
+      const isAdminRoute = window.location.pathname.includes('/admin')
+      if (isAdminRoute) {
+        window.location.href = '/admin/portal?session_expired=1'
+      } else if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login?session_expired=1'
       }
     }
-    // For network errors, surface real error (no mock fallback during launch)
     if (!error.response && error.request) {
-      // console.warn('Network error - server may be unreachable')
+      // network error – let callers handle
     }
     return Promise.reject(error)
   }

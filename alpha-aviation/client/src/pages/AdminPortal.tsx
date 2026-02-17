@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuthStore } from '@/store/authStore'
 import { Button } from '@/components/ui/button'
@@ -9,8 +9,17 @@ export function AdminPortal() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const { login } = useAuthStore()
+  const sessionExpired = searchParams.get('session_expired') === '1'
+
+  useEffect(() => {
+    if (sessionExpired) {
+      setError('Session expired. Please log in again.')
+      window.history.replaceState({}, '', '/admin/portal')
+    }
+  }, [sessionExpired])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -84,9 +93,9 @@ export function AdminPortal() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg"
+              className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg"
             >
-              <p className="text-sm text-red-600">{error}</p>
+              <p className="text-sm text-amber-800">{error}</p>
             </motion.div>
           )}
 
