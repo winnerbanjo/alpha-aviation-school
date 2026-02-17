@@ -16,7 +16,7 @@ const getApiBaseURL = () => {
 // Create axios instance with timeout and CORS credentials
 const api = axios.create({
   baseURL: getApiBaseURL(),
-  timeout: 10000, // 10s - unfreeze UI if server doesn't respond
+  timeout: 30000, // 30s - allow Render cold start to wake without showing timeout
   headers: {
     'Content-Type': 'application/json',
   },
