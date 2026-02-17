@@ -28,8 +28,12 @@ app.use(cors({
     }
     return callback(null, true);
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Handle Preflight OPTIONS requests
 app.options('*', cors());
 
 // Global flag to track DB connection status
@@ -38,6 +42,9 @@ global.useMockData = false;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Root greeting (so GET / returns success instead of 404)
+app.get('/', (req, res) => res.json({ message: 'ASL Aviation Server is Live' }));
 
 // Routes
 app.use('/api/auth', authRoutes);
