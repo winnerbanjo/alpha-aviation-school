@@ -15,31 +15,21 @@ const errorHandler = require('./middleware/errorHandler');
 // Initialize Express app
 const app = express();
 
-// 1. Define allowed origins exactly
 const allowedOrigins = [
   'https://www.aslaviationschool.co',
-  'https://aslaviationschool.co',
-  'https://alpha-aviation-school-l181.vercel.app'
+  'https://aslaviationschool.co'
 ];
 
-// 2. Configure CORS with specific origin matching
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
-
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('CORS blocked: Origin not allowed'));
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error('CORS Policy Block'), false);
     }
+    return callback(null, true);
   },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  credentials: true
 }));
-
-// 3. Handle the 'Preflight' (the check that is currently failing)
 app.options('*', cors());
 
 // Global flag to track DB connection status
