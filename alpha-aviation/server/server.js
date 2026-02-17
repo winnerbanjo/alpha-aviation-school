@@ -19,38 +19,23 @@ const app = express();
 global.dbConnected = false;
 global.useMockData = false;
 
-// Middleware - CORS whitelist for frontend handshake (credentials required for cross-origin)
-const allowedOrigins = [
-  'https://www.aslaviationschool.co',
-  'https://aslaviationschool.co',
-  'https://alpha-aviation-school-l181.vercel.app',
-  'https://alpha-aviation-school.vercel.app',
-  'http://localhost:5173',
-  'http://localhost:3000',
-  process.env.FRONTEND_URL
-].filter(Boolean);
-
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) {
-      return callback(null, process.env.NODE_ENV !== 'production');
-    }
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      if (process.env.NODE_ENV !== 'production') {
-        console.log(`⚠️  CORS: Allowing origin ${origin} (development mode)`);
-        callback(null, true);
-      } else {
-        console.log(`❌ CORS: Blocked origin ${origin}`);
-        callback(new Error('Not allowed by CORS'));
-      }
-    }
-  },
-  credentials: true, // required for Vercel (.co) <-> Render handshake
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+// CORS: allow production frontend so browser preflight and requests succeed
+const corsOptions = {
+  origin: [
+    'https://www.aslaviationschool.co',
+    'https://aslaviationschool.co',
+    'https://alpha-aviation-school-l181.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-}));
+};
+
+app.use(cors(corsOptions));
+// Handle browser preflight (OPTIONS) so cross-origin requests are allowed
+app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// Explicit Render backend URL for production (aslaviationschool.co on Vercel)
+// Render backend - exact URL, no trailing slash (paths like /auth/login are appended)
 const RENDER_API_BASE = 'https://bugawheels.onrender.com/api'
 
 const getApiBaseURL = () => {
