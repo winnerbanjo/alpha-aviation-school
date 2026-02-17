@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// Render backend - exact URL, no trailing slash (paths like /auth/login are appended)
+// Must be https:// on live .co domain; no trailing slash at end
 const RENDER_API_BASE = 'https://bugawheels.onrender.com/api'
 
 const getApiBaseURL = () => {

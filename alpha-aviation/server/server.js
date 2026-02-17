@@ -19,23 +19,13 @@ const app = express();
 global.dbConnected = false;
 global.useMockData = false;
 
-// CORS: allow production frontend so browser preflight and requests succeed
-const corsOptions = {
-  origin: [
-    'https://www.aslaviationschool.co',
-    'https://aslaviationschool.co',
-    'https://alpha-aviation-school-l181.vercel.app',
-    'http://localhost:5173',
-    'http://localhost:3000'
-  ],
+// CORS: allow all origins temporarily for launch (prove connection); tighten later
+app.use(cors({
+  origin: true,
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
-
-app.use(cors(corsOptions));
-// Handle browser preflight (OPTIONS) so cross-origin requests are allowed
-app.options('*', cors(corsOptions));
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+}));
+app.options('*', cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
