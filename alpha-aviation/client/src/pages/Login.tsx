@@ -27,47 +27,8 @@ export function Login() {
     }
 
     try {
-      // Attempt API login - hitting /api/auth/login endpoint
-      console.log('Attempting login for:', email)
-      let response
-      let data
-      
-      try {
-        response = await loginAPI(email, password)
-        data = response
-        console.log('Login response received:', response)
-      } catch (apiError: any) {
-        // If API fails but we're in mock mode, try mock fallback
-        if (email === 'student1@alpha.com' && password === 'password123') {
-          console.log('API failed, using mock fallback for student1@alpha.com')
-          // Create mock student response
-          data = {
-            success: true,
-            message: 'Login successful (Mock Mode Fallback)',
-            data: {
-              token: 'mock-student-token-' + Date.now(),
-              user: {
-                id: 'mock1',
-                email: 'student1@alpha.com',
-                role: 'student',
-                firstName: 'John',
-                lastName: 'Doe',
-                enrolledCourse: 'Aviation Fundamentals & Strategy',
-                paymentStatus: 'Pending',
-                amountDue: 5000,
-                amountPaid: 0,
-                enrollmentDate: new Date('2024-01-15').toISOString(),
-                phone: '+2341234567890',
-                emergencyContact: '',
-                bio: '',
-                documentUrl: ''
-              }
-            }
-          }
-        } else {
-          throw apiError
-        }
-      }
+      // Real API login – no mock fallback during launch
+      const data = await loginAPI(email, password)
 
       // Validate response structure
       if (!data || !data.data || !data.data.user || !data.data.token) {

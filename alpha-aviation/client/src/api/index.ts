@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-// Must be https:// on live .co domain; no trailing slash at end
-const RENDER_API_BASE = 'https://bugawheels.onrender.com/api'
+// Exact backend URL, no trailing slash; paths use /api/auth/... to match backend
+const RENDER_API_BASE = 'https://bugawheels.onrender.com'
 
 const getApiBaseURL = () => {
   if (import.meta.env.VITE_API_URL) {
@@ -10,7 +10,7 @@ const getApiBaseURL = () => {
   if (import.meta.env.PROD) {
     return RENDER_API_BASE
   }
-  return 'http://localhost:5000/api'
+  return 'http://localhost:5000'
 }
 
 // Create axios instance with timeout and CORS credentials
@@ -51,9 +51,9 @@ api.interceptors.response.use(
         window.location.href = '/login'
       }
     }
-    // For network errors, don't crash - let components handle gracefully
+    // For network errors, surface real error (no mock fallback during launch)
     if (!error.response && error.request) {
-      console.warn('Network error - server may be unreachable, using mock data fallback')
+      // console.warn('Network error - server may be unreachable')
     }
     return Promise.reject(error)
   }
@@ -62,7 +62,7 @@ api.interceptors.response.use(
 // Auth API calls
 export const login = async (email: string, password: string) => {
   try {
-    const response = await api.post('/auth/login', { email, password })
+    const response = await api.post('/api/auth/login', { email, password })
     return response.data
   } catch (error: any) {
     // Re-throw with more context for better error handling
@@ -90,113 +90,71 @@ export const register = async (userData: {
   paymentMethod?: string[]
   trainingMethod?: string[]
 }) => {
-  const response = await api.post('/auth/register', userData)
+  const response = await api.post('/api/auth/register', userData)
   return response.data
 }
 
 export const getProfile = async () => {
-  const response = await api.get('/auth/profile')
+  const response = await api.get('/api/auth/profile')
   return response.data
 }
 
 // Student API calls
 export const updateStudentProfile = async (phone?: string, bio?: string, emergencyContact?: string) => {
-  const response = await api.patch('/student/profile', { phone, bio, emergencyContact })
+  const response = await api.patch('/api/student/profile', { phone, bio, emergencyContact })
   return response.data
 }
 
 export const uploadDocument = async (documentUrl: string) => {
-  const response = await api.post('/student/upload-document', { documentUrl })
+  const response = await api.post('/api/student/upload-document', { documentUrl })
   return response.data
 }
 
 export const uploadPaymentReceipt = async (receiptUrl: string) => {
-  const response = await api.post('/student/upload-payment-receipt', { receiptUrl })
+  const response = await api.post('/api/student/upload-payment-receipt', { receiptUrl })
   return response.data
 }
 
 // Admin API calls
 export const getAllStudents = async () => {
   try {
-    const response = await api.get('/admin/students')
+    const response = await api.get('/api/admin/students')
     return response.data
   } catch (error: any) {
-    // Fallback to mock data if server is unreachable
-    if (!error.response && error.request) {
-      console.warn('Server unreachable - using mock data fallback')
-      // Return mock data structure
-      return {
-        data: {
-          students: [
-            {
-              _id: 'mock-1',
-              email: 'student1@alpha.com',
-              firstName: 'John',
-              lastName: 'Doe',
-              enrolledCourse: 'Aviation Fundamentals & Strategy',
-              paymentStatus: 'Pending',
-              amountDue: 5000,
-              amountPaid: 0,
-              enrollmentDate: new Date().toISOString(),
-              phone: '+2341234567890'
-            },
-            {
-              _id: 'mock-2',
-              email: 'student2@alpha.com',
-              firstName: 'Jane',
-              lastName: 'Smith',
-              enrolledCourse: 'Elite Cabin Crew & Safety Operations',
-              paymentStatus: 'Paid',
-              amountDue: 0,
-              amountPaid: 8500,
-              enrollmentDate: new Date().toISOString(),
-              phone: '+2341234567891'
-            }
-          ]
-        }
-      }
-    }
+    // Mock fallback disabled for launch – surface real error
+    // if (!error.response && error.request) { ... }
     throw error
   }
 }
 
 export const getFinancialStats = async () => {
   try {
-    const response = await api.get('/admin/financial-stats')
+    const response = await api.get('/api/admin/financial-stats')
     return response.data
   } catch (error: any) {
-    // Fallback to mock data if server is unreachable
-    if (!error.response && error.request) {
-      console.warn('Server unreachable - using mock financial stats fallback')
-      return {
-        data: {
-          totalRevenue: 8500,
-          revenuePending: 5000
-        }
-      }
-    }
+    // Mock fallback disabled for launch – surface real error
     throw error
   }
 }
 
 export const updatePaymentStatus = async (studentId: string) => {
-  const response = await api.patch(`/admin/students/${studentId}`)
+  const response = await api.patch(`/api/admin/students/${studentId}`)
   return response.data
 }
 
 export const batchUpdatePaymentStatus = async (studentIds: string[]) => {
-  const response = await api.patch('/admin/students/batch-payment', { studentIds })
+  const response = await api.patch('/api/admin/students/batch-payment', { studentIds })
   return response.data
 }
 
 export const updateStudentCourse = async (studentId: string, enrolledCourse: string) => {
-  const response = await api.patch(`/admin/students/${studentId}/course`, { enrolledCourse })
+  const response = await api.patch(`/api/admin/students/${studentId}/course`, { enrolledCourse })
   return response.data
 }
 
 // Payment API calls
 export const getPayments = async () => {
-  const response = await api.get('/payments')
+  const response = await api.get('/api/payments')
   return response.data
 }
 
@@ -205,7 +163,7 @@ export const createPayment = async (paymentData: {
   description?: string
   paymentMethod?: string
 }) => {
-  const response = await api.post('/payments', paymentData)
+  const response = await api.post('/api/payments', paymentData)
   return response.data
 }
 
