@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '@/store/authStore'
 import { Sidebar } from '@/components/dashboard/Sidebar'
@@ -10,10 +10,17 @@ export function Dashboard() {
   const { isAuthenticated, user } = useAuthStore()
   const navigate = useNavigate()
   const location = useLocation()
+  // Wait for persist rehydration before redirecting (prevents flash-to-login)
+  const [authReady, setAuthReady] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => setAuthReady(true), 400)
+    return () => clearTimeout(t)
+  }, [])
 
   useEffect(() => {
+    if (!authReady) return
+
     if (!isAuthenticated || !user) {
-      // Redirect to appropriate login based on route
       if (location.pathname.includes('/admin')) {
         navigate('/admin/portal', { replace: true })
       } else {
@@ -22,23 +29,27 @@ export function Dashboard() {
       return
     }
 
-    // STRICT role-based routing - Students CANNOT access admin routes
     if (user.role === 'admin') {
-      // Admin must go to /admin/dashboard
       if (location.pathname !== '/admin/dashboard' && !location.pathname.includes('/admin/dashboard')) {
         navigate('/admin/dashboard', { replace: true })
         return
       }
     } else if (user.role === 'student') {
-      // Student must go to /dashboard - BLOCK admin routes
       if (location.pathname === '/admin/dashboard' || location.pathname.includes('/admin')) {
         navigate('/dashboard', { replace: true })
         return
       }
     }
-  }, [isAuthenticated, user, navigate, location.pathname])
+  }, [authReady, isAuthenticated, user, navigate, location.pathname])
 
-  if (!isAuthenticated || !user) {
+  if (!authReady || !isAuthenticated || !user) {
+    if (!authReady) {
+      return (
+        <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center">
+          <p className="text-slate-500">Loading...</p>
+        </div>
+      )
+    }
     return null
   }
 

@@ -34,20 +34,22 @@ exports.getAllStudents = async (req, res, next) => {
       .select('-password')
       .sort({ createdAt: -1 });
 
+    const list = Array.isArray(students) ? students : [];
     res.status(200).json({
       success: true,
-      count: students.length,
+      count: list.length,
       data: {
-        students
+        students: list
       }
     });
   } catch (error) {
-    // Fallback to mock data on error
+    // Fallback to mock data on error; always return an array
+    const list = Array.isArray(mockStudents) ? mockStudents : [];
     res.status(200).json({
       success: true,
-      count: mockStudents.length,
+      count: list.length,
       data: {
-        students: mockStudents
+        students: list
       }
     });
   }

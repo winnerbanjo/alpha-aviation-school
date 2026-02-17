@@ -111,7 +111,10 @@ export function AdminDashboard() {
       setLoading(true)
       setError(null)
       const response = await getAllStudents()
-      setStudents(response.data.students || [])
+      console.log('Admin Data:', response)
+      const raw = response?.data?.students ?? response?.students
+      const list = Array.isArray(raw) ? raw : []
+      setStudents(list)
       setLastUpdated(new Date())
     } catch (err: any) {
       console.error('Error fetching students:', err)
@@ -139,8 +142,8 @@ export function AdminDashboard() {
   const fetchFinancialStats = async () => {
     try {
       const response = await getFinancialStats()
-      setTotalRevenue(response.data.totalRevenue || 0)
-      setTotalRevenuePendingCalc(response.data.revenuePending || 0)
+      setTotalRevenue(response?.data?.totalRevenue ?? 0)
+      setTotalRevenuePendingCalc(response?.data?.revenuePending ?? 0)
     } catch (err: any) {
       console.error('Error fetching financial stats:', err)
       if (!error) setError(err?.response?.data?.message || err?.message || 'Failed to load financial stats.')
@@ -358,6 +361,14 @@ export function AdminDashboard() {
         </p>
       )}
 
+      {/* No-data message when server returned empty list */}
+      {students.length === 0 && (
+        <div className="p-4 rounded-lg bg-slate-100 border border-slate-200/50 text-slate-700">
+          <p className="font-medium">No students registered yet. Waiting for first enrollment...</p>
+          <p className="text-sm text-slate-500 mt-1">Data is loaded from the server. Use &quot;Refresh&quot; or &quot;Test Connection&quot; to verify.</p>
+        </div>
+      )}
+
       {/* Stats Cards - Show only on Overview */}
       {activeTab === 'overview' && (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -536,7 +547,7 @@ export function AdminDashboard() {
                       message={
                         searchQuery || paymentFilter !== 'all'
                           ? 'No students found matching your filters. Try adjusting your search or filter settings.'
-                          : 'No students enrolled yet. Students will appear here once they register.'
+                          : 'No students registered yet. Waiting for first enrollment...'
                       }
                     />
                   </TableCell>
