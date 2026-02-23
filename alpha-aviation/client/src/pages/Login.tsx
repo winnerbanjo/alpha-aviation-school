@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useAuthStore } from '@/store/authStore'
 import { Button } from '@/components/ui/button'
-import { login as loginAPI } from '@/api'
+import axios from 'axios'
 import { motion } from 'framer-motion'
 import { GraduationCap } from 'lucide-react'
 
@@ -11,7 +11,6 @@ export function Login() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const navigate = useNavigate()
   const { login } = useAuthStore()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,36 +26,26 @@ export function Login() {
     }
 
     try {
-      // Real API login – no mock fallback during launch
-      const data = await loginAPI(email, password)
+      const response = await axios.post(
+        'https://asl-aviation-server.onrender.com/api/auth/login',
+        {
+          email,
+          password
+        }
+      )
 
-      // Validate response structure
-      if (!data || !data.data || !data.data.user || !data.data.token) {
-        console.error('Invalid response structure:', data)
+      const payload = response.data?.data ? response.data.data : response.data
+      const token = payload?.token
+      const userData = payload?.user
+      const role = userData?.role
+
+      if (!token || !userData || !role) {
+        console.error('Invalid response structure:', response.data)
         setError('Invalid server response. Please try again.')
         setLoading(false)
         return
       }
 
-      const userData = data.data.user
-      const token = data.data.token
-
-      // Check role and redirect accordingly
-      if (userData.role === 'admin') {
-        // Admin should not use student login - redirect to admin portal
-        setError('Admin users must use the Admin Portal')
-        setLoading(false)
-        return
-      }
-
-      // Student login - verify role
-      if (userData.role !== 'student') {
-        setError('Invalid user role. Please contact support.')
-        setLoading(false)
-        return
-      }
-
-      // Save user data and token to store (which persists to localStorage)
       login(
         {
           id: userData.id,
@@ -77,12 +66,14 @@ export function Login() {
         token
       )
 
-      // Explicitly save token to localStorage for API interceptor
       localStorage.setItem('token', token)
+      localStorage.setItem('userRole', role)
       localStorage.setItem('user', JSON.stringify(userData))
 
-      // Navigate to student dashboard
-      navigate('/dashboard')
+      console.log('Token saved:', token)
+      console.log('Role saved:', role)
+
+      window.location.href = '/admin'
     } catch (err: any) {
       if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
         setError('Request timed out. The server took too long to respond. Please try again.')

@@ -1,10 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-// Hard-code JWT secret for launch safety (also exposed via env)
-const JWT_SECRET = process.env.JWT_SECRET || 'alphaadmin2026';
+const JWT_SECRET = 'alphaadmin2026';
 process.env.JWT_SECRET = JWT_SECRET;
 
 // Models / auth utilities
@@ -42,10 +42,63 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => res.send('Server is Up'));
 
+const protect = async (req, res, next) => {
+  let token;
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+    console.log('Validating token for:', req.headers.authorization);
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+
+      if (global.useMockData) {
+        req.user = {
+          ...decoded,
+          role: decoded.role || (String(decoded.userId || '').includes('admin') ? 'admin' : 'student')
+        };
+        return next();
+      }
+
+      const user = await User.findById(decoded.userId);
+      if (!user) {
+        return res.status(401).json({ message: 'Not authorized' });
+      }
+
+      req.user = {
+        ...decoded,
+        role: user.role,
+        email: user.email
+      };
+      return next();
+    } catch (error) {
+      console.error('Token verification failed');
+      return res.status(401).json({ message: 'Not authorized' });
+    }
+  }
+
+  return res.status(401).json({ message: 'No token provided' });
+};
+
+const admin = (req, res, next) => {
+  if (req.user && req.user.role === 'admin') {
+    return next();
+  }
+  return res.status(403).json({ message: 'Admin only' });
+};
+
+app.get('/api/admin', protect, admin, (req, res) => {
+  res.status(200).json({
+    success: true,
+    data: {
+      email: req.user.email || 'admin@alpha.com',
+      role: req.user.role
+    }
+  });
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/payments', paymentRoutes);
-app.use('/api/admin', adminRoutes);
+app.use('/api/admin', protect, admin, adminRoutes);
 app.use('/api/student', studentRoutes);
 
 // Health check route

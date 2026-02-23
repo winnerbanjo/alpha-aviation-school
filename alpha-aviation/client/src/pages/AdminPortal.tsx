@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuthStore } from '@/store/authStore'
 import { Button } from '@/components/ui/button'
 import { Shield, Lock, Building2 } from 'lucide-react'
-import { login as loginAPI } from '@/api'
+import axios from 'axios'
 
 export function AdminPortal() {
   const [password, setPassword] = useState('')
@@ -14,11 +14,50 @@ export function AdminPortal() {
   const [adminPassword, setAdminPassword] = useState('')
   const [authLoginError, setAuthLoginError] = useState('')
   const [authLoginLoading, setAuthLoginLoading] = useState(false)
+  const [adminData, setAdminData] = useState<any>(null)
   const [searchParams] = useSearchParams()
-  const navigate = useNavigate()
   const { login } = useAuthStore()
   const sessionExpired = searchParams.get('session_expired') === '1'
   const authFailed = searchParams.get('auth_failed') === '1'
+
+  const handleReLogin = () => {
+    localStorage.clear()
+    window.location.href = '/login'
+  }
+
+  useEffect(() => {
+    const fetchAdminData = async () => {
+      try {
+        const token = localStorage.getItem('token')
+
+        if (!token) {
+          handleReLogin()
+          return
+        }
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+
+        const response = await axios.get(
+          'https://asl-aviation-server.onrender.com/api/admin',
+          config
+        )
+
+        setAdminData(response.data)
+      } catch (error: any) {
+        console.error('Admin fetch error:', error)
+
+        if (error.response && error.response.status === 401) {
+          handleReLogin()
+        }
+      }
+    }
+
+    fetchAdminData()
+  }, [])
 
   useEffect(() => {
     if (sessionExpired) {
@@ -35,40 +74,54 @@ export function AdminPortal() {
     setLoading(true)
     setError('')
 
-    // Check password - NO email field, password-only
-    if (password === 'alphaadmin2026') {
-      // Create mock admin user for auth store
-      const mockAdmin = {
-        id: 'admin-alpha-2026',
-        email: 'admin@alpha.com',
-        role: 'admin' as const,
-        firstName: 'Admin',
-        lastName: 'User',
-        enrolledCourse: '',
-        paymentStatus: 'Paid' as const,
-        amountDue: 0,
-        amountPaid: 0,
-        enrollmentDate: new Date().toISOString(),
-        phone: '',
-        emergencyContact: '',
-        bio: '',
-        documentUrl: ''
+    try {
+      const response = await axios.post(
+        'https://asl-aviation-server.onrender.com/api/auth/login',
+        {
+          email: 'admin@alpha.com',
+          password
+        }
+      )
+
+      const payload = response.data?.data ? response.data.data : response.data
+      const token = payload?.token
+      const userData = payload?.user
+      const role = userData?.role
+
+      if (!token || !userData || role !== 'admin') {
+        setError('Invalid admin credentials.')
+        setLoading(false)
+        return
       }
 
-      // Generate a mock token (in production, this would come from API)
-      const mockToken = 'admin-token-' + Date.now()
+      login(
+        {
+          id: userData.id,
+          email: userData.email,
+          role: userData.role,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          enrolledCourse: userData.enrolledCourse,
+          paymentStatus: userData.paymentStatus,
+          amountDue: userData.amountDue,
+          amountPaid: userData.amountPaid,
+          enrollmentDate: userData.enrollmentDate,
+          phone: userData.phone,
+          emergencyContact: userData.emergencyContact,
+          bio: userData.bio,
+          documentUrl: userData.documentUrl,
+        },
+        token
+      )
 
-      // Save to auth store and localStorage
-      login(mockAdmin, mockToken)
-      
-      // Explicitly save token to localStorage for API interceptor
-      localStorage.setItem('token', mockToken)
-      localStorage.setItem('user', JSON.stringify(mockAdmin))
-      
-      // Navigate to admin dashboard
-      navigate('/admin/dashboard')
-    } else {
-      setError('Invalid password. Access denied.')
+      localStorage.setItem('token', token)
+      localStorage.setItem('userRole', role)
+      localStorage.setItem('user', JSON.stringify(userData))
+
+      window.location.href = '/admin'
+    } catch (err: any) {
+      setError(err?.response?.data?.message || 'Invalid password. Access denied.')
+    } finally {
       setLoading(false)
     }
   }
@@ -79,16 +132,22 @@ export function AdminPortal() {
     setAuthLoginLoading(true)
 
     try {
-      const response = await loginAPI(adminEmail, adminPassword)
-      const { data } = response
+      const response = await axios.post(
+        'https://asl-aviation-server.onrender.com/api/auth/login',
+        {
+          email: adminEmail,
+          password: adminPassword
+        }
+      )
+      const payload = response.data?.data ? response.data.data : response.data
 
-      if (!data || !data.user || !data.token) {
+      if (!payload || !payload.user || !payload.token) {
         setAuthLoginError('Invalid server response. Please try again.')
         setAuthLoginLoading(false)
         return
       }
 
-      if (data.user.role !== 'admin') {
+      if (payload.user.role !== 'admin') {
         setAuthLoginError('Unauthorized. Please use the Student Portal for non-admin accounts.')
         setAuthLoginLoading(false)
         return
@@ -96,28 +155,29 @@ export function AdminPortal() {
 
       login(
         {
-          id: data.user.id,
-          email: data.user.email,
-          role: data.user.role,
-          firstName: data.user.firstName,
-          lastName: data.user.lastName,
-          enrolledCourse: data.user.enrolledCourse,
-          paymentStatus: data.user.paymentStatus,
-          amountDue: data.user.amountDue,
-          amountPaid: data.user.amountPaid,
-          enrollmentDate: data.user.enrollmentDate,
-          phone: data.user.phone,
-          emergencyContact: data.user.emergencyContact,
-          bio: data.user.bio,
-          documentUrl: data.user.documentUrl,
+          id: payload.user.id,
+          email: payload.user.email,
+          role: payload.user.role,
+          firstName: payload.user.firstName,
+          lastName: payload.user.lastName,
+          enrolledCourse: payload.user.enrolledCourse,
+          paymentStatus: payload.user.paymentStatus,
+          amountDue: payload.user.amountDue,
+          amountPaid: payload.user.amountPaid,
+          enrollmentDate: payload.user.enrollmentDate,
+          phone: payload.user.phone,
+          emergencyContact: payload.user.emergencyContact,
+          bio: payload.user.bio,
+          documentUrl: payload.user.documentUrl,
         },
-        data.token
+        payload.token
       )
 
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('user', JSON.stringify(data.user))
+      localStorage.setItem('token', payload.token)
+      localStorage.setItem('userRole', payload.user.role)
+      localStorage.setItem('user', JSON.stringify(payload.user))
 
-      navigate('/admin/dashboard')
+      window.location.href = '/admin'
     } catch (err: any) {
       if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
         setAuthLoginError('Request timed out. The server took too long to respond. Please try again.')
@@ -159,6 +219,9 @@ export function AdminPortal() {
             <p className="text-slate-500 text-sm">
               Private access - Master Key or Admin Login
             </p>
+            {adminData && (
+              <p className="text-xs text-slate-400 mt-2">Token synchronized</p>
+            )}
           </div>
 
           {error && (
