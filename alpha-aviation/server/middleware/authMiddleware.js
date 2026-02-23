@@ -21,9 +21,10 @@ exports.protect = async (req, res, next) => {
     }
 
     try {
-      // Verify token with aligned secret
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'aviation_school_2026');
+      // Verify token with aligned secret (process.env.JWT_SECRET is set in server.js)
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = decoded;
+      console.log('Admin Access Attempt by:', req.user?.email);
       next();
     } catch (error) {
       return res.status(401).json({

@@ -23,10 +23,23 @@ const errorHandler = require('./middleware/errorHandler');
 // Initialize Express app
 const app = express();
 
-// CORS: credentials true required for cookies/auth; exact origins (no wildcard)
+// Bulletproof CORS: allow only ASL domains, support credentials (no wildcards)
+const allowedOrigins = [
+  'https://www.aslaviationschool.co',
+  'https://aslaviationschool.co',
+];
+
 app.use(cors({
-  origin: ['https://www.aslaviationschool.co', 'https://aslaviationschool.co'],
-  credentials: true
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS blocked for this origin'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.options('*', cors());
 
@@ -71,23 +84,24 @@ app.use((req, res) => {
 // Global error handler (must be last)
 app.use(errorHandler);
 
-// Temporary: seed admin user on startup to ensure portal access
+// Temporary: seed admin user on startup to ensure portal access (new Render DB)
 const seedAdmin = async () => {
   try {
-    const adminExists = await User.findOne({ email: 'admin@alpha.com' });
-    if (!adminExists) {
+    const adminEmail = 'admin@alpha.com';
+    const existingAdmin = await User.findOne({ email: adminEmail });
+    if (!existingAdmin) {
       const hashedPassword = await bcrypt.hash('alphaadmin2026', 10);
       await User.create({
-        email: 'admin@alpha.com',
+        firstName: 'Master',
+        lastName: 'Admin',
+        email: adminEmail,
         password: hashedPassword,
         role: 'admin',
-        firstName: 'Admin',
-        lastName: 'User',
       });
-      console.log('✅ Admin User Seeded Successfully');
+      console.log('✅ DATABASE SEEDED: Admin account created.');
     }
   } catch (err) {
-    console.error('⚠️ Failed to seed admin user:', err.message);
+    console.error('❌ Seeding Error:', err);
   }
 };
 

@@ -21,8 +21,8 @@ exports.protect = async (req, res, next) => {
     }
 
     try {
-      // Verify token with aligned secret
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'aviation_school_2026');
+      // Verify token with aligned secret (process.env.JWT_SECRET is set in server.js)
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
       
       // In mock mode, just attach decoded user
       if (global.useMockData) {
@@ -45,6 +45,8 @@ exports.protect = async (req, res, next) => {
         role: user.role,
         email: user.email
       };
+
+      console.log('Admin Access Attempt by:', req.user?.email);
       
       next();
     } catch (error) {

@@ -4,8 +4,11 @@ const { mockAdmin, mockStudents } = require('../utils/mockData');
 
 // Generate JWT token
 const generateToken = (userId) => {
-  // Align JWT secret with a stable default to avoid random secrets breaking tokens
-  const secret = process.env.JWT_SECRET || 'aviation_school_2026';
+  // Use process.env.JWT_SECRET consistently – value is set in server.js for safety
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET is not defined');
+  }
   return jwt.sign({ userId }, secret, {
     expiresIn: '7d'
   });

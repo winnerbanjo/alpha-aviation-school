@@ -20,6 +20,8 @@ exports.adminOnly = async (req, res, next) => {
     // req.user should already be set
     const user = await User.findById(req.user.userId);
 
+    console.log('Admin Access Attempt by:', user?.email);
+
     if (!user) {
       return res.status(404).json({
         success: false,
