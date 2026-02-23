@@ -5,6 +5,7 @@ const API_URL = 'https://asl-aviation-server.onrender.com/api'
 
 const api = axios.create({
   baseURL: import.meta.env.PROD ? API_URL : 'http://localhost:5000/api',
+  // Default timeout: 30s for most of the app
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
@@ -102,14 +103,16 @@ export const uploadPaymentReceipt = async (receiptUrl: string) => {
 
 // Admin API calls
 export const getAdminTest = async () => {
-  const response = await api.get('/admin/test');
-  return response.data;
-};
+  // Admin connection tests are allowed up to 60s to survive Render cold starts
+  const response = await api.get('/admin/test', { timeout: 60000 })
+  return response.data
+}
 
 // Uses baseURL https://asl-aviation-server.onrender.com/api → GET /admin/students (no bugawheels)
 export const getAllStudents = async () => {
   try {
-    const response = await api.get('/admin/students')
+    // Admin dashboard core data: extend timeout to 60s for Render cold starts
+    const response = await api.get('/admin/students', { timeout: 60000 })
     return response.data
   } catch (error: any) {
     // Mock fallback disabled for launch – surface real error
@@ -120,7 +123,8 @@ export const getAllStudents = async () => {
 
 export const getFinancialStats = async () => {
   try {
-    const response = await api.get('/admin/financial-stats')
+    // Financial stats are part of the admin dashboard; allow up to 60s
+    const response = await api.get('/admin/financial-stats', { timeout: 60000 })
     return response.data
   } catch (error: any) {
     // Mock fallback disabled for launch – surface real error
