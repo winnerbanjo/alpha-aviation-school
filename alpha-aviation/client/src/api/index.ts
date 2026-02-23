@@ -54,7 +54,7 @@ api.interceptors.response.use(
 export const login = async (email: string, password: string, config?: AxiosRequestConfig) => {
   try {
     const response = await api.post('/auth/login', { email, password }, config)
-    return response.data
+    return response
   } catch (error: any) {
     // Re-throw with more context for better error handling
     if (error.response) {

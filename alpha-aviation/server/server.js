@@ -7,6 +7,10 @@ require('dotenv').config();
 const JWT_SECRET = process.env.JWT_SECRET || 'alphaadmin2026';
 process.env.JWT_SECRET = JWT_SECRET;
 
+// Models / auth utilities
+const User = require('./models/User');
+const bcrypt = require('bcryptjs');
+
 // Import routes
 const authRoutes = require('./routes/authRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
@@ -67,6 +71,26 @@ app.use((req, res) => {
 // Global error handler (must be last)
 app.use(errorHandler);
 
+// Temporary: seed admin user on startup to ensure portal access
+const seedAdmin = async () => {
+  try {
+    const adminExists = await User.findOne({ email: 'admin@alpha.com' });
+    if (!adminExists) {
+      const hashedPassword = await bcrypt.hash('alphaadmin2026', 10);
+      await User.create({
+        email: 'admin@alpha.com',
+        password: hashedPassword,
+        role: 'admin',
+        firstName: 'Admin',
+        lastName: 'User',
+      });
+      console.log('✅ Admin User Seeded Successfully');
+    }
+  } catch (err) {
+    console.error('⚠️ Failed to seed admin user:', err.message);
+  }
+};
+
 // Connect to MongoDB with aggressive settings
 const connectDB = async () => {
   const atlasURI = process.env.MONGODB_URI;
@@ -109,6 +133,7 @@ const connectDB = async () => {
       console.log('🛫 FLIGHT DECK CONNECTED');
       global.dbConnected = true;
       global.useMockData = false;
+      await seedAdmin();
       return;
     } catch (error) {
       console.log('⚠️  Atlas connection failed, trying local MongoDB...');
@@ -124,6 +149,7 @@ const connectDB = async () => {
     console.log('🛫 FLIGHT DECK CONNECTED (Local)');
     global.dbConnected = true;
     global.useMockData = false;
+    await seedAdmin();
     return;
   } catch (error) {
     console.log('⚠️  Local MongoDB connection failed, using Mock Data mode');
