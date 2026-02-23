@@ -8,7 +8,9 @@ exports.protect = async (req, res, next) => {
 
     // Check for token in Authorization header
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      console.log('Authorization Header:', req.headers.authorization);
       token = req.headers.authorization.split(' ')[1];
+      console.log('Incoming Token:', token);
     }
 
     if (!token) {
@@ -19,8 +21,8 @@ exports.protect = async (req, res, next) => {
     }
 
     try {
-      // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'alpha_secret_2026_vision');
+      // Verify token with aligned secret
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'aviation_school_2026');
       
       // In mock mode, just attach decoded user
       if (global.useMockData) {

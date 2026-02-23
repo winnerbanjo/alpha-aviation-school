@@ -4,7 +4,9 @@ const { mockAdmin, mockStudents } = require('../utils/mockData');
 
 // Generate JWT token
 const generateToken = (userId) => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET || 'alpha_secret_2026_vision', {
+  // Align JWT secret with a stable default to avoid random secrets breaking tokens
+  const secret = process.env.JWT_SECRET || 'aviation_school_2026';
+  return jwt.sign({ userId }, secret, {
     expiresIn: '7d'
   });
 };

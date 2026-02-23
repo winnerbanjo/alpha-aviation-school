@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Landing } from './pages/Landing'
 import { Login } from './pages/Login'
@@ -10,8 +11,23 @@ import { About } from './pages/About'
 import { Contact } from './pages/Contact'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { Layout } from './components/layout/Layout'
+import api from './api'
 
 function App() {
+  useEffect(() => {
+    const controller = new AbortController()
+
+    api
+      .get('/ping', { signal: controller.signal })
+      .catch(() => {
+        // Best-effort wake-up; ignore errors
+      })
+
+    return () => {
+      controller.abort()
+    }
+  }, [])
+
   return (
     <BrowserRouter>
       <Layout>

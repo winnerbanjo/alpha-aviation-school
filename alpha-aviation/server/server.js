@@ -47,6 +47,11 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Simple keep-alive ping route
+app.get('/api/ping', (req, res) => {
+  res.json({ status: 'awake' });
+});
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({
@@ -86,9 +91,9 @@ const connectDB = async () => {
     }
   }
   
-  // Aggressive connection options
+  // Connection options – keep serverSelectionTimeout low to avoid hanging when DB is slow
   const connectionOptions = {
-    serverSelectionTimeoutMS: 45000, // 45 second timeout
+    serverSelectionTimeoutMS: 5000, // 5 second timeout
     tlsAllowInvalidCertificates: true, // Allow invalid TLS certificates
     dbName: 'alpha_aviation'
   };
@@ -110,7 +115,7 @@ const connectDB = async () => {
   // Try local MongoDB
   try {
     const conn = await mongoose.connect(localURI, {
-      serverSelectionTimeoutMS: 45000, // 45 second timeout
+      serverSelectionTimeoutMS: 5000, // 5 second timeout
     });
     console.log('🛫 FLIGHT DECK CONNECTED (Local)');
     global.dbConnected = true;

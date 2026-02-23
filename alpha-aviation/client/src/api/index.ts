@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { type AxiosRequestConfig } from 'axios'
 
 // Hardcoded ASL server – no env override so live site cannot point to old URL
 const API_URL = 'https://asl-aviation-server.onrender.com/api'
@@ -33,10 +33,22 @@ api.interceptors.response.use(
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       localStorage.removeItem('auth-storage')
-      // TEMPORARILY DISABLED so errors stay on screen for debugging (re-enable when stable)
-      // const isAdminRoute = window.location.pathname.includes('/admin')
-      // if (isAdminRoute) { window.location.href = '/admin/portal?session_expired=1' }
-      // else if (!window.location.pathname.includes('/login')) { window.location.href = '/login?session_expired=1' }
+      // Redirect to login on any unauthorized response to avoid stale tokens
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login'
+      }
+    } else if (
+      error.response?.data?.message &&
+      typeof error.response.data.message === 'string' &&
+      error.response.data.message.toLowerCase().includes('not authorized')
+    ) {
+      // Force reset if backend explicitly reports "Not authorized"
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      localStorage.removeItem('auth-storage')
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login'
+      }
     }
     if (!error.response && error.request) {
       // network error – let callers handle
@@ -46,9 +58,9 @@ api.interceptors.response.use(
 )
 
 // Auth API calls
-export const login = async (email: string, password: string) => {
+export const login = async (email: string, password: string, config?: AxiosRequestConfig) => {
   try {
-    const response = await api.post('/auth/login', { email, password })
+    const response = await api.post('/auth/login', { email, password }, config)
     return response.data
   } catch (error: any) {
     // Re-throw with more context for better error handling
@@ -102,17 +114,17 @@ export const uploadPaymentReceipt = async (receiptUrl: string) => {
 }
 
 // Admin API calls
-export const getAdminTest = async () => {
+export const getAdminTest = async (config?: AxiosRequestConfig) => {
   // Admin connection tests are allowed up to 60s to survive Render cold starts
-  const response = await api.get('/admin/test', { timeout: 60000 })
+  const response = await api.get('/admin/test', { timeout: 60000, ...config })
   return response.data
 }
 
 // Uses baseURL https://asl-aviation-server.onrender.com/api → GET /admin/students (no bugawheels)
-export const getAllStudents = async () => {
+export const getAllStudents = async (config?: AxiosRequestConfig) => {
   try {
     // Admin dashboard core data: extend timeout to 60s for Render cold starts
-    const response = await api.get('/admin/students', { timeout: 60000 })
+    const response = await api.get('/admin/students', { timeout: 60000, ...config })
     return response.data
   } catch (error: any) {
     // Mock fallback disabled for launch – surface real error
@@ -121,10 +133,10 @@ export const getAllStudents = async () => {
   }
 }
 
-export const getFinancialStats = async () => {
+export const getFinancialStats = async (config?: AxiosRequestConfig) => {
   try {
     // Financial stats are part of the admin dashboard; allow up to 60s
-    const response = await api.get('/admin/financial-stats', { timeout: 60000 })
+    const response = await api.get('/admin/financial-stats', { timeout: 60000, ...config })
     return response.data
   } catch (error: any) {
     // Mock fallback disabled for launch – surface real error
@@ -132,18 +144,18 @@ export const getFinancialStats = async () => {
   }
 }
 
-export const updatePaymentStatus = async (studentId: string) => {
-  const response = await api.patch(`/admin/students/${studentId}`)
+export const updatePaymentStatus = async (studentId: string, config?: AxiosRequestConfig) => {
+  const response = await api.patch(`/admin/students/${studentId}`, undefined, config)
   return response.data
 }
 
-export const batchUpdatePaymentStatus = async (studentIds: string[]) => {
-  const response = await api.patch('/admin/students/batch-payment', { studentIds })
+export const batchUpdatePaymentStatus = async (studentIds: string[], config?: AxiosRequestConfig) => {
+  const response = await api.patch('/admin/students/batch-payment', { studentIds }, config)
   return response.data
 }
 
-export const updateStudentCourse = async (studentId: string, enrolledCourse: string) => {
-  const response = await api.patch(`/admin/students/${studentId}/course`, { enrolledCourse })
+export const updateStudentCourse = async (studentId: string, enrolledCourse: string, config?: AxiosRequestConfig) => {
+  const response = await api.patch(`/admin/students/${studentId}/course`, { enrolledCourse }, config)
   return response.data
 }
 

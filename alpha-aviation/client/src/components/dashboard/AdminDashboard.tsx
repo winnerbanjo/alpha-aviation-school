@@ -79,8 +79,14 @@ export function AdminDashboard() {
   }, [])
 
   useEffect(() => {
-    fetchStudents()
-    fetchFinancialStats()
+    const controller = new AbortController()
+
+    fetchStudents(controller.signal)
+    fetchFinancialStats(controller.signal)
+
+    return () => {
+      controller.abort()
+    }
   }, [])
 
   // Calculate stats from students array (fallback if API doesn't return data)
@@ -107,12 +113,12 @@ export function AdminDashboard() {
     }
   }, [students, calculatedTotalRevenue, calculatedPendingRevenue, totalRevenue, totalRevenuePendingCalc])
 
-  const fetchStudents = async () => {
+  const fetchStudents = async (signal?: AbortSignal) => {
     setLoading(true)
     setError(null)
     try {
       // Admin students: strictly https://asl-aviation-server.onrender.com/api/admin/students (no bugawheels)
-      const response = await getAllStudents()
+      const response = await getAllStudents({ signal })
       console.log('Admin Data:', response)
       console.log('Backend Response:', response?.data)
       const raw = response?.data?.students ?? response?.students
@@ -120,6 +126,10 @@ export function AdminDashboard() {
       setStudents(list)
       setLastUpdated(new Date())
     } catch (err: any) {
+      // Swallow aborts when user navigates away
+      if (err?.name === 'CanceledError' || err?.code === 'ERR_CANCELED' || err?.name === 'AbortError') {
+        return
+      }
       console.error('Error fetching students:', err)
       const msg = err?.response?.data?.message ?? err?.message ?? 'Failed to load students from server.'
       setError(msg)
@@ -142,12 +152,15 @@ export function AdminDashboard() {
     }
   }
 
-  const fetchFinancialStats = async () => {
+  const fetchFinancialStats = async (signal?: AbortSignal) => {
     try {
-      const response = await getFinancialStats()
+      const response = await getFinancialStats({ signal })
       setTotalRevenue(response?.data?.totalRevenue ?? 0)
       setTotalRevenuePendingCalc(response?.data?.revenuePending ?? 0)
     } catch (err: any) {
+      if (err?.name === 'CanceledError' || err?.code === 'ERR_CANCELED' || err?.name === 'AbortError') {
+        return
+      }
       console.error('Error fetching financial stats:', err)
       if (!error) setError(err?.response?.data?.message || err?.message || 'Failed to load financial stats.')
     }
