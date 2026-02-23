@@ -9,7 +9,6 @@ process.env.JWT_SECRET = JWT_SECRET;
 
 // Models / auth utilities
 const User = require('./models/User');
-const bcrypt = require('bcryptjs');
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
@@ -23,25 +22,16 @@ const errorHandler = require('./middleware/errorHandler');
 // Initialize Express app
 const app = express();
 
-// Bulletproof CORS: allow only ASL domains, support credentials (no wildcards)
 const allowedOrigins = [
   'https://www.aslaviationschool.co',
   'https://aslaviationschool.co',
 ];
 
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('CORS blocked for this origin'));
-    }
-  },
+  origin: allowedOrigins,
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-app.options('*', cors());
 
 // Global flag to track DB connection status
 global.dbConnected = false;
@@ -90,12 +80,11 @@ const seedAdmin = async () => {
     const adminEmail = 'admin@alpha.com';
     const existingAdmin = await User.findOne({ email: adminEmail });
     if (!existingAdmin) {
-      const hashedPassword = await bcrypt.hash('alphaadmin2026', 10);
       await User.create({
         firstName: 'Master',
         lastName: 'Admin',
         email: adminEmail,
-        password: hashedPassword,
+        password: 'alphaadmin2026',
         role: 'admin',
       });
       console.log('✅ DATABASE SEEDED: Admin account created.');

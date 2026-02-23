@@ -4,7 +4,7 @@ import axios, { type AxiosRequestConfig } from 'axios'
 const API_URL = 'https://asl-aviation-server.onrender.com/api'
 
 const api = axios.create({
-  baseURL: import.meta.env.PROD ? API_URL : 'http://localhost:5000/api',
+  baseURL: API_URL,
   // Default timeout: 30s for most of the app
   timeout: 30000,
   headers: {

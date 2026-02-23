@@ -119,8 +119,10 @@ export function AdminDashboard() {
     setError(null)
     setAuthError(false)
     try {
+      const token = localStorage.getItem('token')
+      const headers = token ? { Authorization: `Bearer ${token}` } : undefined
       // Admin students: strictly https://asl-aviation-server.onrender.com/api/admin/students (no bugawheels)
-      const response = await getAllStudents({ signal })
+      const response = await getAllStudents({ signal, headers })
       console.log('Admin Data:', response)
       console.log('Backend Response:', response?.data)
       const raw = response?.data?.students ?? response?.students
@@ -141,7 +143,7 @@ export function AdminDashboard() {
 
       if (status === 401 || message.toLowerCase().includes('not authorized')) {
         setAuthError(true)
-        setError('Authentication Failed. Click the button below to login again.')
+        setError('Auth Failed: Token invalid for new server. Please re-login.')
       } else {
         setError(message)
       }
@@ -154,7 +156,9 @@ export function AdminDashboard() {
     setTestingConnection(true)
     setTestConnectionStatus(null)
     try {
-      const res = await getAdminTest()
+      const token = localStorage.getItem('token')
+      const headers = token ? { Authorization: `Bearer ${token}` } : undefined
+      const res = await getAdminTest({ headers })
       const count = res?.data?.totalStudents ?? res?.totalStudents ?? '—'
       setTestConnectionStatus(`Connected: ${count} students in database`)
     } catch (err: any) {
@@ -166,7 +170,9 @@ export function AdminDashboard() {
 
   const fetchFinancialStats = async (signal?: AbortSignal) => {
     try {
-      const response = await getFinancialStats({ signal })
+      const token = localStorage.getItem('token')
+      const headers = token ? { Authorization: `Bearer ${token}` } : undefined
+      const response = await getFinancialStats({ signal, headers })
       setTotalRevenue(response?.data?.totalRevenue ?? 0)
       setTotalRevenuePendingCalc(response?.data?.revenuePending ?? 0)
     } catch (err: any) {
@@ -174,7 +180,13 @@ export function AdminDashboard() {
         return
       }
       console.error('Error fetching financial stats:', err)
-      if (!error) setError(err?.response?.data?.message || err?.message || 'Failed to load financial stats.')
+      const status = err?.response?.status
+      if (status === 401) {
+        setAuthError(true)
+        setError('Auth Failed: Token invalid for new server. Please re-login.')
+      } else if (!error) {
+        setError(err?.response?.data?.message || err?.message || 'Failed to load financial stats.')
+      }
     }
   }
 
@@ -328,17 +340,17 @@ export function AdminDashboard() {
           <p className="text-sm text-red-600 mt-1">{error}</p>
         </div>
         {authError ? (
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Button
-              onClick={() => {
-                localStorage.clear()
-                window.location.href = '/admin/portal'
-              }}
-              className="rounded-full bg-[#0061FF] text-white"
-            >
-              Click HERE to Login again
-            </Button>
-          </div>
+          <Button
+            onClick={() => {
+              setError(null)
+              setLoading(true)
+              fetchStudents()
+              fetchFinancialStats()
+            }}
+            className="rounded-full bg-[#0061FF] text-white"
+          >
+            Retry
+          </Button>
         ) : (
           <Button
             onClick={() => {
