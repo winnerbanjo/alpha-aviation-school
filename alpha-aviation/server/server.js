@@ -3,6 +3,10 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
+// Hard-code JWT secret for launch safety (also exposed via env)
+const JWT_SECRET = process.env.JWT_SECRET || 'alphaadmin2026';
+process.env.JWT_SECRET = JWT_SECRET;
+
 // Import routes
 const authRoutes = require('./routes/authRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');

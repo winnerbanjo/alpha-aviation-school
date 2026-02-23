@@ -13,13 +13,17 @@ export function AdminPortal() {
   const navigate = useNavigate()
   const { login } = useAuthStore()
   const sessionExpired = searchParams.get('session_expired') === '1'
+  const authFailed = searchParams.get('auth_failed') === '1'
 
   useEffect(() => {
     if (sessionExpired) {
       setError('Session expired. Please log in again.')
       window.history.replaceState({}, '', '/admin/portal')
+    } else if (authFailed) {
+      setError('Authentication Failed. Click HERE to Login again.')
+      window.history.replaceState({}, '', '/admin/portal')
     }
-  }, [sessionExpired])
+  }, [sessionExpired, authFailed])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

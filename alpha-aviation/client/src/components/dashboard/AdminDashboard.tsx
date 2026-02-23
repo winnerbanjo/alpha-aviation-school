@@ -56,6 +56,7 @@ export function AdminDashboard() {
   const [testConnectionStatus, setTestConnectionStatus] = useState<string | null>(null)
   const [testingConnection, setTestingConnection] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [authError, setAuthError] = useState(false)
 
   // Initialize tab from sessionStorage
   useEffect(() => {
@@ -116,6 +117,7 @@ export function AdminDashboard() {
   const fetchStudents = async (signal?: AbortSignal) => {
     setLoading(true)
     setError(null)
+    setAuthError(false)
     try {
       // Admin students: strictly https://asl-aviation-server.onrender.com/api/admin/students (no bugawheels)
       const response = await getAllStudents({ signal })
@@ -131,8 +133,18 @@ export function AdminDashboard() {
         return
       }
       console.error('Error fetching students:', err)
-      const msg = err?.response?.data?.message ?? err?.message ?? 'Failed to load students from server.'
-      setError(msg)
+      const status = err?.response?.status
+      const message: string =
+        err?.response?.data?.message ??
+        err?.message ??
+        'Failed to load students from server.'
+
+      if (status === 401 || message.toLowerCase().includes('not authorized')) {
+        setAuthError(true)
+        setError('Authentication Failed. Click the button below to login again.')
+      } else {
+        setError(message)
+      }
     } finally {
       setLoading(false)
     }
@@ -310,12 +322,36 @@ export function AdminDashboard() {
     return (
       <div className="space-y-6 p-6">
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="font-medium text-red-800">Error loading dashboard</p>
-          <p className="text-sm text-red-600 mt-1">Error: {error}</p>
+          <p className="font-medium text-red-800">
+            {authError ? 'Authentication Failed' : 'Error loading dashboard'}
+          </p>
+          <p className="text-sm text-red-600 mt-1">{error}</p>
         </div>
-        <Button onClick={() => { setError(null); setLoading(true); fetchStudents(); fetchFinancialStats(); }} className="rounded-full bg-[#0061FF] text-white">
-          Retry
-        </Button>
+        {authError ? (
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button
+              onClick={() => {
+                localStorage.clear()
+                window.location.href = '/admin/portal'
+              }}
+              className="rounded-full bg-[#0061FF] text-white"
+            >
+              Click HERE to Login again
+            </Button>
+          </div>
+        ) : (
+          <Button
+            onClick={() => {
+              setError(null)
+              setLoading(true)
+              fetchStudents()
+              fetchFinancialStats()
+            }}
+            className="rounded-full bg-[#0061FF] text-white"
+          >
+            Retry
+          </Button>
+        )}
       </div>
     )
   }

@@ -33,10 +33,6 @@ api.interceptors.response.use(
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       localStorage.removeItem('auth-storage')
-      // Redirect to login on any unauthorized response to avoid stale tokens
-      if (!window.location.pathname.includes('/login')) {
-        window.location.href = '/login'
-      }
     } else if (
       error.response?.data?.message &&
       typeof error.response.data.message === 'string' &&
@@ -46,9 +42,6 @@ api.interceptors.response.use(
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       localStorage.removeItem('auth-storage')
-      if (!window.location.pathname.includes('/login')) {
-        window.location.href = '/login'
-      }
     }
     if (!error.response && error.request) {
       // network error – let callers handle
