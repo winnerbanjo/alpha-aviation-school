@@ -7,6 +7,7 @@ import { Shield, Lock, Building2 } from 'lucide-react'
 import axios from 'axios'
 
 export function AdminPortal() {
+  console.log('LOCAL STORAGE:', localStorage)
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -14,50 +15,10 @@ export function AdminPortal() {
   const [adminPassword, setAdminPassword] = useState('')
   const [authLoginError, setAuthLoginError] = useState('')
   const [authLoginLoading, setAuthLoginLoading] = useState(false)
-  const [adminData, setAdminData] = useState<any>(null)
   const [searchParams] = useSearchParams()
   const { login } = useAuthStore()
   const sessionExpired = searchParams.get('session_expired') === '1'
   const authFailed = searchParams.get('auth_failed') === '1'
-
-  const handleReLogin = () => {
-    localStorage.clear()
-    window.location.href = '/login'
-  }
-
-  useEffect(() => {
-    const fetchAdminData = async () => {
-      try {
-        const token = localStorage.getItem('token')
-
-        if (!token) {
-          handleReLogin()
-          return
-        }
-
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-
-        const response = await axios.get(
-          'https://asl-aviation-server.onrender.com/api/admin',
-          config
-        )
-
-        setAdminData(response.data)
-      } catch (error: any) {
-        console.error('Admin fetch error:', error)
-
-        if (error.response && error.response.status === 401) {
-          handleReLogin()
-        }
-      }
-    }
-
-    fetchAdminData()
-  }, [])
 
   useEffect(() => {
     if (sessionExpired) {
@@ -118,7 +79,7 @@ export function AdminPortal() {
       localStorage.setItem('userRole', role)
       localStorage.setItem('user', JSON.stringify(userData))
 
-      window.location.href = '/admin'
+      window.location.href = '/admin/dashboard'
     } catch (err: any) {
       setError(err?.response?.data?.message || 'Invalid password. Access denied.')
     } finally {
@@ -177,7 +138,7 @@ export function AdminPortal() {
       localStorage.setItem('userRole', payload.user.role)
       localStorage.setItem('user', JSON.stringify(payload.user))
 
-      window.location.href = '/admin'
+      window.location.href = '/admin/dashboard'
     } catch (err: any) {
       if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
         setAuthLoginError('Request timed out. The server took too long to respond. Please try again.')
@@ -219,9 +180,6 @@ export function AdminPortal() {
             <p className="text-slate-500 text-sm">
               Private access - Master Key or Admin Login
             </p>
-            {adminData && (
-              <p className="text-xs text-slate-400 mt-2">Token synchronized</p>
-            )}
           </div>
 
           {error && (

@@ -37,8 +37,8 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/admin" element={<Navigate to="/admin/portal" replace />} />
-          <Route path="/admin/portal" element={<AdminPortal />} />
+          <Route path="/admin" element={<AdminPortal />} />
+          <Route path="/admin/portal" element={<Navigate to="/admin" replace />} />
           <Route path="/enroll" element={<Enroll />} />
           <Route path="/registration-success" element={<RegistrationSuccess />} />
           {/* Student Dashboard - Default /dashboard route */}

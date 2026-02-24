@@ -12,13 +12,11 @@ export function Login() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { login } = useAuthStore()
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  
+  const handleLogin = async () => {
     setLoading(true)
     setError('')
 
-    // Validate input
     if (!email || !password) {
       setError('Please provide both email and password')
       setLoading(false)
@@ -40,7 +38,6 @@ export function Login() {
       const role = userData?.role
 
       if (!token || !userData || !role) {
-        console.error('Invalid response structure:', response.data)
         setError('Invalid server response. Please try again.')
         setLoading(false)
         return
@@ -71,30 +68,11 @@ export function Login() {
       localStorage.setItem('user', JSON.stringify(userData))
 
       console.log('Token saved:', token)
-      console.log('Role saved:', role)
 
-      window.location.href = '/admin'
-    } catch (err: any) {
-      if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
-        setError('Request timed out. The server took too long to respond. Please try again.')
-      } else if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
-        setError('Server Unreachable: Cannot connect to backend. Check if server is running.')
-      } else if (err.response?.status === 400) {
-        setError('Invalid Email: Please check your email format.')
-      } else if (err.response?.status === 401) {
-        const errorMsg = err.response?.data?.message || 'Wrong Password: Invalid credentials.'
-        if (errorMsg.toLowerCase().includes('email')) {
-          setError('Invalid Email: Email not found in system.')
-        } else if (errorMsg.toLowerCase().includes('password')) {
-          setError('Wrong Password: Password is incorrect.')
-        } else {
-          setError(errorMsg)
-        }
-      } else if (err.response?.status === 500) {
-        setError('Server Error: Internal server error. Please try again later.')
-      } else {
-        setError(err.response?.data?.message || 'Login failed. Please check your credentials and try again.')
-      }
+      window.location.href = role === 'admin' ? '/admin/dashboard' : '/dashboard'
+    } catch (error: any) {
+      console.error(error)
+      setError(error?.response?.data?.message || 'Login failed.')
     } finally {
       setLoading(false)
     }
@@ -143,7 +121,7 @@ export function Login() {
                 </motion.div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={(e) => { e.preventDefault(); handleLogin() }} className="space-y-5">
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-slate-900 mb-2">
                     Email
