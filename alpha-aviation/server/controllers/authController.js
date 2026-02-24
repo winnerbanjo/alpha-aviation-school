@@ -131,7 +131,7 @@ exports.login = async (req, res, next) => {
     // Mock mode login
     if (global.useMockData) {
       // Check for admin
-      if (email === 'admin@alpha.com' && password === 'password123') {
+      if (email === 'admin@alpha.com' && (password === 'password123' || password === 'alphaadmin2026')) {
         const token = generateToken(mockAdmin._id);
         return res.status(200).json({
           success: true,
@@ -193,7 +193,7 @@ exports.login = async (req, res, next) => {
 
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials (Mock Mode - Use: admin@alpha.com or student1@alpha.com / password123)'
+        message: 'Invalid credentials (Mock Mode - Use: admin@alpha.com / alphaadmin2026, or student1@alpha.com / password123)'
       });
     }
 

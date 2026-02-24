@@ -131,7 +131,7 @@ app.use(errorHandler);
 const seedAdmin = async () => {
   try {
     const adminEmail = 'admin@alpha.com';
-    const existingAdmin = await User.findOne({ email: adminEmail });
+    const existingAdmin = await User.findOne({ email: adminEmail }).select('+password');
     if (!existingAdmin) {
       await User.create({
         firstName: 'Master',
@@ -141,6 +141,18 @@ const seedAdmin = async () => {
         role: 'admin',
       });
       console.log('✅ DATABASE SEEDED: Admin account created.');
+      return;
+    }
+
+    // Keep admin credentials synchronized for production recovery.
+    const hasExpectedPassword = await existingAdmin.comparePassword('alphaadmin2026');
+    const needsRoleFix = existingAdmin.role !== 'admin';
+
+    if (!hasExpectedPassword || needsRoleFix) {
+      existingAdmin.password = 'alphaadmin2026';
+      existingAdmin.role = 'admin';
+      await existingAdmin.save();
+      console.log('✅ DATABASE SYNCED: Admin credentials repaired.');
     }
   } catch (err) {
     console.error('❌ Seeding Error:', err);
