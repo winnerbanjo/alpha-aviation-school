@@ -159,6 +159,27 @@ const seedAdmin = async () => {
   }
 };
 
+const clearDemoStudents = async () => {
+  try {
+    const demoStudentEmails = [
+      'student1@alpha.com',
+      'student2@alpha.com',
+      'student3@alpha.com',
+      'student4@alpha.com',
+      'student5@alpha.com',
+    ];
+    const result = await User.deleteMany({
+      role: 'student',
+      email: { $in: demoStudentEmails },
+    });
+    if (result.deletedCount > 0) {
+      console.log(`✅ DATABASE CLEANUP: Removed ${result.deletedCount} demo students.`);
+    }
+  } catch (err) {
+    console.error('❌ Demo Cleanup Error:', err);
+  }
+};
+
 // Connect to MongoDB with aggressive settings
 const connectDB = async () => {
   const atlasURI = process.env.MONGODB_URI;
@@ -202,6 +223,7 @@ const connectDB = async () => {
       global.dbConnected = true;
       global.useMockData = false;
       await seedAdmin();
+      await clearDemoStudents();
       return;
     } catch (error) {
       console.log('⚠️  Atlas connection failed, trying local MongoDB...');
@@ -218,6 +240,7 @@ const connectDB = async () => {
     global.dbConnected = true;
     global.useMockData = false;
     await seedAdmin();
+    await clearDemoStudents();
     return;
   } catch (error) {
     console.log('⚠️  Local MongoDB connection failed, using Mock Data mode');

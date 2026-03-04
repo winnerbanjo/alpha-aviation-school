@@ -40,6 +40,12 @@ const courses = [
 ]
 
 type AdminTab = 'overview' | 'students' | 'revenue'
+const formatNaira = (amount: number) =>
+  new Intl.NumberFormat('en-NG', {
+    style: 'currency',
+    currency: 'NGN',
+    maximumFractionDigits: 0,
+  }).format(amount || 0)
 
 export function AdminDashboard() {
   const [students, setStudents] = useState<Student[]>([])
@@ -262,7 +268,7 @@ export function AdminDashboard() {
     const amountDue = student.amountDue || 0
     
     const message = encodeURIComponent(
-      `Hello ${studentName}, this is Alpha Step Links Aviation School. A reminder of your balance: $${amountDue.toLocaleString()}. ` +
+      `Hello ${studentName}, this is Alpha Step Links Aviation School. A reminder of your balance: ${formatNaira(amountDue)}. ` +
       `Please complete your payment to continue your training program. Thank you!`
     )
     
@@ -472,7 +478,7 @@ export function AdminDashboard() {
                 <div>
                   <p className="text-sm text-slate-500 mb-1">Revenue Pending</p>
                   <p className="text-3xl font-bold tracking-tight text-slate-900">
-                    ${displayPendingRevenue.toLocaleString()}
+                    {formatNaira(displayPendingRevenue)}
                   </p>
                 </div>
                 <div className="p-3 bg-[#007bff] rounded-lg">
@@ -494,7 +500,7 @@ export function AdminDashboard() {
                 <div>
                   <p className="text-sm text-slate-500 mb-1">Total Revenue</p>
                   <p className="text-3xl font-bold tracking-tight text-slate-900">
-                    ${displayTotalRevenue.toLocaleString()}
+                    {formatNaira(displayTotalRevenue)}
                   </p>
                 </div>
                 <div className="p-3 bg-green-100 rounded-lg">
@@ -721,7 +727,7 @@ export function AdminDashboard() {
                 <div>
                   <p className="text-sm text-slate-500 mb-1">Total Revenue</p>
                   <p className="text-3xl font-bold tracking-tight text-slate-900">
-                    ${displayTotalRevenue.toLocaleString()}
+                    {formatNaira(displayTotalRevenue)}
                   </p>
                 </div>
                 <div className="p-3 bg-green-100 rounded-lg">
@@ -740,7 +746,7 @@ export function AdminDashboard() {
                 <div>
                   <p className="text-sm text-slate-500 mb-1">Pending Revenue</p>
                   <p className="text-3xl font-bold tracking-tight text-slate-900">
-                    ${displayPendingRevenue.toLocaleString()}
+                    {formatNaira(displayPendingRevenue)}
                   </p>
                 </div>
                 <div className="p-3 bg-[#007bff] rounded-lg">

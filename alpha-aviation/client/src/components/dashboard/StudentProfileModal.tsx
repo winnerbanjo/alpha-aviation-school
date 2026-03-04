@@ -37,6 +37,12 @@ export function StudentProfileModal({
   onAdminClearanceChange
 }: StudentProfileModalProps) {
   const [adminClearance, setAdminClearance] = useState(student?.adminClearance || false)
+  const formatNaira = (amount: number) =>
+    new Intl.NumberFormat('en-NG', {
+      style: 'currency',
+      currency: 'NGN',
+      maximumFractionDigits: 0,
+    }).format(amount || 0)
 
   useEffect(() => {
     if (student) {
@@ -131,12 +137,12 @@ export function StudentProfileModal({
                   </Badge>
                   {student.paymentStatus === 'Pending' && (
                     <span className="text-sm font-medium text-slate-900">
-                      ${student.amountDue.toLocaleString()} due
+                      {formatNaira(student.amountDue)} due
                     </span>
                   )}
                   {student.paymentStatus === 'Paid' && student.amountPaid && (
                     <span className="text-sm font-medium text-green-600">
-                      ${student.amountPaid.toLocaleString()} paid
+                      {formatNaira(student.amountPaid)} paid
                     </span>
                   )}
                 </div>

@@ -1,11 +1,10 @@
 const User = require('../models/User');
-const { mockStudents, getMockFinancialStats } = require('../utils/mockData');
 
 // Test connection: returns total student count from MongoDB (Admin Only)
 exports.getTest = async (req, res, next) => {
   try {
     const totalStudents = global.useMockData
-      ? mockStudents.length
+      ? 0
       : await User.countDocuments({ role: 'student' });
     res.status(200).json({
       success: true,
@@ -23,9 +22,9 @@ exports.getAllStudents = async (req, res, next) => {
     if (global.useMockData) {
       return res.status(200).json({
         success: true,
-        count: mockStudents.length,
+        count: 0,
         data: {
-          students: mockStudents
+          students: []
         }
       });
     }
@@ -43,14 +42,13 @@ exports.getAllStudents = async (req, res, next) => {
       }
     });
   } catch (error) {
-    // Fallback to mock data on error; always return an array
-    const list = Array.isArray(mockStudents) ? mockStudents : [];
-    res.status(200).json({
+    res.status(503).json({
       success: true,
-      count: list.length,
+      count: 0,
       data: {
-        students: list
-      }
+        students: []
+      },
+      message: 'Database unavailable. No demo data returned.'
     });
   }
 };
@@ -59,10 +57,12 @@ exports.getAllStudents = async (req, res, next) => {
 exports.getFinancialStats = async (req, res, next) => {
   try {
     if (global.useMockData) {
-      const stats = getMockFinancialStats();
       return res.status(200).json({
         success: true,
-        data: stats
+        data: {
+          totalRevenue: 0,
+          revenuePending: 0
+        }
       });
     }
 
@@ -89,11 +89,13 @@ exports.getFinancialStats = async (req, res, next) => {
       }
     });
   } catch (error) {
-    // Fallback to mock data on error
-    const stats = getMockFinancialStats();
-    res.status(200).json({
+    res.status(503).json({
       success: true,
-      data: stats
+      data: {
+        totalRevenue: 0,
+        revenuePending: 0
+      },
+      message: 'Database unavailable. No demo data returned.'
     });
   }
 };
@@ -104,37 +106,9 @@ exports.updatePaymentStatus = async (req, res, next) => {
     const { id } = req.params;
 
     if (global.useMockData) {
-      // Find mock student and toggle status
-      const student = mockStudents.find(s => s._id === id);
-      if (!student) {
-        return res.status(404).json({
-          success: false,
-          message: 'Student not found'
-        });
-      }
-      
-      student.paymentStatus = student.paymentStatus === 'Pending' ? 'Paid' : 'Pending';
-      if (student.paymentStatus === 'Paid') {
-        student.amountPaid = student.amountDue;
-        student.amountDue = 0;
-      }
-
-      return res.status(200).json({
-        success: true,
-        message: 'Payment status updated successfully (Mock Mode)',
-        data: {
-          student: {
-            id: student._id,
-            email: student.email,
-            firstName: student.firstName,
-            lastName: student.lastName,
-            enrolledCourse: student.enrolledCourse,
-            paymentStatus: student.paymentStatus,
-            amountDue: student.amountDue,
-            amountPaid: student.amountPaid,
-            enrollmentDate: student.enrollmentDate
-          }
-        }
+      return res.status(503).json({
+        success: false,
+        message: 'Database unavailable. Demo mode is disabled for admin actions.'
       });
     }
 
@@ -200,19 +174,9 @@ exports.batchUpdatePaymentStatus = async (req, res, next) => {
     }
 
     if (global.useMockData) {
-      const updated = mockStudents.filter(s => studentIds.includes(s._id));
-      updated.forEach(student => {
-        student.paymentStatus = 'Paid';
-        student.amountPaid = student.amountDue;
-        student.amountDue = 0;
-      });
-
-      return res.status(200).json({
-        success: true,
-        message: `Payment status updated for ${updated.length} students (Mock Mode)`,
-        data: {
-          count: updated.length
-        }
+      return res.status(503).json({
+        success: false,
+        message: 'Database unavailable. Demo mode is disabled for admin actions.'
       });
     }
 
@@ -249,26 +213,9 @@ exports.updateStudentCourse = async (req, res, next) => {
     const { enrolledCourse } = req.body;
 
     if (global.useMockData) {
-      const student = mockStudents.find(s => s._id === id);
-      if (!student) {
-        return res.status(404).json({
-          success: false,
-          message: 'Student not found'
-        });
-      }
-      
-      student.enrolledCourse = enrolledCourse;
-
-      return res.status(200).json({
-        success: true,
-        message: 'Student course updated successfully (Mock Mode)',
-        data: {
-          student: {
-            id: student._id,
-            email: student.email,
-            enrolledCourse: student.enrolledCourse
-          }
-        }
+      return res.status(503).json({
+        success: false,
+        message: 'Database unavailable. Demo mode is disabled for admin actions.'
       });
     }
 

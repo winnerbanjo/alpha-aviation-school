@@ -55,6 +55,12 @@ export function StudentDashboard() {
 
   const isPending = user?.paymentStatus === 'Pending'
   const amountDue = user?.amountDue || 0
+  const formatNaira = (amount: number) =>
+    new Intl.NumberFormat('en-NG', {
+      style: 'currency',
+      currency: 'NGN',
+      maximumFractionDigits: 0,
+    }).format(amount || 0)
   const enrollmentDate = user?.enrollmentDate 
     ? new Date(user.enrollmentDate).toLocaleDateString('en-US', { 
         year: 'numeric', 
@@ -269,7 +275,7 @@ export function StudentDashboard() {
                         Amount Due
                       </span>
                       <span className="text-3xl font-bold tracking-tighter text-slate-900">
-                        ${amountDue.toLocaleString()}.00
+                        {formatNaira(amountDue)}
                       </span>
                     </div>
                     <div className="p-4 bg-[#007bff] border border-[#007bff] rounded-lg">

@@ -14,6 +14,12 @@ interface PaymentModalProps {
 export function PaymentModal({ isOpen, onClose, amountDue = 0, userEmail = '' }: PaymentModalProps) {
   const [copied, setCopied] = useState(false)
   const [receiptUploaded, setReceiptUploaded] = useState(false)
+  const formatNaira = (amount: number) =>
+    new Intl.NumberFormat('en-NG', {
+      style: 'currency',
+      currency: 'NGN',
+      maximumFractionDigits: 0,
+    }).format(amount || 0)
 
   const bankDetails = {
     accountName: 'Alpha Step Links Aviation School',
@@ -56,7 +62,7 @@ export function PaymentModal({ isOpen, onClose, amountDue = 0, userEmail = '' }:
           <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg">
             <p className="text-sm text-slate-500 mb-1">Amount Due</p>
             <p className="text-3xl font-bold tracking-tight text-slate-900">
-              ${amountDue.toLocaleString()}.00
+              {formatNaira(amountDue)}
             </p>
           </div>
         )}
