@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { MapPin, Phone, Mail, Send } from 'lucide-react'
+import { sendContactMessage } from '@/api'
 
 export function Contact() {
   const [formData, setFormData] = useState({
@@ -12,16 +13,23 @@ export function Contact() {
     message: ''
   })
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // In production, this would send to your backend
-    console.log('Form submitted:', formData)
-    setSubmitted(true)
-    setTimeout(() => {
-      setSubmitted(false)
+    setLoading(true)
+    setError('')
+    try {
+      await sendContactMessage(formData)
+      setSubmitted(true)
       setFormData({ name: '', email: '', phone: '', message: '' })
-    }, 3000)
+      setTimeout(() => setSubmitted(false), 3000)
+    } catch (err: any) {
+      setError(err?.response?.data?.message || 'Failed to send message. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -64,6 +72,11 @@ export function Contact() {
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-4">
+                    {error && (
+                      <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+                        {error}
+                      </div>
+                    )}
                     <div>
                       <label htmlFor="name" className="block text-sm font-medium text-slate-900 mb-2">
                         Full Name
@@ -122,11 +135,11 @@ export function Contact() {
                     </div>
                     <Button
                       type="submit"
-                      disabled={submitted}
+                      disabled={submitted || loading}
                       className="w-full rounded-full bg-[#0061FF] hover:bg-[#0052E6] text-white"
                     >
                       <Send className="w-4 h-4 mr-2" />
-                      {submitted ? 'Message Sent!' : 'Send Message'}
+                      {submitted ? 'Message Sent!' : loading ? 'Sending...' : 'Send Message'}
                     </Button>
                   </form>
                 </CardContent>
@@ -163,7 +176,7 @@ export function Contact() {
                       </div>
                       <div>
                         <h3 className="text-sm font-medium text-slate-900 mb-1">Phone No</h3>
-                        <p className="text-slate-500">02013306373</p>
+                        <p className="text-slate-500">0814 025 7174</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">

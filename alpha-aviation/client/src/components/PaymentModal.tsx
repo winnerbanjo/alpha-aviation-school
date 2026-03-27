@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { DollarSign, Copy, CheckCircle2, Upload } from 'lucide-react'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { uploadPaymentReceipt } from '@/api'
 
 interface PaymentModalProps {
   isOpen: boolean
@@ -14,6 +15,7 @@ interface PaymentModalProps {
 export function PaymentModal({ isOpen, onClose, amountDue = 0, userEmail = '' }: PaymentModalProps) {
   const [copied, setCopied] = useState(false)
   const [receiptUploaded, setReceiptUploaded] = useState(false)
+  const [uploadingReceipt, setUploadingReceipt] = useState(false)
   const formatNaira = (amount: number) =>
     new Intl.NumberFormat('en-NG', {
       style: 'currency',
@@ -34,12 +36,34 @@ export function PaymentModal({ isOpen, onClose, amountDue = 0, userEmail = '' }:
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const handleReceiptUpload = () => {
-    setReceiptUploaded(true)
-    setTimeout(() => {
-      setReceiptUploaded(false)
-      onClose()
-    }, 3000)
+  const fileToDataUrl = (file: File) =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(String(reader.result || ''))
+      reader.onerror = () => reject(new Error('Failed to read file'))
+      reader.readAsDataURL(file)
+    })
+
+  const handleReceiptUpload = async (file: File) => {
+    if (!file.type.startsWith('image/') && !file.type.includes('pdf')) {
+      alert('Please upload an image file (JPG, PNG) or PDF')
+      return
+    }
+
+    try {
+      setUploadingReceipt(true)
+      const encodedReceipt = await fileToDataUrl(file)
+      await uploadPaymentReceipt(encodedReceipt)
+      setReceiptUploaded(true)
+      setTimeout(() => {
+        setReceiptUploaded(false)
+        onClose()
+      }, 3000)
+    } catch (error: any) {
+      alert(error?.response?.data?.message || 'Failed to upload receipt. Please try again.')
+    } finally {
+      setUploadingReceipt(false)
+    }
   }
 
   return (
@@ -136,13 +160,24 @@ export function PaymentModal({ isOpen, onClose, amountDue = 0, userEmail = '' }:
 
         {/* Upload Receipt */}
         {!receiptUploaded ? (
-          <Button
-            onClick={handleReceiptUpload}
-            className="w-full rounded-lg bg-[#0061FF] hover:bg-[#0052E6] text-white transition-all hover:scale-[1.02]"
-          >
-            <Upload className="w-4 h-4 mr-2" />
-            Upload Receipt
-          </Button>
+          <label className="block">
+            <input
+              type="file"
+              accept="image/*,.pdf"
+              className="hidden"
+              disabled={uploadingReceipt}
+              onChange={(e) => {
+                const file = e.target.files?.[0]
+                if (file) {
+                  handleReceiptUpload(file)
+                }
+              }}
+            />
+            <div className="w-full rounded-lg bg-[#0061FF] hover:bg-[#0052E6] text-white transition-all hover:scale-[1.02] cursor-pointer px-4 py-2.5 flex items-center justify-center">
+              <Upload className="w-4 h-4 mr-2" />
+              {uploadingReceipt ? 'Uploading Receipt...' : 'Upload Receipt'}
+            </div>
+          </label>
         ) : (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}

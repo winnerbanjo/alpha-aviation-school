@@ -5,7 +5,7 @@ export function TopBar() {
         <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-2 sm:gap-4 text-xs text-slate-300">
           <span>📍 7 Chief Tajudeen Odubiyi St, Ilasamaja, Lagos</span>
           <span className="hidden sm:inline">|</span>
-          <span>📞 02013306373</span>
+          <span>📞 0814 025 7174</span>
           <span className="hidden sm:inline">|</span>
           <span>📧 info@alphasteplinksaviationschool.com</span>
         </div>

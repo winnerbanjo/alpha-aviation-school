@@ -1,5 +1,15 @@
 const User = require('../models/User');
 
+const getStudentValue = (student) => {
+  if ((student.amountPaid || 0) > 0) return student.amountPaid || 0;
+  if ((student.amountDue || 0) > 0) return student.amountDue || 0;
+  if ((student.totalCoursePrice || 0) > 0) return student.totalCoursePrice || 0;
+  if (Array.isArray(student.courseSelections)) {
+    return student.courseSelections.reduce((sum, course) => sum + (course.price || 0), 0);
+  }
+  return 0;
+};
+
 // Test connection: returns total student count from MongoDB (Admin Only)
 exports.getTest = async (req, res, next) => {
   try {
@@ -68,18 +78,13 @@ exports.getFinancialStats = async (req, res, next) => {
 
     const students = await User.find({ role: 'student' });
     
-    // Calculate total revenue from all paid students (use amountPaid if available, otherwise amountDue)
     const totalRevenue = students
       .filter((s) => s.paymentStatus === 'Paid')
-      .reduce((sum, s) => {
-        // If amountPaid exists, use it; otherwise use the original amountDue
-        const paidAmount = s.amountPaid || (s.amountDue > 0 ? s.amountDue : 0);
-        return sum + paidAmount;
-      }, 0);
+      .reduce((sum, s) => sum + getStudentValue(s), 0);
     
     const revenuePending = students
       .filter((s) => s.paymentStatus === 'Pending')
-      .reduce((sum, s) => sum + s.amountDue, 0);
+      .reduce((sum, s) => sum + getStudentValue(s), 0);
 
     res.status(200).json({
       success: true,

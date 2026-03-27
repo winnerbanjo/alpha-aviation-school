@@ -9,6 +9,7 @@ process.env.JWT_SECRET = JWT_SECRET;
 
 // Models / auth utilities
 const User = require('./models/User');
+const { buildCourseSelections, getTotalCoursePrice } = require('./utils/courseCatalog');
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
@@ -180,6 +181,90 @@ const clearDemoStudents = async () => {
   }
 };
 
+const generateStudentIdNumber = async () => {
+  let studentIdNumber = '';
+  let exists = true;
+
+  while (exists) {
+    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+    studentIdNumber = `ASL-${new Date().getFullYear()}-${randomSuffix}`;
+    exists = await User.exists({ studentIdNumber });
+  }
+
+  return studentIdNumber;
+};
+
+const repairStudentRecords = async () => {
+  try {
+    const students = await User.find({ role: 'student' });
+    let repairedCount = 0;
+
+    for (const student of students) {
+      let changed = false;
+
+      const normalizedSelectedCourses = Array.isArray(student.selectedCourses) && student.selectedCourses.length > 0
+        ? [...new Set(student.selectedCourses.filter(Boolean))].slice(0, 4)
+        : [student.enrolledCourse].filter(Boolean);
+
+      if (
+        normalizedSelectedCourses.length > 0 &&
+        JSON.stringify(normalizedSelectedCourses) !== JSON.stringify(student.selectedCourses || [])
+      ) {
+        student.selectedCourses = normalizedSelectedCourses;
+        changed = true;
+      }
+
+      const computedCourseSelections = buildCourseSelections(normalizedSelectedCourses);
+      const currentCourseSelections = Array.isArray(student.courseSelections) ? student.courseSelections : [];
+      if (
+        computedCourseSelections.length > 0 &&
+        JSON.stringify(computedCourseSelections) !== JSON.stringify(currentCourseSelections)
+      ) {
+        student.courseSelections = computedCourseSelections;
+        changed = true;
+      }
+
+      const computedTotalCoursePrice = getTotalCoursePrice(computedCourseSelections);
+      if (computedTotalCoursePrice > 0 && computedTotalCoursePrice !== (student.totalCoursePrice || 0)) {
+        student.totalCoursePrice = computedTotalCoursePrice;
+        changed = true;
+      }
+
+      if (computedTotalCoursePrice > 0) {
+        if (student.paymentStatus === 'Paid') {
+          if ((student.amountPaid || 0) === 0) {
+            student.amountPaid = computedTotalCoursePrice;
+            changed = true;
+          }
+          if ((student.amountDue || 0) !== 0) {
+            student.amountDue = 0;
+            changed = true;
+          }
+        } else if ((student.amountDue || 0) === 0) {
+          student.amountDue = computedTotalCoursePrice;
+          changed = true;
+        }
+      }
+
+      if (!student.studentIdNumber) {
+        student.studentIdNumber = await generateStudentIdNumber();
+        changed = true;
+      }
+
+      if (changed) {
+        await student.save();
+        repairedCount += 1;
+      }
+    }
+
+    if (repairedCount > 0) {
+      console.log(`DATABASE REPAIR: Updated ${repairedCount} student record(s).`);
+    }
+  } catch (err) {
+    console.error('Student Repair Error:', err);
+  }
+};
+
 // Connect to MongoDB with aggressive settings
 const connectDB = async () => {
   const atlasURI = process.env.MONGODB_URI;
@@ -224,6 +309,7 @@ const connectDB = async () => {
       global.useMockData = false;
       await seedAdmin();
       await clearDemoStudents();
+      await repairStudentRecords();
       return;
     } catch (error) {
       console.log('⚠️  Atlas connection failed, trying local MongoDB...');
@@ -241,6 +327,7 @@ const connectDB = async () => {
     global.useMockData = false;
     await seedAdmin();
     await clearDemoStudents();
+    await repairStudentRecords();
     return;
   } catch (error) {
     console.log('⚠️  Local MongoDB connection failed, using Mock Data mode');

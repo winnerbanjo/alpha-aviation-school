@@ -21,54 +21,11 @@ export function AdminLogin() {
     setError('')
 
     try {
-      // FORCE ADMIN LOGIN - Recognize admin@alpha.com immediately
-      if (email.toLowerCase() === 'admin@alpha.com' && password === 'password123') {
-        try {
-          const response = await loginAPI(email, password)
-          const { data } = response
-          
-          // Only allow admin login on this page - strict check
-          if (data.user.role !== 'admin') {
-            setError('Unauthorized. Please use the Student Portal.')
-            setLoading(false)
-            return
-          }
-          
-          login(
-            {
-              id: data.user.id,
-              email: data.user.email,
-              role: data.user.role,
-              firstName: data.user.firstName,
-              lastName: data.user.lastName,
-              enrolledCourse: data.user.enrolledCourse,
-              paymentStatus: data.user.paymentStatus,
-              amountDue: data.user.amountDue,
-              amountPaid: data.user.amountPaid,
-              enrollmentDate: data.user.enrollmentDate,
-              phone: data.user.phone,
-              emergencyContact: data.user.emergencyContact,
-              bio: data.user.bio,
-              documentUrl: data.user.documentUrl,
-            },
-            data.token
-          )
-
-          navigate('/admin/dashboard')
-          return
-        } catch (apiError) {
-          // If API fails but credentials match, still redirect (mock mode fallback)
-          console.log('API call failed, but admin credentials detected - redirecting anyway')
-          navigate('/admin/dashboard')
-          return
-        }
-      }
-
       const response = await loginAPI(email, password)
-      const { data } = response
+      const payload = response.data?.data ? response.data.data : response.data
       
       // Only allow admin login on this page - strict check
-      if (data.user.role !== 'admin') {
+      if (payload.user.role !== 'admin') {
         setError('Unauthorized. Please use the Student Portal.')
         setLoading(false)
         return
@@ -76,23 +33,35 @@ export function AdminLogin() {
       
       login(
         {
-          id: data.user.id,
-          email: data.user.email,
-          role: data.user.role,
-          firstName: data.user.firstName,
-          lastName: data.user.lastName,
-          enrolledCourse: data.user.enrolledCourse,
-          paymentStatus: data.user.paymentStatus,
-          amountDue: data.user.amountDue,
-          amountPaid: data.user.amountPaid,
-          enrollmentDate: data.user.enrollmentDate,
-          phone: data.user.phone,
-          emergencyContact: data.user.emergencyContact,
-          bio: data.user.bio,
-          documentUrl: data.user.documentUrl,
+          id: payload.user.id,
+          email: payload.user.email,
+          role: payload.user.role,
+          firstName: payload.user.firstName,
+          lastName: payload.user.lastName,
+          enrolledCourse: payload.user.enrolledCourse,
+          selectedCourses: payload.user.selectedCourses,
+          courseSelections: payload.user.courseSelections,
+          paymentStatus: payload.user.paymentStatus,
+          amountDue: payload.user.amountDue,
+          amountPaid: payload.user.amountPaid,
+          totalCoursePrice: payload.user.totalCoursePrice,
+          enrollmentDate: payload.user.enrollmentDate,
+          phone: payload.user.phone,
+          emergencyContact: payload.user.emergencyContact,
+          bio: payload.user.bio,
+          documentUrl: payload.user.documentUrl,
+          paymentMethod: payload.user.paymentMethod,
+          trainingMethod: payload.user.trainingMethod,
+          status: payload.user.status,
+          paymentReceiptUrl: payload.user.paymentReceiptUrl,
+          studentIdNumber: payload.user.studentIdNumber,
         },
-        data.token
+        payload.token
       )
+
+      localStorage.setItem('token', payload.token)
+      localStorage.setItem('userRole', payload.user.role)
+      localStorage.setItem('user', JSON.stringify(payload.user))
 
       navigate('/admin/dashboard')
     } catch (err: any) {

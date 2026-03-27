@@ -8,9 +8,12 @@ interface User {
   firstName?: string
   lastName?: string
   enrolledCourse?: string
+  selectedCourses?: string[]
+  courseSelections?: Array<{ title: string; price: number }>
   paymentStatus?: 'Pending' | 'Paid'
   amountDue?: number
   amountPaid?: number
+  totalCoursePrice?: number
   enrollmentDate?: string
   phone?: string
   emergencyContact?: string
@@ -21,6 +24,7 @@ interface User {
   trainingMethod?: string[]
   status?: string
   paymentReceiptUrl?: string
+  studentIdNumber?: string
 }
 
 interface AuthState {

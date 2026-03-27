@@ -26,7 +26,7 @@ export function ProfileDashboard() {
     try {
       setLoading(true)
       const response = await updateStudentProfile(phone, bio, emergencyContact)
-      setUser(response.data.user)
+      setUser({ ...(user || {}), ...response.data.user })
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     } catch (error) {
@@ -35,6 +35,49 @@ export function ProfileDashboard() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleDownloadIdCard = () => {
+    if (!user) {
+      return
+    }
+
+    const studentName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Student'
+    const courseLabel = (user.selectedCourses && user.selectedCourses.length > 0)
+      ? user.selectedCourses.slice(0, 2).join(' | ')
+      : user.enrolledCourse || 'Aviation Student'
+    const studentIdNumber = user.studentIdNumber || 'PENDING-ID'
+
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="920" height="560" viewBox="0 0 920 560">
+        <defs>
+          <linearGradient id="card" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0f172a" />
+            <stop offset="100%" stop-color="#1d4ed8" />
+          </linearGradient>
+        </defs>
+        <rect width="920" height="560" rx="36" fill="url(#card)" />
+        <rect x="42" y="42" width="836" height="476" rx="28" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" />
+        <text x="72" y="110" fill="#ffffff" font-size="34" font-family="Arial, sans-serif" font-weight="700">Alpha Step Links Aviation School</text>
+        <text x="72" y="160" fill="#bfdbfe" font-size="18" font-family="Arial, sans-serif">Student Identification Card</text>
+        <rect x="72" y="210" width="170" height="170" rx="20" fill="rgba(255,255,255,0.14)" />
+        <text x="97" y="300" fill="#e2e8f0" font-size="34" font-family="Arial, sans-serif">ASL</text>
+        <text x="280" y="250" fill="#bfdbfe" font-size="18" font-family="Arial, sans-serif">Student Name</text>
+        <text x="280" y="290" fill="#ffffff" font-size="36" font-family="Arial, sans-serif" font-weight="700">${studentName}</text>
+        <text x="280" y="345" fill="#bfdbfe" font-size="18" font-family="Arial, sans-serif">Student ID</text>
+        <text x="280" y="382" fill="#ffffff" font-size="28" font-family="Arial, sans-serif">${studentIdNumber}</text>
+        <text x="280" y="430" fill="#bfdbfe" font-size="18" font-family="Arial, sans-serif">Programme</text>
+        <text x="280" y="467" fill="#ffffff" font-size="22" font-family="Arial, sans-serif">${courseLabel}</text>
+      </svg>
+    `
+
+    const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = `${studentIdNumber}.svg`
+    anchor.click()
+    URL.revokeObjectURL(url)
   }
 
   return (
@@ -66,6 +109,18 @@ export function ProfileDashboard() {
             <input
               type="email"
               value={user?.email || ''}
+              disabled
+              className="w-full px-4 py-2.5 border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-900 mb-2">
+              Student ID Number
+            </label>
+            <input
+              type="text"
+              value={user?.studentIdNumber || ''}
               disabled
               className="w-full px-4 py-2.5 border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed"
             />
@@ -142,10 +197,7 @@ export function ProfileDashboard() {
         <CardContent className="space-y-4">
           {/* Download Student ID Card */}
           <Button
-            onClick={() => {
-              // Generate and download student ID card
-              alert('Student ID Card download initiated. Your ID card will be generated and downloaded.')
-            }}
+            onClick={handleDownloadIdCard}
             className="action-button w-full"
           >
             <Contact className="w-4 h-4 mr-2" />

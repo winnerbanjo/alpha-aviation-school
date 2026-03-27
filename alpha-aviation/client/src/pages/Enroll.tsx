@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { register } from '@/api'
 import { useAuthStore } from '@/store/authStore'
+import { COURSE_CATALOG } from '@/data/courseCatalog'
 
 export function Enroll() {
   const navigate = useNavigate()
@@ -14,12 +15,35 @@ export function Enroll() {
     lastName: '',
     email: '',
     password: '',
-    enrolledCourse: '',
+    selectedCourses: [] as string[],
     paymentMethod: [] as string[],
     trainingMethod: [] as string[],
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  const toggleCourseSelection = (courseTitle: string) => {
+    setFormData((current) => {
+      const isSelected = current.selectedCourses.includes(courseTitle)
+      if (isSelected) {
+        return {
+          ...current,
+          selectedCourses: current.selectedCourses.filter((course) => course !== courseTitle),
+        }
+      }
+
+      if (current.selectedCourses.length >= 4) {
+        setError('You can select at most 4 courses')
+        return current
+      }
+
+      setError('')
+      return {
+        ...current,
+        selectedCourses: [...current.selectedCourses, courseTitle],
+      }
+    })
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,7 +52,7 @@ export function Enroll() {
 
     try {
       // Validate required fields
-      if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || !formData.enrolledCourse) {
+      if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || formData.selectedCourses.length === 0) {
         setError('Please fill in all required fields')
         setLoading(false)
         return
@@ -53,7 +77,7 @@ export function Enroll() {
         password: formData.password,
         firstName: formData.firstName,
         lastName: formData.lastName,
-        enrolledCourse: formData.enrolledCourse,
+        selectedCourses: formData.selectedCourses,
         paymentMethod: formData.paymentMethod,
         trainingMethod: formData.trainingMethod,
         role: 'student',
@@ -72,9 +96,12 @@ export function Enroll() {
             firstName: user.firstName,
             lastName: user.lastName,
             enrolledCourse: user.enrolledCourse,
+            selectedCourses: user.selectedCourses,
+            courseSelections: user.courseSelections,
             paymentStatus: user.paymentStatus,
             amountDue: user.amountDue,
             amountPaid: user.amountPaid,
+            totalCoursePrice: user.totalCoursePrice,
             enrollmentDate: user.enrollmentDate,
             phone: user.phone,
             emergencyContact: user.emergencyContact,
@@ -83,6 +110,8 @@ export function Enroll() {
             paymentMethod: user.paymentMethod,
             trainingMethod: user.trainingMethod,
             status: user.status,
+            paymentReceiptUrl: user.paymentReceiptUrl,
+            studentIdNumber: user.studentIdNumber,
           },
           token
         )
@@ -199,26 +228,47 @@ export function Enroll() {
                   <label className="block text-sm font-medium text-slate-900 mb-2">
                     Course Interest
                   </label>
-                  <select
-                    value={formData.enrolledCourse}
-                    onChange={(e) => setFormData({ ...formData, enrolledCourse: e.target.value })}
-                    className="w-full px-4 py-2.5 border border-slate-200/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 focus:border-[#0061FF] text-slate-900 bg-white"
-                    required
-                  >
-                    <option value="">Select a course</option>
-                    <option>Airline Cabin Crew Training</option>
-                    <option>Airline Customer Service</option>
-                    <option>Airport Operations Fundamental</option>
-                    <option>Cargo Introductory Course</option>
-                    <option>Foundation in Travel & Tourism with Galileo</option>
-                    <option>Air Ticketing & Reservation Management</option>
-                    <option>Customer Service & Communication in Aviation</option>
-                    <option>Hospitality & Tourism Management</option>
-                    <option>Travel Agency Operations</option>
-                    <option>Visa Processing & Documentation</option>
-                    <option>Hotel & Front Office Management</option>
-                    <option>Tourism Marketing & Entrepreneurship</option>
-                  </select>
+                  <p className="text-xs text-slate-500 mb-3">Select up to 4 courses.</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {COURSE_CATALOG.map((course) => {
+                      const isSelected = formData.selectedCourses.includes(course.title)
+                      return (
+                        <label key={course.title} className="tile-checkbox">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleCourseSelection(course.title)}
+                            className="sr-only"
+                          />
+                          <div className={`tile-content w-full p-4 rounded-xl border-2 transition-all ${
+                            isSelected
+                              ? 'border-[#0061FF] bg-[#0061FF]/10'
+                              : 'border-slate-200 bg-white'
+                          }`}>
+                            <div className="flex items-start gap-3">
+                              <div className={`mt-0.5 w-5 h-5 rounded border-2 flex-shrink-0 ${
+                                isSelected ? 'border-[#0061FF] bg-[#0061FF]' : 'border-slate-300'
+                              }`}>
+                                {isSelected && (
+                                  <svg className="w-full h-full text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                  </svg>
+                                )}
+                              </div>
+                              <div>
+                                <p className="text-sm font-semibold text-slate-900">{course.title}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </label>
+                      )
+                    })}
+                  </div>
+                  {formData.selectedCourses.length > 0 && (
+                    <p className="text-xs text-slate-500 mt-3">
+                      {formData.selectedCourses.length} course{formData.selectedCourses.length > 1 ? 's' : ''} selected
+                    </p>
+                  )}
                 </div>
 
                 <div>

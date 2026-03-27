@@ -76,12 +76,22 @@ export const register = async (userData: {
   role?: 'admin' | 'student'
   firstName?: string
   lastName?: string
-  enrolledCourse?: string
+  selectedCourses?: string[]
   amountDue?: number
   paymentMethod?: string[]
   trainingMethod?: string[]
 }) => {
   const response = await api.post('/auth/register', userData)
+  return response.data
+}
+
+export const sendContactMessage = async (contactData: {
+  name: string
+  email: string
+  phone: string
+  message: string
+}) => {
+  const response = await api.post('/auth/contact', contactData)
   return response.data
 }
 

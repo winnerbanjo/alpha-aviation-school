@@ -1,6 +1,19 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+const courseSelectionSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  price: {
+    type: Number,
+    required: true,
+    min: 0
+  }
+}, { _id: false });
+
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -50,6 +63,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  selectedCourses: {
+    type: [String],
+    default: [],
+    validate: {
+      validator: (value) => Array.isArray(value) && value.length <= 4,
+      message: 'Students can enroll in at most 4 courses'
+    }
+  },
+  courseSelections: {
+    type: [courseSelectionSchema],
+    default: []
+  },
   paymentStatus: {
     type: String,
     enum: ['Pending', 'Paid'],
@@ -69,6 +94,11 @@ const userSchema = new mongoose.Schema({
     default: 0,
     min: 0
   },
+  totalCoursePrice: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
   paymentMethod: {
     type: [String],
     default: []
@@ -84,6 +114,12 @@ const userSchema = new mongoose.Schema({
   },
   paymentReceiptUrl: {
     type: String,
+    trim: true
+  },
+  studentIdNumber: {
+    type: String,
+    unique: true,
+    sparse: true,
     trim: true
   }
 }, {

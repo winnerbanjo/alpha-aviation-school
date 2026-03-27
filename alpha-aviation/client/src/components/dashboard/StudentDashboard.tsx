@@ -17,6 +17,7 @@ import { DocumentUploader } from '@/components/student/DocumentUploader'
 import { ResourceLibrary } from '@/components/student/ResourceLibrary'
 import { PaymentModal } from '@/components/PaymentModal'
 import { uploadPaymentReceipt } from '@/api'
+import { formatNaira } from '@/data/courseCatalog'
 
 type TabType = 'overview' | 'curriculum' | 'profile' | 'resources' | 'documents'
 
@@ -55,12 +56,6 @@ export function StudentDashboard() {
 
   const isPending = user?.paymentStatus === 'Pending'
   const amountDue = user?.amountDue || 0
-  const formatNaira = (amount: number) =>
-    new Intl.NumberFormat('en-NG', {
-      style: 'currency',
-      currency: 'NGN',
-      maximumFractionDigits: 0,
-    }).format(amount || 0)
   const enrollmentDate = user?.enrollmentDate 
     ? new Date(user.enrollmentDate).toLocaleDateString('en-US', { 
         year: 'numeric', 
@@ -71,6 +66,7 @@ export function StudentDashboard() {
   
   // Check if student needs to upload payment receipt (status is Pending Payment and no receipt uploaded)
   const needsPaymentReceipt = user?.status === 'Pending Payment' && !user?.paymentReceiptUrl
+  const registeredCourses = user?.courseSelections || []
 
   const handleReceiptUpload = async (file: File) => {
     if (!file.type.startsWith('image/') && !file.type.includes('pdf')) {
@@ -80,11 +76,8 @@ export function StudentDashboard() {
 
     try {
       setUploadingReceipt(true)
-      // In production, upload to cloud storage (S3, Cloudinary, etc.)
-      // For now, we'll create a mock URL
-      const mockUrl = URL.createObjectURL(file)
-      
-      const response = await uploadPaymentReceipt(mockUrl)
+      const encodedReceipt = await fileToDataUrl(file)
+      const response = await uploadPaymentReceipt(encodedReceipt)
       
       // Update user in store
       if (user && response?.data) {
@@ -229,9 +222,26 @@ export function StudentDashboard() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                {user?.studentIdNumber && (
+                  <div>
+                    <p className="text-sm text-slate-500 mb-1">Student ID</p>
+                    <p className="text-lg font-medium text-slate-900">{user.studentIdNumber}</p>
+                  </div>
+                )}
                 <div>
-                  <p className="text-sm text-slate-500 mb-1">Enrolled Course</p>
-                  <p className="text-lg font-medium text-slate-900">{user.enrolledCourse}</p>
+                  <p className="text-sm text-slate-500 mb-1">Registered Courses</p>
+                  <div className="space-y-2">
+                    {registeredCourses.map((course) => (
+                      <div key={course.title} className="flex items-center justify-between rounded-lg border border-slate-200 p-3">
+                        <p className="text-sm font-medium text-slate-900">{course.title}</p>
+                        <p className="text-sm font-semibold text-[#0061FF]">{formatNaira(course.price)}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between rounded-lg bg-slate-50 px-4 py-3">
+                  <p className="text-sm text-slate-500">Total Registered Value</p>
+                  <p className="text-base font-semibold text-slate-900">{formatNaira(user?.totalCoursePrice || amountDue)}</p>
                 </div>
                 {enrollmentDate && (
                   <div className="flex items-center gap-2">
@@ -383,3 +393,10 @@ export function StudentDashboard() {
     </motion.div>
   )
 }
+  const fileToDataUrl = (file: File) =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(String(reader.result || ''))
+      reader.onerror = () => reject(new Error('Failed to read file'))
+      reader.readAsDataURL(file)
+    })

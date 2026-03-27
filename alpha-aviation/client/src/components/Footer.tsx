@@ -68,7 +68,7 @@ export function Footer() {
                   <Phone className="w-5 h-5 text-[#0061FF] flex-shrink-0" />
                   <div>
                     <p className="text-xs text-slate-400 mb-1">Phone No</p>
-                    <p className="text-sm text-white">02013306373</p>
+                    <p className="text-sm text-white">0814 025 7174</p>
                   </div>
                 </div>
               </div>
@@ -128,7 +128,7 @@ export function Footer() {
               </div>
               <div>
                 <a 
-                  href="https://wa.me" 
+                  href="https://wa.me/08140257174" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="inline-flex items-center gap-2 px-4 py-2 bg-[#25D366]/20 hover:bg-[#25D366]/30 rounded-lg border border-[#25D366]/30 transition-colors group"
