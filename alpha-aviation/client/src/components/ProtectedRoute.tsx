@@ -1,5 +1,6 @@
 import React from 'react'
 import { Navigate } from 'react-router-dom'
+import { useAuthStore } from '@/store/authStore'
 
 interface ProtectedRouteProps {
   adminOnly?: boolean
@@ -7,9 +8,18 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ adminOnly, children }: ProtectedRouteProps) {
-  const token = localStorage.getItem('token')
-  const userRole = localStorage.getItem('userRole')
+  const { hasHydrated, token: storeToken, user } = useAuthStore()
+  const token = storeToken || localStorage.getItem('token')
+  const userRole = user?.role || localStorage.getItem('userRole')
   console.log('ProtectedRoute token:', token)
+
+  if (!hasHydrated) {
+    return (
+      <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center">
+        <p className="text-slate-500">Loading...</p>
+      </div>
+    )
+  }
 
   if (!token) {
     console.log('No token found, redirecting')
