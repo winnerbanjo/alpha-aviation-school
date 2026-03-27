@@ -1,7 +1,12 @@
 import axios, { type AxiosRequestConfig } from 'axios'
 
-// Hardcoded ASL server – no env override so live site cannot point to old URL
-const API_URL = 'https://asl-aviation-server.onrender.com/api'
+const isLocalhost =
+  typeof window !== 'undefined' &&
+  ['localhost', '127.0.0.1'].includes(window.location.hostname)
+
+const API_URL = isLocalhost
+  ? 'http://localhost:5000/api'
+  : 'https://asl-aviation-server.onrender.com/api'
 
 const api = axios.create({
   baseURL: API_URL,
