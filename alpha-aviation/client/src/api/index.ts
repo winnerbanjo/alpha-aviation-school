@@ -10,7 +10,6 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,
 })
 
 // Request interceptor: Bearer token (required for admin/student API)
