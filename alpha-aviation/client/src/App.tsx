@@ -1,32 +1,30 @@
-import { useEffect } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { Landing } from './pages/Landing'
-import { Login } from './pages/Login'
-import { AdminPortal } from './pages/AdminPortal'
-import { Dashboard } from './pages/Dashboard'
-import { Enroll } from './pages/Enroll'
-import { RegistrationSuccess } from './pages/RegistrationSuccess'
-import { Courses } from './pages/Courses'
-import { About } from './pages/About'
-import { Contact } from './pages/Contact'
-import { ProtectedRoute } from './components/ProtectedRoute'
-import { Layout } from './components/layout/Layout'
-import api from './api'
+import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Landing } from "./pages/Landing";
+import { Login } from "./pages/Login";
+import { AdminPortal } from "./pages/AdminPortal";
+import { Dashboard } from "./pages/Dashboard";
+import { Enroll } from "./pages/Enroll";
+import { RegistrationSuccess } from "./pages/RegistrationSuccess";
+import { Courses } from "./pages/Courses";
+import { About } from "./pages/About";
+import { Contact } from "./pages/Contact";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { Layout } from "./components/layout/Layout";
+import api from "./api";
 
 function App() {
   useEffect(() => {
-    const controller = new AbortController()
+    const controller = new AbortController();
 
-    api
-      .get('/ping', { signal: controller.signal })
-      .catch(() => {
-        // Best-effort wake-up; ignore errors
-      })
+    api.get("/health", { signal: controller.signal }).catch(() => {
+      // Best-effort wake-up; ignore errors
+    });
 
     return () => {
-      controller.abort()
-    }
-  }, [])
+      controller.abort();
+    };
+  }, []);
 
   return (
     <BrowserRouter>
@@ -38,9 +36,15 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<AdminPortal />} />
-          <Route path="/admin/portal" element={<Navigate to="/admin" replace />} />
+          <Route
+            path="/admin/portal"
+            element={<Navigate to="/admin" replace />}
+          />
           <Route path="/enroll" element={<Enroll />} />
-          <Route path="/registration-success" element={<RegistrationSuccess />} />
+          <Route
+            path="/registration-success"
+            element={<RegistrationSuccess />}
+          />
           {/* Student Dashboard - Default /dashboard route */}
           <Route
             path="/dashboard"
@@ -79,7 +83,7 @@ function App() {
         </Routes>
       </Layout>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;
