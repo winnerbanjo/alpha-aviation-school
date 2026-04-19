@@ -62,10 +62,10 @@ const mockStudents = [
   }
 ];
 
-// Mock admin user
+// Mock admin user - credentials come from env vars in authController
 const mockAdmin = {
   _id: 'mock-admin',
-  email: 'admin@alpha.com',
+  email: process.env.ADMIN_EMAIL || 'admin@alpha.com',
   firstName: 'Admin',
   lastName: 'User',
   role: 'admin',

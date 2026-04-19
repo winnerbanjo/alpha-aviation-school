@@ -4,16 +4,16 @@ const { mockAdmin, mockStudents } = require('../utils/mockData');
 const { buildCourseSelections, getTotalCoursePrice } = require('../utils/courseCatalog');
 const { sendMail } = require('../utils/mailer');
 
-// Generate JWT token
-const generateToken = (userId) => {
-  // Use process.env.JWT_SECRET consistently – value is set in server.js for safety
+// Generate JWT token with role-based expiry
+const generateToken = (userId, role = 'student') => {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
     throw new Error('JWT_SECRET is not defined');
   }
-  return jwt.sign({ userId }, secret, {
-    expiresIn: '7d'
-  });
+
+  // Admin tokens expire in 24h, student tokens in 7d
+  const expiresIn = role === 'admin' ? '24h' : '7d';
+  return jwt.sign({ userId, role }, secret, { expiresIn });
 };
 
 const buildUserResponse = (user) => ({
@@ -88,7 +88,7 @@ exports.register = async (req, res, next) => {
         paymentReceiptUrl: ''
       };
 
-      const token = generateToken(mockUser.id);
+      const token = generateToken(mockUser.id, 'student');
 
       return res.status(201).json({
         success: true,
@@ -152,8 +152,8 @@ exports.register = async (req, res, next) => {
       status: 'Pending Payment'
     });
 
-    // Generate token
-    const token = generateToken(user._id);
+    // Generate token with 7d expiry for students
+    const token = generateToken(user._id, 'student');
 
     await sendMail({
       to: user.email,
@@ -194,11 +194,14 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    // Mock mode login
+    // Mock mode login - only enabled when explicitly set
     if (global.useMockData) {
+      const mockAdminEmail = process.env.ADMIN_EMAIL || 'admin@alpha.com';
+      const mockAdminPassword = process.env.ADMIN_PASSWORD;
+
       // Check for admin
-      if (email === 'admin@alpha.com' && (password === 'password123' || password === 'alphaadmin2026')) {
-        const token = generateToken(mockAdmin._id);
+      if (email === mockAdminEmail && mockAdminPassword && password === mockAdminPassword) {
+        const token = generateToken(mockAdmin._id, 'admin');
         return res.status(200).json({
           success: true,
           message: 'Login successful (Mock Mode)',
@@ -230,8 +233,9 @@ exports.login = async (req, res, next) => {
 
       // Check for mock students
       const mockStudent = mockStudents.find(s => s.email === email);
-      if (mockStudent && password === 'password123') {
-        const token = generateToken(mockStudent._id);
+      const mockStudentPassword = process.env.MOCK_STUDENT_PASSWORD || 'password123';
+      if (mockStudent && password === mockStudentPassword) {
+        const token = generateToken(mockStudent._id, 'student');
         return res.status(200).json({
           success: true,
           message: 'Login successful (Mock Mode)',
@@ -267,7 +271,7 @@ exports.login = async (req, res, next) => {
 
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials (Mock Mode - Use: admin@alpha.com / alphaadmin2026, or student1@alpha.com / password123)'
+        message: 'Invalid credentials in mock mode'
       });
     }
 
@@ -289,8 +293,8 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    // Generate token
-    const token = generateToken(user._id);
+    // Generate token with role-based expiry
+    const token = generateToken(user._id, user.role);
 
     res.status(200).json({
       success: true,
