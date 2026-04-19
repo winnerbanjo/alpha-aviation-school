@@ -1,6 +1,5 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const { mockAdmin, mockStudents } = require('../utils/mockData');
 const { buildCourseSelections, getTotalCoursePrice } = require('../utils/courseCatalog');
 const { sendMail } = require('../utils/mailer');
 
@@ -11,7 +10,6 @@ const generateToken = (userId, role = 'student') => {
     throw new Error('JWT_SECRET is not defined');
   }
 
-  // Admin tokens expire in 24h, student tokens in 7d
   const expiresIn = role === 'admin' ? '24h' : '7d';
   return jwt.sign({ userId, role }, secret, { expiresIn });
 };
@@ -54,53 +52,39 @@ const generateStudentIdNumber = async () => {
   return studentIdNumber;
 };
 
+// Validate email format
+const isValidEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 // Register new user
 exports.register = async (req, res, next) => {
   try {
-    if (global.useMockData) {
-      // In mock mode, just return success with mock user
-      const { email, firstName, lastName, selectedCourses, paymentMethod, trainingMethod } = req.body;
-      const normalizedSelectedCourses = Array.isArray(selectedCourses) ? selectedCourses.slice(0, 4) : [];
-      const courseSelections = buildCourseSelections(normalizedSelectedCourses);
-      const totalCoursePrice = getTotalCoursePrice(courseSelections);
-      const mockUser = {
-        id: `mock-${Date.now()}`,
-        email: email || 'student@alpha.com',
-        role: 'student',
-        firstName: firstName || 'New',
-        lastName: lastName || 'Student',
-        enrolledCourse: normalizedSelectedCourses[0] || 'Aviation Fundamentals & Strategy',
-        selectedCourses: normalizedSelectedCourses,
-        courseSelections,
-        paymentStatus: 'Pending',
-        amountDue: totalCoursePrice,
-        amountPaid: 0,
-        totalCoursePrice,
-        enrollmentDate: new Date(),
-        phone: '',
-        emergencyContact: '',
-        bio: '',
-        documentUrl: '',
-        studentIdNumber: `ASL-MOCK-${Date.now()}`,
-        paymentMethod: paymentMethod || [],
-        trainingMethod: trainingMethod || [],
-        status: 'Pending Payment',
-        paymentReceiptUrl: ''
-      };
+    const { email, password, firstName, lastName, selectedCourses, paymentMethod, trainingMethod } = req.body;
 
-      const token = generateToken(mockUser.id, 'student');
-
-      return res.status(201).json({
-        success: true,
-        message: 'User registered successfully (Mock Mode)',
-        data: {
-          token,
-          user: buildUserResponse(mockUser)
-        }
+    // Input validation
+    if (!email || !password || !selectedCourses) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email, password, and courses are required'
       });
     }
 
-    const { email, password, role, firstName, lastName, selectedCourses, paymentMethod, trainingMethod } = req.body;
+    if (!isValidEmail(email)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid email format'
+      });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 6 characters'
+      });
+    }
+
     const normalizedSelectedCourses = Array.isArray(selectedCourses)
       ? [...new Set(selectedCourses.filter(Boolean))].slice(0, 4)
       : [];
@@ -136,7 +120,7 @@ exports.register = async (req, res, next) => {
     const user = await User.create({
       email,
       password,
-      role: role || 'student',
+      role: 'student',
       firstName,
       lastName,
       enrolledCourse: normalizedSelectedCourses[0] || '',
@@ -152,15 +136,19 @@ exports.register = async (req, res, next) => {
       status: 'Pending Payment'
     });
 
-    // Generate token with 7d expiry for students
     const token = generateToken(user._id, 'student');
 
-    await sendMail({
-      to: user.email,
-      subject: 'Welcome to Alpha Step Links Aviation School',
-      text: `Hello ${user.firstName || 'Student'}, welcome to Alpha Step Links Aviation School. Your student ID is ${studentIdNumber}. Kindly make your payment of NGN ${totalCoursePrice.toLocaleString('en-NG')} to begin your selected course(s): ${normalizedSelectedCourses.join(', ')}.`,
-      html: `<p>Hello ${user.firstName || 'Student'},</p><p>Welcome to Alpha Step Links Aviation School.</p><p>Your student ID is <strong>${studentIdNumber}</strong>.</p><p>Please make your payment of <strong>NGN ${totalCoursePrice.toLocaleString('en-NG')}</strong> to begin your selected course(s): <strong>${normalizedSelectedCourses.join(', ')}</strong>.</p><p>We look forward to having you onboard.</p>`,
-    });
+    // Try to send welcome email, but don't fail if it doesn't work
+    try {
+      await sendMail({
+        to: user.email,
+        subject: 'Welcome to Alpha Step Links Aviation School',
+        text: `Hello ${user.firstName || 'Student'}, welcome to Alpha Step Links Aviation School. Your student ID is ${studentIdNumber}. Kindly make your payment of NGN ${totalCoursePrice.toLocaleString('en-NG')} to begin your selected course(s): ${normalizedSelectedCourses.join(', ')}.`,
+        html: `<p>Hello ${user.firstName || 'Student'},</p><p>Welcome to Alpha Step Links Aviation School.</p><p>Your student ID is <strong>${studentIdNumber}</strong>.</p><p>Please make your payment of <strong>NGN ${totalCoursePrice.toLocaleString('en-NG')}</strong> to begin your selected course(s): <strong>${normalizedSelectedCourses.join(', ')}</strong>.</p><p>We look forward to having you onboard.</p>`,
+      });
+    } catch (mailError) {
+      console.log('Welcome email not sent:', mailError.message);
+    }
 
     res.status(201).json({
       success: true,
@@ -171,22 +159,16 @@ exports.register = async (req, res, next) => {
       }
     });
   } catch (error) {
-    if (error.message && error.message.includes('Mailer not configured')) {
-      return res.status(503).json({
-        success: false,
-        message: 'Mailbox delivery is not configured on the server yet. Please update SMTP settings.'
-      });
-    }
     next(error);
   }
 };
 
-// Login user
+// Login user - standard auth flow
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Validate input
+    // Input validation
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -194,93 +176,13 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    // Mock mode login - only enabled when explicitly set
-    if (global.useMockData) {
-      const mockAdminEmail = process.env.ADMIN_EMAIL || 'admin@alpha.com';
-      const mockAdminPassword = process.env.ADMIN_PASSWORD;
+    // Find user with password field
+    const user = await User.findOne({ email: email.toLowerCase().trim() }).select('+password');
 
-      // Check for admin
-      if (email === mockAdminEmail && mockAdminPassword && password === mockAdminPassword) {
-        const token = generateToken(mockAdmin._id, 'admin');
-        return res.status(200).json({
-          success: true,
-          message: 'Login successful (Mock Mode)',
-          data: {
-            token,
-            user: {
-              id: mockAdmin._id,
-              email: mockAdmin.email,
-              role: mockAdmin.role,
-              firstName: mockAdmin.firstName,
-              lastName: mockAdmin.lastName,
-              enrolledCourse: '',
-              selectedCourses: [],
-              courseSelections: [],
-              paymentStatus: 'Paid',
-              amountDue: 0,
-              amountPaid: 0,
-              totalCoursePrice: 0,
-              enrollmentDate: new Date(),
-              phone: '',
-              emergencyContact: '',
-              bio: '',
-              documentUrl: '',
-              studentIdNumber: ''
-            }
-          }
-        });
-      }
-
-      // Check for mock students
-      const mockStudent = mockStudents.find(s => s.email === email);
-      const mockStudentPassword = process.env.MOCK_STUDENT_PASSWORD || 'password123';
-      if (mockStudent && password === mockStudentPassword) {
-        const token = generateToken(mockStudent._id, 'student');
-        return res.status(200).json({
-          success: true,
-          message: 'Login successful (Mock Mode)',
-          data: {
-            token,
-            user: {
-              id: mockStudent._id,
-              email: mockStudent.email,
-              role: 'student',
-              firstName: mockStudent.firstName,
-              lastName: mockStudent.lastName,
-              enrolledCourse: mockStudent.enrolledCourse,
-              selectedCourses: mockStudent.selectedCourses || [mockStudent.enrolledCourse].filter(Boolean),
-              courseSelections: mockStudent.courseSelections || [],
-              paymentStatus: mockStudent.paymentStatus,
-              amountDue: mockStudent.amountDue,
-              amountPaid: mockStudent.amountPaid,
-              totalCoursePrice: mockStudent.totalCoursePrice || mockStudent.amountDue || mockStudent.amountPaid || 0,
-              enrollmentDate: mockStudent.enrollmentDate,
-              phone: mockStudent.phone || '',
-              emergencyContact: '',
-              bio: '',
-              documentUrl: '',
-              paymentMethod: mockStudent.paymentMethod || [],
-              trainingMethod: mockStudent.trainingMethod || [],
-              status: mockStudent.status || 'Pending Payment',
-              paymentReceiptUrl: mockStudent.paymentReceiptUrl || '',
-              studentIdNumber: mockStudent.studentIdNumber || ''
-            }
-          }
-        });
-      }
-
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid credentials in mock mode'
-      });
-    }
-
-    // Find user and include password for comparison
-    const user = await User.findOne({ email }).select('+password');
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials'
+        message: 'Invalid email or password'
       });
     }
 
@@ -289,7 +191,7 @@ exports.login = async (req, res, next) => {
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials'
+        message: 'Invalid email or password'
       });
     }
 
@@ -312,49 +214,8 @@ exports.login = async (req, res, next) => {
 // Get current user profile
 exports.getProfile = async (req, res, next) => {
   try {
-    if (global.useMockData) {
-      // Return mock admin or first student based on token
-      const userId = req.user?.userId || 'mock-admin';
-      let mockUser = mockAdmin;
-      
-      if (userId.includes('mock') && userId !== 'mock-admin') {
-        mockUser = mockStudents.find(s => s._id === userId) || mockStudents[0];
-      }
-
-      return res.status(200).json({
-        success: true,
-        data: {
-          user: {
-            id: mockUser._id,
-            email: mockUser.email,
-            role: mockUser.role || 'student',
-            firstName: mockUser.firstName,
-            lastName: mockUser.lastName,
-            enrolledCourse: mockUser.enrolledCourse || '',
-            selectedCourses: mockUser.selectedCourses || [mockUser.enrolledCourse].filter(Boolean),
-            courseSelections: mockUser.courseSelections || [],
-            paymentStatus: mockUser.paymentStatus || 'Pending',
-            amountDue: mockUser.amountDue || 0,
-            amountPaid: mockUser.amountPaid || 0,
-            totalCoursePrice: mockUser.totalCoursePrice || mockUser.amountDue || mockUser.amountPaid || 0,
-            enrollmentDate: mockUser.enrollmentDate || new Date(),
-            phone: mockUser.phone || '',
-            emergencyContact: '',
-            bio: '',
-            documentUrl: '',
-            paymentMethod: mockUser.paymentMethod || [],
-            trainingMethod: mockUser.trainingMethod || [],
-            status: mockUser.status || 'Pending Payment',
-            paymentReceiptUrl: mockUser.paymentReceiptUrl || '',
-            studentIdNumber: mockUser.studentIdNumber || '',
-            createdAt: new Date()
-          }
-        }
-      });
-    }
-
     const user = await User.findById(req.user.userId);
-    
+
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -376,6 +237,7 @@ exports.getProfile = async (req, res, next) => {
   }
 };
 
+// Contact message
 exports.sendContactMessage = async (req, res, next) => {
   try {
     const { name, email, phone, message } = req.body;
