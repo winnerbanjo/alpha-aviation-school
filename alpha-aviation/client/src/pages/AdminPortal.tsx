@@ -7,7 +7,6 @@ import { Shield, Lock, Building2 } from 'lucide-react'
 import axios from 'axios'
 
 export function AdminPortal() {
-  console.log('LOCAL STORAGE:', localStorage)
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')

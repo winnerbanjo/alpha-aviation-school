@@ -11,7 +11,6 @@ export function ProtectedRoute({ adminOnly, children }: ProtectedRouteProps) {
   const { hasHydrated, token: storeToken, user } = useAuthStore()
   const token = storeToken || localStorage.getItem('token')
   const userRole = user?.role || localStorage.getItem('userRole')
-  console.log('ProtectedRoute token:', token)
 
   if (!hasHydrated) {
     return (
@@ -22,7 +21,6 @@ export function ProtectedRoute({ adminOnly, children }: ProtectedRouteProps) {
   }
 
   if (!token) {
-    console.log('No token found, redirecting')
     return <Navigate to="/login" replace />
   }
 

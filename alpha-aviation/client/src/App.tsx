@@ -13,6 +13,8 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Layout } from "./components/layout/Layout";
 import api from "./api";
 
+import { ScrollToTop } from "./components/ScrollToTop";
+
 function App() {
   useEffect(() => {
     const controller = new AbortController();
@@ -28,6 +30,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Layout>
         <Routes>
           <Route path="/" element={<Landing />} />
