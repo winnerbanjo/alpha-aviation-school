@@ -4,13 +4,12 @@ import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import { login as apiLogin } from "@/api";
 import { motion } from "framer-motion";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, Plane } from "lucide-react";
 
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const navigate = useNavigate();
   const { login } = useAuthStore();
@@ -18,21 +17,17 @@ export function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     if (!email || !password) {
-      setError("Please provide both email and password");
       setLoading(false);
       return;
     }
 
     try {
       const response = await apiLogin(email, password);
-      const responseBody = response.data;
-      const data = responseBody?.data;
+      const { data } = response.data;
 
-      if (!responseBody?.success || !data?.token || !data?.user) {
-        setError(responseBody?.message || "Login failed.");
+      if (!data?.success || !data.token || !data.user) {
         setLoading(false);
         return;
       }
@@ -65,156 +60,107 @@ export function Login() {
           studentIdNumber: userData.studentIdNumber,
           adminClearance: userData.adminClearance,
         },
-        token,
+        token
       );
 
-      navigate(userData.role === "admin" ? "/admin/dashboard" : "/dashboard", {
-        replace: true,
-      });
+      navigate(userData.role === "admin" ? "/admin/dashboard" : "/dashboard", { replace: true });
     } catch (err: any) {
-      if (err.response?.status === 401) {
-        setError("Invalid email or password");
-      } else if (err.response?.status === 429) {
-        setError("Too many attempts. Please wait a few minutes.");
-      } else if (err.response?.data?.message) {
-        setError(err.response.data.message);
-      } else if (
-        err.message?.includes("Network Error") ||
-        err.code === "ERR_NETWORK"
-      ) {
-        setError("Server unreachable. Please check connection.");
-      } else {
-        setError("Login failed. Please try again.");
-      }
-    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] relative overflow-hidden">
-      {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-20"
-        style={{ backgroundImage: "url(/smiling-traveler-with-suitcase.jpg)" }}
-      />
-      <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px]" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
+      {/* Floating Background Icons */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <motion.div
+          animate={{ y: [0, -20, 0], opacity: [0.2, 0.3, 0.2] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[15%] left-[10%] text-white/10"
+        >
+          <GraduationCap size={140} strokeWidth={1} />
+        </motion.div>
+        <motion.div
+          animate={{ x: [-15, 15, -15], y: [0, -10, 0], opacity: [0.15, 0.25, 0.15] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[30%] right-[15%] text-orange-500/20"
+        >
+          <Plane size={80} strokeWidth={1} />
+        </motion.div>
+        <motion.div
+          animate={{ x: [10, -10, 10], opacity: [0.1, 0.2, 0.1] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-[25%] left-[20%] text-white/10"
+        >
+          <GraduationCap size={60} strokeWidth={1} />
+        </motion.div>
+      </div>
 
-      <div className="relative z-10">
-        <div className="flex items-center justify-center min-h-[calc(100vh-140px)] px-4 sm:px-6 py-24">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="w-full max-w-md"
-          >
-            {/* Glass-card Login Form */}
-            <div className="glass-card rounded-lg shadow-xl p-8 sm:p-10">
-              <div className="text-center mb-8">
-                <div className="flex justify-center mb-4">
-                  <div className="p-3 bg-[#0061FF]/10 rounded-full">
-                    <GraduationCap className="w-8 h-8 text-[#0061FF]" />
-                  </div>
-                </div>
-                <h1 className="text-3xl font-semibold tracking-tighter text-slate-900 mb-2">
-                  Student Portal
-                </h1>
-                <p className="text-slate-500 text-sm">
-                  Sign in to access your training dashboard
-                </p>
-              </div>
-
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mb-6 p-3 bg-red-50 border border-red-200 rounded-md"
-                >
-                  <p className="text-sm text-red-600">{error}</p>
-                </motion.div>
-              )}
-
-              <form onSubmit={handleLogin} className="space-y-5">
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-slate-900 mb-2"
-                  >
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 focus:border-[#0061FF] text-slate-900 transition-all"
-                    placeholder="you@example.com"
-                    required
-                    autoComplete="email"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-slate-900 mb-2"
-                  >
-                    Password
-                  </label>
-                  <input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 focus:border-[#0061FF] text-slate-900 transition-all"
-                    placeholder="Enter your password"
-                    required
-                    autoComplete="current-password"
-                  />
-                </div>
-
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full rounded-full bg-[#0061FF] hover:bg-[#0052E6] text-white py-2.5 shadow-sm transition-all duration-300 hover:scale-105"
-                >
-                  {loading ? "Signing in..." : "Sign in"}
-                </Button>
-              </form>
-
-              <div className="mt-6 text-center space-y-2">
-                <Link
-                  to="/"
-                  className="text-sm text-slate-500 hover:text-slate-900 transition-colors block"
-                >
-                  ← Back to home
-                </Link>
-                <button
-                  onClick={() => {
-                    const email = prompt(
-                      "Enter your email address to reset password:",
-                    );
-                    if (email) {
-                      alert(
-                        `Password reset link will be sent to ${email}. Please check your email.`,
-                      );
-                    }
-                  }}
-                  className="text-sm text-slate-500 hover:text-slate-900 transition-colors block w-full"
-                >
-                  Reset Password
-                </button>
-                <Link
-                  to="/admin"
-                  className="text-xs text-slate-400 hover:text-slate-600 transition-colors block"
-                >
-                  Admin? Sign in here →
-                </Link>
+      {/* Login Card */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="relative z-10 w-full max-w-md"
+      >
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-8 sm:p-10">
+          <div className="text-center mb-8">
+            <div className="inline-flex justify-center mb-4">
+              <div className="p-3 bg-[#0061FF]/10 rounded-full">
+                <GraduationCap className="w-8 h-8 text-[#0061FF]" />
               </div>
             </div>
-          </motion.div>
+            <h1 className="text-2xl font-semibold tracking-tight text-slate-900 mb-2">
+              Welcome Back
+            </h1>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 focus:border-[#0061FF] text-slate-900 transition-all"
+                placeholder="Email address"
+                required
+                autoComplete="email"
+              />
+            </div>
+
+            <div>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 focus:border-[#0061FF] text-slate-900 transition-all"
+                placeholder="Password"
+                required
+                autoComplete="current-password"
+              />
+            </div>
+
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-full bg-[#0061FF] hover:bg-[#0052E6] text-white py-3 shadow-sm transition-all duration-300 hover:scale-[1.02]"
+            >
+              {loading ? "Signing in..." : "Sign In"}
+            </Button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <Link
+              to="/"
+              className="text-sm text-slate-500 hover:text-slate-700 transition-colors"
+            >
+              ← Back to home
+            </Link>
+          </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
