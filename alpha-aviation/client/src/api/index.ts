@@ -202,6 +202,19 @@ export const updateStudentCourse = async (
   return response.data;
 };
 
+export const updateStudentStatus = async (
+  studentId: string,
+  status: "active" | "banned" | "graduated" | "suspended",
+  config?: AxiosRequestConfig,
+) => {
+  const response = await api.patch(
+    `/admin/students/${studentId}/status`,
+    { status },
+    config,
+  );
+  return response.data;
+};
+
 // Payment API calls
 export const getPayments = async () => {
   const response = await api.get("/payments");

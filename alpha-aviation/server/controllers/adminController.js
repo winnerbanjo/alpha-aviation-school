@@ -1,11 +1,14 @@
-const User = require('../models/User');
+const User = require("../models/User");
 
 const getStudentValue = (student) => {
   if ((student.amountPaid || 0) > 0) return student.amountPaid || 0;
   if ((student.amountDue || 0) > 0) return student.amountDue || 0;
   if ((student.totalCoursePrice || 0) > 0) return student.totalCoursePrice || 0;
   if (Array.isArray(student.courseSelections)) {
-    return student.courseSelections.reduce((sum, course) => sum + (course.price || 0), 0);
+    return student.courseSelections.reduce(
+      (sum, course) => sum + (course.price || 0),
+      0,
+    );
   }
   return 0;
 };
@@ -15,11 +18,11 @@ exports.getTest = async (req, res, next) => {
   try {
     const totalStudents = global.useMockData
       ? 0
-      : await User.countDocuments({ role: 'student' });
+      : await User.countDocuments({ role: "student" });
     res.status(200).json({
       success: true,
-      message: 'Connection active',
-      data: { totalStudents }
+      message: "Connection active",
+      data: { totalStudents },
     });
   } catch (error) {
     next(error);
@@ -34,13 +37,13 @@ exports.getAllStudents = async (req, res, next) => {
         success: true,
         count: 0,
         data: {
-          students: []
-        }
+          students: [],
+        },
       });
     }
 
-    const students = await User.find({ role: 'student' })
-      .select('-password')
+    const students = await User.find({ role: "student" })
+      .select("-password")
       .sort({ createdAt: -1 });
 
     const list = Array.isArray(students) ? students : [];
@@ -48,17 +51,17 @@ exports.getAllStudents = async (req, res, next) => {
       success: true,
       count: list.length,
       data: {
-        students: list
-      }
+        students: list,
+      },
     });
   } catch (error) {
     res.status(503).json({
       success: true,
       count: 0,
       data: {
-        students: []
+        students: [],
       },
-      message: 'Database unavailable. No demo data returned.'
+      message: "Database unavailable. No demo data returned.",
     });
   }
 };
@@ -71,36 +74,36 @@ exports.getFinancialStats = async (req, res, next) => {
         success: true,
         data: {
           totalRevenue: 0,
-          revenuePending: 0
-        }
+          revenuePending: 0,
+        },
       });
     }
 
-    const students = await User.find({ role: 'student' });
-    
+    const students = await User.find({ role: "student" });
+
     const totalRevenue = students
-      .filter((s) => s.paymentStatus === 'Paid')
+      .filter((s) => s.paymentStatus === "Paid")
       .reduce((sum, s) => sum + getStudentValue(s), 0);
-    
+
     const revenuePending = students
-      .filter((s) => s.paymentStatus === 'Pending')
+      .filter((s) => s.paymentStatus === "Pending")
       .reduce((sum, s) => sum + getStudentValue(s), 0);
 
     res.status(200).json({
       success: true,
       data: {
         totalRevenue,
-        revenuePending
-      }
+        revenuePending,
+      },
     });
   } catch (error) {
     res.status(503).json({
       success: true,
       data: {
         totalRevenue: 0,
-        revenuePending: 0
+        revenuePending: 0,
       },
-      message: 'Database unavailable. No demo data returned.'
+      message: "Database unavailable. No demo data returned.",
     });
   }
 };
@@ -113,7 +116,8 @@ exports.updatePaymentStatus = async (req, res, next) => {
     if (global.useMockData) {
       return res.status(503).json({
         success: false,
-        message: 'Database unavailable. Demo mode is disabled for admin actions.'
+        message:
+          "Database unavailable. Demo mode is disabled for admin actions.",
       });
     }
 
@@ -122,22 +126,23 @@ exports.updatePaymentStatus = async (req, res, next) => {
     if (!student) {
       return res.status(404).json({
         success: false,
-        message: 'Student not found'
+        message: "Student not found",
       });
     }
 
-    if (student.role !== 'student') {
+    if (student.role !== "student") {
       return res.status(400).json({
         success: false,
-        message: 'User is not a student'
+        message: "User is not a student",
       });
     }
 
     // Toggle payment status
-    student.paymentStatus = student.paymentStatus === 'Pending' ? 'Paid' : 'Pending';
-    
+    student.paymentStatus =
+      student.paymentStatus === "Pending" ? "Paid" : "Pending";
+
     // If marking as paid, set amountPaid and amountDue to 0
-    if (student.paymentStatus === 'Paid') {
+    if (student.paymentStatus === "Paid") {
       student.amountPaid = student.amountDue;
       student.amountDue = 0;
     }
@@ -146,7 +151,7 @@ exports.updatePaymentStatus = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: 'Payment status updated successfully',
+      message: "Payment status updated successfully",
       data: {
         student: {
           id: student._id,
@@ -157,9 +162,9 @@ exports.updatePaymentStatus = async (req, res, next) => {
           paymentStatus: student.paymentStatus,
           amountDue: student.amountDue,
           amountPaid: student.amountPaid,
-          enrollmentDate: student.enrollmentDate
-        }
-      }
+          enrollmentDate: student.enrollmentDate,
+        },
+      },
     });
   } catch (error) {
     next(error);
@@ -174,24 +179,25 @@ exports.batchUpdatePaymentStatus = async (req, res, next) => {
     if (!Array.isArray(studentIds) || studentIds.length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide an array of student IDs'
+        message: "Please provide an array of student IDs",
       });
     }
 
     if (global.useMockData) {
       return res.status(503).json({
         success: false,
-        message: 'Database unavailable. Demo mode is disabled for admin actions.'
+        message:
+          "Database unavailable. Demo mode is disabled for admin actions.",
       });
     }
 
-    const students = await User.find({ 
+    const students = await User.find({
       _id: { $in: studentIds },
-      role: 'student'
+      role: "student",
     });
 
     const updates = students.map(async (student) => {
-      student.paymentStatus = 'Paid';
+      student.paymentStatus = "Paid";
       student.amountPaid = student.amountDue;
       student.amountDue = 0;
       return student.save();
@@ -203,8 +209,8 @@ exports.batchUpdatePaymentStatus = async (req, res, next) => {
       success: true,
       message: `Payment status updated for ${students.length} students`,
       data: {
-        count: students.length
-      }
+        count: students.length,
+      },
     });
   } catch (error) {
     next(error);
@@ -220,24 +226,23 @@ exports.updateStudentCourse = async (req, res, next) => {
     if (global.useMockData) {
       return res.status(503).json({
         success: false,
-        message: 'Database unavailable. Demo mode is disabled for admin actions.'
+        message:
+          "Database unavailable. Demo mode is disabled for admin actions.",
       });
     }
 
     const student = await User.findById(id);
 
     if (!student) {
-      return res.status(404).json({
-        success: false,
-        message: 'Student not found'
-      });
+      return res
+        .status(404)
+        .json({ success: false, message: "Student not found" });
     }
 
-    if (student.role !== 'student') {
-      return res.status(400).json({
-        success: false,
-        message: 'User is not a student'
-      });
+    if (student.role !== "student") {
+      return res
+        .status(400)
+        .json({ success: false, message: "User is not a student" });
     }
 
     student.enrolledCourse = enrolledCourse;
@@ -245,14 +250,69 @@ exports.updateStudentCourse = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: 'Student course updated successfully',
+      message: "Student course updated successfully",
       data: {
         student: {
           id: student._id,
           email: student.email,
-          enrolledCourse: student.enrolledCourse
-        }
-      }
+          enrolledCourse: student.enrolledCourse,
+        },
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const STUDENT_STATUSES = ["active", "banned", "graduated", "suspended"];
+
+exports.updateStudentStatus = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!STUDENT_STATUSES.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid status. Must be one of: ${STUDENT_STATUSES.join(", ")}`,
+      });
+    }
+
+    if (global.useMockData) {
+      return res.status(503).json({
+        success: false,
+        message:
+          "Database unavailable. Demo mode is disabled for admin actions.",
+      });
+    }
+
+    const student = await User.findById(id);
+
+    if (!student) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Student not found" });
+    }
+
+    if (student.role !== "student") {
+      return res
+        .status(400)
+        .json({ success: false, message: "User is not a student" });
+    }
+
+    student.status = status;
+    await student.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Student status updated successfully",
+      data: {
+        student: {
+          id: student._id,
+          email: student.email,
+          status: student.status,
+        },
+      },
     });
   } catch (error) {
     next(error);

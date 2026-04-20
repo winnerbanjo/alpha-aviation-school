@@ -114,8 +114,8 @@ const userSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Pending Payment', 'Payment Received', 'Active', 'Completed'],
-    default: 'Pending Payment'
+    enum: ['active', 'banned', 'graduated', 'suspended'],
+    default: 'active'
   },
   paymentReceiptUrl: {
     type: String,
