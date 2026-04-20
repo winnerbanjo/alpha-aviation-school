@@ -1,155 +1,109 @@
-import { useState, useEffect } from 'react'
-import { useSearchParams, Navigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { useAuthStore } from '@/store/authStore'
-import { Button } from '@/components/ui/button'
-import { Shield, Mail, Lock, AlertCircle } from 'lucide-react'
-import axios from 'axios'
-
-interface LoginResponse {
-  success: boolean
-  message?: string
-  data?: {
-    token: string
-    user: {
-      id: string
-      email: string
-      role: string
-      firstName?: string
-      lastName?: string
-      enrolledCourse?: string
-      selectedCourses?: string[]
-      courseSelections?: Array<{ title: string; price: number }>
-      paymentStatus?: 'Pending' | 'Paid'
-      amountDue?: number
-      amountPaid?: number
-      totalCoursePrice?: number
-      enrollmentDate?: string
-      phone?: string
-      emergencyContact?: string
-      bio?: string
-      documentUrl?: string
-      paymentMethod?: string[]
-      trainingMethod?: string[]
-      status?: string
-      paymentReceiptUrl?: string
-      studentIdNumber?: string
-    }
-  }
-}
+import { useState, useEffect } from "react";
+import { useSearchParams, Navigate, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useAuthStore } from "@/store/authStore";
+import { Button } from "@/components/ui/button";
+import { Shield, Mail, Lock, AlertCircle } from "lucide-react";
+import { login as apiLogin } from "@/api";
 
 export function AdminPortal() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const [searchParams] = useSearchParams()
-  const { login, isAuthenticated, user } = useAuthStore()
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { login: setAuth, isAuthenticated, user } = useAuthStore();
 
-  const sessionExpired = searchParams.get('session_expired') === '1'
-  const authFailed = searchParams.get('auth_failed') === '1'
+  const sessionExpired = searchParams.get("session_expired") === "1";
+  const authFailed = searchParams.get("auth_failed") === "1";
 
   useEffect(() => {
     if (sessionExpired) {
-      setError('Your session has expired. Please log in again.')
-      window.history.replaceState({}, '', '/admin')
+      setError("Your session has expired. Please log in again.");
+      window.history.replaceState({}, "", "/admin");
     } else if (authFailed) {
-      setError('Authentication failed. Please check your credentials.')
-      window.history.replaceState({}, '', '/admin')
+      setError("Authentication failed. Please check your credentials.");
+      window.history.replaceState({}, "", "/admin");
     }
-  }, [sessionExpired, authFailed])
+  }, [sessionExpired, authFailed]);
 
-  if (isAuthenticated && user?.role === 'admin') {
-    return <Navigate to="/admin/dashboard" replace />
+  if (isAuthenticated && user?.role === "admin") {
+    return <Navigate to="/admin/dashboard" replace />;
   }
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-    const emailValue = email.trim().toLowerCase()
-    const passwordValue = password
+    const emailValue = email.trim().toLowerCase();
+    const passwordValue = password;
 
     if (!emailValue || !passwordValue) {
-      setError('Please enter both email and password')
-      setLoading(false)
-      return
+      setError("Please enter both email and password");
+      setLoading(false);
+      return;
     }
 
     try {
-      const response = await axios.post<LoginResponse>(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/auth/login`,
-        { email: emailValue, password: passwordValue }
-      )
+      const response = await apiLogin(emailValue, passwordValue);
+      // Server shape: { success, message, data: { token, user } }
+      const outerBody = response.data; // { success, message, data }
+      const inner = outerBody?.data; // { token, user }
 
-      const { data } = response.data
-
-      if (!data?.success || !data.token || !data.user) {
-        setError(response.data.message || 'Login failed. Please try again.')
-        setLoading(false)
-        return
+      if (!outerBody?.success || !inner?.token || !inner?.user) {
+        setError(outerBody?.message || "Login failed.");
+        setLoading(false);
+        return;
       }
 
-      if (data.user.role !== 'admin') {
-        setError('Access denied. Admin credentials required.')
-        setLoading(false)
-        return
+      if (inner.user.role !== "admin") {
+        setError("Access denied. Admin credentials required.");
+        setLoading(false);
+        return;
       }
 
-      login(
+      setAuth(
         {
-          id: data.user.id,
-          email: data.user.email,
-          role: data.user.role,
-          firstName: data.user.firstName,
-          lastName: data.user.lastName,
-          enrolledCourse: data.user.enrolledCourse,
-          selectedCourses: data.user.selectedCourses,
-          courseSelections: data.user.courseSelections,
-          paymentStatus: data.user.paymentStatus,
-          amountDue: data.user.amountDue,
-          amountPaid: data.user.amountPaid,
-          totalCoursePrice: data.user.totalCoursePrice,
-          enrollmentDate: data.user.enrollmentDate,
-          phone: data.user.phone,
-          emergencyContact: data.user.emergencyContact,
-          bio: data.user.bio,
-          documentUrl: data.user.documentUrl,
-          paymentMethod: data.user.paymentMethod,
-          trainingMethod: data.user.trainingMethod,
-          status: data.user.status,
-          paymentReceiptUrl: data.user.paymentReceiptUrl,
-          studentIdNumber: data.user.studentIdNumber,
+          id: inner.user.id,
+          email: inner.user.email,
+          role: inner.user.role,
+          firstName: inner.user.firstName,
+          lastName: inner.user.lastName,
+          phone: inner.user.phone,
+          adminLevel: inner.user.adminLevel,
+          permissions: inner.user.permissions,
         },
-        data.token
-      )
+        inner.token,
+      );
 
-      window.location.href = '/admin/dashboard'
+      navigate("/admin/dashboard", { replace: true });
     } catch (err: any) {
-      if (err.response) {
-        switch (err.response.status) {
-          case 401:
-            setError('Invalid email or password')
-            break
-          case 429:
-            setError('Too many attempts. Please wait a few minutes.')
-            break
-          default:
-            setError(err.response.data?.message || 'Login failed. Please try again.')
-        }
-      } else if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
-        setError('Request timed out. Please try again.')
-      } else if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
-        setError('Server unreachable. Please check connection.')
+      if (err.response?.status === 401) {
+        setError("Invalid email or password");
+      } else if (err.response?.status === 429) {
+        setError("Too many attempts. Please wait a few minutes.");
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else if (
+        err.message?.includes("timeout") ||
+        err.code === "ECONNABORTED"
+      ) {
+        setError("Request timed out. Please try again.");
+      } else if (
+        err.message?.includes("Network Error") ||
+        err.code === "ERR_NETWORK"
+      ) {
+        setError("Server unreachable. Please check connection.");
       } else {
-        setError('An error occurred. Please try again.')
+        setError("An error occurred. Please try again.");
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
@@ -232,7 +186,7 @@ export function AdminPortal() {
               disabled={loading}
               className="w-full rounded-lg bg-slate-900 hover:bg-slate-800 text-white py-3 shadow-sm transition-all duration-300 hover:scale-[1.02] font-medium"
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
 
@@ -247,5 +201,5 @@ export function AdminPortal() {
         </div>
       </motion.div>
     </div>
-  )
+  );
 }

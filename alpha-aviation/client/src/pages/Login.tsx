@@ -1,47 +1,43 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useAuthStore } from '@/store/authStore'
-import { Button } from '@/components/ui/button'
-import axios from 'axios'
-import { motion } from 'framer-motion'
-import { GraduationCap } from 'lucide-react'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
+import { Button } from "@/components/ui/button";
+import { login as apiLogin } from "@/api";
+import { motion } from "framer-motion";
+import { GraduationCap } from "lucide-react";
 
 export function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const { login } = useAuthStore()
-  
-  const handleLogin = async () => {
-    setLoading(true)
-    setError('')
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+  const { login } = useAuthStore();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
     if (!email || !password) {
-      setError('Please provide both email and password')
-      setLoading(false)
-      return
+      setError("Please provide both email and password");
+      setLoading(false);
+      return;
     }
 
     try {
-      const response = await axios.post(
-        'https://asl-aviation-server.onrender.com/api/auth/login',
-        {
-          email,
-          password
-        }
-      )
+      const response = await apiLogin(email, password);
+      const responseBody = response.data;
+      const data = responseBody?.data;
 
-      const payload = response.data?.data ? response.data.data : response.data
-      const token = payload?.token
-      const userData = payload?.user
-      const role = userData?.role
-
-      if (!token || !userData || !role) {
-        setError('Invalid server response. Please try again.')
-        setLoading(false)
-        return
+      if (!responseBody?.success || !data?.token || !data?.user) {
+        setError(responseBody?.message || "Login failed.");
+        setLoading(false);
+        return;
       }
+
+      const { user: userData, token } = data;
 
       login(
         {
@@ -50,6 +46,7 @@ export function Login() {
           role: userData.role,
           firstName: userData.firstName,
           lastName: userData.lastName,
+          phone: userData.phone,
           enrolledCourse: userData.enrolledCourse,
           selectedCourses: userData.selectedCourses,
           courseSelections: userData.courseSelections,
@@ -58,7 +55,6 @@ export function Login() {
           amountPaid: userData.amountPaid,
           totalCoursePrice: userData.totalCoursePrice,
           enrollmentDate: userData.enrollmentDate,
-          phone: userData.phone,
           emergencyContact: userData.emergencyContact,
           bio: userData.bio,
           documentUrl: userData.documentUrl,
@@ -67,31 +63,40 @@ export function Login() {
           status: userData.status,
           paymentReceiptUrl: userData.paymentReceiptUrl,
           studentIdNumber: userData.studentIdNumber,
+          adminClearance: userData.adminClearance,
         },
-        token
-      )
+        token,
+      );
 
-      localStorage.setItem('token', token)
-      localStorage.setItem('userRole', role)
-      localStorage.setItem('user', JSON.stringify(userData))
-
-      console.log('Token saved:', token)
-
-      window.location.href = role === 'admin' ? '/admin/dashboard' : '/dashboard'
-    } catch (error: any) {
-      console.error(error)
-      setError(error?.response?.data?.message || 'Login failed.')
+      navigate(userData.role === "admin" ? "/admin/dashboard" : "/dashboard", {
+        replace: true,
+      });
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        setError("Invalid email or password");
+      } else if (err.response?.status === 429) {
+        setError("Too many attempts. Please wait a few minutes.");
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else if (
+        err.message?.includes("Network Error") ||
+        err.code === "ERR_NETWORK"
+      ) {
+        setError("Server unreachable. Please check connection.");
+      } else {
+        setError("Login failed. Please try again.");
+      }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] relative overflow-hidden">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center opacity-20"
-        style={{ backgroundImage: 'url(/smiling-traveler-with-suitcase.jpg)' }}
+        style={{ backgroundImage: "url(/smiling-traveler-with-suitcase.jpg)" }}
       />
       <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px]" />
 
@@ -129,9 +134,12 @@ export function Login() {
                 </motion.div>
               )}
 
-              <form onSubmit={(e) => { e.preventDefault(); handleLogin() }} className="space-y-5">
+              <form onSubmit={handleLogin} className="space-y-5">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-slate-900 mb-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-slate-900 mb-2"
+                  >
                     Email
                   </label>
                   <input
@@ -142,11 +150,15 @@ export function Login() {
                     className="w-full px-4 py-2.5 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 focus:border-[#0061FF] text-slate-900 transition-all"
                     placeholder="you@example.com"
                     required
+                    autoComplete="email"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-slate-900 mb-2">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-slate-900 mb-2"
+                  >
                     Password
                   </label>
                   <input
@@ -157,6 +169,7 @@ export function Login() {
                     className="w-full px-4 py-2.5 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 focus:border-[#0061FF] text-slate-900 transition-all"
                     placeholder="Enter your password"
                     required
+                    autoComplete="current-password"
                   />
                 </div>
 
@@ -165,7 +178,7 @@ export function Login() {
                   disabled={loading}
                   className="w-full rounded-full bg-[#0061FF] hover:bg-[#0052E6] text-white py-2.5 shadow-sm transition-all duration-300 hover:scale-105"
                 >
-                  {loading ? 'Signing in...' : 'Sign in'}
+                  {loading ? "Signing in..." : "Sign in"}
                 </Button>
               </form>
 
@@ -178,9 +191,13 @@ export function Login() {
                 </Link>
                 <button
                   onClick={() => {
-                    const email = prompt('Enter your email address to reset password:')
+                    const email = prompt(
+                      "Enter your email address to reset password:",
+                    );
                     if (email) {
-                      alert(`Password reset link will be sent to ${email}. Please check your email.`)
+                      alert(
+                        `Password reset link will be sent to ${email}. Please check your email.`,
+                      );
                     }
                   }}
                   className="text-sm text-slate-500 hover:text-slate-900 transition-colors block w-full"
@@ -188,7 +205,7 @@ export function Login() {
                   Reset Password
                 </button>
                 <Link
-                  to="/admin/portal"
+                  to="/admin"
                   className="text-xs text-slate-400 hover:text-slate-600 transition-colors block"
                 >
                   Admin? Sign in here →
@@ -199,5 +216,5 @@ export function Login() {
         </div>
       </div>
     </div>
-  )
+  );
 }
