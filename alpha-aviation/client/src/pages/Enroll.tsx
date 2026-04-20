@@ -161,14 +161,19 @@ export function Enroll() {
 
         {/* The Enriched Container (Rounded Style) */}
         <div className="absolute inset-4 overflow-hidden ">
-          {/* Top Micro-UI */}
-          <div className="absolute top-8 left-8 right-8 flex justify-between items-center z-20">
-            <div className="flex items-center gap-2 px-3 py-1 bg-black/40 backdrop-blur-md rounded-full border border-white/10">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#0061FF] animate-pulse" />
-              <span className="text-[10px] text-white/70 font-bold uppercase tracking-widest">
-                Enrolling Now
+          {/* Top Micro-UI: Now "Go Home" */}
+          <div className="absolute top-8 left-8 right-8 z-20">
+            <Link
+              to="/"
+              className="group flex items-center gap-3 w-fit px-4 py-2 bg-black/40 backdrop-blur-md rounded-full border border-white/10 hover:border-white/30 transition-all"
+            >
+              <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                <ArrowLeft className="w-3 h-3" />
+              </div>
+              <span className="text-[10px] text-white/70 font-bold uppercase tracking-widest group-hover:text-white transition-colors">
+                Go Home
               </span>
-            </div>
+            </Link>
           </div>
 
           {/* Main Narrative Overlay */}
@@ -268,18 +273,23 @@ export function Enroll() {
             transition={{ duration: 0.6 }}
           >
             <div className="flex items-center justify-between mb-12">
-              <Link
-                to="/"
-                className="group flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-colors"
-              >
-                <div className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center group-hover:border-slate-900 group-hover:bg-slate-900 group-hover:text-white transition-all">
-                  <ArrowLeft className="w-4 h-4" />
-                </div>
-                <span className="text-xs font-bold tracking-widest uppercase">
-                  Go Home
-                </span>
-              </Link>
-              <div className="flex items-center gap-1.5 shadow-sm bg-white p-2 rounded-full border border-slate-100">
+              {/* Conditional Nav: Back to Step 1 or Placeholder */}
+              <div className="min-w-[120px]">
+                {step === 2 && (
+                  <button
+                    onClick={() => setStep(1)}
+                    className="group flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-colors"
+                  >
+                    <div className="w-8 h-8 rounded-full border border-slate-500 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-all">
+                      <ArrowLeft className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs font-bold tracking-widest uppercase text-slate-900">
+                      Step 1
+                    </span>
+                  </button>
+                )}
+              </div>
+              <div className="flex items-center gap-1.5 shadow-sm bg-white p-2 rounded-full border border-slate-500">
                 {[1, 2].map((s) => (
                   <div
                     key={s}
@@ -298,9 +308,14 @@ export function Enroll() {
               <h2 className="text-4xl font-semibold tracking-tighter text-slate-900 mb-2">
                 Begin Your Journey
               </h2>
-              <p className="text-slate-400 text-sm font-medium">
-                Fill the fields below to start your professional flight
-                training.
+              <p className="text-sm text-slate-400 font-medium">
+                Already have an account?{" "}
+                <Link
+                  to="/login"
+                  className="text-[#0061FF] font-bold hover:underline underline-offset-4"
+                >
+                  Sign in
+                </Link>
               </p>
             </div>
 
@@ -328,7 +343,7 @@ export function Enroll() {
                               firstName: e.target.value,
                             })
                           }
-                          className="w-full bg-white px-5 py-4 border border-slate-200 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                          className="w-full bg-white px-5 py-4 border-2 border-slate-500 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
                           placeholder="Your first name"
                           required
                         />
@@ -346,7 +361,7 @@ export function Enroll() {
                               lastName: e.target.value,
                             })
                           }
-                          className="w-full bg-white px-5 py-4 border border-slate-200 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                          className="w-full bg-white px-5 py-4 border-2 border-slate-500 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
                           placeholder="Your last name"
                           required
                         />
@@ -363,7 +378,7 @@ export function Enroll() {
                         onChange={(e) =>
                           setFormData({ ...formData, email: e.target.value })
                         }
-                        className="w-full bg-white px-5 py-4 border border-slate-200 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                        className="w-full bg-white px-5 py-4 border-2 border-slate-500 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
                         placeholder="email@aviation.com"
                         required
                       />
@@ -379,7 +394,7 @@ export function Enroll() {
                         onChange={(e) =>
                           setFormData({ ...formData, password: e.target.value })
                         }
-                        className="w-full bg-white px-5 py-4 border border-slate-200 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                        className="w-full bg-white px-5 py-4 border-2 border-slate-500 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
                         placeholder="••••••••"
                         minLength={6}
                         required
@@ -405,7 +420,7 @@ export function Enroll() {
                               className={`group flex items-center justify-between p-5 rounded-[1.25rem] border-2 transition-all duration-300 ${
                                 isSelected
                                   ? "border-[#0061FF] bg-[#0061FF]/5 shadow-lg shadow-[#0061FF]/5"
-                                  : "border-white bg-white hover:border-slate-100 hover:shadow-xl hover:shadow-slate-200/50"
+                                  : "border-slate-500 bg-white hover:border-[#0061FF] hover:shadow-xl hover:shadow-slate-200/50"
                               }`}
                             >
                               <div className="flex items-center gap-4">
@@ -505,7 +520,7 @@ export function Enroll() {
                                 className={`p-8 rounded-[1.5rem] border-2 text-center transition-all duration-300 ${
                                   isSelected
                                     ? "border-[#0061FF] bg-[#0061FF]/5 shadow-lg shadow-[#0061FF]/5"
-                                    : "border-white bg-white hover:border-slate-100 hover:shadow-xl hover:shadow-slate-200/50"
+                                    : "border-slate-500 bg-white hover:border-[#0061FF] hover:shadow-xl hover:shadow-slate-200/50"
                                 }`}
                               >
                                 <div
@@ -558,8 +573,8 @@ export function Enroll() {
                                 }}
                                 className={`py-4 px-2 rounded-[1.25rem] border-2 text-center transition-all duration-300 ${
                                   isSelected
-                                    ? "border-slate-900 bg-slate-900 text-white"
-                                    : "border-white bg-white hover:border-slate-100 text-slate-400"
+                                    ? "border-slate-500 bg-slate-900 text-white"
+                                    : "border-slate-500 bg-white hover:border-slate-100 text-slate-400"
                                 }`}
                               >
                                 <span
@@ -598,19 +613,6 @@ export function Enroll() {
             </form>
 
             <div className="mt-20 pt-10 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full border border-slate-100 flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-slate-200" />
-                </div>
-                <div className="text-left">
-                  <span className="text-[11px] text-slate-300 font-bold uppercase tracking-widest block">
-                    Safe Enrollment
-                  </span>
-                  <span className="text-[10px] text-slate-200 font-medium block">
-                    256-bit Encrypted Portal
-                  </span>
-                </div>
-              </div>
               <p className="text-xs text-slate-400 font-medium">
                 Member of the Academy?{" "}
                 <Link
