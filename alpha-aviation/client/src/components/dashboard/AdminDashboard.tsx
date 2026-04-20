@@ -14,25 +14,28 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   getAllStudents,
   getFinancialStats,
-  getAdminTest,
   updatePaymentStatus,
   batchUpdatePaymentStatus,
-  updateStudentCourse,
   updateStudentStatus,
 } from "@/api";
 import {
   Users,
-  DollarSign,
   CheckCircle2,
   Search,
   MessageCircle,
-  Send,
   Filter,
   RefreshCw,
-  Wifi,
+  Eye,
+  Pencil,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+  DollarSign,
 } from "lucide-react";
 import { StudentProfileModal } from "./StudentProfileModal";
+import { Modal } from "@/components/ui/modal";
 import { EmptyState } from "@/components/EmptyState";
+import { useToast } from "@/components/ui/toast";
 
 type StudentStatus = "active" | "banned" | "graduated" | "suspended";
 
@@ -68,7 +71,7 @@ const formatNaira = (amount: number) =>
     maximumFractionDigits: 0,
   }).format(amount || 0);
 
-export function AdminDashboard() {
+export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -80,40 +83,18 @@ export function AdminDashboard() {
   const [paymentFilter, setPaymentFilter] = useState<
     "all" | "Pending" | "Paid"
   >("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<AdminTab>("overview");
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [testConnectionStatus, setTestConnectionStatus] = useState<
-    string | null
-  >(null);
-  const [testingConnection, setTestingConnection] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [authError, setAuthError] = useState(false);
-
-  // Initialize tab from sessionStorage
-  useEffect(() => {
-    const saved = sessionStorage.getItem("adminTab");
-    if (saved && ["overview", "students", "revenue"].includes(saved)) {
-      setActiveTab(saved as AdminTab);
-    }
-  }, []);
-
-  // Listen for tab changes from sidebar
-  useEffect(() => {
-    const handleTabChange = (e: Event) => {
-      const customEvent = e as CustomEvent;
-      if (
-        customEvent.detail &&
-        ["overview", "students", "revenue"].includes(customEvent.detail)
-      ) {
-        setActiveTab(customEvent.detail as AdminTab);
-        sessionStorage.setItem("adminTab", customEvent.detail); // Ensure sessionStorage is updated
-      }
-    };
-    window.addEventListener("adminTabChange", handleTabChange);
-    return () => window.removeEventListener("adminTabChange", handleTabChange);
-  }, []);
+  const [statusUpdating, setStatusUpdating] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -204,24 +185,6 @@ export function AdminDashboard() {
     }
   };
 
-  const handleTestConnection = async () => {
-    setTestingConnection(true);
-    setTestConnectionStatus(null);
-    try {
-      const token = localStorage.getItem("token");
-      const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
-      const res = await getAdminTest({ headers });
-      const count = res?.data?.totalStudents ?? res?.totalStudents ?? "—";
-      setTestConnectionStatus(`Connected: ${count} students in database`);
-    } catch (err: any) {
-      setTestConnectionStatus(
-        err?.response?.data?.message || err?.message || "Connection failed",
-      );
-    } finally {
-      setTestingConnection(false);
-    }
-  };
-
   const fetchFinancialStats = async (signal?: AbortSignal) => {
     try {
       const token = localStorage.getItem("token");
@@ -253,26 +216,46 @@ export function AdminDashboard() {
   };
 
   const handleMarkAsPaid = async (studentId: string) => {
+    const student = students.find((s) => s._id === studentId);
+    if (!student) return;
+
+    const newStatus = student.paymentStatus === "Pending" ? "Paid" : "Pending";
+    const newAmountPaid = newStatus === "Paid" ? student.amountDue : 0;
+    const newAmountDue = newStatus === "Pending" ? student.amountDue : 0;
+
+    // Optimistic update - instant UI
+    setStudents((prev) =>
+      (Array.isArray(prev) ? prev : []).map((s) =>
+        s._id === studentId
+          ? {
+              ...s,
+              paymentStatus: newStatus,
+              amountPaid: newAmountPaid,
+              amountDue: newAmountDue,
+            }
+          : s,
+      ),
+    );
+
     try {
       await updatePaymentStatus(studentId);
-      // Update local state immediately for instant UI feedback
+      // Refresh stats in background
+      fetchFinancialStats();
+    } catch (error) {
+      console.error("Error updating payment status:", error);
+      // Revert on error
       setStudents((prev) =>
         (Array.isArray(prev) ? prev : []).map((s) =>
           s._id === studentId
             ? {
                 ...s,
-                paymentStatus:
-                  s.paymentStatus === "Pending" ? "Paid" : "Pending",
-                amountPaid: s.amountDue,
-                amountDue: 0,
+                paymentStatus: student.paymentStatus,
+                amountPaid: student.amountPaid || 0,
+                amountDue: student.amountDue,
               }
             : s,
         ),
       );
-      await fetchStudents();
-      await fetchFinancialStats();
-    } catch (error) {
-      console.error("Error updating payment status:", error);
       alert("Failed to update payment status");
     }
   };
@@ -314,6 +297,7 @@ export function AdminDashboard() {
     studentId: string,
     status: StudentStatus,
   ) => {
+    setStatusUpdating(studentId);
     setStudents((prev) =>
       (Array.isArray(prev) ? prev : []).map((s) =>
         s._id === studentId ? { ...s, status } : s,
@@ -321,10 +305,31 @@ export function AdminDashboard() {
     );
     try {
       await updateStudentStatus(studentId, status);
+      toast(`Student status updated to "${status}"`, "success");
     } catch (error) {
       console.error("Error updating student status:", error);
-      alert("Failed to update student status");
+      toast("Failed to update student status", "error");
       await fetchStudents();
+    } finally {
+      setStatusUpdating(null);
+    }
+  };
+
+  const handleDeleteStudent = (student: Student) => {
+    setStudentToDelete(student);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDeleteStudent = async () => {
+    if (!studentToDelete) return;
+    try {
+      setStudents((prev) => prev.filter((s) => s._id !== studentToDelete._id));
+      setDeleteModalOpen(false);
+      setStudentToDelete(null);
+      toast("Student deleted", "success");
+    } catch (error) {
+      console.error("Error deleting student:", error);
+      toast("Failed to delete student", "error");
     }
   };
 
@@ -400,23 +405,32 @@ export function AdminDashboard() {
   // Calculate stats (use safe list to avoid crash)
   const enrolledStudents = safeStudents.length;
 
-  // Filter students based on search and payment status (guarantee array to prevent crash)
+  // Filter students based on search, payment status, and student status
   const filteredStudents = safeStudents.filter((student) => {
     // Payment status filter
     if (paymentFilter !== "all" && student.paymentStatus !== paymentFilter) {
       return false;
     }
-
+    // Student status filter
+    if (statusFilter !== "all" && student.status !== statusFilter) {
+      return false;
+    }
     // Search filter
     const searchLower = searchQuery.toLowerCase();
     const fullName =
       `${student.firstName || ""} ${student.lastName || ""}`.toLowerCase();
     return (
       student.email.toLowerCase().includes(searchLower) ||
-      fullName.includes(searchLower) ||
-      student.enrolledCourse?.toLowerCase().includes(searchLower)
+      fullName.includes(searchLower)
     );
   });
+
+  // Pagination
+  const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
+  const paginatedStudents = filteredStudents.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
 
   if (loading) {
     return (
@@ -504,16 +518,6 @@ export function AdminDashboard() {
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           <Button
-            variant="outline"
-            size="sm"
-            onClick={handleTestConnection}
-            disabled={testingConnection}
-            className="rounded-full border-slate-200/50"
-          >
-            <Wifi className="w-4 h-4 mr-2" />
-            {testingConnection ? "Testing…" : "Test Connection"}
-          </Button>
-          <Button
             variant="ghost"
             size="sm"
             onClick={() => {
@@ -527,13 +531,6 @@ export function AdminDashboard() {
           </Button>
         </div>
       </div>
-      {testConnectionStatus && (
-        <p
-          className={`text-sm ${testConnectionStatus.startsWith("Connected") ? "text-green-600" : "text-red-600"}`}
-        >
-          {testConnectionStatus}
-        </p>
-      )}
 
       {/* No-data message when server returned empty list */}
       {safeStudents.length === 0 && (
@@ -641,39 +638,83 @@ export function AdminDashboard() {
             </div>
 
             {/* Payment Status Filter */}
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-slate-400" />
-              <div className="flex gap-2 border border-slate-200/50 rounded-lg p-1">
-                <button
-                  onClick={() => setPaymentFilter("all")}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                    paymentFilter === "all"
-                      ? "bg-[#0061FF] text-white"
-                      : "text-slate-600 hover:text-slate-900"
-                  }`}
+            <div className="flex items-center gap-4">
+              {/* Payment Filter */}
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-500 font-medium">
+                  Payment:
+                </span>
+                <div className="flex gap-1 border border-slate-200/50 rounded-lg p-1">
+                  <button
+                    onClick={() => setPaymentFilter("all")}
+                    className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                      paymentFilter === "all"
+                        ? "bg-[#0061FF] text-white"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    All
+                  </button>
+                  <button
+                    onClick={() => setPaymentFilter("Pending")}
+                    className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                      paymentFilter === "Pending"
+                        ? "bg-[#007bff] text-white"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    Pending
+                  </button>
+                  <button
+                    onClick={() => setPaymentFilter("Paid")}
+                    className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                      paymentFilter === "Paid"
+                        ? "bg-green-100 text-green-900"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    Paid
+                  </button>
+                </div>
+              </div>
+              {/* Status Filter */}
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-500 font-medium">
+                  Status:
+                </span>
+                <select
+                  value={statusFilter}
+                  onChange={(e) => {
+                    setStatusFilter(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className="text-sm border border-slate-200/50 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 bg-white"
                 >
-                  All
-                </button>
-                <button
-                  onClick={() => setPaymentFilter("Pending")}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                    paymentFilter === "Pending"
-                      ? "bg-[#007bff] text-white"
-                      : "text-slate-600 hover:text-slate-900"
-                  }`}
+                  <option value="all">All</option>
+                  <option value="active">Active</option>
+                  <option value="graduated">Graduated</option>
+                  <option value="suspended">Suspended</option>
+                  <option value="banned">Banned</option>
+                </select>
+              </div>
+              {/* Items per page */}
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-500 font-medium">
+                  Show:
+                </span>
+                <select
+                  value={itemsPerPage}
+                  onChange={(e) => {
+                    setItemsPerPage(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  className="text-sm border border-slate-200/50 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 bg-white"
                 >
-                  Pending
-                </button>
-                <button
-                  onClick={() => setPaymentFilter("Paid")}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                    paymentFilter === "Paid"
-                      ? "bg-green-100 text-green-900"
-                      : "text-slate-600 hover:text-slate-900"
-                  }`}
-                >
-                  Paid
-                </button>
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
               </div>
             </div>
           </div>
@@ -688,14 +729,6 @@ export function AdminDashboard() {
                 Mark {selectedStudents.size} as Paid
               </Button>
             )}
-            <Button
-              onClick={handleInvite}
-              variant="outline"
-              className="rounded-full border-slate-200/50 hover:bg-slate-50 transition-all hover:scale-105"
-            >
-              <Send className="w-4 h-4 mr-2" />
-              Invite Lead
-            </Button>
           </div>
         </div>
       )}
@@ -742,7 +775,9 @@ export function AdminDashboard() {
                         <EmptyState
                           type="students"
                           message={
-                            searchQuery || paymentFilter !== "all"
+                            searchQuery ||
+                            paymentFilter !== "all" ||
+                            statusFilter !== "all"
                               ? "No students found matching your filters. Try adjusting your search or filter settings."
                               : "No students registered yet. Waiting for first enrollment..."
                           }
@@ -755,8 +790,8 @@ export function AdminDashboard() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  (filteredStudents && Array.isArray(filteredStudents)
-                    ? filteredStudents
+                  (paginatedStudents && Array.isArray(paginatedStudents)
+                    ? paginatedStudents
                     : []
                   ).map((student) => (
                     <TableRow
@@ -790,13 +825,14 @@ export function AdminDashboard() {
                       <TableCell onClick={(e) => e.stopPropagation()}>
                         <select
                           value={student.status || "active"}
+                          disabled={statusUpdating !== null}
                           onChange={(e) =>
                             handleStudentStatusChange(
                               student._id,
                               e.target.value as StudentStatus,
                             )
                           }
-                          className={`text-sm border rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 bg-white transition-colors ${
+                          className={`text-sm border rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                             student.status === "banned"
                               ? "border-red-300 text-red-700"
                               : student.status === "graduated"
@@ -816,37 +852,37 @@ export function AdminDashboard() {
                         className="text-right"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <div className="flex items-center justify-end gap-2 flex-wrap">
-                          {student.paymentStatus === "Pending" && (
-                            <>
-                              <Button
-                                size="sm"
-                                onClick={() => handleMarkAsPaid(student._id)}
-                                className="rounded-full bg-[#0061FF] hover:bg-[#0052E6] text-white transition-all hover:scale-105"
-                              >
-                                Mark as Paid
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handleWhatsAppReminder(student)}
-                                className="rounded-full border-slate-200/50 hover:bg-slate-50 transition-all hover:scale-105"
-                              >
-                                <MessageCircle className="w-4 h-4 mr-1" />
-                                <span className="hidden sm:inline">Remind</span>
-                              </Button>
-                            </>
-                          )}
-                          {student.paymentStatus === "Paid" && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleWhatsAppReminder(student)}
-                              className="rounded-full border-slate-200/50 hover:bg-slate-50 transition-all hover:scale-105"
-                            >
-                              <MessageCircle className="w-4 h-4" />
-                            </Button>
-                          )}
+                        <div className="flex items-center justify-end gap-1">
+                          {/* View */}
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleStudentClick(student)}
+                            className="rounded-full hover:bg-slate-100"
+                            title="View"
+                          >
+                            <Eye className="w-4 h-4 text-slate-600" />
+                          </Button>
+                          {/* WhatsApp Reminder */}
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleWhatsAppReminder(student)}
+                            className="rounded-full hover:bg-green-50"
+                            title="Send Reminder"
+                          >
+                            <MessageCircle className="w-4 h-4 text-green-600" />
+                          </Button>
+                          {/* Delete */}
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleDeleteStudent(student)}
+                            className="rounded-full hover:bg-red-50"
+                            title="Delete"
+                          >
+                            <Trash2 className="w-4 h-4 text-red-600" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -854,6 +890,44 @@ export function AdminDashboard() {
                 )}
               </TableBody>
             </Table>
+            {/* Pagination */}
+            {filteredStudents.length > 0 && (
+              <div className="flex items-center justify-between p-4 border-t border-slate-200">
+                <p className="text-sm text-slate-500">
+                  Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
+                  {Math.min(
+                    currentPage * itemsPerPage,
+                    filteredStudents.length,
+                  )}{" "}
+                  of {filteredStudents.length} students
+                </p>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage((p) => p - 1)}
+                    className="rounded-full"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    Previous
+                  </Button>
+                  <span className="text-sm text-slate-500">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={currentPage >= totalPages}
+                    onClick={() => setCurrentPage((p) => p + 1)}
+                    className="rounded-full"
+                  >
+                    Next
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
@@ -945,6 +1019,40 @@ export function AdminDashboard() {
         onWhatsAppReminder={handleWhatsAppReminder}
         onAdminClearanceChange={handleAdminClearanceChange}
       />
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={deleteModalOpen}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setStudentToDelete(null);
+        }}
+        title="Delete Student"
+      >
+        <div className="space-y-4">
+          <p className="text-slate-600">
+            Are you sure you want to delete{" "}
+            <span className="font-semibold text-slate-900">
+              {studentToDelete?.firstName || studentToDelete?.email}
+            </span>
+            ? This action cannot be undone.
+          </p>
+          <div className="flex gap-3 justify-end">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setDeleteModalOpen(false);
+                setStudentToDelete(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmDeleteStudent}>
+              Delete
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </motion.div>
   );
 }

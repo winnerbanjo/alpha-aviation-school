@@ -30,14 +30,15 @@ function App() {
           <Route path="/courses" element={<Courses />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/enroll" element={<Enroll />} />
           <Route
             path="/registration-success"
             element={<RegistrationSuccess />}
           />
         </Route>
 
+        {/* Auth & Enroll pages - no layout */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/enroll" element={<Enroll />} />
         <Route path="/admin" element={<AdminPortal />} />
         <Route
           path="/admin/portal"
@@ -54,6 +55,22 @@ function App() {
         />
         <Route
           path="/admin/dashboard"
+          element={
+            <ProtectedRoute adminOnly>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/students"
+          element={
+            <ProtectedRoute adminOnly>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/revenue"
           element={
             <ProtectedRoute adminOnly>
               <Dashboard />
