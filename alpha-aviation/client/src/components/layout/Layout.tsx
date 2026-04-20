@@ -10,6 +10,7 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const isDashboardRoute = location?.pathname?.includes("/dashboard") || false;
+  const isAuthRoute = location?.pathname === "/admin" || location?.pathname === "/login" || false;
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -35,14 +36,14 @@ export function Layout({ children }: LayoutProps) {
         </div>
       </div>
 
-      {/* Navbar */}
-      <Navbar scrolled={scrolled} />
+      {/* Navbar - Hidden on auth routes */}
+      {!isAuthRoute && <Navbar scrolled={scrolled} />}
 
       {/* Main Content */}
       <main className="flex-1">{children}</main>
 
-      {/* Footer - Only on non-dashboard routes */}
-      {!isDashboardRoute && <Footer />}
+      {/* Footer - Only on public pages */}
+      {!isDashboardRoute && !isAuthRoute && <Footer />}
     </div>
   );
 }

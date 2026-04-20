@@ -14,30 +14,46 @@ const generateToken = (userId, role = 'student') => {
   return jwt.sign({ userId, role }, secret, { expiresIn });
 };
 
-const buildUserResponse = (user) => ({
-  id: user._id || user.id,
-  email: user.email,
-  role: user.role,
-  firstName: user.firstName,
-  lastName: user.lastName,
-  enrolledCourse: user.enrolledCourse,
-  selectedCourses: user.selectedCourses || [],
-  courseSelections: user.courseSelections || [],
-  paymentStatus: user.paymentStatus,
-  amountDue: user.amountDue,
-  amountPaid: user.amountPaid,
-  totalCoursePrice: user.totalCoursePrice || 0,
-  enrollmentDate: user.enrollmentDate,
-  phone: user.phone,
-  emergencyContact: user.emergencyContact,
-  bio: user.bio,
-  documentUrl: user.documentUrl,
-  paymentMethod: user.paymentMethod || [],
-  trainingMethod: user.trainingMethod || [],
-  status: user.status || 'Pending Payment',
-  paymentReceiptUrl: user.paymentReceiptUrl || '',
-  studentIdNumber: user.studentIdNumber || '',
-});
+const buildUserResponse = (user) => {
+  const base = {
+    id: user._id || user.id,
+    email: user.email,
+    role: user.role,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    phone: user.phone,
+  };
+
+  // Admin gets minimal data
+  if (user.role === 'admin') {
+    return {
+      ...base,
+      adminLevel: user.adminLevel || 'standard',
+      permissions: user.permissions || ['view', 'edit'],
+    };
+  }
+
+  // Student gets full profile
+  return {
+    ...base,
+    enrolledCourse: user.enrolledCourse,
+    selectedCourses: user.selectedCourses || [],
+    courseSelections: user.courseSelections || [],
+    paymentStatus: user.paymentStatus,
+    amountDue: user.amountDue,
+    amountPaid: user.amountPaid,
+    totalCoursePrice: user.totalCoursePrice || 0,
+    enrollmentDate: user.enrollmentDate,
+    emergencyContact: user.emergencyContact,
+    bio: user.bio,
+    documentUrl: user.documentUrl,
+    paymentMethod: user.paymentMethod || [],
+    trainingMethod: user.trainingMethod || [],
+    status: user.status || 'Pending Payment',
+    paymentReceiptUrl: user.paymentReceiptUrl || '',
+    studentIdNumber: user.studentIdNumber || '',
+  };
+};
 
 const generateStudentIdNumber = async () => {
   let studentIdNumber = '';

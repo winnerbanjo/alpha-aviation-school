@@ -15,6 +15,7 @@ const courseSelectionSchema = new mongoose.Schema({
 }, { _id: false });
 
 const userSchema = new mongoose.Schema({
+  // Core auth fields
   email: {
     type: String,
     required: [true, 'Email is required'],
@@ -34,6 +35,8 @@ const userSchema = new mongoose.Schema({
     default: 'student',
     required: true
   },
+  
+  // Common fields (used by both)
   firstName: {
     type: String,
     trim: true
@@ -46,6 +49,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+
+  // Student-specific fields
   emergencyContact: {
     type: String,
     trim: true
@@ -121,6 +126,17 @@ const userSchema = new mongoose.Schema({
     unique: true,
     sparse: true,
     trim: true
+  },
+
+  // Admin-specific fields
+  adminLevel: {
+    type: String,
+    enum: ['super', 'standard'],
+    default: 'standard'
+  },
+  permissions: {
+    type: [String],
+    default: ['view', 'edit']
   }
 }, {
   timestamps: true

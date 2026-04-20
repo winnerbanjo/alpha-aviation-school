@@ -1,11 +1,6 @@
 import axios, { type AxiosRequestConfig } from "axios";
 
-const isLocalhost =
-  typeof window !== "undefined" &&
-  ["localhost", "127.0.0.1"].includes(window.location.hostname);
-
-const API_URL = "http://localhost:5000/api";
-// : 'https://asl-aviation-server.onrender.com/api'
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 const api = axios.create({
   baseURL: API_URL,
