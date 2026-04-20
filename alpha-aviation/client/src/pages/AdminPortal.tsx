@@ -49,9 +49,8 @@ export function AdminPortal() {
 
     try {
       const response = await apiLogin(emailValue, passwordValue);
-      // Server shape: { success, message, data: { token, user } }
-      const outerBody = response.data; // { success, message, data }
-      const inner = outerBody?.data; // { token, user }
+      const outerBody = response.data;
+      const inner = outerBody?.data;
 
       if (!outerBody?.success || !inner?.token || !inner?.user) {
         setError(outerBody?.message || "Login failed.");

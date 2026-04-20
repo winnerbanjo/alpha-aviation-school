@@ -12,79 +12,71 @@ import { Contact } from "./pages/Contact";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Layout } from "./components/layout/Layout";
 import api from "./api";
-
 import { ScrollToTop } from "./components/ScrollToTop";
 
 function App() {
   useEffect(() => {
     const controller = new AbortController();
-
-    api.get("/health", { signal: controller.signal }).catch(() => {
-      // Best-effort wake-up; ignore errors
-    });
-
-    return () => {
-      controller.abort();
-    };
+    api.get("/health", { signal: controller.signal }).catch(() => {});
+    return () => controller.abort();
   }, []);
 
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Layout>
-        <Routes>
+      <Routes>
+        <Route element={<Layout />}>
           <Route path="/" element={<Landing />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/admin" element={<AdminPortal />} />
-          <Route
-            path="/admin/portal"
-            element={<Navigate to="/admin" replace />}
-          />
           <Route path="/enroll" element={<Enroll />} />
           <Route
             path="/registration-success"
             element={<RegistrationSuccess />}
           />
-          {/* Student Dashboard - Default /dashboard route */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          {/* Admin Dashboard - /admin/dashboard route */}
-          <Route
-            path="/admin/dashboard"
-            element={
-              <ProtectedRoute adminOnly>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          {/* Legacy routes for backward compatibility */}
-          <Route
-            path="/dashboard/admin"
-            element={
-              <ProtectedRoute adminOnly>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard/student"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </Layout>
+        </Route>
+
+        <Route path="/admin" element={<AdminPortal />} />
+        <Route
+          path="/admin/portal"
+          element={<Navigate to="/admin" replace />}
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute adminOnly>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/admin"
+          element={
+            <ProtectedRoute adminOnly>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/student"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </BrowserRouter>
   );
 }
