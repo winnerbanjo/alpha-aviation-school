@@ -30,6 +30,8 @@ interface User {
   studentIdNumber?: string
   // Student permission granted by admin
   adminClearance?: boolean
+  // Certificate
+  certificateUrl?: string
 }
 
 interface AuthState {

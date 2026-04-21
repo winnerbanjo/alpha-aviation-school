@@ -1,16 +1,19 @@
-const User = require('../models/User');
-const jwt = require('jsonwebtoken');
-const { buildCourseSelections, getTotalCoursePrice } = require('../utils/courseCatalog');
-const { sendMail } = require('../utils/mailer');
+const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+const {
+  buildCourseSelections,
+  getTotalCoursePrice,
+} = require("../utils/courseCatalog");
+const { sendMail } = require("../utils/mailer");
 
 // Generate JWT token with role-based expiry
-const generateToken = (userId, role = 'student') => {
+const generateToken = (userId, role = "student") => {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
-    throw new Error('JWT_SECRET is not defined');
+    throw new Error("JWT_SECRET is not defined");
   }
 
-  const expiresIn = role === 'admin' ? '24h' : '7d';
+  const expiresIn = role === "admin" ? "24h" : "7d";
   return jwt.sign({ userId, role }, secret, { expiresIn });
 };
 
@@ -25,11 +28,11 @@ const buildUserResponse = (user) => {
   };
 
   // Admin gets minimal data
-  if (user.role === 'admin') {
+  if (user.role === "admin") {
     return {
       ...base,
-      adminLevel: user.adminLevel || 'standard',
-      permissions: user.permissions || ['view', 'edit'],
+      adminLevel: user.adminLevel || "standard",
+      permissions: user.permissions || ["view", "edit"],
     };
   }
 
@@ -49,14 +52,16 @@ const buildUserResponse = (user) => {
     documentUrl: user.documentUrl,
     paymentMethod: user.paymentMethod || [],
     trainingMethod: user.trainingMethod || [],
-    status: user.status || 'Pending Payment',
-    paymentReceiptUrl: user.paymentReceiptUrl || '',
-    studentIdNumber: user.studentIdNumber || '',
+    status: user.status || "active",
+    paymentReceiptUrl: user.paymentReceiptUrl || "",
+    studentIdNumber: user.studentIdNumber || "",
+    certificateUrl: user.certificateUrl || "",
+    adminClearance: user.adminClearance || false,
   };
 };
 
 const generateStudentIdNumber = async () => {
-  let studentIdNumber = '';
+  let studentIdNumber = "";
   let exists = true;
 
   while (exists) {
@@ -77,27 +82,35 @@ const isValidEmail = (email) => {
 // Register new user
 exports.register = async (req, res, next) => {
   try {
-    const { email, password, firstName, lastName, selectedCourses, paymentMethod, trainingMethod } = req.body;
+    const {
+      email,
+      password,
+      firstName,
+      lastName,
+      selectedCourses,
+      paymentMethod,
+      trainingMethod,
+    } = req.body;
 
     // Input validation
     if (!email || !password || !selectedCourses) {
       return res.status(400).json({
         success: false,
-        message: 'Email, password, and courses are required'
+        message: "Email, password, and courses are required",
       });
     }
 
     if (!isValidEmail(email)) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid email format'
+        message: "Invalid email format",
       });
     }
 
     if (password.length < 6) {
       return res.status(400).json({
         success: false,
-        message: 'Password must be at least 6 characters'
+        message: "Password must be at least 6 characters",
       });
     }
 
@@ -108,7 +121,7 @@ exports.register = async (req, res, next) => {
     if (normalizedSelectedCourses.length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'Please select at least one course'
+        message: "Please select at least one course",
       });
     }
 
@@ -116,7 +129,7 @@ exports.register = async (req, res, next) => {
     if (courseSelections.length !== normalizedSelectedCourses.length) {
       return res.status(400).json({
         success: false,
-        message: 'One or more selected courses are invalid'
+        message: "One or more selected courses are invalid",
       });
     }
 
@@ -128,7 +141,7 @@ exports.register = async (req, res, next) => {
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: 'User with this email already exists'
+        message: "User with this email already exists",
       });
     }
 
@@ -136,43 +149,43 @@ exports.register = async (req, res, next) => {
     const user = await User.create({
       email,
       password,
-      role: 'student',
+      role: "student",
       firstName,
       lastName,
-      enrolledCourse: normalizedSelectedCourses[0] || '',
+      enrolledCourse: normalizedSelectedCourses[0] || "",
       selectedCourses: normalizedSelectedCourses,
       courseSelections,
-      paymentStatus: 'Pending',
+      paymentStatus: "Pending",
       amountDue: totalCoursePrice,
       enrollmentDate: new Date(),
       totalCoursePrice,
       studentIdNumber,
       paymentMethod: paymentMethod || [],
       trainingMethod: trainingMethod || [],
-      status: 'Pending Payment'
+      status: "active",
     });
 
-    const token = generateToken(user._id, 'student');
+    const token = generateToken(user._id, "student");
 
     // Try to send welcome email, but don't fail if it doesn't work
     try {
       await sendMail({
         to: user.email,
-        subject: 'Welcome to Alpha Step Links Aviation School',
-        text: `Hello ${user.firstName || 'Student'}, welcome to Alpha Step Links Aviation School. Your student ID is ${studentIdNumber}. Kindly make your payment of NGN ${totalCoursePrice.toLocaleString('en-NG')} to begin your selected course(s): ${normalizedSelectedCourses.join(', ')}.`,
-        html: `<p>Hello ${user.firstName || 'Student'},</p><p>Welcome to Alpha Step Links Aviation School.</p><p>Your student ID is <strong>${studentIdNumber}</strong>.</p><p>Please make your payment of <strong>NGN ${totalCoursePrice.toLocaleString('en-NG')}</strong> to begin your selected course(s): <strong>${normalizedSelectedCourses.join(', ')}</strong>.</p><p>We look forward to having you onboard.</p>`,
+        subject: "Welcome to Alpha Step Links Aviation School",
+        text: `Hello ${user.firstName || "Student"}, welcome to Alpha Step Links Aviation School. Your student ID is ${studentIdNumber}. Kindly make your payment of NGN ${totalCoursePrice.toLocaleString("en-NG")} to begin your selected course(s): ${normalizedSelectedCourses.join(", ")}.`,
+        html: `<p>Hello ${user.firstName || "Student"},</p><p>Welcome to Alpha Step Links Aviation School.</p><p>Your student ID is <strong>${studentIdNumber}</strong>.</p><p>Please make your payment of <strong>NGN ${totalCoursePrice.toLocaleString("en-NG")}</strong> to begin your selected course(s): <strong>${normalizedSelectedCourses.join(", ")}</strong>.</p><p>We look forward to having you onboard.</p>`,
       });
     } catch (mailError) {
-      console.log('Welcome email not sent:', mailError.message);
+      console.log("Welcome email not sent:", mailError.message);
     }
 
     res.status(201).json({
       success: true,
-      message: 'User registered successfully',
+      message: "User registered successfully",
       data: {
         token,
-        user: buildUserResponse(user)
-      }
+        user: buildUserResponse(user),
+      },
     });
   } catch (error) {
     next(error);
@@ -188,17 +201,19 @@ exports.login = async (req, res, next) => {
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide email and password'
+        message: "Please provide email and password",
       });
     }
 
     // Find user with password field
-    const user = await User.findOne({ email: email.toLowerCase().trim() }).select('+password');
+    const user = await User.findOne({
+      email: email.toLowerCase().trim(),
+    }).select("+password");
 
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid email or password'
+        message: "Invalid email or password",
       });
     }
 
@@ -207,7 +222,7 @@ exports.login = async (req, res, next) => {
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid email or password'
+        message: "Invalid email or password",
       });
     }
 
@@ -216,11 +231,11 @@ exports.login = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: 'Login successful',
+      message: "Login successful",
       data: {
         token,
-        user: buildUserResponse(user)
-      }
+        user: buildUserResponse(user),
+      },
     });
   } catch (error) {
     next(error);
@@ -235,7 +250,7 @@ exports.getProfile = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: "User not found",
       });
     }
 
@@ -244,9 +259,9 @@ exports.getProfile = async (req, res, next) => {
       data: {
         user: {
           ...buildUserResponse(user),
-          createdAt: user.createdAt
-        }
-      }
+          createdAt: user.createdAt,
+        },
+      },
     });
   } catch (error) {
     next(error);
@@ -261,12 +276,12 @@ exports.sendContactMessage = async (req, res, next) => {
     if (!name || !email || !phone || !message) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide name, email, phone, and message'
+        message: "Please provide name, email, phone, and message",
       });
     }
 
     await sendMail({
-      to: 'info@alphasteplinksaviationschool.com',
+      to: "info@alphasteplinksaviationschool.com",
       replyTo: email,
       subject: `New contact enquiry from ${name}`,
       text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\n\nMessage:\n${message}`,
@@ -276,7 +291,7 @@ exports.sendContactMessage = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: 'Message sent successfully'
+      message: "Message sent successfully",
     });
   } catch (error) {
     next(error);

@@ -215,6 +215,66 @@ export const updateStudentStatus = async (
   return response.data;
 };
 
+// User management
+export const createUser = async (userData: {
+  email: string;
+  password: string;
+  role: "admin" | "student";
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+}, config?: AxiosRequestConfig) => {
+  const response = await api.post("/admin/users", userData, config);
+  return response.data;
+};
+
+export const updateUser = async (
+  userId: string,
+  userData: {
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    role?: "admin" | "student";
+    status?: "active" | "banned" | "graduated" | "suspended";
+    paymentStatus?: "Pending" | "Paid";
+  },
+  config?: AxiosRequestConfig,
+) => {
+  const response = await api.put(`/admin/users/${userId}`, userData, config);
+  return response.data;
+};
+
+export const deleteUser = async (userId: string, config?: AxiosRequestConfig) => {
+  const response = await api.delete(`/admin/users/${userId}`, config);
+  return response.data;
+};
+
+export const bulkImportUsers = async (
+  users: Array<{
+    email: string;
+    password: string;
+    role?: "admin" | "student";
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    status?: "active" | "banned" | "graduated" | "suspended";
+  }>,
+  config?: AxiosRequestConfig,
+) => {
+  const response = await api.post("/admin/users/bulk-import", { users }, config);
+  return response.data;
+};
+
+export const uploadCertificate = async (
+  userId: string,
+  certificateUrl: string,
+  config?: AxiosRequestConfig,
+) => {
+  const response = await api.post(`/admin/users/${userId}/certificate`, { certificateUrl }, config);
+  return response.data;
+};
+
 // Payment API calls
 export const getPayments = async () => {
   const response = await api.get("/payments");

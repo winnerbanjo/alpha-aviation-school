@@ -16,6 +16,8 @@ import {
   CreditCard,
   Star,
   ArrowRight,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 
 export function Enroll() {
@@ -29,6 +31,7 @@ export function Enroll() {
     lastName: "",
     email: "",
     password: "",
+    showPassword: false,
     selectedCourses: [] as string[],
     paymentMethod: [] as string[],
     trainingMethod: [] as string[],
@@ -388,17 +391,38 @@ export function Enroll() {
                       <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">
                         Secure Password
                       </label>
-                      <input
-                        type="password"
-                        value={formData.password}
-                        onChange={(e) =>
-                          setFormData({ ...formData, password: e.target.value })
-                        }
-                        className="w-full bg-white px-5 py-4 border-2 border-slate-500 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
-                        placeholder="••••••••"
-                        minLength={6}
-                        required
-                      />
+                      <div className="relative">
+                        <input
+                          type={formData.showPassword ? "text" : "password"}
+                          value={formData.password}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              password: e.target.value,
+                            })
+                          }
+                          className="w-full bg-white px-5 py-4 border-2 border-slate-500 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                          placeholder="••••••••"
+                          minLength={6}
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setFormData({
+                              ...formData,
+                              showPassword: !formData.showPassword,
+                            })
+                          }
+                          className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                        >
+                          {formData.showPassword ? (
+                            <EyeOff className="w-5 h-5" />
+                          ) : (
+                            <Eye className="w-5 h-5" />
+                          )}
+                        </button>
+                      </div>
                     </div>
 
                     <div className="space-y-4 pt-4">

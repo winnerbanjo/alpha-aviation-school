@@ -17,6 +17,10 @@ import {
   updatePaymentStatus,
   batchUpdatePaymentStatus,
   updateStudentStatus,
+  createUser,
+  updateUser,
+  bulkImportUsers,
+  deleteUser as apiDeleteUser,
 } from "@/api";
 import {
   Users,
@@ -26,11 +30,15 @@ import {
   Filter,
   RefreshCw,
   Eye,
+  EyeOff,
   Pencil,
   Trash2,
   ChevronLeft,
   ChevronRight,
   DollarSign,
+  Plus,
+  UserPlus,
+  Upload,
 } from "lucide-react";
 import { StudentProfileModal } from "./StudentProfileModal";
 import { Modal } from "@/components/ui/modal";
@@ -52,6 +60,7 @@ interface Student {
   enrollmentDate?: string;
   phone?: string;
   adminClearance?: boolean;
+  certificateUrl?: string;
 }
 
 const courses = [
@@ -89,6 +98,23 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
+
+  // User creation/editing modal
+  const [userModalOpen, setUserModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<Student | null>(null);
+  const [userFormData, setUserFormData] = useState({
+    email: "",
+    password: "",
+    role: "student" as "admin" | "student",
+    firstName: "",
+    lastName: "",
+    phone: "",
+  });
+
+  // CSV import
+  const [csvModalOpen, setCsvModalOpen] = useState(false);
+  const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [csvPreview, setCsvPreview] = useState<any[]>([]);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -298,10 +324,21 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
     status: StudentStatus,
   ) => {
     setStatusUpdating(studentId);
+    // Graduating a student automatically marks them as Paid
+    const extraFields =
+      status === "graduated"
+        ? { paymentStatus: "Paid" as const, amountDue: 0 }
+        : {};
     setStudents((prev) =>
       (Array.isArray(prev) ? prev : []).map((s) =>
-        s._id === studentId ? { ...s, status } : s,
+        s._id === studentId ? { ...s, status, ...extraFields } : s,
       ),
+    );
+    // Also update selectedStudent snapshot so open modal reflects change
+    setSelectedStudent((prev) =>
+      prev && prev._id === studentId
+        ? { ...prev, status, ...extraFields }
+        : prev,
     );
     try {
       await updateStudentStatus(studentId, status);
@@ -323,6 +360,7 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
   const confirmDeleteStudent = async () => {
     if (!studentToDelete) return;
     try {
+      await apiDeleteUser(studentToDelete._id);
       setStudents((prev) => prev.filter((s) => s._id !== studentToDelete._id));
       setDeleteModalOpen(false);
       setStudentToDelete(null);
@@ -333,28 +371,136 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
     }
   };
 
+  const handleSaveUser = async () => {
+    try {
+      if (editingUser) {
+        // Update existing user
+        await updateUser(editingUser._id, {
+          email: userFormData.email,
+          firstName: userFormData.firstName,
+          lastName: userFormData.lastName,
+          phone: userFormData.phone,
+          role: userFormData.role,
+        });
+        toast("User updated", "success");
+      } else {
+        // Create new user
+        await createUser(userFormData);
+        toast("User created", "success");
+      }
+      // Refetch to get updated list
+      await fetchStudents();
+      setUserModalOpen(false);
+      setUserFormData({
+        email: "",
+        password: "",
+        role: "student",
+        firstName: "",
+        lastName: "",
+        phone: "",
+      });
+      setEditingUser(null);
+    } catch (error) {
+      console.error("Error saving user:", error);
+      toast("Failed to save user", "error");
+    }
+  };
+
+  const handleCsvFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      const lines = text.split("\n").filter((line) => line.trim());
+
+      // Get header row and normalize
+      const headerRow = lines[0];
+      const headerKeys = headerRow
+        .split(",")
+        .map((h) => h.trim().toLowerCase().replace(/\s/g, ""));
+
+      const parsed = lines
+        .slice(1)
+        .map((line) => {
+          // Handle CSV with potential empty fields
+          const values = line.split(",");
+          const row: any = {};
+
+          headerKeys.forEach((key, idx) => {
+            const value = values[idx]?.trim() || "";
+
+            // Map to proper keys
+            if (key === "email") row.email = value;
+            else if (key === "password") row.password = value;
+            else if (key === "role") row.role = value;
+            else if (key === "firstname" || key === "first")
+              row.firstName = value;
+            else if (key === "lastname" || key === "last") row.lastName = value;
+            else if (key === "phone" || key === "phonenumber")
+              row.phone = value;
+            else if (key === "status") row.status = value;
+          });
+
+          // Combine name for display
+          row.fullname = [row.firstName, row.lastName]
+            .filter(Boolean)
+            .join(" ");
+          return row;
+        })
+        .filter((r) => r.email && r.password);
+
+      setCsvPreview(parsed);
+    };
+    reader.readAsText(file);
+    setCsvFile(file);
+  };
+
+  const handleCsvUpload = async () => {
+    if (!csvPreview.length) return;
+    try {
+      await bulkImportUsers(csvPreview);
+      toast(`Imported ${csvPreview.length} users`, "success");
+      setCsvModalOpen(false);
+      setCsvFile(null);
+      setCsvPreview([]);
+      await fetchStudents();
+    } catch (error) {
+      console.error("Error importing users:", error);
+      toast("Failed to import users", "error");
+    }
+  };
+
   const handleAdminClearanceChange = async (
     studentId: string,
     cleared: boolean,
   ) => {
     try {
-      // Update local state immediately for instant UI feedback
       setStudents((prev) =>
         (Array.isArray(prev) ? prev : []).map((s) =>
           s._id === studentId ? { ...s, adminClearance: cleared } : s,
         ),
       );
-      // In production, this would call an API endpoint to update admin clearance
-      // await updateAdminClearance(studentId, cleared)
       console.log(
         `Admin clearance ${cleared ? "granted" : "revoked"} for student ${studentId}`,
       );
     } catch (error) {
       console.error("Error updating admin clearance:", error);
-      alert("Failed to update admin clearance");
-      // Revert on error
+      toast("Failed to update admin clearance", "error");
       await fetchStudents();
     }
+  };
+
+  const handleCertificateUploaded = (studentId: string, url: string) => {
+    setStudents((prev) =>
+      (Array.isArray(prev) ? prev : []).map((s) =>
+        s._id === studentId ? { ...s, certificateUrl: url } : s,
+      ),
+    );
+    setSelectedStudent((prev) =>
+      prev && prev._id === studentId ? { ...prev, certificateUrl: url } : prev,
+    );
   };
 
   const handleWhatsAppReminder = (student: Student) => {
@@ -729,6 +875,32 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
                 Mark {selectedStudents.size} as Paid
               </Button>
             )}
+            <Button
+              onClick={() => {
+                setEditingUser(null);
+                setUserFormData({
+                  email: "",
+                  password: "",
+                  role: "student",
+                  firstName: "",
+                  lastName: "",
+                  phone: "",
+                });
+                setUserModalOpen(true);
+              }}
+              className="rounded-full bg-green-600 hover:bg-green-700 text-white transition-all hover:scale-105"
+            >
+              <UserPlus className="w-4 h-4 mr-2" />
+              Add User
+            </Button>
+            <Button
+              onClick={() => setCsvModalOpen(true)}
+              variant="outline"
+              className="rounded-full border-slate-200/50"
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Import CSV
+            </Button>
           </div>
         </div>
       )}
@@ -751,6 +923,7 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
                       className="rounded border-slate-300"
                     />
                   </TableHead>
+                  <TableHead className="text-slate-900">Email</TableHead>
                   <TableHead className="text-slate-900">Student Name</TableHead>
                   <TableHead className="text-slate-900">
                     Payment Status
@@ -806,6 +979,9 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
                           onChange={() => toggleStudentSelection(student._id)}
                           className="rounded border-slate-300"
                         />
+                      </TableCell>
+                      <TableCell className="text-slate-600">
+                        {student.email || "N/A"}
                       </TableCell>
                       <TableCell className="font-medium text-slate-900">
                         {student.firstName || ""} {student.lastName || ""}
@@ -1018,6 +1194,7 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
         onMarkAsPaid={handleMarkAsPaid}
         onWhatsAppReminder={handleWhatsAppReminder}
         onAdminClearanceChange={handleAdminClearanceChange}
+        onCertificateUploaded={handleCertificateUploaded}
       />
 
       {/* Delete Confirmation Modal */}
@@ -1047,8 +1224,241 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
             >
               Cancel
             </Button>
-            <Button variant="destructive" onClick={confirmDeleteStudent}>
+            <Button
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={confirmDeleteStudent}
+            >
               Delete
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Create/Edit User Modal */}
+      <Modal
+        isOpen={userModalOpen}
+        onClose={() => {
+          setUserModalOpen(false);
+          setEditingUser(null);
+          setUserFormData({
+            email: "",
+            password: "",
+            role: "student",
+            firstName: "",
+            lastName: "",
+            phone: "",
+          });
+        }}
+        title={editingUser ? "Edit User" : "Create New User"}
+      >
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                First Name
+              </label>
+              <input
+                type="text"
+                value={userFormData.firstName}
+                onChange={(e) =>
+                  setUserFormData({
+                    ...userFormData,
+                    firstName: e.target.value,
+                  })
+                }
+                className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20"
+                placeholder="First name"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Last Name
+              </label>
+              <input
+                type="text"
+                value={userFormData.lastName}
+                onChange={(e) =>
+                  setUserFormData({ ...userFormData, lastName: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20"
+                placeholder="Last name"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              Email *
+            </label>
+            <input
+              type="email"
+              value={userFormData.email}
+              onChange={(e) =>
+                setUserFormData({ ...userFormData, email: e.target.value })
+              }
+              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20"
+              placeholder="email@example.com"
+              required={!editingUser}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              Password {editingUser ? "(leave blank to keep)" : "*"}
+            </label>
+            <input
+              type="password"
+              value={userFormData.password}
+              onChange={(e) =>
+                setUserFormData({ ...userFormData, password: e.target.value })
+              }
+              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20"
+              placeholder="••••••••"
+              required={!editingUser}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              Role *
+            </label>
+            <select
+              value={userFormData.role}
+              onChange={(e) =>
+                setUserFormData({
+                  ...userFormData,
+                  role: e.target.value as "admin" | "student",
+                })
+              }
+              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20"
+            >
+              <option value="student">Student</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              Phone
+            </label>
+            <input
+              type="tel"
+              value={userFormData.phone}
+              onChange={(e) =>
+                setUserFormData({ ...userFormData, phone: e.target.value })
+              }
+              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20"
+              placeholder="+234..."
+            />
+          </div>
+
+          <div className="flex gap-3 justify-end pt-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setUserModalOpen(false);
+                setEditingUser(null);
+                setUserFormData({
+                  email: "",
+                  password: "",
+                  role: "student",
+                  firstName: "",
+                  lastName: "",
+                  phone: "",
+                });
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSaveUser}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              {editingUser ? "Update" : "Create"}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* CSV Import Modal */}
+      <Modal
+        isOpen={csvModalOpen}
+        onClose={() => {
+          setCsvModalOpen(false);
+          setCsvFile(null);
+          setCsvPreview([]);
+        }}
+        title="Import Users from CSV"
+      >
+        <div className="space-y-4">
+          <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center">
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleCsvFileChange}
+              className="hidden"
+              id="csv-upload"
+            />
+            <label htmlFor="csv-upload" className="cursor-pointer">
+              <Upload className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+              <p className="text-sm text-slate-600">
+                {csvFile ? csvFile.name : "Click to upload CSV file"}
+              </p>
+            </label>
+          </div>
+
+          {csvPreview.length > 0 && (
+            <div>
+              <p className="text-sm font-medium text-slate-700 mb-2">
+                Preview ({csvPreview.length} users):
+              </p>
+              <div className="max-h-40 overflow-auto border rounded-lg">
+                <table className="w-full text-xs">
+                  <thead className="bg-slate-50">
+                    <tr>
+                      <th className="px-2 py-1 text-left">Email</th>
+                      <th className="px-2 py-1 text-left">Role</th>
+                      <th className="px-2 py-1 text-left">Name</th>
+                      <th className="px-2 py-1 text-left">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {csvPreview.slice(0, 5).map((row, i) => (
+                      <tr key={i} className="border-t">
+                        <td className="px-2 py-1">{row.email}</td>
+                        <td className="px-2 py-1">{row.role || "student"}</td>
+                        <td className="px-2 py-1">{row.fullname}</td>
+                        <td className="px-2 py-1">{row.status || "active"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {csvPreview.length > 5 && (
+                  <p className="text-xs text-slate-500 p-2">
+                    ...and {csvPreview.length - 5} more
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
+          <div className="flex gap-3 justify-end">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setCsvModalOpen(false);
+                setCsvFile(null);
+                setCsvPreview([]);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCsvUpload}
+              disabled={!csvPreview.length}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              Import {csvPreview.length} Users
             </Button>
           </div>
         </div>

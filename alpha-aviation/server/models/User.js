@@ -127,6 +127,10 @@ const userSchema = new mongoose.Schema({
     sparse: true,
     trim: true
   },
+  certificateUrl: {
+    type: String,
+    trim: true
+  },
 
   // Admin-specific fields
   adminLevel: {
