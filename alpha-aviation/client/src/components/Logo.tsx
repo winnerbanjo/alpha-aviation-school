@@ -29,7 +29,7 @@ export function Logo({
           className={`w-16 h-16 relative bg-transparent flex items-center justify-center`}
         >
           <img
-            src="/asl-logo.png"
+            src="/new-logo.png"
             alt="Alpha Aviation School Logo"
             className="w-full h-full object-contain"
           />
