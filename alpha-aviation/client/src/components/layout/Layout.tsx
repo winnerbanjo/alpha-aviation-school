@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import { Navbar } from "@/components/Navbar";
+import { Navbar } from "@/components/layout/Navbar";
 import Footer from "./Footer";
 
 export function Layout() {
@@ -15,7 +15,7 @@ export function Layout() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar scrolled={scrolled} />
-      <main className="flex-1">
+      <main className="flex-1 pt-16 lg:pt-0">
         <Outlet />
       </main>
       <Footer />

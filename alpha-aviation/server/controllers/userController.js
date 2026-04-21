@@ -1,5 +1,18 @@
 const User = require('../models/User');
 
+const generateStudentIdNumber = async () => {
+  let studentIdNumber = '';
+  let exists = true;
+
+  while (exists) {
+    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+    studentIdNumber = `ASL-${new Date().getFullYear()}-${randomSuffix}`;
+    exists = await User.exists({ studentIdNumber });
+  }
+
+  return studentIdNumber;
+};
+
 exports.createUser = async (req, res, next) => {
   try {
     const { email, password, role, firstName, lastName, phone } = req.body;
@@ -33,7 +46,7 @@ exports.createUser = async (req, res, next) => {
       });
     }
 
-    const user = await User.create({
+    const userData = {
       email,
       password,
       role,
@@ -42,7 +55,13 @@ exports.createUser = async (req, res, next) => {
       phone,
       status: role === 'admin' ? 'active' : 'active',
       paymentStatus: role === 'student' ? 'Pending' : undefined,
-    });
+    };
+
+    if (role === 'student') {
+      userData.studentIdNumber = await generateStudentIdNumber();
+    }
+
+    const user = await User.create(userData);
 
     res.status(201).json({
       success: true,
@@ -53,6 +72,7 @@ exports.createUser = async (req, res, next) => {
         role: user.role,
         firstName: user.firstName,
         lastName: user.lastName,
+        studentIdNumber: user.studentIdNumber || null,
       }
     });
   } catch (error) {
@@ -214,7 +234,7 @@ exports.bulkImportUsers = async (req, res, next) => {
         continue;
       }
 
-      await User.create({
+      const createData = {
         email: email.toLowerCase(),
         password,
         role: userRole,
@@ -223,7 +243,13 @@ exports.bulkImportUsers = async (req, res, next) => {
         phone: phone || '',
         status: userStatus,
         paymentStatus: userRole === 'student' ? 'Pending' : undefined,
-      });
+      };
+
+      if (userRole === 'student') {
+        createData.studentIdNumber = await generateStudentIdNumber();
+      }
+
+      await User.create(createData);
 
       results.created++;
     }

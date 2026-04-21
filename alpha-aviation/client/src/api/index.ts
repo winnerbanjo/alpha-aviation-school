@@ -4,7 +4,6 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 const api = axios.create({
   baseURL: API_URL,
-  // Default timeout: 30s for most of the app
   timeout: 30000,
   headers: {
     "Content-Type": "application/json",
@@ -216,14 +215,17 @@ export const updateStudentStatus = async (
 };
 
 // User management
-export const createUser = async (userData: {
-  email: string;
-  password: string;
-  role: "admin" | "student";
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
-}, config?: AxiosRequestConfig) => {
+export const createUser = async (
+  userData: {
+    email: string;
+    password: string;
+    role: "admin" | "student";
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+  },
+  config?: AxiosRequestConfig,
+) => {
   const response = await api.post("/admin/users", userData, config);
   return response.data;
 };
@@ -245,7 +247,10 @@ export const updateUser = async (
   return response.data;
 };
 
-export const deleteUser = async (userId: string, config?: AxiosRequestConfig) => {
+export const deleteUser = async (
+  userId: string,
+  config?: AxiosRequestConfig,
+) => {
   const response = await api.delete(`/admin/users/${userId}`, config);
   return response.data;
 };
@@ -259,10 +264,15 @@ export const bulkImportUsers = async (
     lastName?: string;
     phone?: string;
     status?: "active" | "banned" | "graduated" | "suspended";
+    studentIdNumber?: string;
   }>,
   config?: AxiosRequestConfig,
 ) => {
-  const response = await api.post("/admin/users/bulk-import", { users }, config);
+  const response = await api.post(
+    "/admin/users/bulk-import",
+    { users },
+    config,
+  );
   return response.data;
 };
 
@@ -271,7 +281,11 @@ export const uploadCertificate = async (
   certificateUrl: string,
   config?: AxiosRequestConfig,
 ) => {
-  const response = await api.post(`/admin/users/${userId}/certificate`, { certificateUrl }, config);
+  const response = await api.post(
+    `/admin/users/${userId}/certificate`,
+    { certificateUrl },
+    config,
+  );
   return response.data;
 };
 

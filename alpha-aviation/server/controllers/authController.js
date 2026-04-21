@@ -60,7 +60,7 @@ const buildUserResponse = (user) => {
   };
 };
 
-const generateStudentIdNumber = async () => {
+export const generateStudentIdNumber = async () => {
   let studentIdNumber = "";
   let exists = true;
 
