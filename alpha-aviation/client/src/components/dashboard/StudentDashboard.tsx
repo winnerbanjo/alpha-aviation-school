@@ -39,7 +39,9 @@ type TabType =
   | "curriculum"
   | "profile"
   | "resources"
-  | "documents";
+  | "documents"
+  | "certificate"
+  | "records";
 
 export function StudentDashboard() {
   const { user, setUser } = useAuthStore();
@@ -183,8 +185,6 @@ export function StudentDashboard() {
   const tabs = isGraduated
     ? [
         { id: "certificate", label: "My Certificate", icon: Award },
-        { id: "records", label: "Training Records", icon: FileText },
-        { id: "resources", label: "Resource Library", icon: Download },
         { id: "profile", label: "Profile Settings", icon: User },
       ]
     : [

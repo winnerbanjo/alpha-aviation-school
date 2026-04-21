@@ -657,16 +657,16 @@ export function Enroll() {
                     exit={{ opacity: 0, y: -12 }}
                     className="space-y-8"
                   >
-                    {/* Payment Method */}
+                    {/* Payment Method - single select */}
                     <div className="space-y-4">
                       <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">
-                        Scholarship & Tuition
+                        Scholarship &amp; Tuition
                       </label>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {["Full Payment", "Installmental Payment"].map(
                           (method) => {
                             const isSelected =
-                              formData.paymentMethod.includes(method);
+                              formData.paymentMethod[0] === method;
                             return (
                               <button
                                 key={method}
@@ -674,11 +674,7 @@ export function Enroll() {
                                 onClick={() =>
                                   setFormData({
                                     ...formData,
-                                    paymentMethod: isSelected
-                                      ? formData.paymentMethod.filter(
-                                          (m) => m !== method,
-                                        )
-                                      : [...formData.paymentMethod, method],
+                                    paymentMethod: isSelected ? [] : [method],
                                   })
                                 }
                                 className={`p-6 rounded-[1.5rem] border-2 text-center transition-all duration-300 ${
@@ -711,7 +707,7 @@ export function Enroll() {
                         )}
                       </div>
                     </div>
-                    {/* Training Mode */}
+                    {/* Training Mode - single select */}
                     <div className="space-y-4">
                       <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">
                         Preferred Training Mode
@@ -720,7 +716,7 @@ export function Enroll() {
                         {["Physical", "Virtual", "Distance Learning"].map(
                           (method) => {
                             const isSelected =
-                              formData.trainingMethod.includes(method);
+                              formData.trainingMethod[0] === method;
                             return (
                               <button
                                 key={method}
@@ -728,11 +724,7 @@ export function Enroll() {
                                 onClick={() =>
                                   setFormData({
                                     ...formData,
-                                    trainingMethod: isSelected
-                                      ? formData.trainingMethod.filter(
-                                          (m) => m !== method,
-                                        )
-                                      : [...formData.trainingMethod, method],
+                                    trainingMethod: isSelected ? [] : [method],
                                   })
                                 }
                                 className={`py-4 px-2 rounded-[1.25rem] border-2 text-center transition-all duration-300 ${

@@ -1,52 +1,71 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { useAuthStore } from '@/store/authStore'
-import { updateStudentProfile } from '@/api'
-import { User, Phone, FileText, Save, AlertCircle, Contact, Award, Lock } from 'lucide-react'
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useAuthStore } from "@/store/authStore";
+import { updateStudentProfile } from "@/api";
+import {
+  User,
+  Phone,
+  FileText,
+  Save,
+  AlertCircle,
+  Contact,
+  Award,
+  Lock,
+} from "lucide-react";
 
 export function ProfileDashboard() {
-  const { user, setUser } = useAuthStore()
-  const [phone, setPhone] = useState(user?.phone || '')
-  const [bio, setBio] = useState(user?.bio || '')
-  const [emergencyContact, setEmergencyContact] = useState(user?.emergencyContact || '')
-  const [loading, setLoading] = useState(false)
-  const [saved, setSaved] = useState(false)
+  const { user, setUser } = useAuthStore();
+  const [phone, setPhone] = useState(user?.phone || "");
+  const [bio, setBio] = useState(user?.bio || "");
+  const [emergencyContact, setEmergencyContact] = useState(
+    user?.emergencyContact || "",
+  );
+  const [loading, setLoading] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     if (user) {
-      setPhone(user.phone || '')
-      setBio(user.bio || '')
-      setEmergencyContact(user.emergencyContact || '')
+      setPhone(user.phone || "");
+      setBio(user.bio || "");
+      setEmergencyContact(user.emergencyContact || "");
     }
-  }, [user])
+  }, [user]);
 
   const handleSave = async () => {
     try {
-      setLoading(true)
-      const response = await updateStudentProfile(phone, bio, emergencyContact)
-      setUser({ ...(user || {}), ...response.data.user })
-      setSaved(true)
-      setTimeout(() => setSaved(false), 3000)
+      setLoading(true);
+      const response = await updateStudentProfile(phone, bio, emergencyContact);
+      setUser({ ...(user || {}), ...response.data.user });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
     } catch (error) {
-      console.error('Error updating profile:', error)
-      alert('Failed to update profile')
+      console.error("Error updating profile:", error);
+      setSaved(false);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleDownloadIdCard = () => {
     if (!user) {
-      return
+      return;
     }
 
-    const studentName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Student'
-    const courseLabel = (user.selectedCourses && user.selectedCourses.length > 0)
-      ? user.selectedCourses.slice(0, 2).join(' | ')
-      : user.enrolledCourse || 'Aviation Student'
-    const studentIdNumber = user.studentIdNumber || 'PENDING-ID'
+    const studentName =
+      `${user.firstName || ""} ${user.lastName || ""}`.trim() || "Student";
+    const courseLabel =
+      user.selectedCourses && user.selectedCourses.length > 0
+        ? user.selectedCourses.slice(0, 2).join(" | ")
+        : user.enrolledCourse || "Aviation Student";
+    const studentIdNumber = user.studentIdNumber || "PENDING-ID";
 
     const svg = `
       <svg xmlns="http://www.w3.org/2000/svg" width="920" height="560" viewBox="0 0 920 560">
@@ -69,16 +88,16 @@ export function ProfileDashboard() {
         <text x="280" y="430" fill="#bfdbfe" font-size="18" font-family="Arial, sans-serif">Programme</text>
         <text x="280" y="467" fill="#ffffff" font-size="22" font-family="Arial, sans-serif">${courseLabel}</text>
       </svg>
-    `
+    `;
 
-    const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const anchor = document.createElement('a')
-    anchor.href = url
-    anchor.download = `${studentIdNumber}.svg`
-    anchor.click()
-    URL.revokeObjectURL(url)
-  }
+    const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `${studentIdNumber}.svg`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <motion.div
@@ -93,7 +112,9 @@ export function ProfileDashboard() {
               <User className="w-5 h-5 text-[#0061FF]" />
             </div>
             <div>
-              <CardTitle className="text-slate-900 tracking-tighter">Profile Settings</CardTitle>
+              <CardTitle className="text-slate-900 tracking-tighter">
+                Profile Settings
+              </CardTitle>
               <CardDescription className="text-slate-500">
                 Update your personal information
               </CardDescription>
@@ -101,6 +122,32 @@ export function ProfileDashboard() {
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* Name (read-only) */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-900 mb-2">
+                First Name
+              </label>
+              <input
+                type="text"
+                value={user?.firstName || ""}
+                disabled
+                className="w-full px-4 py-2.5 border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-900 mb-2">
+                Last Name
+              </label>
+              <input
+                type="text"
+                value={user?.lastName || ""}
+                disabled
+                className="w-full px-4 py-2.5 border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed"
+              />
+            </div>
+          </div>
+
           {/* Email (Read-only) */}
           <div>
             <label className="block text-sm font-medium text-slate-900 mb-2">
@@ -108,7 +155,7 @@ export function ProfileDashboard() {
             </label>
             <input
               type="email"
-              value={user?.email || ''}
+              value={user?.email || ""}
               disabled
               className="w-full px-4 py-2.5 border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed"
             />
@@ -120,7 +167,7 @@ export function ProfileDashboard() {
             </label>
             <input
               type="text"
-              value={user?.studentIdNumber || ''}
+              value={user?.studentIdNumber || "Not assigned yet"}
               disabled
               className="w-full px-4 py-2.5 border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed"
             />
@@ -128,7 +175,7 @@ export function ProfileDashboard() {
 
           {/* Phone */}
           <div>
-            <label className="block text-sm font-medium text-slate-900 mb-2 flex items-center gap-2">
+            <label className="flex items-center gap-2 text-sm font-medium text-slate-900 mb-2">
               <Phone className="w-4 h-4" />
               Phone Number
             </label>
@@ -143,7 +190,7 @@ export function ProfileDashboard() {
 
           {/* Emergency Contact */}
           <div>
-            <label className="block text-sm font-medium text-slate-900 mb-2 flex items-center gap-2">
+            <label className="flex items-center gap-2 text-sm font-medium text-slate-900 mb-2">
               <AlertCircle className="w-4 h-4" />
               Emergency Contact
             </label>
@@ -154,12 +201,14 @@ export function ProfileDashboard() {
               placeholder="+234 XXX XXX XXXX"
               className="w-full px-4 py-2.5 border border-slate-200/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 focus:border-[#0061FF] text-slate-900"
             />
-            <p className="text-xs text-slate-400 mt-1">Contact person in case of emergency</p>
+            <p className="text-xs text-slate-400 mt-1">
+              Contact person in case of emergency
+            </p>
           </div>
 
           {/* Bio */}
           <div>
-            <label className="block text-sm font-medium text-slate-900 mb-2 flex items-center gap-2">
+            <label className="flex items-center gap-2 text-sm font-medium text-slate-900 mb-2">
               <FileText className="w-4 h-4" />
               Bio
             </label>
@@ -171,7 +220,9 @@ export function ProfileDashboard() {
               maxLength={500}
               className="w-full px-4 py-2.5 border border-slate-200/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 focus:border-[#0061FF] text-slate-900 resize-none"
             />
-            <p className="text-xs text-slate-400 mt-1">{bio.length}/500 characters</p>
+            <p className="text-xs text-slate-400 mt-1">
+              {bio.length}/500 characters
+            </p>
           </div>
 
           {/* Save Button */}
@@ -181,7 +232,7 @@ export function ProfileDashboard() {
             className="w-full rounded-full bg-[#0061FF] hover:bg-[#0052E6] text-white shadow-sm transition-all duration-300 hover:scale-105"
           >
             <Save className="w-4 h-4 mr-2" />
-            {saved ? 'Saved!' : loading ? 'Saving...' : 'Save Changes'}
+            {saved ? "Saved!" : loading ? "Saving..." : "Save Changes"}
           </Button>
         </CardContent>
       </Card>
@@ -189,7 +240,9 @@ export function ProfileDashboard() {
       {/* Download Section */}
       <Card className="border-slate-200/50 mt-6">
         <CardHeader>
-          <CardTitle className="text-slate-900 tracking-tighter">Downloads</CardTitle>
+          <CardTitle className="text-slate-900 tracking-tighter">
+            Downloads
+          </CardTitle>
           <CardDescription className="text-slate-500">
             Download your student documents
           </CardDescription>
@@ -203,37 +256,8 @@ export function ProfileDashboard() {
             <Contact className="w-4 h-4 mr-2" />
             Download Student ID Card
           </Button>
-
-          {/* Download Certificate */}
-          <Button
-            onClick={() => {
-              if (!user?.adminClearance) {
-                alert('Certificate download is locked. Please wait for admin clearance before downloading your certificate.')
-              } else {
-                alert('Certificate download initiated. Your certificate will be generated and downloaded.')
-              }
-            }}
-            disabled={!user?.adminClearance}
-            className={`w-full rounded-full shadow-sm transition-all duration-300 ${
-              user?.adminClearance
-                ? 'action-button'
-                : 'bg-slate-200 text-slate-400 cursor-not-allowed hover:scale-100'
-            }`}
-          >
-            {user?.adminClearance ? (
-              <>
-                <Award className="w-4 h-4 mr-2" />
-                Download Certificate
-              </>
-            ) : (
-              <>
-                <Lock className="w-4 h-4 mr-2" />
-                Download Certificate (Locked - Awaiting Admin Clearance)
-              </>
-            )}
-          </Button>
         </CardContent>
       </Card>
     </motion.div>
-  )
+  );
 }
