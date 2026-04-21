@@ -33,8 +33,9 @@ interface Student {
   enrollmentDate?: string;
   phone?: string;
   adminClearance?: boolean;
-  status?: string;
+  status?: "active" | "banned" | "graduated" | "suspended";
   certificateUrl?: string;
+  studentIdNumber?: string;
 }
 
 interface StudentProfileModalProps {

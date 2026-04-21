@@ -61,6 +61,7 @@ interface Student {
   phone?: string;
   adminClearance?: boolean;
   certificateUrl?: string;
+  studentIdNumber?: string;
 }
 
 const courses = [
@@ -994,7 +995,7 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
                     <TableRow
                       key={student?._id ?? student?.id ?? Math.random()}
                       className="cursor-pointer hover:bg-slate-50 transition-colors"
-                      onClick={() => handleStudentClick(student)}
+                      // onClick={() => handleStudentClick(student)}
                     >
                       <TableCell onClick={(e) => e.stopPropagation()}>
                         <input
