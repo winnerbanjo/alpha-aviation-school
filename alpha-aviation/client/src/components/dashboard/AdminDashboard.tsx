@@ -937,11 +937,35 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {!(
-                  filteredStudents &&
-                  Array.isArray(filteredStudents) &&
-                  filteredStudents.length > 0
-                ) ? (
+                {loading ? (
+                  /* Skeleton rows while API call is in flight */
+                  Array.from({ length: 8 }).map((_, i) => (
+                    <TableRow key={i} className="animate-pulse">
+                      <TableCell>
+                        <div className="h-4 w-4 bg-slate-100 rounded" />
+                      </TableCell>
+                      <TableCell>
+                        <div className="h-3.5 bg-slate-100 rounded w-40" />
+                      </TableCell>
+                      <TableCell>
+                        <div className="h-3.5 bg-slate-100 rounded w-28" />
+                      </TableCell>
+                      <TableCell>
+                        <div className="h-5 bg-slate-100 rounded-full w-16" />
+                      </TableCell>
+                      <TableCell>
+                        <div className="h-5 bg-slate-100 rounded-full w-20" />
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="h-7 bg-slate-100 rounded-lg w-16 ml-auto" />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : !(
+                    filteredStudents &&
+                    Array.isArray(filteredStudents) &&
+                    filteredStudents.length > 0
+                  ) ? (
                   <TableRow>
                     <TableCell colSpan={5} className="py-16">
                       {filteredStudents && Array.isArray(filteredStudents) ? (
