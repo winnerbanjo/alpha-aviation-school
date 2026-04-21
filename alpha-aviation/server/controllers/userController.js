@@ -263,3 +263,74 @@ exports.bulkImportUsers = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.bulkDeleteUsers = async (req, res, next) => {
+  try {
+    const { userIds } = req.body;
+
+    if (!Array.isArray(userIds) || userIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No user IDs provided'
+      });
+    }
+
+    if (global.useMockData) {
+      return res.status(503).json({
+        success: false,
+        message: 'Database unavailable. Demo mode is disabled for admin actions.'
+      });
+    }
+
+    const result = await User.deleteMany({ _id: { $in: userIds } });
+
+    res.status(200).json({
+      success: true,
+      message: `${result.deletedCount} user(s) deleted successfully`,
+      data: { deletedCount: result.deletedCount }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.bulkUpdateUserStatus = async (req, res, next) => {
+  try {
+    const { userIds, status } = req.body;
+
+    if (!Array.isArray(userIds) || userIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No user IDs provided'
+      });
+    }
+
+    const validStatuses = ['active', 'banned', 'graduated', 'suspended'];
+    if (!status || !validStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid status. Must be one of: ${validStatuses.join(', ')}`
+      });
+    }
+
+    if (global.useMockData) {
+      return res.status(503).json({
+        success: false,
+        message: 'Database unavailable. Demo mode is disabled for admin actions.'
+      });
+    }
+
+    const result = await User.updateMany(
+      { _id: { $in: userIds } },
+      { status }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: `${result.modifiedCount} user(s) status updated to ${status}`,
+      data: { modifiedCount: result.modifiedCount }
+    });
+  } catch (error) {
+    next(error);
+  }
+};

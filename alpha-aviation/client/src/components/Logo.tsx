@@ -37,7 +37,7 @@ export function Logo({
       </div>
       {showText && (
         <span
-          className={`font-semibold tracking-tight text-slate-900 ${textSizes[size]}`}
+          className={`font-semibold hidden lg:flex tracking-tight text-slate-900 ${textSizes[size]}`}
         >
           Alpha Step Links Aviation School
         </span>

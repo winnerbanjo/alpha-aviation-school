@@ -21,6 +21,8 @@ import {
   updateUser,
   bulkImportUsers,
   deleteUser as apiDeleteUser,
+  bulkDeleteUsers,
+  bulkUpdateStatus,
 } from "@/api";
 import {
   Users,
@@ -39,6 +41,7 @@ import {
   Plus,
   UserPlus,
   Upload,
+  Loader2,
 } from "lucide-react";
 import { StudentProfileModal } from "./StudentProfileModal";
 import { Modal } from "@/components/ui/modal";
@@ -99,6 +102,9 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
+  const [bulkDeleteModalOpen, setBulkDeleteModalOpen] = useState(false);
+  const [bulkSuspendModalOpen, setBulkSuspendModalOpen] = useState(false);
+  const [deletingInProgress, setDeletingInProgress] = useState(false);
 
   // User creation/editing modal
   const [userModalOpen, setUserModalOpen] = useState(false);
@@ -369,6 +375,41 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
     } catch (error) {
       console.error("Error deleting student:", error);
       toast("Failed to delete student", "error");
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    setDeletingInProgress(true);
+    try {
+      await bulkDeleteUsers(Array.from(selectedStudents));
+      setStudents((prev) =>
+        prev.filter((s) => !selectedStudents.has(s._id)),
+      );
+      setSelectedStudents(new Set());
+      setBulkDeleteModalOpen(false);
+      toast(`${selectedStudents.size} user(s) deleted`, "success");
+    } catch (error) {
+      console.error("Error bulk deleting:", error);
+      toast("Failed to delete users", "error");
+    } finally {
+      setDeletingInProgress(false);
+    }
+  };
+
+  const handleBulkSuspend = async () => {
+    try {
+      await bulkUpdateStatus(Array.from(selectedStudents), "suspended");
+      setStudents((prev) =>
+        prev.map((s) =>
+          selectedStudents.has(s._id) ? { ...s, status: "suspended" as const } : s,
+        ),
+      );
+      setSelectedStudents(new Set());
+      setBulkSuspendModalOpen(false);
+      toast(`${selectedStudents.size} user(s) suspended`, "success");
+    } catch (error) {
+      console.error("Error bulk suspending:", error);
+      toast("Failed to suspend users", "error");
     }
   };
 
@@ -869,12 +910,29 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-2">
             {selectedStudents.size > 0 && (
-              <Button
-                onClick={handleBatchMarkAsPaid}
-                className="rounded-full bg-[#0061FF] hover:bg-[#0052E6] text-white transition-all hover:scale-105"
-              >
-                Mark {selectedStudents.size} as Paid
-              </Button>
+              <>
+                <Button
+                  onClick={handleBatchMarkAsPaid}
+                  className="rounded-full bg-[#0061FF] hover:bg-[#0052E6] text-white transition-all hover:scale-105"
+                >
+                  Mark {selectedStudents.size} as Paid
+                </Button>
+                <Button
+                  onClick={() => setBulkSuspendModalOpen(true)}
+                  variant="outline"
+                  className="rounded-full border-amber-200 text-amber-700 hover:bg-amber-50"
+                >
+                  Suspend
+                </Button>
+                <Button
+                  onClick={() => setBulkDeleteModalOpen(true)}
+                  variant="outline"
+                  className="rounded-full border-red-200 text-red-600 hover:bg-red-50"
+                >
+                  <Trash2 className="w-4 h-4 mr-1" />
+                  Delete ({selectedStudents.size})
+                </Button>
+              </>
             )}
             <Button
               onClick={() => {
@@ -1252,8 +1310,76 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
             <Button
               className="bg-red-600 hover:bg-red-700 text-white"
               onClick={confirmDeleteStudent}
+              disabled={deletingInProgress}
             >
-              Delete
+              {deletingInProgress ? "Deleting..." : "Delete"}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Bulk Delete Confirmation Modal */}
+      <Modal
+        isOpen={bulkDeleteModalOpen}
+        onClose={() => setBulkDeleteModalOpen(false)}
+        title="Delete Multiple Users"
+      >
+        <div className="space-y-4">
+          <p className="text-slate-600">
+            Are you sure you want to delete{" "}
+            <span className="font-semibold text-slate-900">
+              {selectedStudents.size} user(s)
+            </span>
+            ? This action cannot be undone.
+          </p>
+          <div className="flex gap-3 justify-end">
+            <Button variant="outline" onClick={() => setBulkDeleteModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={handleBulkDelete}
+              disabled={deletingInProgress}
+            >
+              {deletingInProgress ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete All"
+              )}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Bulk Suspend Confirmation Modal */}
+      <Modal
+        isOpen={bulkSuspendModalOpen}
+        onClose={() => setBulkSuspendModalOpen(false)}
+        title="Suspend Multiple Users"
+      >
+        <div className="space-y-4">
+          <p className="text-slate-600">
+            Are you sure you want to suspend{" "}
+            <span className="font-semibold text-slate-900">
+              {selectedStudents.size} user(s)
+            </span>
+            ? They will lose access to their accounts.
+          </p>
+          <div className="flex gap-3 justify-end">
+            <Button
+              variant="outline"
+              onClick={() => setBulkSuspendModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="bg-amber-600 hover:bg-amber-700 text-white"
+              onClick={handleBulkSuspend}
+            >
+              Suspend All
             </Button>
           </div>
         </div>
