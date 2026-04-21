@@ -85,7 +85,7 @@ export function Navbar({ scrolled = false }: NavbarProps) {
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-slate-900 p-2 mr-2 hover:bg-slate-100 rounded-full transition-colors"
+            className="text-slate-900 p-2 mr-2 hover:bg-slate-100 rounded-full lg:hidden transition-colors"
           >
             {mobileMenuOpen ? (
               <X className="w-5 h-5" />
@@ -105,7 +105,7 @@ export function Navbar({ scrolled = false }: NavbarProps) {
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-slate-900 p-2 lg:hidden hover:bg-slate-100 rounded-full transition-colors"
+            className="lg:hidden text-slate-900 p-2 lg:hidden hover:bg-slate-100 rounded-full transition-colors"
           >
             {mobileMenuOpen ? (
               <X className="w-6 h-6" />

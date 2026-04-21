@@ -268,11 +268,24 @@ export const bulkImportUsers = async (
   }>,
   config?: AxiosRequestConfig,
 ) => {
-  const response = await api.post(
-    "/admin/users/bulk-import",
-    { users },
-    config,
-  );
+  const response = await api.post("/admin/users/bulk-import", { users }, config);
+  return response.data;
+};
+
+export const bulkDeleteUsers = async (
+  userIds: string[],
+  config?: AxiosRequestConfig,
+) => {
+  const response = await api.post("/admin/users/bulk-delete", { userIds }, config);
+  return response.data;
+};
+
+export const bulkUpdateStatus = async (
+  userIds: string[],
+  status: "active" | "banned" | "graduated" | "suspended",
+  config?: AxiosRequestConfig,
+) => {
+  const response = await api.post("/admin/users/bulk-status", { userIds, status }, config);
   return response.data;
 };
 

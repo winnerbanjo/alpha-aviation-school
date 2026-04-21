@@ -25,6 +25,8 @@ router.post("/users", userController.createUser);
 router.put("/users/:id", userController.updateUser);
 router.delete("/users/:id", userController.deleteUser);
 router.post("/users/bulk-import", userController.bulkImportUsers);
+router.post("/users/bulk-delete", userController.bulkDeleteUsers);
+router.post("/users/bulk-status", userController.bulkUpdateUserStatus);
 router.post("/users/:id/certificate", userController.uploadCertificate);
 
 module.exports = router;
