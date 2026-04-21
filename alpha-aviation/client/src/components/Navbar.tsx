@@ -1,177 +1,178 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useAuthStore } from '@/store/authStore'
-import { Button } from '@/components/ui/button'
-import { Menu, X } from 'lucide-react'
-import { Logo } from '@/components/Logo'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
+import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
+import { Logo } from "@/components/Logo";
 
 interface NavbarProps {
-  scrolled?: boolean
+  scrolled?: boolean;
 }
 
 export function Navbar({ scrolled = false }: NavbarProps) {
-  const { isAuthenticated, logout, user } = useAuthStore()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  
+  const { isAuthenticated, logout, user } = useAuthStore();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   // Determine dashboard path based on user role
-  const dashboardPath = user?.role === 'admin' ? '/admin/dashboard' : '/dashboard'
+  const dashboardPath =
+    user?.role === "admin" ? "/admin/dashboard" : "/dashboard";
 
   return (
     <>
-      <nav 
-        className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/50 shadow-sm transition-all duration-300"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center">
-              <Logo size="sm" showText={true} />
+      {/* Desktop Floating Pill Navbar */}
+      <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 w-full pointer-events-none transition-all duration-300">
+        <nav className="pointer-events-auto bg-white/95 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100 rounded-full px-2 py-2 flex items-center justify-between w-full max-w-5xl">
+          {/* Left: Logo */}
+          <Link to="/" className="flex items-center pl-4">
+            <Logo size="sm" showText={true} />
+          </Link>
+
+          {/* Center: Navigation Links */}
+          <div className="hidden lg:flex items-center gap-8 px-8">
+            <Link
+              to="/about"
+              className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors"
+            >
+              About Us
             </Link>
-            
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-8">
-              <Link to="/" className="text-sm text-slate-600 hover:text-slate-900 transition-colors">
-                Home
-              </Link>
-              <Link to="/about" className="text-sm text-slate-600 hover:text-slate-900 transition-colors">
-                About Us
-              </Link>
-              <Link to="/courses" className="text-sm text-slate-600 hover:text-slate-900 transition-colors">
-                Training Courses
-              </Link>
-              <Link to="/contact" className="text-sm text-slate-600 hover:text-slate-900 transition-colors">
-                Contact Us
-              </Link>
-              
+            <Link
+              to="/courses"
+              className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors"
+            >
+              Programs
+            </Link>
+            <Link
+              to="/contact"
+              className="text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors"
+            >
+              Contact
+            </Link>
+          </div>
+
+          {/* Right: Auth / CTA Buttons */}
+          <div className="hidden lg:flex items-center gap-2 pr-2">
+            {isAuthenticated ? (
+              <>
+                <Link to={dashboardPath}>
+                  <Button
+                    variant="ghost"
+                    className="rounded-full text-[13px] font-medium hover:bg-slate-100 h-9 px-5"
+                  >
+                    Dashboard
+                  </Button>
+                </Link>
+                <Button
+                  onClick={logout}
+                  className="rounded-full text-[13px] font-medium bg-slate-900 hover:bg-black text-white h-9 px-6 transition-all"
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button
+                    variant="ghost"
+                    className="rounded-full text-[13px] font-medium hover:bg-slate-100 h-9 px-5"
+                  >
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/enroll">
+                  <Button className="rounded-full bg-slate-900 hover:bg-black text-white text-[13px] font-medium h-9 px-6 shadow-sm transition-all">
+                    Enroll Now
+                  </Button>
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden text-slate-900 p-2 mr-2 hover:bg-slate-100 rounded-full transition-colors"
+          >
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </button>
+        </nav>
+      </div>
+
+      {/* Mobile Menu Dropdown (Solid Base) */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-40 top-0 pt-24 px-4 bg-slate-50/95 backdrop-blur-xl">
+          <div className="bg-white rounded-3xl shadow-xl p-6 border border-slate-100 flex flex-col space-y-4">
+            <Link
+              to="/"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-base font-medium text-slate-800 py-2"
+            >
+              Home
+            </Link>
+            <Link
+              to="/about"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-base font-medium text-slate-800 py-2"
+            >
+              About Us
+            </Link>
+            <Link
+              to="/courses"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-base font-medium text-slate-800 py-2"
+            >
+              Programs
+            </Link>
+            <Link
+              to="/contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-base font-medium text-slate-800 py-2"
+            >
+              Contact
+            </Link>
+
+            <div className="pt-4 mt-2 border-t border-slate-100 flex flex-col gap-3">
               {isAuthenticated ? (
                 <>
-                  <Link to={dashboardPath}>
-                    <Button variant="ghost" size="sm" className="rounded-full">
+                  <Link
+                    to={dashboardPath}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Button className="w-full rounded-full bg-slate-100 text-slate-900 hover:bg-slate-200 py-6 text-base font-medium shadow-none">
                       Dashboard
                     </Button>
                   </Link>
                   <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={logout}
-                    className="rounded-full"
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full rounded-full bg-slate-900 text-white hover:bg-black py-6 text-base font-medium shadow-none"
                   >
                     Logout
                   </Button>
                 </>
               ) : (
                 <>
-                  <Link to="/login">
-                    <Button variant="ghost" size="sm" className="rounded-full">
+                  <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
+                    <Button className="w-full rounded-full bg-slate-100 text-slate-900 hover:bg-slate-200 py-6 text-base font-medium shadow-none">
                       Login
                     </Button>
                   </Link>
-                  <Link to="/enroll">
-                    <Button
-                      size="sm"
-                      className="rounded-full bg-[#0061FF] hover:bg-[#0052E6] text-white shadow-sm transition-all duration-300 hover:scale-105"
-                    >
+                  <Link to="/enroll" onClick={() => setMobileMenuOpen(false)}>
+                    <Button className="w-full rounded-full bg-slate-900 hover:bg-black text-white py-6 text-base font-medium">
                       Enroll Now
                     </Button>
                   </Link>
                 </>
               )}
             </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden text-slate-900"
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Mobile Menu - Glassmorphism */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 pt-20">
-          {/* Backdrop */}
-          <div 
-            className="absolute inset-0 bg-black/20 backdrop-blur-sm"
-            onClick={() => setMobileMenuOpen(false)}
-          />
-          
-          {/* Menu Content */}
-          <div className="glass-card relative z-50 mx-4 rounded-lg shadow-xl border border-white/90 p-6">
-            <nav className="flex flex-col space-y-4">
-              <Link 
-                to="/" 
-                className="text-sm text-slate-900 hover:text-[#0061FF] transition-colors py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Home
-              </Link>
-              <Link 
-                to="/about" 
-                className="text-sm text-slate-900 hover:text-[#0061FF] transition-colors py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                About Us
-              </Link>
-              <Link 
-                to="/courses" 
-                className="text-sm text-slate-900 hover:text-[#0061FF] transition-colors py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Training Courses
-              </Link>
-              <Link 
-                to="/contact" 
-                className="text-sm text-slate-900 hover:text-[#0061FF] transition-colors py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Contact Us
-              </Link>
-              
-              <div className="pt-4 border-t border-slate-200/50 space-y-3">
-                {isAuthenticated ? (
-                  <>
-                    <Link to={dashboardPath} onClick={() => setMobileMenuOpen(false)}>
-                      <Button variant="ghost" size="sm" className="w-full rounded-full">
-                        Dashboard
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        logout()
-                        setMobileMenuOpen(false)
-                      }}
-                      className="w-full rounded-full"
-                    >
-                      Logout
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
-                      <Button variant="ghost" size="sm" className="w-full rounded-full">
-                        Login
-                      </Button>
-                    </Link>
-                    <Link to="/enroll" onClick={() => setMobileMenuOpen(false)}>
-                      <Button
-                        size="sm"
-                        className="w-full rounded-full bg-[#0061FF] hover:bg-[#0052E6] text-white"
-                      >
-                        Enroll Now
-                      </Button>
-                    </Link>
-                  </>
-                )}
-              </div>
-            </nav>
           </div>
         </div>
       )}
     </>
-  )
+  );
 }

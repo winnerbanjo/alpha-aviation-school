@@ -1,15 +1,16 @@
-import * as React from "react"
-import { X } from "lucide-react"
+import * as React from "react";
+import { X } from "lucide-react";
 
 interface ModalProps {
-  isOpen: boolean
-  onClose: () => void
-  title?: string
-  children: React.ReactNode
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  children: React.ReactNode;
+  wide?: boolean;
 }
 
-export function Modal({ isOpen, onClose, title, children }: ModalProps) {
-  if (!isOpen) return null
+export function Modal({ isOpen, onClose, title, children, wide }: ModalProps) {
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -18,9 +19,11 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
         className="fixed inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
-      
+
       {/* Modal Content */}
-      <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 border border-slate-100 z-50">
+      <div
+        className={`relative bg-white rounded-lg shadow-xl  w-full mx-4 border border-slate-100 z-50 ${wide ? "max-w-2xl" : "max-w-md"}`}
+      >
         {/* Header */}
         {title && (
           <div className="flex items-center justify-between p-6 border-b border-slate-100">
@@ -33,10 +36,10 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
             </button>
           </div>
         )}
-        
+
         {/* Body */}
         <div className="p-6">{children}</div>
       </div>
     </div>
-  )
+  );
 }

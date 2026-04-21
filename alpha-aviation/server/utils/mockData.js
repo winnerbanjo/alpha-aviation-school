@@ -1,7 +1,9 @@
-// Mock data for offline/local mode
+// Mock data for local development only
+// DO NOT use in production - these are for testing only
+
 const mockStudents = [
   {
-    _id: 'mock1',
+    _id: 'mock-student-1',
     email: 'student1@alpha.com',
     firstName: 'John',
     lastName: 'Doe',
@@ -13,7 +15,7 @@ const mockStudents = [
     phone: '+2341234567890'
   },
   {
-    _id: 'mock2',
+    _id: 'mock-student-2',
     email: 'student2@alpha.com',
     firstName: 'Jane',
     lastName: 'Smith',
@@ -25,7 +27,7 @@ const mockStudents = [
     phone: '+2341234567891'
   },
   {
-    _id: 'mock3',
+    _id: 'mock-student-3',
     email: 'student3@alpha.com',
     firstName: 'Michael',
     lastName: 'Johnson',
@@ -37,7 +39,7 @@ const mockStudents = [
     phone: '+2341234567892'
   },
   {
-    _id: 'mock4',
+    _id: 'mock-student-4',
     email: 'student4@alpha.com',
     firstName: 'Sarah',
     lastName: 'Williams',
@@ -49,7 +51,7 @@ const mockStudents = [
     phone: '+2341234567893'
   },
   {
-    _id: 'mock5',
+    _id: 'mock-student-5',
     email: 'student5@alpha.com',
     firstName: 'David',
     lastName: 'Brown',
@@ -62,24 +64,24 @@ const mockStudents = [
   }
 ];
 
-// Mock admin user
-const mockAdmin = {
+// Mock admin - NOT used in production
+// Mock admin credentials must be set via environment variables if mock mode is enabled
+const getMockAdmin = () => ({
   _id: 'mock-admin',
-  email: 'admin@alpha.com',
+  email: process.env.ADMIN_EMAIL || 'admin@localhost',
   firstName: 'Admin',
   lastName: 'User',
   role: 'admin',
   paymentStatus: 'Paid',
   amountDue: 0,
   amountPaid: 0
-};
+});
 
-// Calculate mock financial stats
 const getMockFinancialStats = () => {
   const totalRevenue = mockStudents
     .filter((s) => s.paymentStatus === 'Paid')
     .reduce((sum, s) => sum + s.amountPaid, 0);
-  
+
   const revenuePending = mockStudents
     .filter((s) => s.paymentStatus === 'Pending')
     .reduce((sum, s) => sum + s.amountDue, 0);
@@ -89,6 +91,6 @@ const getMockFinancialStats = () => {
 
 module.exports = {
   mockStudents,
-  mockAdmin,
+  getMockAdmin,
   getMockFinancialStats
 };

@@ -7,6 +7,11 @@ interface User {
   role: 'student' | 'admin'
   firstName?: string
   lastName?: string
+  phone?: string
+  // Admin-specific fields
+  adminLevel?: 'super' | 'standard'
+  permissions?: string[]
+  // Student-specific fields
   enrolledCourse?: string
   selectedCourses?: string[]
   courseSelections?: Array<{ title: string; price: number }>
@@ -15,16 +20,18 @@ interface User {
   amountPaid?: number
   totalCoursePrice?: number
   enrollmentDate?: string
-  phone?: string
   emergencyContact?: string
   bio?: string
   documentUrl?: string
-  adminClearance?: boolean
   paymentMethod?: string[]
   trainingMethod?: string[]
   status?: string
   paymentReceiptUrl?: string
   studentIdNumber?: string
+  // Student permission granted by admin
+  adminClearance?: boolean
+  // Certificate
+  certificateUrl?: string
 }
 
 interface AuthState {

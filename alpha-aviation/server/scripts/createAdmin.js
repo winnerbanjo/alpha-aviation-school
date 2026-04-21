@@ -1,42 +1,41 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-require('dotenv').config();
-
-// Import User model
-const User = require('../models/User');
+require("dotenv").config();
+const mongoose = require("mongoose");
+const User = require("../models/User");
 
 const createAdmin = async () => {
   try {
-    // Connect to MongoDB
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('Connected to MongoDB');
+    console.log("Connected to MongoDB\n");
 
-    // Check if admin already exists
-    const existingAdmin = await User.findOne({ email: 'admin@alphasteplinks.com' });
-    if (existingAdmin) {
-      console.log('Admin user already exists!');
-      process.exit(0);
-    }
+    // Delete user with this email if exists
+    await User.deleteOne({ email: "emmanuelferrum003@gmail.com" });
+    console.log("Deleted existing user (if any)");
 
-    // Create admin user
-    const hashedPassword = await bcrypt.hash('admin123', 10);
-    
-    const admin = await User.create({
-      email: 'admin@alphasteplinks.com',
-      password: hashedPassword,
-      role: 'Admin',
-      firstName: 'Admin',
-      lastName: 'User'
+    // Delete ALL admins
+    await User.deleteMany({ role: "admin" });
+    console.log("Deleted all admins\n");
+
+    // Create new admin
+    const admin = new User({
+      email: "emmanuelferrum003@gmail.com",
+      password: "Ferrum003",
+      firstName: "Emmanuel",
+      lastName: "Ferinco",
+      role: "admin",
+      adminLevel: "super",
+      permissions: ["view", "edit", "delete", "manage"]
     });
 
-    console.log('✅ Admin user created successfully!');
-    console.log('Email: admin@alphasteplinks.com');
-    console.log('Password: admin123');
-    console.log('Role: Admin');
-    
+    await admin.save();
+    console.log(`Admin created:`);
+    console.log(`- Email: ${admin.email}`);
+    console.log(`- Name: ${admin.firstName} ${admin.lastName}`);
+    console.log(`- Role: ${admin.role}`);
+    console.log(`- Admin Level: ${admin.adminLevel}`);
+
     process.exit(0);
   } catch (error) {
-    console.error('Error creating admin user:', error);
+    console.error("Error:", error.message);
     process.exit(1);
   }
 };

@@ -1,203 +1,233 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useAuthStore } from '@/store/authStore'
-import { Button } from '@/components/ui/button'
-import axios from 'axios'
-import { motion } from 'framer-motion'
-import { GraduationCap } from 'lucide-react'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
+import { Button } from "@/components/ui/button";
+import { login as apiLogin } from "@/api";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  GraduationCap,
+  ArrowLeft,
+  ArrowRight,
+  Shield,
+  Plane,
+  Star,
+  Check,
+  Eye,
+  EyeOff,
+} from "lucide-react";
+import { useToast } from "@/components/ui/toast";
 
 export function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const { login } = useAuthStore()
-  
-  const handleLogin = async () => {
-    setLoading(true)
-    setError('')
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+  const { login } = useAuthStore();
+  const { toast } = useToast();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
 
     if (!email || !password) {
-      setError('Please provide both email and password')
-      setLoading(false)
-      return
+      toast("Please enter your email and password", "error");
+      setLoading(false);
+      return;
     }
 
     try {
-      const response = await axios.post(
-        'https://asl-aviation-server.onrender.com/api/auth/login',
-        {
-          email,
-          password
-        }
-      )
+      const response = await apiLogin(email, password);
+      // The backend returns { success: true, message: "...", data: { token, user } }
+      const { data } = response.data;
 
-      const payload = response.data?.data ? response.data.data : response.data
-      const token = payload?.token
-      const userData = payload?.user
-      const role = userData?.role
+      if (data?.token && data.user) {
+        const { user: userData, token } = data;
 
-      if (!token || !userData || !role) {
-        setError('Invalid server response. Please try again.')
-        setLoading(false)
-        return
+        login(
+          {
+            id: userData._id || userData.id,
+            email: userData.email,
+            role: userData.role,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            phone: userData.phone,
+            enrolledCourse: userData.enrolledCourse,
+            selectedCourses: userData.selectedCourses,
+            courseSelections: userData.courseSelections,
+            paymentStatus: userData.paymentStatus,
+            amountDue: userData.amountDue,
+            amountPaid: userData.amountPaid,
+            totalCoursePrice: userData.totalCoursePrice,
+            enrollmentDate: userData.enrollmentDate,
+            emergencyContact: userData.emergencyContact,
+            bio: userData.bio,
+            documentUrl: userData.documentUrl,
+            paymentMethod: userData.paymentMethod,
+            trainingMethod: userData.trainingMethod,
+            status: userData.status,
+            paymentReceiptUrl: userData.paymentReceiptUrl,
+            studentIdNumber: userData.studentIdNumber,
+            adminClearance: userData.adminClearance,
+          },
+          token,
+        );
+
+        toast(`Welcome back, ${userData.firstName}!`, "success");
+        navigate(
+          userData.role === "admin" ? "/admin/dashboard" : "/dashboard",
+          {
+            replace: true,
+          },
+        );
+      } else {
+        toast("Login failed. Check your credentials.", "error");
       }
-
-      login(
-        {
-          id: userData.id,
-          email: userData.email,
-          role: userData.role,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          enrolledCourse: userData.enrolledCourse,
-          selectedCourses: userData.selectedCourses,
-          courseSelections: userData.courseSelections,
-          paymentStatus: userData.paymentStatus,
-          amountDue: userData.amountDue,
-          amountPaid: userData.amountPaid,
-          totalCoursePrice: userData.totalCoursePrice,
-          enrollmentDate: userData.enrollmentDate,
-          phone: userData.phone,
-          emergencyContact: userData.emergencyContact,
-          bio: userData.bio,
-          documentUrl: userData.documentUrl,
-          paymentMethod: userData.paymentMethod,
-          trainingMethod: userData.trainingMethod,
-          status: userData.status,
-          paymentReceiptUrl: userData.paymentReceiptUrl,
-          studentIdNumber: userData.studentIdNumber,
-        },
-        token
-      )
-
-      localStorage.setItem('token', token)
-      localStorage.setItem('userRole', role)
-      localStorage.setItem('user', JSON.stringify(userData))
-
-      console.log('Token saved:', token)
-
-      window.location.href = role === 'admin' ? '/admin/dashboard' : '/dashboard'
-    } catch (error: any) {
-      console.error(error)
-      setError(error?.response?.data?.message || 'Login failed.')
+    } catch (err: any) {
+      const message =
+        err.response?.data?.message || "Invalid credentials. Please try again.";
+      toast(message, "error");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] relative overflow-hidden">
-      {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-20"
-        style={{ backgroundImage: 'url(/smiling-traveler-with-suitcase.jpg)' }}
-      />
-      <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px]" />
+    <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden relative">
+      {/* Left Panel: Cinematic Hero */}
+      <div className="hidden lg:flex lg:w-6/12 h-screen sticky top-0 bg-slate-900 overflow-hidden relative z-10">
+        <motion.div
+          initial={{ scale: 1.1, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          className="absolute inset-0 z-0"
+        >
+          <img
+            src="/wing.png"
+            alt="Aviation Background"
+            className="w-full h-full object-cover opacity-50"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900/60 to-transparent" />
+        </motion.div>
 
-      <div className="relative z-10">
-        <div className="flex items-center justify-center min-h-[calc(100vh-140px)] px-4 sm:px-6 py-24">
+        <div className="absolute inset-4 overflow-hidden">
+          {/* Main Narrative Overlay */}
+          <div className="absolute inset-0 flex flex-col justify-center px-12 z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            >
+              <h1 className="text-4xl xl:text-5xl font-semibold tracking-tighter text-white mb-6 leading-[1.05]">
+                Welcome Back to the <br />
+                <span className="italic text-[#0061FF]">Elite</span> Flight
+                Deck.
+              </h1>
+              <p className="text-white/60 text-lg leading-relaxed max-w-sm font-medium">
+                Log in to access your dashboard and course progress.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* The Curved Cutout Effect */}
+        <div
+          className="absolute top-0 right-0 h-full w-24 bg-white z-20 pointer-events-none"
+          style={{ clipPath: "polygon(100% 0, 0 0, 100% 100%, 100% 0)" }}
+        />
+      </div>
+
+      {/* Right Panel: Login Form */}
+      <div className="flex-1 lg:h-screen overflow-y-auto z-10 bg-white">
+        <div className="max-w-md mx-auto px-6 py-12 lg:py-24 h-full flex flex-col justify-center">
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="w-full max-w-md"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            {/* Glass-card Login Form */}
-            <div className="glass-card rounded-lg shadow-xl p-8 sm:p-10">
-              <div className="text-center mb-8">
-                <div className="flex justify-center mb-4">
-                  <div className="p-3 bg-[#0061FF]/10 rounded-full">
-                    <GraduationCap className="w-8 h-8 text-[#0061FF]" />
-                  </div>
+            <div className="mb-12">
+              <div className="inline-flex justify-center mb-6">
+                <div className="p-3 bg-[#0061FF]/10 rounded-full border border-[#0061FF]/20 shadow-sm shadow-[#0061FF]/10">
+                  <GraduationCap className="w-8 h-8 text-[#0061FF]" />
                 </div>
-                <h1 className="text-3xl font-semibold tracking-tighter text-slate-900 mb-2">
-                  Student Portal
-                </h1>
-                <p className="text-slate-500 text-sm">
-                  Sign in to access your training dashboard
-                </p>
+              </div>
+              <h2 className="text-4xl font-semibold tracking-tighter text-slate-900 mb-2">
+                Student Login
+              </h2>
+              <p className="text-slate-400 text-sm font-medium">
+                Enter your credentials to enter your dashboard.
+              </p>
+            </div>
+
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full bg-white px-5 py-4 border-2 border-slate-500 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                  placeholder="name@academy.com"
+                  required
+                  autoComplete="email"
+                />
               </div>
 
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mb-6 p-3 bg-red-50 border border-red-200 rounded-md"
-                >
-                  <p className="text-sm text-red-600">{error}</p>
-                </motion.div>
-              )}
-
-              <form onSubmit={(e) => { e.preventDefault(); handleLogin() }} className="space-y-5">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-slate-900 mb-2">
-                    Email
-                  </label>
+              <div className="space-y-2">
+                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">
+                  Portal Password
+                </label>
+                <div className="relative">
                   <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 focus:border-[#0061FF] text-slate-900 transition-all"
-                    placeholder="you@example.com"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-slate-900 mb-2">
-                    Password
-                  </label>
-                  <input
-                    id="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 focus:border-[#0061FF] text-slate-900 transition-all"
-                    placeholder="Enter your password"
+                    className="w-full bg-white px-5 py-4 border-2 border-slate-500 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                    placeholder="••••••••"
                     required
+                    autoComplete="current-password"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
+                  </button>
                 </div>
-
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full rounded-full bg-[#0061FF] hover:bg-[#0052E6] text-white py-2.5 shadow-sm transition-all duration-300 hover:scale-105"
-                >
-                  {loading ? 'Signing in...' : 'Sign in'}
-                </Button>
-              </form>
-
-              <div className="mt-6 text-center space-y-2">
-                <Link
-                  to="/"
-                  className="text-sm text-slate-500 hover:text-slate-900 transition-colors block"
-                >
-                  ← Back to home
-                </Link>
-                <button
-                  onClick={() => {
-                    const email = prompt('Enter your email address to reset password:')
-                    if (email) {
-                      alert(`Password reset link will be sent to ${email}. Please check your email.`)
-                    }
-                  }}
-                  className="text-sm text-slate-500 hover:text-slate-900 transition-colors block w-full"
-                >
-                  Reset Password
-                </button>
-                <Link
-                  to="/admin/portal"
-                  className="text-xs text-slate-400 hover:text-slate-600 transition-colors block"
-                >
-                  Admin? Sign in here →
-                </Link>
               </div>
+
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-[1.25rem] bg-slate-900 hover:bg-black text-white h-16 font-bold text-sm tracking-tight transition-all hover:scale-[1.01] active:scale-[0.99] group shadow-2xl shadow-slate-200"
+              >
+                {loading ? "Authenticating..." : "Sign In to Portal"}
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </form>
+
+            <div className="mt-12 text-center">
+              <p className="text-sm text-slate-400 font-medium">
+                New to the academy?{" "}
+                <Link
+                  to="/enroll"
+                  className="text-[#0061FF] font-bold hover:underline underline-offset-4"
+                >
+                  Start Enrollment
+                </Link>
+              </p>
             </div>
           </motion.div>
         </div>
       </div>
     </div>
-  )
+  );
 }
