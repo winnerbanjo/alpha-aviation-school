@@ -126,19 +126,19 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto text-white pt-24 pb-12 px-6 sm:px-8 relative z-10 flex flex-col">
         {/* MAIN HEADLINE */}
         <div className="relative">
-          <h1 className="text-4xl sm:text-7xl md:text-8xl lg:text-9xl uppercase font-black leading-[0.85] tracking-tighter mix-blend-overlay opacity-90 italic">
+          <h1 className="text-4xl sm:text-7xl md:text-8xl lg:text-9xl uppercase font-black leading-[0.85] tracking-tighter mix-blend-overlay opacity-90 lg:italic">
             Alpha Step Links <br />
             Aviation School .
           </h1>
 
           {/* OVERLAPPING ENROLL BUTTON (ABIBUS STYLE) */}
-          <div className="absolute right-0 bottom-0 md:bottom-2 pr-4 md:pr-12">
+          <div className="absolute right-0 bottom-0 top-12  md:bottom-2 pr-4 md:pr-12">
             <Link
               to="/enroll"
-              className="relative w-fit py-4 flex items-center justify-start text-lg shrink-0 px-1 bg-[#FF6B35] text-white rounded-full font-bold overflow-hidden shadow-[0_20px_50px_-10px_rgba(255,107,53,0.4)] transition-all duration-500 hover:scale-105 active:scale-95 group"
+              className="relative w-fit py-4  flex items-center  justify-start text-lg shrink-0 px-1 bg-[#FF6B35] text-white rounded-full font-bold overflow-hidden shadow-[0_20px_50px_-10px_rgba(255,107,53,0.4)] transition-all duration-500 hover:scale-105 active:scale-95 group"
             >
               <span className="absolute left-0 aspect-square h-full p-2 bg-transparent flex items-center justify-center transition-transform duration-500 group-hover:translate-x-12">
-                <span className="bg-white h-full w-full flex items-center justify-center rounded-full shadow-inner">
+                <span className="bg-white h-12 lg:h-10 lg:w-10 shrink-0 w-12 flex items-center justify-center rounded-full shadow-inner">
                   <Icon
                     icon="ion:paper-plane"
                     width="1.3em"
@@ -147,11 +147,11 @@ export default function Footer() {
                   />
                 </span>
               </span>
-              <span className="ml-14 transition-all duration-500 group-hover:text-transparent pr-8">
-                ENROLL TODAY
+              <span className="ml-16 lg:ml-14 transition-all duration-500 group-hover:text-transparent pr-8">
+                ENROLL
               </span>
               <span className="absolute inset-0 bg-white flex items-center justify-center transform translate-x-full group-hover:translate-x-0 transition-transform duration-500 text-black font-black uppercase tracking-widest">
-                START FLIGHT
+                JOIN US
               </span>
             </Link>
           </div>
