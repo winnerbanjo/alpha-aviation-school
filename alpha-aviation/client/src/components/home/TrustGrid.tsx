@@ -43,45 +43,37 @@ const features = [
 
 export function TrustGrid() {
   return (
-    <section className="relative bg-slate-950 py-32 overflow-hidden">
-      {/* Tiled Grid Background System */}
-      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
+    <section className="relative bg-white py-32 overflow-hidden border-t border-slate-50">
+      {/* Tiled Grid Background System (Inverted) */}
+      <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none">
         <div
           className="absolute inset-0"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)
+              linear-gradient(#020617 1px, transparent 1px),
+              linear-gradient(90deg, #020617 1px, transparent 1px)
             `,
             backgroundSize: "50px 50px",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-transparent to-slate-950" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 sm:px-8 relative z-10">
         <div className="text-center mb-24 space-y-6">
-          <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-block text-[11px] font-black text-[#FF6B35] uppercase tracking-[0.6em] bg-[#FF6B35]/5 px-4 py-2 rounded-full border border-[#FF6B35]/20"
-          >
-            Institutional Power
-          </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-4xl md:text-6xl font-black text-white leading-tight uppercase tracking-tight"
+            className="text-4xl md:text-6xl font-black text-slate-900 leading-tight uppercase tracking-tight"
           >
             The Alpha <br className="md:hidden" /> Advantage .
           </motion.h2>
         </div>
 
-        {/* Feature Tiles Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-l border-t border-white/5">
+        {/* Feature Tiles Grid (Inverted) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-l border-t border-slate-100">
           {features.map((feature, index) => (
             <motion.div
               key={index}
@@ -89,50 +81,50 @@ export function TrustGrid() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.05 }}
-              className="group relative p-12 border-b border-r border-white/5 hover:bg-white/[0.02] transition-all duration-500 overflow-hidden"
+              className="group relative p-12 border-b border-r border-slate-100 hover:bg-slate-50 transition-all duration-500 overflow-hidden"
             >
               {/* Animated Glow on Hover */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#0061FF]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#0061FF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
               <div className="relative z-10 space-y-6">
-                <div className="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center text-[#FF6B35] border border-white/10 group-hover:border-[#FF6B35]/50 transition-colors">
+                <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-[#FF6B35] border border-slate-100 group-hover:border-[#FF6B35]/30 transition-colors">
                   <Icon icon={feature.icon} width="24" height="24" />
                 </div>
 
-                <h3 className="text-xl font-bold text-white uppercase tracking-tight">
+                <h3 className="text-xl font-bold text-slate-900 uppercase tracking-tight">
                   {feature.title}
                 </h3>
 
-                <p className="text-sm text-slate-400 font-medium leading-relaxed group-hover:text-slate-300 transition-colors">
+                <p className="text-sm text-slate-500 font-medium leading-relaxed group-hover:text-slate-600 transition-colors">
                   {feature.description}
                 </p>
               </div>
 
               {/* Tiled corner accent */}
-              <div className="absolute top-0 right-0 p-4 opacity-10">
+              <div className="absolute top-0 right-0 p-4 opacity-[0.05]">
                 <Icon
                   icon="lucide:grid-3x3"
                   width="60"
-                  className="text-white"
+                  className="text-slate-900"
                 />
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Bottom Global Slogan */}
+        {/* Bottom Global Slogan (Inverted) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-20 flex flex-col md:flex-row items-center justify-between gap-8 border-t border-white/5 pt-12"
+          className="mt-20 flex flex-col md:flex-row items-center justify-between gap-8 border-t border-slate-100 pt-12"
         >
           <div className="flex items-center gap-6">
             <div className="flex -space-x-3">
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="w-10 h-10 rounded-full border-2 border-slate-950 bg-slate-900 flex items-center justify-center overflow-hidden"
+                  className="w-10 h-10 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center overflow-hidden"
                 >
                   <img
                     src={`https://i.pravatar.cc/100?u=student${i}`}
@@ -141,8 +133,8 @@ export function TrustGrid() {
                 </div>
               ))}
             </div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-              Joined by <span className="text-white">5,000+</span> Elite
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+              Joined by <span className="text-slate-900">5,000+</span> Elite
               Students
             </p>
           </div>
@@ -150,19 +142,19 @@ export function TrustGrid() {
           <div className="flex items-center gap-10">
             <div className="flex items-center gap-3">
               <Icon icon="flag:ng-4x3" width="20" />
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
                 Nigeria
               </span>
             </div>
             <div className="flex items-center gap-3">
               <Icon icon="flag:gb-4x3" width="20" />
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
                 UK
               </span>
             </div>
             <div className="flex items-center gap-3">
               <Icon icon="flag:ca-4x3" width="20" />
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
                 Canada
               </span>
             </div>
