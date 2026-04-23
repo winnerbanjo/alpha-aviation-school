@@ -50,7 +50,7 @@ export function About() {
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-block text-[11px] font-black text-[#FF6B35] uppercase tracking-[0.6em] mb-8"
+            className="inline-block text-[10px] sm:text-[11px] font-black text-[#FF6B35] uppercase tracking-[0.6em] mb-6 sm:mb-8"
           >
             Institutional Legacy
           </motion.span>
@@ -58,7 +58,7 @@ export function About() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-[4rem] sm:text-[6rem] lg:text-[8rem] font-black text-white leading-[0.85] tracking-tighter uppercase italic"
+            className="text-[2.5rem] sm:text-[6rem] lg:text-[8rem] font-black text-white leading-[1.1] sm:leading-[0.85] tracking-tighter uppercase italic"
           >
             Our Story <br />
             Soaring Higher <span className="text-[#FF6B35]">.</span>
@@ -67,20 +67,21 @@ export function About() {
       </section>
 
       {/* The Alpha Narrative (Split-Screen) */}
-      <section className="py-32 bg-white relative overflow-hidden">
+      <section className="py-20 sm:py-32 bg-white relative overflow-hidden text-center md:text-left">
         <div className="max-w-7xl mx-auto px-6 sm:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-20 items-center">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="space-y-12"
+              className="space-y-8 sm:space-y-12"
             >
               <div className="space-y-6">
-                <h2 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight uppercase tracking-tight">
-                  Defining the <br /> Future of Flight.
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 leading-tight uppercase tracking-tight">
+                  Defining the <br className="hidden sm:block" /> Future of
+                  Flight.
                 </h2>
-                <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-xl">
+                <p className="text-base sm:text-lg text-slate-500 font-medium leading-relaxed max-w-xl mx-auto md:mx-0">
                   Alpha Step Links Aviation School is a certified and
                   fast-growing aviation training institution dedicated to
                   nurturing the next generation of aviation professionals. With
@@ -91,16 +92,20 @@ export function About() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-8 border-t border-slate-100 pt-12">
-                <div className="space-y-2">
-                  <p className="text-3xl font-black text-slate-950">10k+</p>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+              <div className="grid grid-cols-2 gap-6 sm:gap-8 border-t border-slate-100 pt-10 sm:pt-12">
+                <div className="space-y-1 sm:space-y-2 text-left">
+                  <p className="text-2xl sm:text-3xl font-black text-slate-950">
+                    10k+
+                  </p>
+                  <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                     Graduates
                   </p>
                 </div>
-                <div className="space-y-2">
-                  <p className="text-3xl font-black text-slate-950">3+</p>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                <div className="space-y-1 sm:space-y-2 text-left">
+                  <p className="text-2xl sm:text-3xl font-black text-slate-950">
+                    3+
+                  </p>
+                  <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                     Continents
                   </p>
                 </div>
@@ -111,7 +116,7 @@ export function About() {
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="relative aspect-square lg:aspect-video rounded-3xl overflow-hidden shadow-2xl group"
+              className="relative aspect-video sm:aspect-square lg:aspect-video rounded-3xl overflow-hidden shadow-2xl group"
             >
               <img
                 src="https://images.unsplash.com/photo-1544016768-982d1554f0b9?auto=format&fit=crop&q=80"
@@ -119,11 +124,11 @@ export function About() {
                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-tr from-slate-950/40 to-transparent" />
-              <div className="absolute bottom-10 left-10 p-6 bg-white shadow-xl rounded-2xl border border-slate-100">
+              <div className="absolute bottom-6 left-6 sm:bottom-10 sm:left-10 p-4 sm:p-6 bg-white shadow-xl rounded-2xl border border-slate-100">
                 <Icon
                   icon="mdi:airplane-marker"
-                  width="32"
-                  className="text-[#FF6B35]"
+                  width="24"
+                  className="sm:w-8 text-[#FF6B35]"
                 />
               </div>
             </motion.div>
@@ -132,20 +137,20 @@ export function About() {
       </section>
 
       {/* Core Values (Inverted Grid) */}
-      <section className="relative bg-white py-32 overflow-hidden border-t border-slate-50">
+      <section className="relative bg-white py-20 sm:py-32 overflow-hidden border-t border-slate-50">
         <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none">
           <div
             className="absolute inset-0"
             style={{
               backgroundImage: `linear-gradient(#020617 1px, transparent 1px), linear-gradient(90deg, #020617 1px, transparent 1px)`,
-              backgroundSize: "50px 50px",
+              backgroundSize: "40px 40px",
             }}
           />
         </div>
 
         <div className="max-w-7xl mx-auto px-6 sm:px-8 relative z-10">
-          <div className="text-center mb-24">
-            <h2 className="text-4xl md:text-6xl font-black text-slate-950 uppercase tracking-tight">
+          <div className="text-center mb-16 sm:mb-24">
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-black text-slate-950 uppercase tracking-tight">
               Our Core Values .
             </h2>
           </div>
@@ -158,16 +163,21 @@ export function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="group p-12 border-b border-r border-slate-100 hover:bg-slate-50 transition-all duration-500"
+                className="group p-8 sm:p-12 border-b border-r border-slate-100 hover:bg-slate-50 transition-all duration-500"
               >
                 <div className="relative z-10 space-y-6 text-center md:text-left">
-                  <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-[#FF6B35] border border-slate-100 group-hover:border-[#FF6B35]/30 transition-colors mx-auto md:mx-0">
-                    <Icon icon={v.icon} width="24" height="24" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-50 flex items-center justify-center text-[#FF6B35] border border-slate-100 group-hover:border-[#FF6B35]/30 transition-colors mx-auto md:mx-0">
+                    <Icon
+                      icon={v.icon}
+                      width="20"
+                      height="20"
+                      className="sm:w-6 sm:h-6"
+                    />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-950 uppercase tracking-tight">
+                  <h3 className="text-lg sm:text-xl font-bold text-slate-950 uppercase tracking-tight">
                     {v.title}
                   </h3>
-                  <p className="text-sm text-slate-500 font-medium leading-relaxed group-hover:text-slate-600 transition-colors">
+                  <p className="text-[13px] sm:text-sm text-slate-500 font-medium leading-relaxed group-hover:text-slate-600 transition-colors">
                     {v.description}
                   </p>
                 </div>
@@ -178,18 +188,18 @@ export function About() {
       </section>
 
       {/* Mission & Vision (Authority Quote Layout) */}
-      <section className="bg-slate-950 py-32 relative overflow-hidden">
-        <div className="max-w-5xl mx-auto px-6 text-center space-y-24">
+      <section className="bg-slate-950 py-24 sm:py-32 relative overflow-hidden">
+        <div className="max-w-5xl mx-auto px-6 text-center space-y-20 sm:space-y-24">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="space-y-10"
+            className="space-y-8 sm:space-y-10"
           >
-            <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em]">
+            <span className="text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-[0.5em]">
               The Mission
             </span>
-            <h3 className="text-3xl md:text-5xl font-black text-white leading-[1.1] uppercase italic">
+            <h3 className="text-2xl sm:text-3xl md:text-5xl font-black text-white leading-[1.2] sm:leading-[1.1] uppercase italic">
               "To deliver world-class training that empowers impactful careers
               in the dynamic aviation industry."
             </h3>
@@ -200,12 +210,12 @@ export function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="space-y-10"
+            className="space-y-8 sm:space-y-10"
           >
-            <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em]">
+            <span className="text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-[0.5em]">
               The Vision
             </span>
-            <h3 className="text-3xl md:text-5xl font-black text-white leading-[1.1] uppercase italic text-[#FF6B35]">
+            <h3 className="text-2xl sm:text-3xl md:text-5xl font-black text-white leading-[1.2] sm:leading-[1.1] uppercase italic text-[#FF6B35]">
               "To inspire and train aviation professionals across continents,
               fostering innovation and safety."
             </h3>
@@ -214,7 +224,7 @@ export function About() {
 
         {/* Subtle background element */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-5 flex items-center justify-center">
-          <h1 className="text-[30vw] font-black text-white whitespace-nowrap">
+          <h1 className="text-[40vw] sm:text-[30vw] font-black text-white whitespace-nowrap">
             MISSION
           </h1>
         </div>

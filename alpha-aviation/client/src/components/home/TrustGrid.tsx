@@ -81,14 +81,19 @@ export function TrustGrid() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.05 }}
-              className="group relative p-12 border-b border-r border-white/5 hover:bg-white/[0.02] transition-all duration-500 overflow-hidden"
+              className="group relative p-8 sm:p-12 border-b border-r border-white/5 hover:bg-white/[0.02] transition-all duration-500 overflow-hidden"
             >
               {/* Animated Glow on Hover */}
               <div className="absolute inset-0 bg-gradient-to-br from-[#0061FF]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
               <div className="relative z-10 space-y-6">
-                <div className="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center text-[#FF6B35] border border-white/10 group-hover:border-[#FF6B35]/50 transition-colors">
-                  <Icon icon={feature.icon} width="24" height="24" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-900 flex items-center justify-center text-[#FF6B35] border border-white/10 group-hover:border-[#FF6B35]/50 transition-colors">
+                  <Icon
+                    icon={feature.icon}
+                    width="20"
+                    height="20"
+                    className="sm:w-6 sm:h-6"
+                  />
                 </div>
 
                 <h3 className="text-xl font-bold text-white uppercase tracking-tight">
@@ -104,8 +109,8 @@ export function TrustGrid() {
               <div className="absolute top-0 right-0 p-4 opacity-10">
                 <Icon
                   icon="lucide:grid-3x3"
-                  width="60"
-                  className="text-white"
+                  width="40"
+                  className="text-white sm:w-[60px]"
                 />
               </div>
             </motion.div>
@@ -117,14 +122,14 @@ export function TrustGrid() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-20 flex flex-col md:flex-row items-center justify-between gap-8 border-t border-white/5 pt-12"
+          className="mt-20 flex flex-col md:flex-row items-center justify-between gap-10 border-t border-white/5 pt-12"
         >
           <div className="flex items-center gap-6">
             <div className="flex -space-x-3">
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="w-10 h-10 rounded-full border-2 border-slate-950 bg-slate-900 flex items-center justify-center overflow-hidden"
+                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-slate-950 bg-slate-900 flex items-center justify-center overflow-hidden"
                 >
                   <img
                     src={`https://i.pravatar.cc/100?u=student${i}`}
@@ -133,28 +138,28 @@ export function TrustGrid() {
                 </div>
               ))}
             </div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+            <p className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-widest">
               Joined by <span className="text-white">5,000+</span> Elite
               Students
             </p>
           </div>
 
-          <div className="flex items-center gap-10">
+          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
             <div className="flex items-center gap-3">
-              <Icon icon="flag:ng-4x3" width="20" />
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
+              <Icon icon="flag:ng-4x3" width="16" className="sm:w-5" />
+              <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
                 Nigeria
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <Icon icon="flag:gb-4x3" width="20" />
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
+              <Icon icon="flag:gb-4x3" width="16" className="sm:w-5" />
+              <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
                 UK
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <Icon icon="flag:ca-4x3" width="20" />
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
+              <Icon icon="flag:ca-4x3" width="16" className="sm:w-5" />
+              <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
                 Canada
               </span>
             </div>

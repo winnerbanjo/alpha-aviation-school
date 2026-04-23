@@ -14,7 +14,7 @@ export function AboutSummary() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-4xl sm:text-6xl font-black text-slate-900 lg:leading-[0.95] lg:tracking-tight lg:uppercase"
+              className="text-3xl sm:text-6xl font-black text-slate-900 leading-tight sm:leading-[0.95] tracking-tight uppercase"
             >
               Defining the <br />
               New Standards <br />
@@ -26,7 +26,7 @@ export function AboutSummary() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="text-lg  max-w-lg "
+              className="text-base sm:text-lg max-w-lg leading-relaxed text-slate-500"
             >
               Alpha Step Links Aviation School is a global training institution
               bridging Nigeria, the UK, and Canada. We specialize in high-impact
@@ -38,31 +38,31 @@ export function AboutSummary() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="grid grid-cols-2 gap-8 pt-4"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4"
             >
               <div className="space-y-2">
                 <Icon
                   icon="ph:globe-hemisphere-west-fill"
-                  width="32"
-                  className="text-[#FF6B35]"
+                  width="28"
+                  className="sm:w-8 text-[#FF6B35]"
                 />
-                <h4 className="font-black text-slate-900 text-sm uppercase tracking-widest">
+                <h4 className="font-black text-slate-900 text-xs sm:text-sm uppercase tracking-widest">
                   Global Reach
                 </h4>
-                <p className="text-xs text-slate-400 font-bold leading-relaxed">
+                <p className="text-[10px] sm:text-xs text-slate-400 font-bold leading-relaxed">
                   Present in Nigeria, UK & Canada.
                 </p>
               </div>
               <div className="space-y-2">
                 <Icon
                   icon="ph:star-four-fill"
-                  width="32"
-                  className="text-[#0061FF]"
+                  width="28"
+                  className="sm:w-8 text-[#0061FF]"
                 />
-                <h4 className="font-black text-slate-900 text-sm uppercase tracking-widest">
+                <h4 className="font-black text-slate-900 text-xs sm:text-sm uppercase tracking-widest">
                   IATA Aligned
                 </h4>
-                <p className="text-xs text-slate-400 font-bold leading-relaxed">
+                <p className="text-[10px] sm:text-xs text-slate-400 font-bold leading-relaxed">
                   Industry standard curriculum.
                 </p>
               </div>
@@ -77,29 +77,29 @@ export function AboutSummary() {
             transition={{ duration: 0.8 }}
             className="relative"
           >
-            <div className="relative z-10 rounded-[3rem] overflow-hidden shadow-2xl skew-y-1">
+            <div className="relative z-10 rounded-3xl sm:rounded-[3rem] overflow-hidden shadow-2xl">
               <img
                 src="/aviation-academy-story.png"
                 alt="Aviation Excellence"
-                className="w-full h-[500px] object-cover brightness-105"
+                className="w-full h-[300px] sm:h-[500px] object-cover brightness-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent" />
             </div>
 
             {/* Decorative Accents */}
-            <div className="absolute -top-8 -right-8 w-32 h-32 bg-[#FF6B35]/10 rounded-full blur-3xl" />
-            <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-[#0061FF]/10 rounded-full blur-3xl" />
+            <div className="absolute -top-8 -right-8 w-32 h-32 bg-[#FF6B35]/10 rounded-full blur-3xl hidden sm:block" />
+            <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-[#0061FF]/10 rounded-full blur-3xl hidden sm:block" />
 
-            <div className="absolute bottom-10 -left-10 bg-white p-6 rounded-3xl shadow-xl z-20 hidden md:block">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white">
-                  <Icon icon="mdi:airplane" width="24" />
+            <div className="absolute -bottom-6 -right-6 sm:bottom-10 sm:-left-10 bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-xl z-20">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-slate-900 rounded-xl sm:rounded-2xl flex items-center justify-center text-white">
+                  <Icon icon="mdi:airplane" width="20" className="sm:w-6" />
                 </div>
                 <div>
-                  <p className="text-2xl font-black text-slate-900 leading-none">
+                  <p className="text-xl sm:text-2xl font-black text-slate-900 leading-none">
                     10k+
                   </p>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  <p className="text-[8px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                     Graduates
                   </p>
                 </div>

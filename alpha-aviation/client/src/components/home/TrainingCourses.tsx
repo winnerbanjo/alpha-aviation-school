@@ -69,8 +69,8 @@ export function TrainingCourses() {
       <div className="absolute inset-0 pointer-events-none opacity-[0.25]">
         {/* Large Decorative Slogan in Background */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none">
-          <h2 className="text-[15rem] md:text-[25rem] font-black uppercase text-slate-200/50 leading-none whitespace-nowrap">
-            Alpha Aviation school
+          <h2 className="text-[10rem] sm:text-[25rem] font-black uppercase text-slate-200/50 leading-none whitespace-nowrap">
+            Alpha Aviation
           </h2>
         </div>
 
@@ -119,7 +119,7 @@ export function TrainingCourses() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-4xl sm:text-6xl font-black text-slate-900 lg:leading-[0.95] lg:tracking-tight lg:uppercase"
+              className="text-4xl sm:text-6xl font-black text-slate-900 leading-tight sm:leading-[0.95] tracking-tight uppercase"
             >
               Elite Training <br /> Programs .
             </motion.h2>
@@ -129,7 +129,7 @@ export function TrainingCourses() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-lg  max-w-md font-normal"
+            className="text-base sm:text-lg max-w-md font-normal text-slate-500 leading-relaxed"
           >
             A high-fidelity curriculum tailored for the modern aviation
             industry, blending operational excellence with world-class

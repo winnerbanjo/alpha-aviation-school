@@ -123,16 +123,16 @@ export default function Footer() {
         <div className="absolute bottom-0 left-0 w-1/2 h-full bg-[#FF6B35]/[0.03] blur-[150px] rounded-full" />
       </div>
 
-      <div className="max-w-7xl mx-auto text-white pt-24 pb-12 px-6 sm:px-8 relative z-10 flex flex-col">
+      <div className="max-w-7xl mx-auto text-white pt-16 sm:pt-24 pb-12 px-6 sm:px-8 relative z-10 flex flex-col">
         {/* MAIN HEADLINE */}
-        <div className="relative">
-          <h1 className="text-4xl sm:text-7xl md:text-8xl lg:text-9xl uppercase font-black leading-[0.85] tracking-tighter mix-blend-overlay opacity-90 lg:italic">
+        <div className="relative flex flex-col md:block">
+          <h1 className="text-3xl sm:text-7xl md:text-8xl lg:text-9xl uppercase font-black leading-[1] sm:leading-[0.85] tracking-tighter mix-blend-overlay opacity-90 lg:italic mb-12 md:mb-0">
             Alpha Step Links <br />
             Aviation School .
           </h1>
 
           {/* OVERLAPPING ENROLL BUTTON (ABIBUS STYLE) */}
-          <div className="absolute right-0 bottom-0 top-12  md:bottom-2 pr-4 md:pr-12">
+          <div className="md:absolute md:right-0 md:bottom-2 pr-4 md:pr-12">
             <Link
               to="/enroll"
               className="relative w-fit py-4  flex items-center  justify-start text-lg shrink-0 px-1 bg-[#FF6B35] text-white rounded-full font-bold overflow-hidden shadow-[0_20px_50px_-10px_rgba(255,107,53,0.4)] transition-all duration-500 hover:scale-105 active:scale-95 group"
@@ -158,7 +158,7 @@ export default function Footer() {
         </div>
 
         {/* CONTENT GRID */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 mt-32 border-t border-white/5 pt-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 mt-20 sm:mt-32 border-t border-white/5 pt-16">
           <div className="col-span-2 md:col-span-1">
             <h5 className="font-bold text-white uppercase text-xs tracking-[0.2em] mb-6">
               Discovery

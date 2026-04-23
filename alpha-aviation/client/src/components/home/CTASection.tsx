@@ -4,14 +4,14 @@ import { motion } from "framer-motion";
 
 export function CTASection() {
   return (
-    <section className="relative h-auto bg-white py-32 overflow-hidden">
+    <section className="relative h-auto bg-white py-16 sm:py-32 overflow-hidden">
       <div className="mx-auto px-6 relative z-10">
         <div className="flex flex-col items-center text-center">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-[11px] font-black text-slate-900 uppercase tracking-[0.5em] mb-6"
+            className="text-[10px] sm:text-[11px] font-black text-slate-900 uppercase tracking-[0.5em] mb-4 sm:mb-6"
           >
             Take the Next Step
           </motion.span>
@@ -21,7 +21,7 @@ export function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-5xl md:text-7xl font-black text-slate-900 leading-[1.1] mb-8"
+            className="text-4xl sm:text-6xl md:text-7xl font-black text-slate-900 leading-[1.1] mb-6 sm:mb-8 uppercase"
           >
             Join Us & <span className="text-[#0061FF]">Fly!</span>
           </motion.h2>
@@ -31,7 +31,7 @@ export function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-lg text-slate-500 max-w-2xl mb-12 font-medium"
+            className="text-base sm:text-lg text-slate-500 max-w-2xl mb-10 sm:mb-12 font-medium leading-relaxed"
           >
             Ready to work together? Talk with one of our industry experts to
             discuss <br className="hidden md:block" /> your goals and see how we
