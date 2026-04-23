@@ -1,168 +1,224 @@
-import { motion } from 'framer-motion'
-import { Card, CardContent } from '@/components/ui/card'
-import { Award, Target, Globe, Users } from 'lucide-react'
-import { AboutSEO } from '@/components/seo/SEO'
+import React from "react";
+import { motion } from "framer-motion";
+import { Icon } from "@iconify/react";
+import { AboutSEO } from "@/components/seo/SEO";
 
 const values = [
   {
-    icon: Award,
-    title: 'Excellence',
-    description: 'We strive for the highest standards in every aspect of our training, from curriculum design to instructor expertise, ensuring our graduates are equipped to excel in competitive aviation environments.'
+    icon: "material-symbols:award-star-outline",
+    title: "Excellence",
+    description:
+      "We strive for the highest standards in every aspect of our training, ensuring our graduates excel in elite aviation environments.",
   },
   {
-    icon: Target,
-    title: 'Precision',
-    description: 'Accuracy and attention to detail are at the heart of aviation; we instill these principles through rigorous, hands-on programs that emphasize safety protocols, operational efficiency, and technical mastery.'
+    icon: "material-symbols:target-play-outline",
+    title: "Precision",
+    description:
+      "Accuracy and attention to detail are at the heart of aviation; we instill these principles through rigorous, hands-on programs.",
   },
   {
-    icon: Globe,
-    title: 'Global Reach',
-    description: 'With operations spanning Nigeria, the UK, and Canada, we connect students to international opportunities, including internships and IATA-aligned certifications, bridging local talent with worldwide aviation demands.'
+    icon: "material-symbols:public",
+    title: "Global Reach",
+    description:
+      "Spanning Nigeria, the UK, and Canada, we connect students to international opportunities and IATA-aligned certifications.",
   },
   {
-    icon: Users,
-    title: 'Community',
-    description: 'We are dedicated to giving back through youth empowerment initiatives, fostering inclusive education, and supporting local communities in Lagos and beyond to build a stronger, more diverse aviation workforce.'
-  }
-]
+    icon: "material-symbols:groups-outline",
+    title: "Community",
+    description:
+      "We are dedicated to youth empowerment and fostering inclusive education to build a diverse aviation workforce.",
+  },
+];
 
 export function About() {
   return (
     <>
       <AboutSEO />
-      {/* Hero Section */}
-      <section className="relative py-20 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
+
+      {/* Cinematic Header */}
+      <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-slate-950">
+        <div className="absolute inset-0 z-0 opacity-40">
+          <img
+            src="/clean-airplane-interior.jpg"
+            alt="About Alpha Aviation"
+            className="w-full h-full object-cover grayscale brightness-50 scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-transparent to-slate-950" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center pt-24">
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-20"
+            className="inline-block text-[11px] font-black text-[#FF6B35] uppercase tracking-[0.6em] mb-8"
           >
-            <h1 className="heading-xl text-slate-900 mb-6">
-              About Alpha Step Links Aviation School
-            </h1>
-          </motion.div>
+            Institutional Legacy
+          </motion.span>
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-[4rem] sm:text-[6rem] lg:text-[8rem] font-black text-white leading-[0.85] tracking-tighter uppercase italic"
+          >
+            Our Story <br />
+            Soaring Higher <span className="text-[#FF6B35]">.</span>
+          </motion.h1>
         </div>
       </section>
 
-      {/* Bento Grid: About Us, Mission & Vision */}
-      <section className="py-20 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-20">
-            {/* Large About Us Card */}
+      {/* The Alpha Narrative (Split-Screen) */}
+      <section className="py-32 bg-white relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.5 }}
-              className="lg:col-span-2 premium-card border-slate-200 glass-text p-10"
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="space-y-12"
             >
-              <h2 className="heading-lg text-slate-900 mb-6">About Us</h2>
-              <p className="text-content text-slate-600 text-base sm:text-lg max-w-2xl">
-                Alpha Step Links Aviation School is a certified and fast-growing aviation training institution dedicated to nurturing the next generation of aviation professionals. With a presence in Nigeria, the United Kingdom, and Canada, we specialize in high-quality programs including Aviation & Travel Training, Ticketing & Reservation, Cabin Crew Courses, IATA-aligned curricula, Youth Empowerment initiatives, International Internship Pathways, and Franchise & Licensing Programs like Classroom-in-a-Box. Our experienced instructors, state-of-the-art facilities, and curriculum aligned with international standards ensure students gain practical skills in air transport, safety, operations, and aviation management. Committed to innovation and excellence, we prepare graduates for thriving careers in airlines, airports, and aviation services worldwide.
-              </p>
-            </motion.div>
-            
-            {/* Mission Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-            >
-              <Card className="premium-card border-slate-200 h-full">
-                <CardContent className="p-10">
-                  <h2 className="heading-lg text-slate-900 mb-6 text-2xl sm:text-3xl">
-                    Mission
-                  </h2>
-                  <p className="text-content text-slate-600 text-lg font-medium max-w-xl">
-                    To deliver world-class aviation training that meets global standards, empowers learners with essential practical skills, and equips them for successful, impactful careers in the dynamic aviation industry.
+              <div className="space-y-6">
+                <h2 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight uppercase tracking-tight">
+                  Defining the <br /> Future of Flight.
+                </h2>
+                <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-xl">
+                  Alpha Step Links Aviation School is a certified and
+                  fast-growing aviation training institution dedicated to
+                  nurturing the next generation of aviation professionals. With
+                  a presence in Nigeria, the United Kingdom, and Canada, we
+                  specialize in high-quality programs including Aviation &
+                  Travel Training, Ticketing & Reservation, and Cabin Crew
+                  Courses.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-8 border-t border-slate-100 pt-12">
+                <div className="space-y-2">
+                  <p className="text-3xl font-black text-slate-950">10k+</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Graduates
                   </p>
-                </CardContent>
-              </Card>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-3xl font-black text-slate-950">3+</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Continents
+                  </p>
+                </div>
+              </div>
             </motion.div>
 
-            {/* Vision Card */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="relative aspect-square lg:aspect-video rounded-3xl overflow-hidden shadow-2xl group"
             >
-              <Card className="premium-card border-slate-200 h-full">
-                <CardContent className="p-10">
-                  <h2 className="heading-lg text-slate-900 mb-6 text-2xl sm:text-3xl">
-                    Vision
-                  </h2>
-                  <p className="text-content text-slate-600 text-lg font-medium max-w-xl">
-                    To become the premier global leader in aviation education, expanding our reach to inspire and train aviation professionals across continents, fostering innovation and safety in the skies for generations to come.
-                  </p>
-                </CardContent>
-              </Card>
+              <img
+                src="https://images.unsplash.com/photo-1544016768-982d1554f0b9?auto=format&fit=crop&q=80"
+                alt="Legacy Excellence"
+                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-tr from-slate-950/40 to-transparent" />
+              <div className="absolute bottom-10 left-10 p-6 bg-white shadow-xl rounded-2xl border border-slate-100">
+                <Icon
+                  icon="mdi:airplane-marker"
+                  width="32"
+                  className="text-[#FF6B35]"
+                />
+              </div>
             </motion.div>
           </div>
+        </div>
+      </section>
 
-          {/* Alpha Step Links Legacy */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            className="mb-20"
-          >
-            <Card className="premium-card border-slate-200">
-              <CardContent className="p-8 md:p-12">
-                <h2 className="heading-lg text-slate-900 mb-6">
-                  Legacy
-                </h2>
-                <p className="text-content text-slate-600 text-base sm:text-lg max-w-4xl mx-auto">
-                  Founded as part of the broader Alpha Step Links Ltd., which offers integrated services in travel, education, and logistics, Alpha Step Links Aviation School has quickly established itself as a beacon of excellence in aviation training. From our roots in Nigeria, we've expanded internationally to the UK and Canada, building a legacy of producing highly skilled graduates who contribute to the aviation sector's growth. Our commitment to youth empowerment and innovative programs, such as international internships and franchise opportunities, has created lasting impact, with ongoing expansions in 2026 solidifying our role in shaping the future of aviation.
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
+      {/* Core Values (Inverted Grid) */}
+      <section className="relative bg-white py-32 overflow-hidden border-t border-slate-50">
+        <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `linear-gradient(#020617 1px, transparent 1px), linear-gradient(90deg, #020617 1px, transparent 1px)`,
+              backgroundSize: "50px 50px",
+            }}
+          />
+        </div>
 
-          {/* Core Values */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-          >
-            <h2 className="heading-lg text-slate-900 mb-10 text-center">
-              Our Core Values
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 relative z-10">
+          <div className="text-center mb-24">
+            <h2 className="text-4xl md:text-6xl font-black text-slate-950 uppercase tracking-tight">
+              Our Core Values .
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {values?.map((value, index) => {
-                if (!value) return null
-                const Icon = value?.icon
-                if (!Icon) return null
-                return (
-                  <motion.div
-                    key={value?.title || index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 + index * 0.1, duration: 0.5 }}
-                    whileHover={{ y: -4 }}
-                  >
-                    <Card className="premium-card h-full border-slate-200">
-                      <CardContent className="p-10">
-                        <div className="flex justify-center mb-4">
-                          <div className="p-3 bg-[#0061FF]/10 rounded-lg">
-                            <Icon className="w-8 h-8 text-[#0061FF]" />
-                          </div>
-                        </div>
-                        <h3 className="text-xl font-bold tracking-tight text-slate-900 mb-3">
-                          {value?.title || ''}
-                        </h3>
-                        <p className="text-content text-slate-600 text-sm">
-                          {value?.description || ''}
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                )
-              })}
-            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-l border-t border-slate-100">
+            {values.map((v, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="group p-12 border-b border-r border-slate-100 hover:bg-slate-50 transition-all duration-500"
+              >
+                <div className="relative z-10 space-y-6 text-center md:text-left">
+                  <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-[#FF6B35] border border-slate-100 group-hover:border-[#FF6B35]/30 transition-colors mx-auto md:mx-0">
+                    <Icon icon={v.icon} width="24" height="24" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-950 uppercase tracking-tight">
+                    {v.title}
+                  </h3>
+                  <p className="text-sm text-slate-500 font-medium leading-relaxed group-hover:text-slate-600 transition-colors">
+                    {v.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Mission & Vision (Authority Quote Layout) */}
+      <section className="bg-slate-950 py-32 relative overflow-hidden">
+        <div className="max-w-5xl mx-auto px-6 text-center space-y-24">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="space-y-10"
+          >
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em]">
+              The Mission
+            </span>
+            <h3 className="text-3xl md:text-5xl font-black text-white leading-[1.1] uppercase italic">
+              "To deliver world-class training that empowers impactful careers
+              in the dynamic aviation industry."
+            </h3>
           </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="space-y-10"
+          >
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em]">
+              The Vision
+            </span>
+            <h3 className="text-3xl md:text-5xl font-black text-white leading-[1.1] uppercase italic text-[#FF6B35]">
+              "To inspire and train aviation professionals across continents,
+              fostering innovation and safety."
+            </h3>
+          </motion.div>
+        </div>
+
+        {/* Subtle background element */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-5 flex items-center justify-center">
+          <h1 className="text-[30vw] font-black text-white whitespace-nowrap">
+            MISSION
+          </h1>
         </div>
       </section>
     </>
-  )
+  );
 }
