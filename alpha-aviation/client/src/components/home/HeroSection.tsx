@@ -46,9 +46,9 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 w-full text-center space-y-8 mt-4">
-        <h1 className="text-[2.5rem] sm:text-[4.5rem] md:text-[5.5rem] lg:text-[6.5rem] font-bold tracking-tight text-slate-900 leading-[1.05]">
+        <h1 className="font-bold text-[2.5rem] sm:text-[4.5rem] md:text-[5.5rem] lg:text-[6.5rem] tracking-tight text-slate-900 leading-[1.05]">
           Elevating Aviation <br />
-          <span className="text-slate-600/80 font-medium tracking-tight">
+          <span className="text-slate-600/80 lg:font-medium tracking-tight">
             Simplifying The Sky.
           </span>
         </h1>

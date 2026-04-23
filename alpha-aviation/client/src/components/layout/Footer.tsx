@@ -25,8 +25,8 @@ export default function Footer() {
       to: "/login",
     },
     {
-      label: "Admin Portal",
-      to: "/login",
+      label: "",
+      to: "",
     },
     {
       label: "info@alphasteplinksaviationschool.com",
