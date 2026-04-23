@@ -63,7 +63,7 @@ export function TrainingCourses() {
   return (
     <section
       id="courses"
-      className="relative bg-[#F8FAFC] py-32 overflow-hidden"
+      className="relative bg-[#F8FAFC] py-20 lg:py-32 overflow-hidden"
     >
       {/* Background Cinematic Elements */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.25]">
@@ -112,14 +112,14 @@ export function TrainingCourses() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 sm:px-8 relative z-10">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-24 gap-12">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-10 lg:mb-24 gap-7 lg:gap-12">
           <div className="space-y-6">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-5xl sm:text-7xl font-black tracking-tight text-slate-900 leading-[0.95] uppercase"
+              className="text-4xl sm:text-6xl font-black text-slate-900 lg:leading-[0.95] lg:tracking-tight lg:uppercase"
             >
               Elite Training <br /> Programs .
             </motion.h2>

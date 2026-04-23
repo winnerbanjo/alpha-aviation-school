@@ -8,13 +8,13 @@ export function AboutSummary() {
       <div className="max-w-7xl mx-auto px-6 sm:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Left Side: Content */}
-          <div className="space-y-8">
+          <div className="space-y-5 lg:space-y-8">
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-5xl sm:text-6xl font-black text-slate-900 leading-[0.95] tracking-tight uppercase"
+              className="text-4xl sm:text-6xl font-black text-slate-900 lg:leading-[0.95] lg:tracking-tight lg:uppercase"
             >
               Defining the <br />
               New Standards <br />
@@ -26,7 +26,7 @@ export function AboutSummary() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="text-lg text-slate-500 max-w-lg font-medium leading-relaxed"
+              className="text-lg  max-w-lg "
             >
               Alpha Step Links Aviation School is a global training institution
               bridging Nigeria, the UK, and Canada. We specialize in high-impact
