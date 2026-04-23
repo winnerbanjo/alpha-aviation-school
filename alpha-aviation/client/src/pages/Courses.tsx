@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Plane, Globe, Ticket, Headphones, Building2, FileText, TrendingUp, ChevronDown } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { CoursesSEO } from '@/components/seo/SEO'
 
 const licensedCourses = [
   'Airline Cabin Crew Training',
@@ -150,6 +151,7 @@ export function Courses() {
 
   return (
     <>
+      <CoursesSEO />
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">

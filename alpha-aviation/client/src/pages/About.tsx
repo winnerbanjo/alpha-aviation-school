@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { Award, Target, Globe, Users } from 'lucide-react'
+import { AboutSEO } from '@/components/seo/SEO'
 
 const values = [
   {
@@ -28,6 +29,7 @@ const values = [
 export function About() {
   return (
     <>
+      <AboutSEO />
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">

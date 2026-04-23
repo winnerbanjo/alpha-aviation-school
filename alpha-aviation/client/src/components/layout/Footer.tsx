@@ -1,186 +1,260 @@
+import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
-import { MapPin, Phone, Mail } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Footer() {
+  const Links = [
+    {
+      label: "Our Programs",
+      to: "/courses",
+    },
+    {
+      label: "About Us",
+      to: "/about",
+    },
+    {
+      label: "Campus Life",
+      to: "/courses",
+    },
+    {
+      label: "Enroll Now",
+      to: "/enroll",
+    },
+    {
+      label: "Student Login",
+      to: "/login",
+    },
+    {
+      label: "",
+      to: "",
+    },
+    {
+      label: "info@alphasteplinksaviationschool.com",
+      to: "mailto:info@alphasteplinksaviationschool.com",
+    },
+    {
+      label: "0814 025 7174",
+      to: "tel:+2348140257174",
+    },
+  ];
+
+  const Social = [
+    {
+      icon: "iconoir:instagram",
+      to: "https://instagram.com",
+    },
+    {
+      icon: "ic:twotone-whatsapp",
+      to: "https://wa.me/2348140257174",
+    },
+    {
+      icon: "ic:round-facebook",
+      to: "https://facebook.com",
+    },
+    {
+      icon: "proicons:x-twitter",
+      to: "https://twitter.com",
+    },
+    {
+      icon: "ic:baseline-tiktok",
+      to: "https://tiktok.com",
+    },
+  ];
+
   return (
-    <footer className="bg-slate-900 text-slate-300 border-t border-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          {/* Brand Section */}
-          <div>
-            <h3 className="text-xl font-semibold tracking-tighter text-white mb-4">
-              Alpha Step Links Aviation School
-            </h3>
-            <p className="text-sm text-slate-400 leading-relaxed">
-              World-class aviation training designed to launch your career in
-              the skies. Excellence, precision, and global standards.
+    <div className="bg-black p-0 m-0 border-t border-white/5 relative overflow-hidden group/footer">
+      {/* 
+          CONTINUOUS 3D FLIGHT BACKGROUND 
+          Spans the entire footer background
+      */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        {/* Deep Perspective Plane 1 */}
+        <motion.div
+          animate={{
+            x: ["-20%", "120%"],
+            y: [20, -40, 20],
+            rotateZ: [5, 10, 5],
+            scale: [0.8, 1.2, 0.8],
+            opacity: [0, 0.15, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute top-[10%] left-0 text-white select-none"
+        >
+          {/* Using a more '3D-perspective' looking icon */}
+          <Icon
+            icon="game-icons:commercial-airplane"
+            width="280"
+            height="280"
+            className="blur-[1px]"
+          />
+        </motion.div>
+
+        {/* Deep Perspective Plane 2 (Opposite direction) */}
+        <motion.div
+          animate={{
+            x: ["120%", "-20%"],
+            y: [-20, 30, -20],
+            rotateZ: [-5, -10, -5],
+            scale: [0.6, 0.9, 0.6],
+            opacity: [0, 0.1, 0],
+          }}
+          transition={{
+            duration: 28,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 5,
+          }}
+          className="absolute bottom-[20%] right-0 text-white select-none"
+        >
+          <Icon
+            icon="fluent-mdl2:airplane"
+            width="200"
+            height="200"
+            className="blur-[2px]"
+          />
+        </motion.div>
+
+        {/* Dynamic Glows */}
+        <div className="absolute top-0 right-0 w-2/3 h-full bg-blue-600/[0.03] blur-[150px] rounded-full animate-pulse" />
+        <div className="absolute bottom-0 left-0 w-1/2 h-full bg-[#FF6B35]/[0.03] blur-[150px] rounded-full" />
+      </div>
+
+      <div className="max-w-7xl mx-auto text-white pt-24 pb-12 px-6 sm:px-8 relative z-10 flex flex-col">
+        {/* MAIN HEADLINE */}
+        <div className="relative">
+          <h1 className="text-4xl sm:text-7xl md:text-8xl lg:text-9xl uppercase font-black leading-[0.85] tracking-tighter mix-blend-overlay opacity-90 lg:italic">
+            Alpha Step Links <br />
+            Aviation School .
+          </h1>
+
+          {/* OVERLAPPING ENROLL BUTTON (ABIBUS STYLE) */}
+          <div className="absolute right-0 bottom-0 top-12  md:bottom-2 pr-4 md:pr-12">
+            <Link
+              to="/enroll"
+              className="relative w-fit py-4  flex items-center  justify-start text-lg shrink-0 px-1 bg-[#FF6B35] text-white rounded-full font-bold overflow-hidden shadow-[0_20px_50px_-10px_rgba(255,107,53,0.4)] transition-all duration-500 hover:scale-105 active:scale-95 group"
+            >
+              <span className="absolute left-0 aspect-square h-full p-2 bg-transparent flex items-center justify-center transition-transform duration-500 group-hover:translate-x-12">
+                <span className="bg-white h-12 lg:h-10 lg:w-10 shrink-0 w-12 flex items-center justify-center rounded-full shadow-inner">
+                  <Icon
+                    icon="ion:paper-plane"
+                    width="1.3em"
+                    height="1.3em"
+                    style={{ color: "black" }}
+                  />
+                </span>
+              </span>
+              <span className="ml-16 lg:ml-14 transition-all duration-500 group-hover:text-transparent pr-8">
+                ENROLL
+              </span>
+              <span className="absolute inset-0 bg-white flex items-center justify-center transform translate-x-full group-hover:translate-x-0 transition-transform duration-500 text-black font-black uppercase tracking-widest">
+                JOIN US
+              </span>
+            </Link>
+          </div>
+        </div>
+
+        {/* CONTENT GRID */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 mt-32 border-t border-white/5 pt-16">
+          <div className="col-span-2 md:col-span-1">
+            <h5 className="font-bold text-white uppercase text-xs tracking-[0.2em] mb-6">
+              Discovery
+            </h5>
+            <p className="text-sm text-gray-500 pr-6 leading-relaxed font-medium">
+              A haven of aviation excellence where every flight path is an
+              experience beyond the ordinary.
             </p>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <h4 className="text-sm font-semibold tracking-tighter text-white mb-4">
-              Quick Links
-            </h4>
-            <ul className="space-y-2">
-              <li>
+            <h5 className="font-bold text-white uppercase text-xs tracking-[0.2em] mb-6">
+              Navigate
+            </h5>
+            <div className="flex flex-col space-y-3">
+              {Links.slice(0, 3).map((link, index) => (
                 <Link
-                  to="/"
-                  className="text-sm text-slate-400 hover:text-white transition-colors"
+                  key={index}
+                  className="text-gray-500 hover:text-white text-sm font-medium transition-all duration-300 hover:translate-x-1"
+                  to={link.to}
                 >
-                  Home
+                  {link.label}
                 </Link>
-              </li>
-              <li>
-                <Link
-                  to="/about"
-                  className="text-sm text-slate-400 hover:text-white transition-colors"
-                >
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/courses"
-                  className="text-sm text-slate-400 hover:text-white transition-colors"
-                >
-                  Training Courses
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/contact"
-                  className="text-sm text-slate-400 hover:text-white transition-colors"
-                >
-                  Contact Us
-                </Link>
-              </li>
-            </ul>
+              ))}
+            </div>
           </div>
 
-          {/* Contact Info Grid */}
           <div>
-            <h4 className="text-sm font-semibold tracking-tighter text-white mb-6">
-              Contact Information
-            </h4>
-            <div className="space-y-4 mb-8">
-              <div className="p-4 bg-slate-800/50 rounded-lg border border-slate-700/50">
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-[#0061FF] flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-xs text-slate-400 mb-1">Address</p>
-                    <p className="text-sm text-white">
-                      7 Chief Tajudeen Odubiyi St, Ilasamaja, Lagos 102214,
-                      Lagos
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="p-4 bg-slate-800/50 rounded-lg border border-slate-700/50">
-                <div className="flex items-center gap-3">
-                  <Phone className="w-5 h-5 text-[#0061FF] flex-shrink-0" />
-                  <div>
-                    <p className="text-xs text-slate-400 mb-1">Phone No</p>
-                    <p className="text-sm text-white">0814 025 7174</p>
-                  </div>
-                </div>
-              </div>
-              <div className="p-4 bg-slate-800/50 rounded-lg border border-slate-700/50">
-                <div className="flex items-center gap-3">
-                  <Mail className="w-5 h-5 text-[#0061FF] flex-shrink-0" />
-                  <div>
-                    <p className="text-xs text-slate-400 mb-1">Email</p>
-                    <p className="text-sm text-white break-all">
-                      info@alphasteplinksaviationschool.com
-                    </p>
-                  </div>
-                </div>
-              </div>
+            <h5 className="font-bold text-white uppercase text-xs tracking-[0.2em] mb-6">
+              Admissions
+            </h5>
+            <div className="flex flex-col space-y-3">
+              {Links.slice(3, 6).map((link, index) => (
+                <Link
+                  key={index}
+                  className="text-gray-500 hover:text-white text-sm font-medium transition-all duration-300 hover:translate-x-1"
+                  to={link.to}
+                >
+                  {link.label}
+                </Link>
+              ))}
             </div>
-            <div>
-              <h4 className="text-sm font-semibold tracking-tighter text-white mb-4">
-                Follow Us
-              </h4>
-              <div className="flex flex-wrap gap-3 mb-4">
+          </div>
+
+          <div>
+            <h5 className="font-bold text-white uppercase text-xs tracking-[0.2em] mb-6">
+              Campus
+            </h5>
+            <div className="text-sm text-gray-500 space-y-1 font-medium leading-relaxed">
+              <p>7 Chief Tajudeen Odubiyi St,</p>
+              <p>Ilasamaja, Lagos,</p>
+              <p>Nigeria.</p>
+            </div>
+          </div>
+
+          <div className="col-span-2 lg:col-span-1">
+            <h5 className="font-bold text-white uppercase text-xs tracking-[0.2em] mb-6">
+              Get in Touch
+            </h5>
+            <div className="flex flex-col space-y-3">
+              {Links.slice(6, 8).map((link, index) => (
                 <a
-                  href="https://facebook.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2.5 bg-[#1877F2]/20 hover:bg-[#1877F2]/30 rounded-lg transition-colors group"
-                  title="Facebook"
+                  key={index}
+                  className="text-gray-500 hover:text-white text-sm font-medium transition-all duration-300 break-all"
+                  href={link.to}
                 >
-                  {/* <Facebook className="w-5 h-5 text-[#1877F2] group-hover:scale-110 transition-transform" /> */}
+                  {link.label}
                 </a>
-                <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2.5 bg-gradient-to-br from-[#E4405F]/20 to-[#F77737]/20 hover:from-[#E4405F]/30 hover:to-[#F77737]/30 rounded-lg transition-colors group"
-                  title="Instagram"
-                >
-                  {/* <Instagram className="w-5 h-5 text-[#E4405F] group-hover:scale-110 transition-transform" /> */}
-                </a>
-                <a
-                  href="https://twitter.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2.5 bg-[#1DA1F2]/20 hover:bg-[#1DA1F2]/30 rounded-lg transition-colors group"
-                  title="Twitter"
-                >
-                  {/* <Twitter className="w-5 h-5 text-[#1DA1F2] group-hover:scale-110 transition-transform" /> */}
-                </a>
-                <a
-                  href="https://tiktok.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2.5 bg-black/30 hover:bg-black/40 rounded-lg transition-colors group"
-                  title="TikTok"
-                >
-                  <svg
-                    className="w-5 h-5 text-white group-hover:scale-110 transition-transform"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
-                  </svg>
-                </a>
-              </div>
-              <div>
-                <a
-                  href="https://wa.me/08140257174"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#25D366]/20 hover:bg-[#25D366]/30 rounded-lg border border-[#25D366]/30 transition-colors group"
-                >
-                  <svg
-                    className="w-5 h-5 text-[#25D366] group-hover:scale-110 transition-transform"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.98 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .96 4.534.96 10.082c0 1.744.413 3.391 1.15 4.835L.08 24l9.305-2.388a11.88 11.88 0 005.385 1.288h.005c5.554 0 10.089-4.534 10.089-10.082 0-2.724-1.062-5.283-2.987-7.207z" />
-                  </svg>
-                  <span className="text-sm text-[#25D366] font-medium">
-                    Chat us Via WhatsApp
-                  </span>
-                </a>
-              </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-slate-800">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-slate-500">
-              © 2026 Alpha Step Links Aviation School. All rights reserved.
-            </p>
-            <p className="text-xs text-slate-500">
-              Designed with excellence for the next generation of aviation
-              professionals.
-            </p>
+        {/* COPYRIGHT & SOCIALS */}
+        <div className="flex flex-col sm:flex-row justify-between mt-24 items-center gap-8 pt-8 border-t border-white/5">
+          <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-gray-600">
+            © Alpha Step Links Aviation 2026 . All Rights Reserved
+          </p>
+          <div className="flex gap-6 items-center">
+            {Social.map((soc, index) => (
+              <a
+                key={index}
+                href={soc.to}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-600 hover:text-white transition-all transform hover:-translate-y-2 active:scale-90"
+              >
+                <Icon icon={soc.icon} width="1.4em" height="1.4em" />
+              </a>
+            ))}
           </div>
         </div>
       </div>
-    </footer>
+
+      {/* BOTTOM ACCENT BAR */}
+      <div className="h-1 bg-gradient-to-r from-transparent via-[#FF6B35] to-transparent opacity-20 w-full" />
+    </div>
   );
 }

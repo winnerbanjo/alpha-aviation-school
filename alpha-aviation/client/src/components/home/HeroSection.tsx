@@ -46,17 +46,21 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 w-full text-center space-y-8 mt-4">
-        <h1 className="text-[3.5rem] sm:text-[4.5rem] md:text-[5.5rem] lg:text-[6.5rem] font-bold tracking-tight text-slate-900 leading-[1.05]">
+        <h1 className="font-bold text-[2.5rem] sm:text-[4.5rem] md:text-[5.5rem] lg:text-[6.5rem] tracking-tight text-slate-900 leading-[1.05]">
           Elevating Aviation <br />
-          <span className="text-slate-600/80 font-medium tracking-tight">
+          <span className="text-slate-600/80 lg:font-medium tracking-tight">
             Simplifying The Sky.
           </span>
         </h1>
 
-        <p className="text-lg sm:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto font-medium">
+        <p className="text-lg hidden lg:block sm:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto font-medium">
           Comprehensive aviation training, expert career pathways, and
           industry-standard curricula — delivered with precision, safety, and
           operational excellence.
+        </p>
+        <p className="text-lg lg:hidden text-slate-600 leading-tight max-w-2xl mx-auto font-normal">
+          Comprehensive aviation training, expert career pathways, and
+          industry-standard curricula.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
