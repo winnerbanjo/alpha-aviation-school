@@ -1,4 +1,5 @@
 import { HeroSection } from "@/components/home/HeroSection";
+import { AboutSummary } from "@/components/home/AboutSummary";
 import { TrainingCourses } from "@/components/home/TrainingCourses";
 import { StorySection } from "@/components/home/StorySection";
 import { CoreValues } from "@/components/home/CoreValues";
@@ -16,6 +17,7 @@ export function Landing() {
     <>
       <HomeSEO />
       <HeroSection />
+      <AboutSummary />
       <TrainingCourses />
       {/* <StorySection aboutUsText={aboutUsText} legacyText={legacyText} /> */}
       <CTASection />
