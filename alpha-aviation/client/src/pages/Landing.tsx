@@ -3,6 +3,7 @@ import { TrainingCourses } from "@/components/home/TrainingCourses";
 import { StorySection } from "@/components/home/StorySection";
 import { CoreValues } from "@/components/home/CoreValues";
 import { HomeSEO } from "@/components/seo/SEO";
+import { CTASection } from "@/components/home/CTASection";
 
 const aboutUsText =
   "Alpha Step Links Aviation School is a certified and fast-growing aviation training institution dedicated to nurturing the next generation of aviation professionals. With a presence in Nigeria, the United Kingdom, and Canada, we specialize in high-quality programs including Aviation & Travel Training, Ticketing & Reservation, Cabin Crew Courses, IATA-aligned curricula, Youth Empowerment initiatives, International Internship Pathways, and Franchise & Licensing Programs like Classroom-in-a-Box. Our experienced instructors, state-of-the-art facilities, and curriculum aligned with international standards ensure students gain practical skills in air transport, safety, operations, and aviation management. Committed to innovation and excellence, we prepare graduates for thriving careers in airlines, airports, and aviation services worldwide.";
@@ -16,8 +17,9 @@ export function Landing() {
       <HomeSEO />
       <HeroSection />
       <TrainingCourses />
-      {/* <StorySection aboutUsText={aboutUsText} legacyText={legacyText} />
-      <CoreValues /> */}
+      {/* <StorySection aboutUsText={aboutUsText} legacyText={legacyText} /> */}
+      <CTASection />
+      {/* <CoreValues /> */}
     </>
   );
 }
