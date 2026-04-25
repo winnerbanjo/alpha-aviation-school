@@ -128,7 +128,7 @@ export default function Footer() {
         <div className="relative flex flex-col md:block">
           <h1 className="text-3xl sm:text-7xl md:text-8xl lg:text-9xl uppercase font-black leading-[1] sm:leading-[0.85] tracking-tighter mix-blend-overlay opacity-90 lg:italic mb-12 md:mb-0">
             Alpha Step Links <br />
-            Aviation School .
+            Aviation School
           </h1>
 
           {/* OVERLAPPING ENROLL BUTTON (ABIBUS STYLE) */}

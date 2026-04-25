@@ -355,7 +355,7 @@ export function Enroll() {
 
             {/* Step label */}
             <div className="mb-8">
-              <div className="inline-block px-3 py-1 bg-[#0061FF]/10 text-[#0061FF] text-[10px] font-black uppercase tracking-widest rounded-md mb-3">
+              <div className="inline-block px-3 py-1 bg-[#0061FF]/10 text-[#0061FF] text-[10px] font-extrabold uppercase tracking-widest rounded-md mb-3">
                 Step {step} of 3 —{" "}
                 {step === 1
                   ? "Create Account"
@@ -402,7 +402,7 @@ export function Enroll() {
                   >
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">
+                        <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
                           First Name
                         </label>
                         <input
@@ -420,7 +420,7 @@ export function Enroll() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">
+                        <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
                           Last Name
                         </label>
                         <input
@@ -440,7 +440,7 @@ export function Enroll() {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">
+                      <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
                         Email Address
                       </label>
                       <input
@@ -456,7 +456,7 @@ export function Enroll() {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">
+                      <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
                         Password
                       </label>
                       <div className="relative">
@@ -535,7 +535,7 @@ export function Enroll() {
                     {/* Course list */}
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                        <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">
                           Available Programmes
                         </label>
                         {count > 0 && (
@@ -659,7 +659,7 @@ export function Enroll() {
                   >
                     {/* Payment Method - single select */}
                     <div className="space-y-4">
-                      <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">
+                      <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
                         Scholarship &amp; Tuition
                       </label>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -709,7 +709,7 @@ export function Enroll() {
                     </div>
                     {/* Training Mode - single select */}
                     <div className="space-y-4">
-                      <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">
+                      <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
                         Preferred Training Mode
                       </label>
                       <div className="grid grid-cols-3 gap-3">
@@ -733,7 +733,7 @@ export function Enroll() {
                                     : "border-slate-300 bg-white text-slate-400 hover:border-slate-500"
                                 }`}
                               >
-                                <span className="text-[10px] font-black uppercase tracking-tighter block">
+                                <span className="text-[10px] font-extrabold uppercase tracking-tighter block">
                                   {method}
                                 </span>
                               </button>

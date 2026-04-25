@@ -44,10 +44,10 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.8 }}
-            className="text-[3rem] sm:text-[6rem] md:text-[7.5rem] lg:text-[8.5rem] font-black text-white leading-[0.95] sm:leading-[0.85] tracking-tighter uppercase"
+            className="text-[3rem] sm:text-[6rem] md:text-[7.5rem] lg:text-[8rem] font-semibold text-white leading-[0.95] sm:leading-[0.85] tracking-tighter uppercase"
           >
             Elevating <br />
-            The Sky <span className="text-[#FF6B35]">.</span>
+            The Sky
           </motion.h1>
 
           {/* Subtext */}

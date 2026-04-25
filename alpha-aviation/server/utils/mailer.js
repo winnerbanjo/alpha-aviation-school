@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
 let transporterPromise = null;
 
@@ -8,6 +9,12 @@ const createTransporter = async () => {
   }
 
   transporterPromise = (async () => {
+    // Try Resend first (recommended)
+    if (process.env.RESEND_API_KEY) {
+      return { provider: 'resend', client: new Resend(process.env.RESEND_API_KEY) };
+    }
+
+    // Fallback to SMTP
     if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
       return nodemailer.createTransport({
         host: process.env.SMTP_HOST,
@@ -17,16 +24,7 @@ const createTransporter = async () => {
           user: process.env.SMTP_USER,
           pass: process.env.SMTP_PASS,
         },
-      });
-    }
-
-    if (process.env.GMAIL_USER && process.env.GMAIL_PASS) {
-      return nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: process.env.GMAIL_USER,
-          pass: process.env.GMAIL_PASS,
-        },
+        tls: process.env.SMTP_HOST?.includes('zoho') ? { rejectUnauthorized: false } : undefined,
       });
     }
 
@@ -38,6 +36,7 @@ const createTransporter = async () => {
 
 const sendMail = async ({ to, subject, text, html, replyTo, required = false }) => {
   const transporter = await createTransporter();
+  
   if (!transporter) {
     const errorMessage = `Mailer not configured for outbound email: ${subject}`;
     if (required) {
@@ -47,8 +46,25 @@ const sendMail = async ({ to, subject, text, html, replyTo, required = false }) 
     return { skipped: true };
   }
 
+  // Use Resend
+  if (transporter.provider === 'resend') {
+    const { data, error } = await transporter.client.emails.send({
+      from: process.env.MAIL_FROM || 'onboarding@resend.dev',
+      to,
+      subject,
+      html: html || text,
+      text,
+    });
+    
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  }
+
+  // Use SMTP
   return transporter.sendMail({
-    from: process.env.MAIL_FROM || process.env.SMTP_USER || process.env.GMAIL_USER || 'no-reply@alphasteplinksaviationschool.com',
+    from: process.env.MAIL_FROM || process.env.SMTP_USER || 'no-reply@alphasteplinksaviationschool.com',
     to,
     replyTo,
     subject,

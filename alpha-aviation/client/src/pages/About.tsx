@@ -39,7 +39,7 @@ export function About() {
       <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-slate-950">
         <div className="absolute inset-0 z-0 opacity-40">
           <img
-            src="/clean-airplane-interior.jpg"
+            src="/modern-cockpit.png"
             alt="About Alpha Aviation"
             className="w-full h-full object-cover grayscale brightness-50 scale-110"
           />
@@ -50,7 +50,7 @@ export function About() {
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-block text-[10px] sm:text-[11px] font-black text-[#FF6B35] uppercase tracking-[0.6em] mb-6 sm:mb-8"
+            className="inline-block text-[10px] sm:text-[11px] font-extrabold text-[#FF6B35] uppercase tracking-[0.6em] mb-6 sm:mb-8"
           >
             Institutional Legacy
           </motion.span>
@@ -58,10 +58,10 @@ export function About() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-[2.5rem] sm:text-[6rem] lg:text-[8rem] font-black text-white leading-[1.1] sm:leading-[0.85] tracking-tighter uppercase italic"
+            className="text-4xl sm:text-5xl lg:text-7xl font-semibold text-white leading-[1.1] sm:leading-[1] tracking-tighter uppercase italic"
           >
             Our Story <br />
-            Soaring Higher <span className="text-[#FF6B35]">.</span>
+            Soaring Higher
           </motion.h1>
         </div>
       </section>
@@ -77,7 +77,7 @@ export function About() {
               className="space-y-8 sm:space-y-12"
             >
               <div className="space-y-6">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 leading-tight uppercase tracking-tight">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-slate-900 leading-tight uppercase tracking-tight">
                   Defining the <br className="hidden sm:block" /> Future of
                   Flight.
                 </h2>
@@ -94,16 +94,16 @@ export function About() {
 
               <div className="grid grid-cols-2 gap-6 sm:gap-8 border-t border-slate-100 pt-10 sm:pt-12">
                 <div className="space-y-1 sm:space-y-2 text-left">
-                  <p className="text-2xl sm:text-3xl font-black text-slate-950">
-                    10k+
+                  <p className="text-xl sm:text-2xl font-semibold text-slate-950">
+                    500+
                   </p>
                   <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                     Graduates
                   </p>
                 </div>
                 <div className="space-y-1 sm:space-y-2 text-left">
-                  <p className="text-2xl sm:text-3xl font-black text-slate-950">
-                    3+
+                  <p className="text-xl sm:text-2xl font-semibold text-slate-950">
+                    3
                   </p>
                   <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                     Continents
@@ -150,8 +150,8 @@ export function About() {
 
         <div className="max-w-7xl mx-auto px-6 sm:px-8 relative z-10">
           <div className="text-center mb-16 sm:mb-24">
-            <h2 className="text-3xl sm:text-4xl md:text-6xl font-black text-slate-950 uppercase tracking-tight">
-              Our Core Values .
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-slate-950 uppercase tracking-tight">
+              Our Core Values
             </h2>
           </div>
 
@@ -196,10 +196,10 @@ export function About() {
             viewport={{ once: true }}
             className="space-y-8 sm:space-y-10"
           >
-            <span className="text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-[0.5em]">
+            <span className="text-[9px] sm:text-[10px] font-extrabold text-slate-500 uppercase tracking-[0.5em]">
               The Mission
             </span>
-            <h3 className="text-2xl sm:text-3xl md:text-5xl font-black text-white leading-[1.2] sm:leading-[1.1] uppercase italic">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white leading-[1.2] sm:leading-[1.1] uppercase italic">
               "To deliver world-class training that empowers impactful careers
               in the dynamic aviation industry."
             </h3>
@@ -212,10 +212,10 @@ export function About() {
             transition={{ delay: 0.2 }}
             className="space-y-8 sm:space-y-10"
           >
-            <span className="text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-[0.5em]">
+            <span className="text-[9px] sm:text-[10px] font-extrabold text-slate-500 uppercase tracking-[0.5em]">
               The Vision
             </span>
-            <h3 className="text-2xl sm:text-3xl md:text-5xl font-black text-white leading-[1.2] sm:leading-[1.1] uppercase italic text-[#FF6B35]">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white leading-[1.2] sm:leading-[1.1] uppercase italic text-[#FF6B35]">
               "To inspire and train aviation professionals across continents,
               fostering innovation and safety."
             </h3>
@@ -224,7 +224,7 @@ export function About() {
 
         {/* Subtle background element */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-5 flex items-center justify-center">
-          <h1 className="text-[40vw] sm:text-[30vw] font-black text-white whitespace-nowrap">
+          <h1 className="text-[25vw] sm:text-[20vw] font-bold text-white whitespace-nowrap">
             MISSION
           </h1>
         </div>

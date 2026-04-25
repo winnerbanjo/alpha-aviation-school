@@ -162,7 +162,7 @@ export function Login() {
 
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">
+                <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
                   Email Address
                 </label>
                 <input
@@ -177,7 +177,7 @@ export function Login() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">
+                <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
                   Portal Password
                 </label>
                 <div className="relative">

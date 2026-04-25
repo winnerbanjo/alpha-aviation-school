@@ -11,7 +11,7 @@ export function CTASection() {
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-[10px] sm:text-[11px] font-black text-slate-900 uppercase tracking-[0.5em] mb-4 sm:mb-6"
+            className="text-[10px] sm:text-[11px] font-bold text-slate-900 uppercase tracking-[0.5em] mb-4 sm:mb-6"
           >
             Take the Next Step
           </motion.span>
@@ -21,7 +21,7 @@ export function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-4xl sm:text-6xl md:text-7xl font-black text-slate-900 leading-[1.1] mb-6 sm:mb-8 uppercase"
+            className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-slate-900 leading-[1.1] mb-6 sm:mb-8 uppercase"
           >
             Join Us & <span className="text-[#0061FF]">Fly!</span>
           </motion.h2>
@@ -63,7 +63,7 @@ export function CTASection() {
             className="hidden lg:block  absolute  top-[10%] w-[300px] h-[500px] rounded-t-full overflow-hidden border-2 border-slate-50 shadow-2xl rotate-[-5deg]"
           >
             <img
-              src="/people-portrait-with-plane-flying-sky.jpg"
+              src="/student-pilot.png"
               alt="Aviation Scene"
               className="w-full h-full object-cover grayscale-[20%] brightness-110"
             />

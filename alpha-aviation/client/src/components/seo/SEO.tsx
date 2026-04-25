@@ -72,7 +72,7 @@ export function HomeSEO() {
   return (
     <SEO
       title={undefined}
-      description={`${SITE_NAME} - Certified aviation training institution in Nigeria, UK, and Canada. Enroll in cabin crew, air ticketing, travel & tourism programs. IATA-aligned curricula. 10,000+ graduates.`}
+      description={`${SITE_NAME} - Certified aviation training institution in Nigeria, UK, and Canada. Enroll in cabin crew, air ticketing, travel & tourism programs. IATA-aligned curricula. 500+ graduates.`}
       keywords="aviation school, aviation training, cabin crew, air ticketing, travel agency, tourism, IATA certified, Nigeria, UK, Canada"
       url="/"
     />

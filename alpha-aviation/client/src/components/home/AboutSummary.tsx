@@ -14,7 +14,7 @@ export function AboutSummary() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-3xl sm:text-6xl font-black text-slate-900 leading-tight sm:leading-[0.95] tracking-tight uppercase"
+              className="text-2xl sm:text-5xl font-semibold text-slate-900 leading-tight sm:leading-[0.95] tracking-tight uppercase"
             >
               Defining the <br />
               New Standards <br />
@@ -46,7 +46,7 @@ export function AboutSummary() {
                   width="28"
                   className="sm:w-8 text-[#FF6B35]"
                 />
-                <h4 className="font-black text-slate-900 text-xs sm:text-sm uppercase tracking-widest">
+                <h4 className="font-bold text-slate-900 text-xs sm:text-sm uppercase tracking-widest">
                   Global Reach
                 </h4>
                 <p className="text-[10px] sm:text-xs text-slate-400 font-bold leading-relaxed">
@@ -59,7 +59,7 @@ export function AboutSummary() {
                   width="28"
                   className="sm:w-8 text-[#0061FF]"
                 />
-                <h4 className="font-black text-slate-900 text-xs sm:text-sm uppercase tracking-widest">
+                <h4 className="font-bold text-slate-900 text-xs sm:text-sm uppercase tracking-widest">
                   IATA Aligned
                 </h4>
                 <p className="text-[10px] sm:text-xs text-slate-400 font-bold leading-relaxed">
@@ -96,8 +96,8 @@ export function AboutSummary() {
                   <Icon icon="mdi:airplane" width="20" className="sm:w-6" />
                 </div>
                 <div>
-                  <p className="text-xl sm:text-2xl font-black text-slate-900 leading-none">
-                    10k+
+                  <p className="text-lg sm:text-xl font-semibold text-slate-900 leading-none">
+                    500+
                   </p>
                   <p className="text-[8px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                     Graduates

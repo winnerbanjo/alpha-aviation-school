@@ -66,9 +66,9 @@ export function TrustGrid() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-4xl md:text-6xl font-black text-white leading-tight uppercase tracking-tight"
+            className="text-4xl md:text-6xl font-extrabold text-white leading-tight uppercase tracking-tight"
           >
-            The Alpha <br className="md:hidden" /> Advantage .
+            The Alpha <br className="md:hidden" /> Advantage
           </motion.h2>
         </div>
 
