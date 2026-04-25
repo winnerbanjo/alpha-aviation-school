@@ -44,10 +44,10 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.8 }}
-            className="text-[4rem] sm:text-[6rem] md:text-[7.5rem] lg:text-[8.5rem] font-black text-white leading-[0.85] tracking-tighter uppercase "
+            className="text-[3rem] sm:text-[6rem] md:text-[7.5rem] lg:text-[8rem] font-semibold text-white leading-[0.95] sm:leading-[0.85] tracking-tighter uppercase"
           >
             Elevating <br />
-            The Sky <span className="text-[#FF6B35]">.</span>
+            The Sky
           </motion.h1>
 
           {/* Subtext */}
@@ -55,7 +55,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9 }}
-            className="text-lg sm:text-xl text-white max-w-2xl font-normal"
+            className="text-base sm:text-xl text-white max-w-2xl font-normal leading-relaxed"
           >
             Alpha Step Links Aviation School is a global beacon of excellence.
             From expert pilot training to elite travel management.
@@ -66,16 +66,16 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.1 }}
-            className="flex flex-col sm:flex-row items-start gap-6 pt-6"
+            className="flex flex-col sm:flex-row items-start sm:items-center gap-6 pt-6"
           >
-            <Link to="/enroll">
-              <button className="group relative bg-[#FF6B35] hover:bg-[#E55A26] text-white px-5 lg:px-10 py-5 lg:py-6 rounded-full font-bold transition-all shadow-2xl shadow-orange-950/20 flex items-center gap-4 overflow-hidden">
-                <span className="relative z-10 uppercase tracking-widest text-sm">
+            <Link to="/enroll" className="w-full sm:w-auto">
+              <button className="w-full sm:w-auto group relative bg-[#FF6B35] hover:bg-[#E55A26] text-white px-8 lg:px-10 py-4 lg:py-6 rounded-full font-bold transition-all shadow-2xl shadow-orange-950/20 flex items-center justify-center gap-4 overflow-hidden">
+                <span className="relative z-10 uppercase tracking-widest text-xs lg:text-sm">
                   Start Your Journey
                 </span>
                 <Icon
                   icon="mdi:airplane-takeoff"
-                  className="relative z-10 w-6 h-6 group-hover:translate-x-2 transition-transform"
+                  className="relative z-10 w-5 h-5 lg:w-6 lg:h-6 group-hover:translate-x-2 transition-transform"
                 />
                 <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity" />
               </button>
@@ -85,56 +85,32 @@ export function HeroSection() {
       </div>
 
       {/* Bottom Global Status Bar (Institutional Presence) */}
-      <div className="absolute bottom-12 left-0 right-0 z-20">
+      <div className="absolute bottom-8 sm:bottom-12 left-0 right-0 z-20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5 }}
-            className="flex flex-wrap items-center justify-between gap-12 border-t border-white/10 pt-10"
+            className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 sm:gap-12 border-t border-white/10 pt-8 sm:pt-10"
           >
-            {/* <div className="flex items-center gap-4">
-              <div className="flex -space-x-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className="w-10 h-10 rounded-full border-2 border-slate-950 bg-slate-800 overflow-hidden shadow-xl"
-                  >
-                    <img
-                      src={`https://i.pravatar.cc/100?u=asl${i}`}
-                      alt="Elite Student"
-                    />
-                  </div>
-                ))}
-              </div>
-              <div className="space-y-0.5">
-                <p className="text-xl font-black text-white leading-none">
-                  10k+
-                </p>
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                  Global Graduates
-                </p>
-              </div>
-            </div> */}
-
-            <div className="flex items-center gap-12 text-slate-500">
+            <div className="flex items-center gap-8 text-slate-500">
               <div className="flex items-center gap-3 group">
                 <Icon
                   icon="ph:certificate-fill"
-                  width="24"
-                  className="group-hover:text-white transition-colors"
+                  width="20"
+                  className="sm:w-6 group-hover:text-white transition-colors"
                 />
-                <span className="text-[11px] font-bold uppercase tracking-widest group-hover:text-white transition-colors">
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest group-hover:text-white transition-colors">
                   IATA Aligned
                 </span>
               </div>
               <div className="flex items-center gap-3 group">
                 <Icon
                   icon="ph:star-four-fill"
-                  width="24"
-                  className="group-hover:text-white transition-colors"
+                  width="20"
+                  className="sm:w-6 group-hover:text-white transition-colors"
                 />
-                <span className="text-[11px] font-bold uppercase tracking-widest group-hover:text-white transition-colors">
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest group-hover:text-white transition-colors">
                   ISO Certified
                 </span>
               </div>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 
 @tailwind base;
 @tailwind components;
@@ -72,9 +72,9 @@
     @apply text-3xl sm:text-4xl font-bold tracking-tight;
   }
 
-  /* Global rule: All headings get tracking-tight (Google-tier) */
+  /* Global rule: All headings get tracking-tight (Google-tier) and use display font */
   h1, h2, h3, h4, h5, h6 {
-    @apply tracking-tight;
+    @apply tracking-tight font-display;
   }
 }
 

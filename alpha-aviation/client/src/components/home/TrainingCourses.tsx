@@ -45,7 +45,7 @@ const professionalCourses = [
     icon: "material-symbols:description-outline",
     description:
       "Specialized expertise in international travel regulations and complex visa documentation.",
-    image: "/aviation-academy-story.png",
+    image: "/visa-processing.png",
     studentCount: "4,600",
   },
   {
@@ -54,7 +54,7 @@ const professionalCourses = [
     icon: "material-symbols:trending-up",
     description:
       "Launch your own aviation business with expert marketing and entrepreneurial strategies.",
-    image: "/clean-airplane-interior.jpg",
+    image: "/tourism-entrepreneur.png",
     studentCount: "1,150",
   },
 ];
@@ -69,8 +69,8 @@ export function TrainingCourses() {
       <div className="absolute inset-0 pointer-events-none opacity-[0.25]">
         {/* Large Decorative Slogan in Background */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none">
-          <h2 className="text-[15rem] md:text-[25rem] font-black uppercase text-slate-200/50 leading-none whitespace-nowrap">
-            Alpha Aviation school
+          <h2 className="text-[10rem] sm:text-[25rem] font-bold uppercase text-slate-200/50 leading-none whitespace-nowrap">
+            Alpha Aviation
           </h2>
         </div>
 
@@ -119,9 +119,9 @@ export function TrainingCourses() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-4xl sm:text-6xl font-black text-slate-900 lg:leading-[0.95] lg:tracking-tight lg:uppercase"
+              className="text-3xl sm:text-5xl font-semibold text-slate-900 leading-tight sm:leading-[0.95] tracking-tight uppercase"
             >
-              Elite Training <br /> Programs .
+              Elite Training <br /> Programs
             </motion.h2>
           </div>
           <motion.p
@@ -129,7 +129,7 @@ export function TrainingCourses() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-lg  max-w-md font-normal"
+            className="text-base sm:text-lg max-w-md font-normal text-slate-500 leading-relaxed"
           >
             A high-fidelity curriculum tailored for the modern aviation
             industry, blending operational excellence with world-class
@@ -166,7 +166,7 @@ export function TrainingCourses() {
               {/* Content Section */}
               <div className="p-5 flex flex-col flex-1">
                 <div className="mb-6">
-                  <h3 className="text-2xl font-black text-slate-900 leading-[1.2] uppercase tracking-tight transition-colors">
+                  <h3 className="text-xl font-semibold text-slate-900 leading-[1.2] uppercase tracking-tight transition-colors">
                     {course.title}
                   </h3>
                 </div>
@@ -193,7 +193,7 @@ export function TrainingCourses() {
                       ))}
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-sm font-black text-slate-900 leading-none">
+                      <span className="text-sm font-bold text-slate-900 leading-none">
                         {course.studentCount}+
                       </span>
                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
@@ -222,7 +222,7 @@ export function TrainingCourses() {
           className="mt-24 text-center"
         >
           <Link to="/courses">
-            <button className="px-12 py-5 bg-transparent border-2 border-slate-900 text-slate-900 rounded-full font-black uppercase text-sm tracking-widest hover:bg-slate-900 hover:text-white transition-all shadow-xl shadow-slate-200/50">
+            <button className="px-12 py-5 bg-transparent border-2 border-slate-900 text-slate-900 rounded-full font-extrabold uppercase text-sm tracking-widest hover:bg-slate-900 hover:text-white transition-all shadow-xl shadow-slate-200/50">
               Explore All Programs
             </button>
           </Link>
