@@ -9,6 +9,8 @@ import { RegistrationSuccess } from "./pages/RegistrationSuccess";
 import { Courses } from "./pages/Courses";
 import { About } from "./pages/About";
 import { Contact } from "./pages/Contact";
+import { ForgotPassword } from "./pages/ForgotPassword";
+import { ResetPassword } from "./pages/ResetPassword";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Layout } from "./components/layout/Layout";
 import api from "./api";
@@ -39,6 +41,8 @@ function App() {
         {/* Auth & Enroll pages - no layout */}
         <Route path="/login" element={<Login />} />
         <Route path="/enroll" element={<Enroll />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/admin" element={<AdminPortal />} />
         <Route
           path="/admin/portal"

@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const {
@@ -292,6 +293,104 @@ exports.sendContactMessage = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Message sent successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Forgot password — sends reset link email
+exports.forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Please provide your email address" });
+    }
+
+    const user = await User.findOne({
+      email: email.toLowerCase().trim(),
+    }).select("+resetToken +resetTokenExpiry");
+
+    // Always return success to prevent email enumeration
+    if (!user) {
+      return res.status(200).json({
+        success: true,
+        message: "If that email exists, a reset link has been sent.",
+      });
+    }
+
+    const token = crypto.randomBytes(32).toString("hex");
+    user.resetToken = token;
+    user.resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    await user.save({ validateBeforeSave: false });
+
+    const clientUrl =
+      process.env.CLIENT_URL || "https://www.aslaviationschool.co";
+    const resetUrl = `${clientUrl}/reset-password?token=${token}`;
+
+    await sendMail({
+      to: user.email,
+      subject: "Password Reset Request — Alpha Step Links Aviation School",
+      html: `
+        <p>Hello ${user.firstName || "Student"},</p>
+        <p>You requested a password reset. Click the link below to set a new password. This link expires in <strong>1 hour</strong>.</p>
+        <p><a href="${resetUrl}" style="background:#0061FF;color:#fff;padding:12px 24px;text-decoration:none;border-radius:8px;display:inline-block;font-weight:bold;">Reset My Password</a></p>
+        <p>If you did not request this, please ignore this email.</p>
+        <p>— Alpha Step Links Aviation School</p>
+      `,
+      text: `Hello ${user.firstName || "Student"}, paste this link in your browser to reset your password: ${resetUrl}`,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "If that email exists, a reset link has been sent.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Reset password — validates token and sets new password
+exports.resetPassword = async (req, res, next) => {
+  try {
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Token and new password are required",
+      });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 6 characters",
+      });
+    }
+
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpiry: { $gt: new Date() },
+    }).select("+resetToken +resetTokenExpiry +password");
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Reset link is invalid or has expired",
+      });
+    }
+
+    user.password = password;
+    user.resetToken = undefined;
+    user.resetTokenExpiry = undefined;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Password reset successfully. You can now sign in.",
     });
   } catch (error) {
     next(error);
