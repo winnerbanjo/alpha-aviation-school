@@ -132,7 +132,7 @@ export default function Footer() {
           </h1>
 
           {/* OVERLAPPING ENROLL BUTTON (ABIBUS STYLE) */}
-          <div className="md:absolute md:right-0 md:bottom-2 pr-4 md:pr-12">
+          <div className="md:absolute md:right-0 md:pr-12">
             <Link
               to="/enroll"
               className="relative w-fit py-4  flex items-center  justify-start text-lg shrink-0 px-1 bg-[#FF6B35] text-white rounded-full font-bold overflow-hidden shadow-[0_20px_50px_-10px_rgba(255,107,53,0.4)] transition-all duration-500 hover:scale-105 active:scale-95 group"

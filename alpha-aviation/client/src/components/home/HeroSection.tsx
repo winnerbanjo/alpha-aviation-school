@@ -44,7 +44,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.8 }}
-            className="text-[3rem] sm:text-[6rem] md:text-[7.5rem] lg:text-[8rem] font-semibold text-white leading-[0.95] sm:leading-[0.85] tracking-tighter uppercase"
+            className="text-[3rem] sm:text-[5rem] md:text-[6rem] lg:text-[6.5rem] font-semibold text-white leading-[0.95] sm:leading-[0.85] tracking-tighter uppercase"
           >
             Elevating <br />
             The Sky
@@ -85,7 +85,7 @@ export function HeroSection() {
       </div>
 
       {/* Bottom Global Status Bar (Institutional Presence) */}
-      <div className="absolute bottom-8 sm:bottom-12 left-0 right-0 z-20">
+      {/* <div className="absolute bottom-8 sm:bottom-12 left-0 right-0 z-20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -117,7 +117,7 @@ export function HeroSection() {
             </div>
           </motion.div>
         </div>
-      </div>
+      </div> */}
     </section>
   );
 }
