@@ -96,6 +96,16 @@ export const sendContactMessage = async (contactData: {
   return response.data;
 };
 
+export const forgotPassword = async (email: string) => {
+  const response = await api.post("/auth/forgot-password", { email });
+  return response.data;
+};
+
+export const resetPassword = async (token: string, password: string) => {
+  const response = await api.post("/auth/reset-password", { token, password });
+  return response.data;
+};
+
 export const getProfile = async () => {
   const response = await api.get("/auth/profile");
   return response.data;
@@ -268,7 +278,11 @@ export const bulkImportUsers = async (
   }>,
   config?: AxiosRequestConfig,
 ) => {
-  const response = await api.post("/admin/users/bulk-import", { users }, config);
+  const response = await api.post(
+    "/admin/users/bulk-import",
+    { users },
+    config,
+  );
   return response.data;
 };
 
@@ -276,7 +290,11 @@ export const bulkDeleteUsers = async (
   userIds: string[],
   config?: AxiosRequestConfig,
 ) => {
-  const response = await api.post("/admin/users/bulk-delete", { userIds }, config);
+  const response = await api.post(
+    "/admin/users/bulk-delete",
+    { userIds },
+    config,
+  );
   return response.data;
 };
 
@@ -285,7 +303,11 @@ export const bulkUpdateStatus = async (
   status: "active" | "banned" | "graduated" | "suspended",
   config?: AxiosRequestConfig,
 ) => {
-  const response = await api.post("/admin/users/bulk-status", { userIds, status }, config);
+  const response = await api.post(
+    "/admin/users/bulk-status",
+    { userIds, status },
+    config,
+  );
   return response.data;
 };
 

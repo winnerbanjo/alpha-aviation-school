@@ -244,7 +244,7 @@ export function Login() {
               </Button>
             </form>
 
-            <div className="mt-12 text-center">
+            <div className="mt-12 text-center space-y-4">
               <p className="text-sm text-slate-400 font-medium">
                 New to the academy?{" "}
                 <Link
@@ -252,6 +252,14 @@ export function Login() {
                   className="text-[#0061FF] font-bold hover:underline underline-offset-4"
                 >
                   Start Enrollment
+                </Link>
+              </p>
+              <p className="text-sm text-slate-400 font-medium">
+                <Link
+                  to="/forgot-password"
+                  className="text-slate-500 hover:text-slate-800 font-medium hover:underline underline-offset-4 transition-colors"
+                >
+                  Forgot your password?
                 </Link>
               </p>
             </div>
