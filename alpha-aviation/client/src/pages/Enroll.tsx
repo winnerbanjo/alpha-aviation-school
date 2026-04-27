@@ -319,6 +319,21 @@ export function Enroll() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
+            {/* Mobile-only Back to Home */}
+            <div className="lg:hidden mb-8">
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors group"
+              >
+                <div className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center bg-slate-50 group-hover:bg-slate-100 transition-colors">
+                  <ArrowLeft className="w-4 h-4 text-slate-600" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600">
+                  Back to Home
+                </span>
+              </Link>
+            </div>
+
             {/* Top nav */}
             <div className="flex items-center justify-between mb-10">
               <div className="min-w-[100px]">

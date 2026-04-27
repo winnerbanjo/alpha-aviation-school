@@ -112,6 +112,21 @@ export function Login() {
         </motion.div>
 
         <div className="absolute inset-4 overflow-hidden">
+          {/* Go Home */}
+          <div className="absolute top-8 left-8 z-20">
+            <Link
+              to="/"
+              className="group flex items-center gap-3 w-fit px-4 py-2 bg-black/40 backdrop-blur-md rounded-full border border-white/10 hover:border-white/30 transition-all"
+            >
+              <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                <ArrowLeft className="w-3 h-3" />
+              </div>
+              <span className="text-[10px] text-white/70 font-bold uppercase tracking-widest group-hover:text-white transition-colors">
+                Go Home
+              </span>
+            </Link>
+          </div>
+
           {/* Main Narrative Overlay */}
           <div className="absolute inset-0 flex flex-col justify-center px-12 z-10">
             <motion.div
@@ -146,6 +161,21 @@ export function Login() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
+            {/* Mobile-only Back to Home */}
+            <div className="lg:hidden mb-8">
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors"
+              >
+                <div className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center bg-slate-50 group-hover:bg-slate-100 transition-colors">
+                  <ArrowLeft className="w-4 h-4 text-slate-600" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600">
+                  Back to Home
+                </span>
+              </Link>
+            </div>
+
             <div className="mb-12">
               <div className="inline-flex justify-center mb-6">
                 <div className="p-3 bg-[#0061FF]/10 rounded-full border border-[#0061FF]/20 shadow-sm shadow-[#0061FF]/10">
