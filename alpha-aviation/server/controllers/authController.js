@@ -173,8 +173,45 @@ exports.register = async (req, res, next) => {
       await sendMail({
         to: user.email,
         subject: "Welcome to Alpha Step Links Aviation School",
-        text: `Hello ${user.firstName || "Student"}, welcome to Alpha Step Links Aviation School. Your student ID is ${studentIdNumber}. Kindly make your payment of NGN ${totalCoursePrice.toLocaleString("en-NG")} to begin your selected course(s): ${normalizedSelectedCourses.join(", ")}.`,
-        html: `<p>Hello ${user.firstName || "Student"},</p><p>Welcome to Alpha Step Links Aviation School.</p><p>Your student ID is <strong>${studentIdNumber}</strong>.</p><p>Please make your payment of <strong>NGN ${totalCoursePrice.toLocaleString("en-NG")}</strong> to begin your selected course(s): <strong>${normalizedSelectedCourses.join(", ")}</strong>.</p><p>We look forward to having you onboard.</p>`,
+        text: `Hello ${user.firstName || "Student"}\n\nWelcome to Alpha Step Links Aviation School.\n\nYour student ID is ${studentIdNumber}.\n\nPlease make your payment of NGN ${totalCoursePrice.toLocaleString("en-NG")} to begin your selected course(s): ${normalizedSelectedCourses.join(", ")}.\n\nWe look forward to having you onboard.`,
+        html: `
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; padding: 40px 0;">
+          <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+            <tr>
+              <td align="center" style="background-color: #020617; padding: 40px 20px;">
+                <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">Alpha Step Links</h1>
+                <p style="color: #94a3b8; margin: 8px 0 0 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Aviation School</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 40px 40px 20px 40px;">
+                <h2 style="color: #0f172a; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Welcome to the Academy</h2>
+                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">Hello ${user.firstName || "Student"},</p>
+                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">Your enrollment has been successfully registered. Your official Student ID is <strong>${studentIdNumber}</strong>.</p>
+                <div style="background-color: #f1f5f9; padding: 24px; border-radius: 8px; margin-bottom: 32px;">
+                  <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Selected Course(s)</p>
+                  <p style="margin: 0 0 16px 0; color: #0f172a; font-size: 16px; font-weight: 600;">${normalizedSelectedCourses.join(", ")}</p>
+                  <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Amount Due</p>
+                  <p style="margin: 0; color: #FF6B35; font-size: 24px; font-weight: 700;">NGN ${totalCoursePrice.toLocaleString("en-NG")}</p>
+                </div>
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                  <tr>
+                    <td align="center">
+                      <a href="${process.env.CLIENT_URL || "https://www.aslaviationschool.co"}/login" style="background-color: #0061FF; color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;">Access Your Portal</a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color: #f1f5f9; padding: 30px; text-align: center; border-top: 1px solid #e2e8f0;">
+                <p style="color: #64748b; font-size: 13px; margin: 0 0 8px 0;">Alpha Step Links Aviation School ensures global standards in training.</p>
+                <p style="color: #94a3b8; font-size: 12px; margin: 0;">&copy; ${new Date().getFullYear()} Alpha Step Links. All rights reserved.</p>
+              </td>
+            </tr>
+          </table>
+        </div>
+        `,
       });
     } catch (mailError) {
       console.log("Welcome email not sent:", mailError.message);
@@ -333,14 +370,41 @@ exports.forgotPassword = async (req, res, next) => {
     await sendMail({
       to: user.email,
       subject: "Password Reset Request — Alpha Step Links Aviation School",
+      text: `Hello ${user.firstName || "Student"}\n\nPaste this link in your browser to reset your password: ${resetUrl}\n\nThis link expires in 1 hour.`,
       html: `
-        <p>Hello ${user.firstName || "Student"},</p>
-        <p>You requested a password reset. Click the link below to set a new password. This link expires in <strong>1 hour</strong>.</p>
-        <p><a href="${resetUrl}" style="background:#0061FF;color:#fff;padding:12px 24px;text-decoration:none;border-radius:8px;display:inline-block;font-weight:bold;">Reset My Password</a></p>
-        <p>If you did not request this, please ignore this email.</p>
-        <p>— Alpha Step Links Aviation School</p>
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; padding: 40px 0;">
+          <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+            <tr>
+              <td align="center" style="background-color: #020617; padding: 40px 20px;">
+                <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">Alpha Step Links</h1>
+                <p style="color: #94a3b8; margin: 8px 0 0 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Aviation School</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 40px 40px 20px 40px;">
+                <h2 style="color: #0f172a; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Password Reset Request</h2>
+                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">Hello ${user.firstName || "Student"},</p>
+                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 32px 0;">We received a request to reset your password for your portal account. To proceed, securely click the button below to set a new password. This link will expire in <strong>1 hour</strong>.</p>
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                  <tr>
+                    <td align="center">
+                      <a href="${resetUrl}" style="background-color: #FF6B35; color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;">Reset Password</a>
+                    </td>
+                  </tr>
+                </table>
+                <p style="color: #64748b; font-size: 14px; line-height: 1.6; margin: 32px 0 0 0;">If the button doesn't work, copy and paste this link into your browser:</p>
+                <p style="color: #0061FF; font-size: 14px; line-height: 1.5; margin: 8px 0 0 0; word-break: break-all;">${resetUrl}</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color: #f1f5f9; padding: 30px; text-align: center; border-top: 1px solid #e2e8f0;">
+                <p style="color: #64748b; font-size: 13px; margin: 0 0 8px 0;">If you didn't request this email, you can safely ignore it.</p>
+                <p style="color: #94a3b8; font-size: 12px; margin: 0;">&copy; ${new Date().getFullYear()} Alpha Step Links. All rights reserved.</p>
+              </td>
+            </tr>
+          </table>
+        </div>
       `,
-      text: `Hello ${user.firstName || "Student"}, paste this link in your browser to reset your password: ${resetUrl}`,
     });
 
     res.status(200).json({
