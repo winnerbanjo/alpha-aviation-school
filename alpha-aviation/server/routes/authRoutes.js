@@ -19,7 +19,7 @@ const loginLimiter = rateLimit({
 // Stricter rate limit for register
 const registerLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 3, // 3 registrations per hour per IP
+  max: 100, // Increased limit for development
   message: {
     success: false,
     message: "Too many accounts created, please try again later",

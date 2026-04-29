@@ -51,8 +51,6 @@ const buildUserResponse = (user) => {
     emergencyContact: user.emergencyContact,
     bio: user.bio,
     documentUrl: user.documentUrl,
-    paymentMethod: user.paymentMethod || [],
-    trainingMethod: user.trainingMethod || [],
     status: user.status || "active",
     paymentReceiptUrl: user.paymentReceiptUrl || "",
     studentIdNumber: user.studentIdNumber || "",
@@ -89,8 +87,6 @@ exports.register = async (req, res, next) => {
       firstName,
       lastName,
       selectedCourses,
-      paymentMethod,
-      trainingMethod,
     } = req.body;
 
     // Input validation
@@ -161,8 +157,6 @@ exports.register = async (req, res, next) => {
       enrollmentDate: new Date(),
       totalCoursePrice,
       studentIdNumber,
-      paymentMethod: paymentMethod || [],
-      trainingMethod: trainingMethod || [],
       status: "active",
     });
 

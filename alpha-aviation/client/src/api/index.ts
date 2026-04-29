@@ -79,8 +79,6 @@ export const register = async (userData: {
   lastName?: string;
   selectedCourses?: string[];
   amountDue?: number;
-  paymentMethod?: string[];
-  trainingMethod?: string[];
 }) => {
   const response = await api.post("/auth/register", userData);
   return response.data;
