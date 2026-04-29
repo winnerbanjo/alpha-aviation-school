@@ -9,7 +9,6 @@ import { useToast } from "@/components/ui/toast";
 import {
   ArrowLeft,
   Check,
-  CreditCard,
   Star,
   ArrowRight,
   Eye,
@@ -17,7 +16,6 @@ import {
   GraduationCap,
   User,
   BookOpen,
-  Settings2,
   Award,
 } from "lucide-react";
 
@@ -34,12 +32,17 @@ export function Enroll() {
     password: "",
     showPassword: false,
     selectedCourses: [] as string[],
-    paymentMethod: [] as string[],
-    trainingMethod: [] as string[],
   });
   const [loading, setLoading] = useState(false);
 
   const toggleCourseSelection = (courseTitle: string) => {
+    if (
+      !formData.selectedCourses.includes(courseTitle) &&
+      formData.selectedCourses.length >= 4
+    ) {
+      toast("Maximum 4 courses — unselect one to swap", "error");
+      return;
+    }
     setFormData((current) => {
       const isSelected = current.selectedCourses.includes(courseTitle);
       if (isSelected) {
@@ -49,10 +52,6 @@ export function Enroll() {
             (c) => c !== courseTitle,
           ),
         };
-      }
-      if (current.selectedCourses.length >= 4) {
-        toast("Maximum 4 courses — unselect one to swap", "error");
-        return current;
       }
       return {
         ...current,
@@ -106,16 +105,12 @@ export function Enroll() {
     setStep(2);
   };
 
-  const handleStep2Next = () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (formData.selectedCourses.length === 0) {
       toast("Select at least one course to continue", "error");
       return;
     }
-    setStep(3);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
     setLoading(true);
     try {
       const response = await register({
@@ -124,8 +119,6 @@ export function Enroll() {
         firstName: formData.firstName,
         lastName: formData.lastName,
         selectedCourses: formData.selectedCourses,
-        paymentMethod: formData.paymentMethod,
-        trainingMethod: formData.trainingMethod,
         role: "student",
       });
 
@@ -155,7 +148,6 @@ export function Enroll() {
   const stepLabels = [
     { icon: User, label: "Account" },
     { icon: BookOpen, label: "Courses" },
-    { icon: Settings2, label: "Preferences" },
   ];
 
   const leftPanelText = [
@@ -176,14 +168,6 @@ export function Enroll() {
         </>
       ),
       sub: "Select up to 4 courses. Pick all 4 to unlock the international internship bundle.",
-    },
-    {
-      heading: (
-        <>
-          Almost <span className="italic text-[#0061FF]">There.</span>
-        </>
-      ),
-      sub: "Tell us how you prefer to pay and train. We'll accommodate you.",
     },
   ];
 
@@ -353,7 +337,7 @@ export function Enroll() {
               </div>
               {/* Step dots */}
               <div className="flex items-center gap-1.5 bg-white p-2 rounded-full border border-slate-300 shadow-sm">
-                {[1, 2, 3].map((s) => (
+                {[1, 2].map((s) => (
                   <div
                     key={s}
                     className={`h-1.5 rounded-full transition-all duration-500 ease-out ${
@@ -371,19 +355,11 @@ export function Enroll() {
             {/* Step label */}
             <div className="mb-8">
               <div className="inline-block px-3 py-1 bg-[#0061FF]/10 text-[#0061FF] text-[10px] font-extrabold uppercase tracking-widest rounded-md mb-3">
-                Step {step} of 3 —{" "}
-                {step === 1
-                  ? "Create Account"
-                  : step === 2
-                    ? "Choose Courses"
-                    : "Payment & Training Preferences"}
+                Step {step} of 2 —{" "}
+                {step === 1 ? "Create Account" : "Choose Courses"}
               </div>
               <h2 className="text-3xl font-semibold tracking-tighter text-slate-900 mb-1">
-                {step === 1
-                  ? "Begin Your Journey"
-                  : step === 2
-                    ? "Select Your Programme"
-                    : "Final Details"}
+                {step === 1 ? "Begin Your Journey" : "Select Your Programme"}
               </h2>
               <p className="text-sm text-slate-400 font-medium">
                 {step === 1 ? (
@@ -396,10 +372,8 @@ export function Enroll() {
                       Sign in
                     </Link>
                   </>
-                ) : step === 2 ? (
-                  "Tell us what you'd like to study."
                 ) : (
-                  "Tell us how you'd like to pay and study."
+                  "Tell us what you'd like to study."
                 )}
               </p>
             </div>
@@ -652,123 +626,14 @@ export function Enroll() {
                     )}
 
                     <Button
-                      type="button"
-                      onClick={handleStep2Next}
-                      disabled={count === 0}
-                      className="w-full rounded-[1.25rem] bg-slate-900 hover:bg-black disabled:bg-slate-300 text-white h-14 font-bold text-sm tracking-tight transition-all hover:scale-[1.01] active:scale-[0.99] group shadow-xl shadow-slate-200"
+                      type="submit"
+                      disabled={count === 0 || loading}
+                      className="w-full rounded-[1.25rem] bg-slate-900 hover:bg-black disabled:bg-[#0f172a]/50 text-white h-14 font-bold text-sm tracking-tight transition-all hover:scale-[1.01] active:scale-[0.99] shadow-2xl shadow-[#0f172a]/20"
                     >
-                      Continue to Preferences
-                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                      {loading
+                        ? "Processing Enrollment…"
+                        : "Complete Enrollment"}
                     </Button>
-                  </motion.div>
-                )}
-
-                {/* ══ STEP 3: Payment & Training Preferences ══ */}
-                {step === 3 && (
-                  <motion.div
-                    key="step3"
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -12 }}
-                    className="space-y-8"
-                  >
-                    {/* Payment Method - single select */}
-                    <div className="space-y-4">
-                      <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
-                        Scholarship &amp; Tuition
-                      </label>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {["Full Payment", "Installmental Payment"].map(
-                          (method) => {
-                            const isSelected =
-                              formData.paymentMethod[0] === method;
-                            return (
-                              <button
-                                key={method}
-                                type="button"
-                                onClick={() =>
-                                  setFormData({
-                                    ...formData,
-                                    paymentMethod: isSelected ? [] : [method],
-                                  })
-                                }
-                                className={`p-6 rounded-[1.5rem] border-2 text-center transition-all duration-300 ${
-                                  isSelected
-                                    ? "border-[#0061FF] bg-[#0061FF]/5 shadow-lg shadow-[#0061FF]/5"
-                                    : "border-slate-300 bg-white hover:border-[#0061FF]"
-                                }`}
-                              >
-                                <div
-                                  className={`w-10 h-10 rounded-2xl mx-auto mb-3 flex items-center justify-center transition-all ${
-                                    isSelected
-                                      ? "bg-[#0061FF] text-white rotate-3"
-                                      : "bg-slate-50 text-slate-300"
-                                  }`}
-                                >
-                                  <CreditCard className="w-5 h-5" />
-                                </div>
-                                <span
-                                  className={`text-sm font-bold tracking-tight block ${
-                                    isSelected
-                                      ? "text-slate-900"
-                                      : "text-slate-500"
-                                  }`}
-                                >
-                                  {method}
-                                </span>
-                              </button>
-                            );
-                          },
-                        )}
-                      </div>
-                    </div>
-                    {/* Training Mode - single select */}
-                    <div className="space-y-4">
-                      <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
-                        Preferred Training Mode
-                      </label>
-                      <div className="grid grid-cols-3 gap-3">
-                        {["Physical", "Virtual", "Distance Learning"].map(
-                          (method) => {
-                            const isSelected =
-                              formData.trainingMethod[0] === method;
-                            return (
-                              <button
-                                key={method}
-                                type="button"
-                                onClick={() =>
-                                  setFormData({
-                                    ...formData,
-                                    trainingMethod: isSelected ? [] : [method],
-                                  })
-                                }
-                                className={`py-4 px-2 rounded-[1.25rem] border-2 text-center transition-all duration-300 ${
-                                  isSelected
-                                    ? "border-slate-600 bg-slate-900 text-white"
-                                    : "border-slate-300 bg-white text-slate-400 hover:border-slate-500"
-                                }`}
-                              >
-                                <span className="text-[10px] font-extrabold uppercase tracking-tighter block">
-                                  {method}
-                                </span>
-                              </button>
-                            );
-                          },
-                        )}
-                      </div>
-                    </div>
-                    {/* Order Summary */}\
-                    <div className="flex flex-col gap-3">
-                      <Button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full rounded-[1.25rem] bg-[#0061FF] hover:bg-[#0052E6] disabled:bg-[#0061FF]/50 text-white h-14 font-bold text-sm tracking-tight transition-all hover:scale-[1.01] active:scale-[0.99] shadow-2xl shadow-[#0061FF]/20"
-                      >
-                        {loading
-                          ? "Processing Enrollment…"
-                          : "Complete Enrollment"}
-                      </Button>
-                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>

@@ -64,8 +64,6 @@ export function Login() {
             emergencyContact: userData.emergencyContact,
             bio: userData.bio,
             documentUrl: userData.documentUrl,
-            paymentMethod: userData.paymentMethod,
-            trainingMethod: userData.trainingMethod,
             status: userData.status,
             paymentReceiptUrl: userData.paymentReceiptUrl,
             studentIdNumber: userData.studentIdNumber,

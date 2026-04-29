@@ -108,14 +108,6 @@ const userSchema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
-    paymentMethod: {
-      type: [String],
-      default: [],
-    },
-    trainingMethod: {
-      type: [String],
-      default: [],
-    },
     status: {
       type: String,
       enum: ["active", "banned", "graduated", "suspended"],

@@ -23,8 +23,6 @@ interface User {
   emergencyContact?: string
   bio?: string
   documentUrl?: string
-  paymentMethod?: string[]
-  trainingMethod?: string[]
   status?: string
   paymentReceiptUrl?: string
   studentIdNumber?: string
