@@ -45,7 +45,7 @@ type TabType =
 
 export function StudentDashboard() {
   const { user, setUser } = useAuthStore();
-  const [activeTab, setActiveTab] = useState<TabType>("overview");
+  const [activeTab, setActiveTab] = useState<TabType>("certificate");
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [uploadingReceipt, setUploadingReceipt] = useState(false);
   const [receiptUploaded, setReceiptUploaded] = useState(false);
