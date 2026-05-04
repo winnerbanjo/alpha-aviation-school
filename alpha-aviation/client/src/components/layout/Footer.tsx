@@ -29,8 +29,8 @@ export default function Footer() {
       to: "",
     },
     {
-      label: "info@alphasteplinksaviationschool.com",
-      to: "mailto:info@alphasteplinksaviationschool.com",
+      label: "support@aslaviationschool.co",
+      to: "mailto:support@aslaviationschool.co",
     },
     {
       label: "0814 025 7174",
