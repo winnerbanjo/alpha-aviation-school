@@ -39,9 +39,7 @@ export function Login() {
 
     try {
       const response = await apiLogin(email, password);
-      // The backend returns { success: true, message: "...", data: { token, user } }
       const { data } = response.data;
-
       if (data?.token && data.user) {
         const { user: userData, token } = data;
 

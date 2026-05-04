@@ -17,13 +17,13 @@ import {
   Award,
 } from "lucide-react";
 
-import { StudentOverview } from "@/components/student/StudentOverview";
+import { StudentOverview } from "./StudentOverview";
 import { CurriculumTimeline } from "@/components/student/CurriculumTimeline";
 import { ProfileDashboard } from "@/components/student/ProfileDashboard";
 import { DocumentUploader } from "@/components/student/DocumentUploader";
 import { ResourceLibrary } from "@/components/student/ResourceLibrary";
-import { StudentCertificate } from "@/components/student/StudentCertificate";
-import { StudentRecords } from "@/components/student/StudentRecords";
+import { StudentCertificate } from "./StudentCertificate";
+import { StudentRecords } from "./StudentRecords";
 import { getProfile } from "@/api";
 
 export function StudentDashboard() {
