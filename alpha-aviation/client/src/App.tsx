@@ -51,6 +51,10 @@ function App() {
 
         <Route
           path="/dashboard"
+          element={<Navigate to="/dashboard/overview" replace />}
+        />
+        <Route
+          path="/dashboard/:tab"
           element={
             <ProtectedRoute>
               <Dashboard />
@@ -77,22 +81,6 @@ function App() {
           path="/admin/revenue"
           element={
             <ProtectedRoute adminOnly>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/admin"
-          element={
-            <ProtectedRoute adminOnly>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/student"
-          element={
-            <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
           }
