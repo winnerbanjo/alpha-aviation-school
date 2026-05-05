@@ -291,7 +291,7 @@ export function StudentPayments() {
           </div>
 
           <p className="text-xs text-slate-400 text-center">
-            Or email your receipt directly to admin@aslaviationschool.co
+            Or email your receipt directly to support@aslaviationschool.co
           </p>
         </div>
       </Modal>
