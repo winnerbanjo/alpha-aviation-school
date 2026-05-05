@@ -104,6 +104,41 @@ export const resetPassword = async (token: string, password: string) => {
   return response.data;
 };
 
+// OTP Verification API calls
+export const verifyEnrollmentOTP = async (data: {
+  email: string;
+  otp: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  selectedCourses: string[];
+}) => {
+  const response = await api.post("/auth/verify-enrollment-otp", data);
+  return response.data;
+};
+
+export const resendEnrollmentOTP = async (email: string) => {
+  const response = await api.post("/auth/resend-enrollment-otp", { email });
+  return response.data;
+};
+
+export const verifyAdminOTP = async (data: {
+  email: string;
+  otp: string;
+  tempToken: string;
+}) => {
+  const response = await api.post("/auth/verify-admin-otp", data);
+  return response.data;
+};
+
+export const resendAdminOTP = async (data: {
+  email: string;
+  tempToken: string;
+}) => {
+  const response = await api.post("/auth/resend-admin-otp", data);
+  return response.data;
+};
+
 export const getProfile = async () => {
   const response = await api.get("/auth/profile");
   return response.data;

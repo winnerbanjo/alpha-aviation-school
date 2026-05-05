@@ -1,62 +1,68 @@
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { useAuthStore } from '@/store/authStore'
-import { uploadDocument } from '@/api'
-import { Upload, FileCheck, Image as ImageIcon } from 'lucide-react'
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/store/authStore";
+import { uploadDocument } from "@/api";
+import { Upload, FileCheck, Image as ImageIcon } from "lucide-react";
 
 export function DocumentUploader() {
-  const { user, setUser } = useAuthStore()
-  const [uploading, setUploading] = useState(false)
-  const [dragActive, setDragActive] = useState(false)
+  const { user, setUser } = useAuthStore();
+  const [uploading, setUploading] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
 
   const handleFileSelect = async (file: File) => {
-    if (!file.type.startsWith('image/')) {
-      alert('Please upload an image file (ID/Passport photo)')
-      return
+    if (!file.type.startsWith("image/")) {
+      alert("Please upload an image file (ID/Passport photo)");
+      return;
     }
 
     try {
-      setUploading(true)
+      setUploading(true);
       // In production, upload to cloud storage (S3, Cloudinary, etc.)
       // For now, we'll create a mock URL
-      const mockUrl = URL.createObjectURL(file)
-      
-      await uploadDocument(mockUrl)
-      
+      const mockUrl = URL.createObjectURL(file);
+
+      await uploadDocument(mockUrl);
+
       // Update user in store
       if (user) {
-        setUser({ ...user, documentUrl: mockUrl })
+        setUser({ ...user, documentUrl: mockUrl });
       }
-      
-      alert('Document uploaded successfully!')
+
+      alert("Document uploaded successfully!");
     } catch (error) {
-      console.error('Error uploading document:', error)
-      alert('Failed to upload document')
+      console.error("Error uploading document:", error);
+      alert("Failed to upload document");
     } finally {
-      setUploading(false)
+      setUploading(false);
     }
-  }
+  };
 
   const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    setDragActive(false)
-    
+    e.preventDefault();
+    setDragActive(false);
+
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFileSelect(e.dataTransfer.files[0])
+      handleFileSelect(e.dataTransfer.files[0]);
     }
-  }
+  };
 
   const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    if (e.type === 'dragenter' || e.type === 'dragover') {
-      setDragActive(true)
-    } else if (e.type === 'dragleave') {
-      setDragActive(false)
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
     }
-  }
+  };
 
   return (
     <motion.div
@@ -78,12 +84,16 @@ export function DocumentUploader() {
                 <FileCheck className="w-5 h-5 text-green-600" />
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <p className="text-sm font-medium text-green-900">Document Uploaded</p>
+                    <p className="text-sm font-medium text-green-900">
+                      Document Uploaded
+                    </p>
                     <span className="px-2 py-0.5 text-xs font-medium bg-green-600 text-white rounded-full">
                       Verified
                     </span>
                   </div>
-                  <p className="text-xs text-green-700">Your ID/Passport has been submitted and verified</p>
+                  <p className="text-xs text-green-700">
+                    Your ID/Passport has been submitted and verified
+                  </p>
                 </div>
               </div>
               <img
@@ -100,24 +110,22 @@ export function DocumentUploader() {
               onDrop={handleDrop}
               className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
                 dragActive
-                  ? 'border-[#0061FF] bg-[#0061FF]/5'
-                  : 'border-slate-200 hover:border-slate-300'
+                  ? "border-[#0061FF] bg-[#0061FF]/5"
+                  : "border-slate-200 hover:border-slate-300"
               }`}
             >
               <ImageIcon className="w-12 h-12 text-slate-400 mx-auto mb-4" />
               <p className="text-sm font-medium text-slate-900 mb-2">
                 Drop your ID/Passport photo here
               </p>
-              <p className="text-xs text-slate-500 mb-4">
-                or click to browse
-              </p>
+              <p className="text-xs text-slate-500 mb-4">or click to browse</p>
               <input
                 type="file"
                 id="document-upload"
                 accept="image/*"
                 onChange={(e) => {
                   if (e.target.files && e.target.files[0]) {
-                    handleFileSelect(e.target.files[0])
+                    handleFileSelect(e.target.files[0]);
                   }
                 }}
                 className="hidden"
@@ -130,7 +138,7 @@ export function DocumentUploader() {
                   disabled={uploading}
                 >
                   <Upload className="w-4 h-4 mr-2" />
-                  {uploading ? 'Uploading...' : 'Select File'}
+                  {uploading ? "Uploading..." : "Select File"}
                 </Button>
               </label>
             </div>
@@ -138,5 +146,5 @@ export function DocumentUploader() {
         </CardContent>
       </Card>
     </motion.div>
-  )
+  );
 }

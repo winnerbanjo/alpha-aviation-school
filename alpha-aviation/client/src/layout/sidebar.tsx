@@ -47,32 +47,17 @@ export function Sidebar({ role }: SidebarProps) {
     {
       icon: LayoutDashboard,
       label: "Overview",
-      path: "/dashboard",
-      tab: "overview",
-    },
-    {
-      icon: BookOpen,
-      label: "Flight Roadmap",
-      path: "/dashboard",
-      tab: "curriculum",
-    },
-    {
-      icon: FileText,
-      label: "Document Vault",
-      path: "/dashboard",
-      tab: "documents",
+      path: "/dashboard/overview",
     },
     {
       icon: Download,
       label: "Resource Library",
-      path: "/dashboard",
-      tab: "resources",
+      path: "/dashboard/resources",
     },
     {
       icon: User,
       label: "Profile Settings",
-      path: "/dashboard",
-      tab: "profile",
+      path: "/dashboard/profile",
     },
   ];
 

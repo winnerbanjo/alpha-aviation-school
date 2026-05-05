@@ -39,10 +39,16 @@ export function Login() {
 
     try {
       const response = await apiLogin(email, password);
-      // The backend returns { success: true, message: "...", data: { token, user } }
       const { data } = response.data;
 
-      if (data?.token && data.user) {
+      if (data?.requiresOTP && data?.tempToken) {
+        // Admin requires OTP verification
+        navigate(
+          `/verify-otp?purpose=admin_login&email=${encodeURIComponent(email)}&tempToken=${encodeURIComponent(data.tempToken)}`,
+          { replace: true }
+        );
+        toast("Verification code sent to your email!", "success");
+      } else if (data?.token && data.user) {
         const { user: userData, token } = data;
 
         login(
