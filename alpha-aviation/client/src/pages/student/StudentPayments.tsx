@@ -290,9 +290,12 @@ export function StudentPayments() {
             </label>
           </div>
 
-          <p className="text-xs text-slate-400 text-center">
+          <a
+            href="mailto:support@aslaviationschool.co"
+            className="text-xs text-blue-600 hover:text-blue-800 text-center"
+          >
             Or email your receipt directly to support@aslaviationschool.co
-          </p>
+          </a>
         </div>
       </Modal>
     </div>
