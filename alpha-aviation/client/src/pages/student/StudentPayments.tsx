@@ -9,16 +9,18 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { PaymentModal } from "@/components/PaymentModal";
+import { Modal } from "@/components/ui/modal";
 import {
   CreditCard,
   CheckCircle2,
   AlertCircle,
   Upload,
   FileText,
+  Copy,
 } from "lucide-react";
 import { uploadPaymentReceipt } from "@/api";
 import { formatNaira } from "@/data/courseCatalog";
+import { useToast } from "@/components/ui/toast";
 
 const fileToDataUrl = (file: File) =>
   new Promise<string>((resolve, reject) => {
@@ -30,17 +32,38 @@ const fileToDataUrl = (file: File) =>
 
 export function StudentPayments() {
   const { user, setUser } = useAuthStore();
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const { toast } = useToast();
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [uploadingReceipt, setUploadingReceipt] = useState(false);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
 
   const amountDue = user?.amountDue || 0;
   const amountPaid = user?.amountPaid || 0;
   const isPending = user?.paymentStatus === "Pending";
   const paymentReceiptUrl = user?.paymentReceiptUrl || "";
 
+  const bankDetails = {
+    accountName: "Alpha step links aviation school ltd",
+    accountNumber: "1000485345",
+    bank: "Globus bank",
+    reference: user?.email || "STUDENT-REF",
+  };
+
+  const copyToClipboard = (field: string, text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
+    toast("Copied to clipboard", "success");
+  };
+
   const handleReceiptUpload = async (file: File) => {
     if (!file.type.startsWith("image/") && !file.type.includes("pdf")) {
-      alert("Please upload an image file (JPG, PNG) or PDF");
+      toast("Please upload an image file (JPG, PNG) or PDF", "error");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast("File size must be under 5MB", "error");
       return;
     }
 
@@ -56,11 +79,13 @@ export function StudentPayments() {
           status: response.data.status || "Payment Received",
         });
       }
+
+      toast("Receipt uploaded successfully", "success");
+      setIsUploadModalOpen(false);
     } catch (error: any) {
-      console.error("Error uploading receipt:", error);
-      alert(
-        error.response?.data?.message ||
-          "Failed to upload receipt. Please try again.",
+      toast(
+        error.response?.data?.message || "Failed to upload receipt",
+        "error",
       );
     } finally {
       setUploadingReceipt(false);
@@ -146,26 +171,52 @@ export function StudentPayments() {
               </p>
             </div>
 
-            <Button
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-              onClick={() => setIsPaymentModalOpen(true)}
-            >
-              <CreditCard className="w-4 h-4 mr-2" />
-              View Payment Instructions
-            </Button>
-
-            <div className="p-4 bg-slate-50 rounded-lg text-sm">
-              <p className="font-semibold text-slate-900 mb-2">
+            <div className="space-y-3">
+              <p className="text-sm font-semibold text-slate-900">
                 Bank Transfer Details
               </p>
-              <ul className="text-slate-600 space-y-1">
-                <li>Account Name: Alpha step links aviation school ltd</li>
-                <li>Account Number: 1000485345</li>
-                <li>Bank: Globus bank</li>
-              </ul>
+
+              {Object.entries({
+                "Account Name": bankDetails.accountName,
+                "Account Number": bankDetails.accountNumber,
+                Bank: bankDetails.bank,
+                Reference: bankDetails.reference,
+              }).map(([label, value]) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between p-3 bg-slate-50 rounded-lg"
+                >
+                  <div>
+                    <p className="text-xs text-slate-500">{label}</p>
+                    <p className="text-sm font-medium text-slate-900">
+                      {value}
+                    </p>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => copyToClipboard(label, value)}
+                    className="h-8 w-8 p-0 shrink-0"
+                  >
+                    {copiedField === label ? (
+                      <CheckCircle2 className="w-4 h-4 text-green-600" />
+                    ) : (
+                      <Copy className="w-4 h-4" />
+                    )}
+                  </Button>
+                </div>
+              ))}
+
               <p className="text-xs text-slate-500 mt-3 pt-3 border-t border-slate-200">
-                Include your email ({user?.email}) as reference.
+                Include your email as reference when making the transfer.
               </p>
+              <Button
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                onClick={() => setIsUploadModalOpen(true)}
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                Upload Receipt
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -204,12 +255,46 @@ export function StudentPayments() {
         )}
       </div>
 
-      <PaymentModal
-        isOpen={isPaymentModalOpen}
-        onClose={() => setIsPaymentModalOpen(false)}
-        amountDue={amountDue}
-        userEmail={user?.email}
-      />
+      <Modal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        title="Upload Payment Receipt"
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-slate-500">
+            Upload a screenshot or photo of your bank transfer receipt. Our team
+            will verify it shortly.
+          </p>
+
+          <div className="p-6 bg-slate-50 border-2 border-dashed border-slate-200 rounded-lg">
+            <label className="block cursor-pointer">
+              <input
+                type="file"
+                accept="image/*,.pdf"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleReceiptUpload(file);
+                }}
+                className="hidden"
+                disabled={uploadingReceipt}
+              />
+              <div className="flex flex-col items-center justify-center py-4">
+                <FileText className="w-10 h-10 text-slate-400 mb-3" />
+                <p className="text-sm font-medium text-slate-900 mb-1">
+                  {uploadingReceipt ? "Uploading..." : "Click to select file"}
+                </p>
+                <p className="text-xs text-slate-500">
+                  JPG, PNG, or PDF (Max 5MB)
+                </p>
+              </div>
+            </label>
+          </div>
+
+          <p className="text-xs text-slate-400 text-center">
+            Or email your receipt directly to admin@aslaviationschool.co
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 }
