@@ -52,8 +52,23 @@ export function AdminPortal() {
       const outerBody = response.data;
       const inner = outerBody?.data;
 
-      if (!outerBody?.success || !inner?.token || !inner?.user) {
+      if (!outerBody?.success) {
         setError(outerBody?.message || "Login failed.");
+        setLoading(false);
+        return;
+      }
+
+      if (inner?.requiresOTP && inner?.tempToken) {
+        navigate(
+          `/admin/verify-otp?email=${encodeURIComponent(emailValue)}&tempToken=${encodeURIComponent(inner.tempToken)}`,
+          { replace: true },
+        );
+        setLoading(false);
+        return;
+      }
+
+      if (!inner?.token || !inner?.user) {
+        setError("Login failed.");
         setLoading(false);
         return;
       }

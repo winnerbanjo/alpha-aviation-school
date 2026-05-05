@@ -20,7 +20,6 @@ const Contact = lazy(() =>
   import("../pages/Contact").then((m) => ({ default: m.Contact })),
 );
 
-
 // Auth & Setup
 const Login = lazy(() =>
   import("../pages/Login").then((m) => ({ default: m.Login })),
@@ -42,6 +41,11 @@ const VerifyOtp = lazy(() =>
 const AdminPortal = lazy(() =>
   import("../pages/AdminPortal").then((m) => ({ default: m.AdminPortal })),
 );
+const AdminOtpVerification = lazy(() =>
+  import("../pages/AdminOtpVerification").then((m) => ({
+    default: m.AdminOtpVerification,
+  })),
+);
 
 const AdminDashboard = lazy(() =>
   import("../pages/admin/AdminDashboard").then((m) => ({
@@ -54,6 +58,36 @@ const StudentOverview = lazy(() =>
     default: m.StudentOverview,
   })),
 );
+const StudentCourses = lazy(() =>
+  import("../pages/student/StudentCourses").then((m) => ({
+    default: m.StudentCourses,
+  })),
+);
+const StudentPayments = lazy(() =>
+  import("../pages/student/StudentPayments").then((m) => ({
+    default: m.StudentPayments,
+  })),
+);
+const StudentProfile = lazy(() =>
+  import("../pages/student/StudentProfile").then((m) => ({
+    default: m.StudentProfile,
+  })),
+);
+const StudentResources = lazy(() =>
+  import("../pages/student/StudentResources").then((m) => ({
+    default: m.StudentResources,
+  })),
+);
+const StudentCertificate = lazy(() =>
+  import("../pages/student/StudentCertificate").then((m) => ({
+    default: m.StudentCertificate,
+  })),
+);
+const StudentRecords = lazy(() =>
+  import("../pages/student/StudentRecords").then((m) => ({
+    default: m.StudentRecords,
+  })),
+);
 
 // Global Loading fallback
 const PageLoader = () => (
@@ -61,9 +95,6 @@ const PageLoader = () => (
     <p className="text-slate-500">Loading...</p>
   </div>
 );
-
-// We will map exactly the previous Dashboard rendering here soon
-// The Dashboard component will be completely replaced by layout sub-routes
 
 export const RoutesConfig = () => {
   const routes = useRoutes([
@@ -84,6 +115,7 @@ export const RoutesConfig = () => {
     { path: "/verify-otp", element: <VerifyOtp /> },
     { path: "/admin", element: <AdminPortal /> },
     { path: "/admin/portal", element: <Navigate to="/admin" replace /> },
+    { path: "/admin/verify-otp", element: <AdminOtpVerification /> },
 
     // Core Admin Layout
     {
@@ -108,7 +140,16 @@ export const RoutesConfig = () => {
           <StudentLayout />
         </ProtectedRoute>
       ),
-      children: [{ path: "", element: <StudentOverview /> }],
+      children: [
+        { path: "", element: <Navigate to="/dashboard/overview" replace /> },
+        { path: "overview", element: <StudentOverview /> },
+        { path: "courses", element: <StudentCourses /> },
+        { path: "payments", element: <StudentPayments /> },
+        { path: "resources", element: <StudentResources /> },
+        { path: "certificate", element: <StudentCertificate /> },
+        { path: "records", element: <StudentRecords /> },
+        { path: "profile", element: <StudentProfile /> },
+      ],
     },
   ]);
 

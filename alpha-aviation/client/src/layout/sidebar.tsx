@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
 import { useNavigate } from "react-router-dom";
 import {
@@ -12,6 +12,8 @@ import {
   Menu,
   X,
   LogOut,
+  CreditCard,
+  GraduationCap,
 } from "lucide-react";
 import { useState } from "react";
 import { Logo } from "@/components/Logo";
@@ -24,13 +26,11 @@ export function Sidebar({ role }: SidebarProps) {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const location = useLocation();
 
   type NavItem = {
     icon: typeof LayoutDashboard;
     label: string;
     path: string;
-    tab?: string;
   };
 
   const adminNavItems: NavItem[] = [
@@ -50,9 +50,29 @@ export function Sidebar({ role }: SidebarProps) {
       path: "/dashboard/overview",
     },
     {
+      icon: BookOpen,
+      label: "Courses",
+      path: "/dashboard/courses",
+    },
+    {
+      icon: CreditCard,
+      label: "Payments & Bills",
+      path: "/dashboard/payments",
+    },
+    {
       icon: Download,
-      label: "Resource Library",
+      label: "Resources",
       path: "/dashboard/resources",
+    },
+    {
+      icon: GraduationCap,
+      label: "Certificate",
+      path: "/dashboard/certificate",
+    },
+    {
+      icon: FileText,
+      label: "Records",
+      path: "/dashboard/records",
     },
     {
       icon: User,
@@ -62,17 +82,6 @@ export function Sidebar({ role }: SidebarProps) {
   ];
 
   const navItems = role === "admin" ? adminNavItems : studentNavItems;
-
-  const isActive = (item: NavItem) => {
-    if (role === "admin") {
-      return location.pathname === item.path;
-    }
-    if (item.tab) {
-      const activeTab = sessionStorage.getItem("activeTab");
-      return activeTab === item.tab;
-    }
-    return location.pathname === item.path;
-  };
 
   return (
     <>
@@ -112,25 +121,14 @@ export function Sidebar({ role }: SidebarProps) {
           <nav className="flex-1 p-4 space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const active = isActive(item);
               return (
                 <NavLink
                   key={item.label}
                   to={item.path}
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    if (item.tab) {
-                      sessionStorage.setItem("activeTab", item.tab);
-                      window.dispatchEvent(
-                        new CustomEvent("studentTabChange", {
-                          detail: item.tab,
-                        }),
-                      );
-                    }
-                  }}
-                  className={({ isActive: navIsActive }) =>
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) =>
                     `flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                      navIsActive || active
+                      isActive
                         ? "bg-[#0061FF]/20 text-white border-l-2 border-[#0061FF] font-semibold"
                         : "text-slate-300 hover:bg-slate-800 hover:text-white hover:scale-[1.02]"
                     }`
@@ -153,18 +151,16 @@ export function Sidebar({ role }: SidebarProps) {
               </p>
               <p className="text-xs text-slate-400 truncate">{user?.email}</p>
             </div>
-            {role === "admin" && (
-              <button
-                onClick={() => {
-                  logout();
-                  navigate("/admin/portal");
-                }}
-                className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-300 rounded-lg hover:bg-red-900/20 hover:text-red-300 transition-all duration-200"
-              >
-                <LogOut className="w-5 h-5" />
-                Logout
-              </button>
-            )}
+            <button
+              onClick={() => {
+                logout();
+                navigate(role === "admin" ? "/admin/portal" : "/login");
+              }}
+              className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-300 rounded-lg hover:bg-red-900/20 hover:text-red-300 transition-all duration-200"
+            >
+              <LogOut className="w-5 h-5" />
+              Logout
+            </button>
           </div>
         </div>
       </aside>
