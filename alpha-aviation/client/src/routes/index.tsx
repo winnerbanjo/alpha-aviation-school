@@ -41,6 +41,11 @@ const VerifyOtp = lazy(() =>
 const AdminPortal = lazy(() =>
   import("../pages/AdminPortal").then((m) => ({ default: m.AdminPortal })),
 );
+const AdminOtpVerification = lazy(() =>
+  import("../pages/AdminOtpVerification").then((m) => ({
+    default: m.AdminOtpVerification,
+  })),
+);
 
 const AdminDashboard = lazy(() =>
   import("../pages/admin/AdminDashboard").then((m) => ({
@@ -110,6 +115,7 @@ export const RoutesConfig = () => {
     { path: "/verify-otp", element: <VerifyOtp /> },
     { path: "/admin", element: <AdminPortal /> },
     { path: "/admin/portal", element: <Navigate to="/admin" replace /> },
+    { path: "/admin/verify-otp", element: <AdminOtpVerification /> },
 
     // Core Admin Layout
     {

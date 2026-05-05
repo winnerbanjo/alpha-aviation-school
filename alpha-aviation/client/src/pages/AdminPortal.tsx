@@ -60,7 +60,7 @@ export function AdminPortal() {
 
       if (inner?.requiresOTP && inner?.tempToken) {
         navigate(
-          `/verify-otp?purpose=admin_login&email=${encodeURIComponent(emailValue)}&tempToken=${encodeURIComponent(inner.tempToken)}`,
+          `/admin/verify-otp?email=${encodeURIComponent(emailValue)}&tempToken=${encodeURIComponent(inner.tempToken)}`,
           { replace: true },
         );
         setLoading(false);
