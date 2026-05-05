@@ -14,7 +14,16 @@ export function StudentRecords() {
   const { user } = useAuthStore();
 
   return (
-    <Card className="border-slate-200/50">
+    <div className="p-6 lg:p-8 space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
+          Training Records
+        </h1>
+        <p className="text-slate-500">
+          View your completed courses, achievements, and payment history.
+        </p>
+      </div>
+      <Card className="border-slate-200/50">
       <CardHeader>
         <CardTitle>Training Records</CardTitle>
         <CardDescription>
@@ -44,5 +53,6 @@ export function StudentRecords() {
         </div>
       </CardContent>
     </Card>
+    </div>
   );
 }

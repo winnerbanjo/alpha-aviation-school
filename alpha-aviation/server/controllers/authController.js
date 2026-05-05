@@ -1,11 +1,19 @@
 const crypto = require("crypto");
 const User = require("../models/User");
+const OtpSession = require("../models/OtpSession");
 const jwt = require("jsonwebtoken");
 const {
   buildCourseSelections,
   getTotalCoursePrice,
 } = require("../utils/courseCatalog");
 const { sendMail } = require("../utils/mailer");
+const {
+  generateOTP,
+  hashOTP,
+  getOTPExpiry,
+  isValidOTPFormat,
+  OTP_PURPOSE,
+} = require("../utils/otp");
 
 // Generate JWT token with role-based expiry
 const generateToken = (userId, role = "student") => {
@@ -78,7 +86,7 @@ const isValidEmail = (email) => {
   return emailRegex.test(email);
 };
 
-// Register new user
+// Register new user - with OTP verification
 exports.register = async (req, res, next) => {
   try {
     const {
@@ -130,9 +138,6 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    const totalCoursePrice = getTotalCoursePrice(courseSelections);
-    const studentIdNumber = await generateStudentIdNumber();
-
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -142,9 +147,160 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    // Create new user
+    // Generate OTP
+    const otp = generateOTP();
+    const hashedOTP = hashOTP(otp);
+    const expiresAt = getOTPExpiry(10); // 10 minutes
+
+    // Delete any existing OTP sessions for this email and purpose
+    await OtpSession.deleteMany({
+      email: email.toLowerCase().trim(),
+      purpose: OTP_PURPOSE.ENROLLMENT,
+    });
+
+    // Create OTP session
+    await OtpSession.create({
+      email: email.toLowerCase().trim(),
+      otp: hashedOTP,
+      purpose: OTP_PURPOSE.ENROLLMENT,
+      expiresAt,
+    });
+
+    // Store registration data temporarily (in a cache or DB - using OtpSession metadata)
+    // For simplicity, we'll store in a separate temp collection or re-create on verification
+    // Let's use a temporary approach: store data in the OtpSession or use Redis
+    // For now, we'll require the client to resend data on verification
+
+    // Send OTP email
+    try {
+      await sendMail({
+        to: email,
+        subject: "Verify Your Email - Alpha Step Links Aviation School",
+        text: `Hello ${firstName || "Student"},\n\nYour verification code is: ${otp}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request this, please ignore this email.`,
+        html: `
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; padding: 40px 0;">
+          <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+            <tr>
+              <td align="center" style="background-color: #020617; padding: 40px 20px;">
+                <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">Alpha Step Links</h1>
+                <p style="color: #94a3b8; margin: 8px 0 0 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Aviation School</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 40px 40px 20px 40px;">
+                <h2 style="color: #0f172a; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Verify Your Email</h2>
+                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">Hello ${firstName || "Student"},</p>
+                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 32px 0;">Please use the verification code below to complete your enrollment:</p>
+                <div style="background-color: #f1f5f9; padding: 32px; border-radius: 8px; margin-bottom: 32px; text-align: center;">
+                  <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Verification Code</p>
+                  <p style="margin: 0; color: #0061FF; font-size: 36px; font-weight: 700; letter-spacing: 8px;">${otp}</p>
+                </div>
+                <p style="color: #64748b; font-size: 14px; line-height: 1.6; margin: 0 0 16px 0;">This code will expire in <strong>10 minutes</strong>.</p>
+                <p style="color: #94a3b8; font-size: 13px; line-height: 1.6; margin: 0;">If you didn't request this email, you can safely ignore it.</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color: #f1f5f9; padding: 30px; text-align: center; border-top: 1px solid #e2e8f0;">
+                <p style="color: #64748b; font-size: 13px; margin: 0 0 8px 0;">Alpha Step Links Aviation School ensures global standards in training.</p>
+                <p style="color: #94a3b8; font-size: 12px; margin: 0;">&copy; ${new Date().getFullYear()} Alpha Step Links. All rights reserved.</p>
+              </td>
+            </tr>
+          </table>
+        </div>
+        `,
+      });
+    } catch (mailError) {
+      console.log("OTP email not sent:", mailError.message);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to send verification email. Please try again.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Verification code sent to your email",
+      data: {
+        requiresVerification: true,
+        email: email.toLowerCase().trim(),
+        purpose: OTP_PURPOSE.ENROLLMENT,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Verify enrollment OTP and complete registration
+exports.verifyEnrollmentOTP = async (req, res, next) => {
+  try {
+    const { email, otp, firstName, lastName, password, selectedCourses } = req.body;
+
+    if (!email || !otp || !firstName || !lastName || !password || !selectedCourses) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+
+    if (!isValidOTPFormat(otp)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP format",
+      });
+    }
+
+    // Find valid OTP session
+    const otpSession = await OtpSession.findOne({
+      email: email.toLowerCase().trim(),
+      purpose: OTP_PURPOSE.ENROLLMENT,
+      expiresAt: { $gt: new Date() },
+      verified: false,
+    });
+
+    if (!otpSession) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP expired or not found. Please request a new one.",
+      });
+    }
+
+    // Check attempts
+    if (otpSession.attempts >= 5) {
+      await OtpSession.deleteOne({ _id: otpSession._id });
+      return res.status(400).json({
+        success: false,
+        message: "Too many attempts. Please request a new OTP.",
+      });
+    }
+
+    // Verify OTP
+    const hashedOTP = hashOTP(otp);
+    if (otpSession.otp !== hashedOTP) {
+      otpSession.attempts += 1;
+      await otpSession.save();
+      return res.status(400).json({
+        success: false,
+        message: "Invalid verification code",
+      });
+    }
+
+    // Mark OTP as verified
+    otpSession.verified = true;
+    await otpSession.save();
+
+    // Process registration
+    const normalizedSelectedCourses = Array.isArray(selectedCourses)
+      ? [...new Set(selectedCourses.filter(Boolean))].slice(0, 4)
+      : [];
+
+    const courseSelections = buildCourseSelections(normalizedSelectedCourses);
+    const totalCoursePrice = getTotalCoursePrice(courseSelections);
+    const studentIdNumber = await generateStudentIdNumber();
+
+    // Create user
     const user = await User.create({
-      email,
+      email: email.toLowerCase().trim(),
       password,
       role: "student",
       firstName,
@@ -158,16 +314,20 @@ exports.register = async (req, res, next) => {
       totalCoursePrice,
       studentIdNumber,
       status: "active",
+      isEmailVerified: true,
     });
+
+    // Clean up OTP session
+    await OtpSession.deleteOne({ _id: otpSession._id });
 
     const token = generateToken(user._id, "student");
 
-    // Try to send welcome email, but don't fail if it doesn't work
+    // Send welcome email
     try {
       await sendMail({
         to: user.email,
         subject: "Welcome to Alpha Step Links Aviation School",
-        text: `Hello ${user.firstName || "Student"}\n\nWelcome to Alpha Step Links Aviation School.\n\nYour student ID is ${studentIdNumber}.\n\nPlease make your payment of NGN ${totalCoursePrice.toLocaleString("en-NG")} to begin your selected course(s): ${normalizedSelectedCourses.join(", ")}.\n\nWe look forward to having you onboard.`,
+        text: `Hello ${user.firstName}\n\nWelcome to Alpha Step Links Aviation School.\n\nYour student ID is ${studentIdNumber}.\n\nPlease make your payment of NGN ${totalCoursePrice.toLocaleString("en-NG")} to begin your selected course(s): ${normalizedSelectedCourses.join(", ")}.\n\nWe look forward to having you onboard.`,
         html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; padding: 40px 0;">
           <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
@@ -180,7 +340,7 @@ exports.register = async (req, res, next) => {
             <tr>
               <td style="padding: 40px 40px 20px 40px;">
                 <h2 style="color: #0f172a; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Welcome to the Academy</h2>
-                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">Hello ${user.firstName || "Student"},</p>
+                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">Hello ${user.firstName},</p>
                 <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">Your enrollment has been successfully registered. Your official Student ID is <strong>${studentIdNumber}</strong>.</p>
                 <div style="background-color: #f1f5f9; padding: 24px; border-radius: 8px; margin-bottom: 32px;">
                   <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Selected Course(s)</p>
@@ -213,7 +373,7 @@ exports.register = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: "User registered successfully",
+      message: "Account created successfully",
       data: {
         token,
         user: buildUserResponse(user),
@@ -224,7 +384,104 @@ exports.register = async (req, res, next) => {
   }
 };
 
-// Login user - standard auth flow
+// Resend enrollment OTP
+exports.resendEnrollmentOTP = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
+    // Check rate limiting - max 3 resends per 15 minutes
+    const recentOtpCount = await OtpSession.countDocuments({
+      email: email.toLowerCase().trim(),
+      purpose: OTP_PURPOSE.ENROLLMENT,
+      createdAt: { $gt: new Date(Date.now() - 15 * 60 * 1000) },
+    });
+
+    if (recentOtpCount >= 3) {
+      return res.status(429).json({
+        success: false,
+        message: "Too many OTP requests. Please wait 15 minutes before trying again.",
+      });
+    }
+
+    // Delete existing OTP
+    await OtpSession.deleteMany({
+      email: email.toLowerCase().trim(),
+      purpose: OTP_PURPOSE.ENROLLMENT,
+    });
+
+    // Generate new OTP
+    const otp = generateOTP();
+    const hashedOTP = hashOTP(otp);
+    const expiresAt = getOTPExpiry(10);
+
+    await OtpSession.create({
+      email: email.toLowerCase().trim(),
+      otp: hashedOTP,
+      purpose: OTP_PURPOSE.ENROLLMENT,
+      expiresAt,
+    });
+
+    // Send OTP email
+    try {
+      await sendMail({
+        to: email,
+        subject: "Your New Verification Code - Alpha Step Links Aviation School",
+        text: `Your new verification code is: ${otp}\n\nThis code will expire in 10 minutes.`,
+        html: `
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; padding: 40px 0;">
+          <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+            <tr>
+              <td align="center" style="background-color: #020617; padding: 40px 20px;">
+                <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">Alpha Step Links</h1>
+                <p style="color: #94a3b8; margin: 8px 0 0 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Aviation School</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 40px 40px 20px 40px;">
+                <h2 style="color: #0f172a; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">New Verification Code</h2>
+                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 32px 0;">Here is your new verification code:</p>
+                <div style="background-color: #f1f5f9; padding: 32px; border-radius: 8px; margin-bottom: 32px; text-align: center;">
+                  <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Verification Code</p>
+                  <p style="margin: 0; color: #0061FF; font-size: 36px; font-weight: 700; letter-spacing: 8px;">${otp}</p>
+                </div>
+                <p style="color: #64748b; font-size: 14px; line-height: 1.6; margin: 0;">This code will expire in <strong>10 minutes</strong>.</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color: #f1f5f9; padding: 30px; text-align: center; border-top: 1px solid #e2e8f0;">
+                <p style="color: #64748b; font-size: 13px; margin: 0 0 8px 0;">If you didn't request this email, please ignore it.</p>
+                <p style="color: #94a3b8; font-size: 12px; margin: 0;">&copy; ${new Date().getFullYear()} Alpha Step Links. All rights reserved.</p>
+              </td>
+            </tr>
+          </table>
+        </div>
+        `,
+      });
+    } catch (mailError) {
+      console.log("OTP resend email not sent:", mailError.message);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to send verification email. Please try again.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "New verification code sent",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Login user - with OTP for admin
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -258,7 +515,92 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    // Generate token with role-based expiry
+    // If admin, send OTP and require second factor
+    if (user.role === "admin") {
+      // Generate OTP
+      const otp = generateOTP();
+      const hashedOTP = hashOTP(otp);
+      const expiresAt = getOTPExpiry(5); // 5 minutes for admin
+
+      // Delete existing OTP sessions for this admin
+      await OtpSession.deleteMany({
+        email: user.email,
+        purpose: OTP_PURPOSE.ADMIN_LOGIN,
+      });
+
+      // Create OTP session
+      await OtpSession.create({
+        email: user.email,
+        otp: hashedOTP,
+        purpose: OTP_PURPOSE.ADMIN_LOGIN,
+        expiresAt,
+      });
+
+      // Send OTP email
+      try {
+        await sendMail({
+          to: user.email,
+          subject: "Admin Login Verification - Alpha Step Links Aviation School",
+          text: `Hello ${user.firstName || "Admin"},\n\nYour verification code is: ${otp}\n\nThis code will expire in 5 minutes.\n\nIf you didn't request this, please secure your account immediately.`,
+          html: `
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; padding: 40px 0;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+              <tr>
+                <td align="center" style="background-color: #020617; padding: 40px 20px;">
+                  <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">Alpha Step Links</h1>
+                  <p style="color: #94a3b8; margin: 8px 0 0 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Aviation School</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 40px 40px 20px 40px;">
+                  <h2 style="color: #0f172a; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Admin Login Verification</h2>
+                  <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">Hello ${user.firstName || "Admin"},</p>
+                  <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 32px 0;">A login attempt was made on your admin account. Use the code below to complete sign in:</p>
+                  <div style="background-color: #f1f5f9; padding: 32px; border-radius: 8px; margin-bottom: 32px; text-align: center;">
+                    <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Verification Code</p>
+                    <p style="margin: 0; color: #0061FF; font-size: 36px; font-weight: 700; letter-spacing: 8px;">${otp}</p>
+                  </div>
+                  <p style="color: #64748b; font-size: 14px; line-height: 1.6; margin: 0 0 16px 0;">This code will expire in <strong>5 minutes</strong>.</p>
+                  <p style="color: #ef4444; font-size: 13px; line-height: 1.6; margin: 0;">If you didn't request this, please secure your account immediately.</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="background-color: #f1f5f9; padding: 30px; text-align: center; border-top: 1px solid #e2e8f0;">
+                  <p style="color: #64748b; font-size: 13px; margin: 0 0 8px 0;">Alpha Step Links Aviation School ensures global standards in training.</p>
+                  <p style="color: #94a3b8; font-size: 12px; margin: 0;">&copy; ${new Date().getFullYear()} Alpha Step Links. All rights reserved.</p>
+                </td>
+              </tr>
+            </table>
+          </div>
+          `,
+        });
+      } catch (mailError) {
+        console.log("Admin OTP email not sent:", mailError.message);
+        return res.status(500).json({
+          success: false,
+          message: "Failed to send verification code. Please try again.",
+        });
+      }
+
+      // Return temp token (short-lived, just for OTP verification)
+      const tempToken = jwt.sign(
+        { userId: user._id, role: user.role, purpose: "otp_verification" },
+        process.env.JWT_SECRET,
+        { expiresIn: "10m" }
+      );
+
+      return res.status(200).json({
+        success: true,
+        message: "Verification code sent to your email",
+        data: {
+          requiresOTP: true,
+          email: user.email,
+          tempToken,
+        },
+      });
+    }
+
+    // For students, generate token directly
     const token = generateToken(user._id, user.role);
 
     res.status(200).json({
@@ -268,6 +610,222 @@ exports.login = async (req, res, next) => {
         token,
         user: buildUserResponse(user),
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Verify admin login OTP
+exports.verifyAdminOTP = async (req, res, next) => {
+  try {
+    const { email, otp, tempToken } = req.body;
+
+    if (!email || !otp || !tempToken) {
+      return res.status(400).json({
+        success: false,
+        message: "Email, OTP, and temp token are required",
+      });
+    }
+
+    if (!isValidOTPFormat(otp)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP format",
+      });
+    }
+
+    // Verify temp token
+    let decoded;
+    try {
+      decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+      if (decoded.purpose !== "otp_verification") {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid temporary token",
+        });
+      }
+    } catch (err) {
+      return res.status(401).json({
+        success: false,
+        message: "Temporary token expired. Please login again.",
+      });
+    }
+
+    // Find valid OTP session
+    const otpSession = await OtpSession.findOne({
+      email: email.toLowerCase().trim(),
+      purpose: OTP_PURPOSE.ADMIN_LOGIN,
+      expiresAt: { $gt: new Date() },
+      verified: false,
+    });
+
+    if (!otpSession) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP expired or not found. Please login again.",
+      });
+    }
+
+    // Check attempts
+    if (otpSession.attempts >= 5) {
+      await OtpSession.deleteOne({ _id: otpSession._id });
+      return res.status(400).json({
+        success: false,
+        message: "Too many attempts. Please login again.",
+      });
+    }
+
+    // Verify OTP
+    const hashedOTP = hashOTP(otp);
+    if (otpSession.otp !== hashedOTP) {
+      otpSession.attempts += 1;
+      await otpSession.save();
+      return res.status(400).json({
+        success: false,
+        message: "Invalid verification code",
+      });
+    }
+
+    // Mark OTP as verified
+    otpSession.verified = true;
+    await otpSession.save();
+
+    // Get user and generate full token
+    const user = await User.findById(decoded.userId);
+    if (!user || user.role !== "admin") {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid user",
+      });
+    }
+
+    // Clean up OTP session
+    await OtpSession.deleteOne({ _id: otpSession._id });
+
+    const token = generateToken(user._id, user.role);
+
+    res.status(200).json({
+      success: true,
+      message: "Login successful",
+      data: {
+        token,
+        user: buildUserResponse(user),
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Resend admin login OTP
+exports.resendAdminOTP = async (req, res, next) => {
+  try {
+    const { email, tempToken } = req.body;
+
+    if (!email || !tempToken) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and temp token are required",
+      });
+    }
+
+    // Verify temp token
+    let decoded;
+    try {
+      decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+      if (decoded.purpose !== "otp_verification") {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid temporary token",
+        });
+      }
+    } catch (err) {
+      return res.status(401).json({
+        success: false,
+        message: "Temporary token expired. Please login again.",
+      });
+    }
+
+    // Check rate limiting
+    const recentOtpCount = await OtpSession.countDocuments({
+      email: email.toLowerCase().trim(),
+      purpose: OTP_PURPOSE.ADMIN_LOGIN,
+      createdAt: { $gt: new Date(Date.now() - 15 * 60 * 1000) },
+    });
+
+    if (recentOtpCount >= 3) {
+      return res.status(429).json({
+        success: false,
+        message: "Too many OTP requests. Please wait 15 minutes before trying again.",
+      });
+    }
+
+    // Delete existing OTP
+    await OtpSession.deleteMany({
+      email: email.toLowerCase().trim(),
+      purpose: OTP_PURPOSE.ADMIN_LOGIN,
+    });
+
+    // Generate new OTP
+    const otp = generateOTP();
+    const hashedOTP = hashOTP(otp);
+    const expiresAt = getOTPExpiry(5);
+
+    await OtpSession.create({
+      email: email.toLowerCase().trim(),
+      otp: hashedOTP,
+      purpose: OTP_PURPOSE.ADMIN_LOGIN,
+      expiresAt,
+    });
+
+    // Send OTP email
+    try {
+      await sendMail({
+        to: email,
+        subject: "New Verification Code - Alpha Step Links Aviation School",
+        text: `Your new verification code is: ${otp}\n\nThis code will expire in 5 minutes.`,
+        html: `
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; padding: 40px 0;">
+          <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+            <tr>
+              <td align="center" style="background-color: #020617; padding: 40px 20px;">
+                <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">Alpha Step Links</h1>
+                <p style="color: #94a3b8; margin: 8px 0 0 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Aviation School</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 40px 40px 20px 40px;">
+                <h2 style="color: #0f172a; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">New Verification Code</h2>
+                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 32px 0;">Here is your new verification code:</p>
+                <div style="background-color: #f1f5f9; padding: 32px; border-radius: 8px; margin-bottom: 32px; text-align: center;">
+                  <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Verification Code</p>
+                  <p style="margin: 0; color: #0061FF; font-size: 36px; font-weight: 700; letter-spacing: 8px;">${otp}</p>
+                </div>
+                <p style="color: #64748b; font-size: 14px; line-height: 1.6; margin: 0;">This code will expire in <strong>5 minutes</strong>.</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color: #f1f5f9; padding: 30px; text-align: center; border-top: 1px solid #e2e8f0;">
+                <p style="color: #64748b; font-size: 13px; margin: 0 0 8px 0;">If you didn't request this, please secure your account.</p>
+                <p style="color: #94a3b8; font-size: 12px; margin: 0;">&copy; ${new Date().getFullYear()} Alpha Step Links. All rights reserved.</p>
+              </td>
+            </tr>
+          </table>
+        </div>
+        `,
+      });
+    } catch (mailError) {
+      console.log("Admin OTP resend email not sent:", mailError.message);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to send verification email. Please try again.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "New verification code sent",
     });
   } catch (error) {
     next(error);

@@ -104,7 +104,16 @@ export function ProfileDashboard() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
+      className="p-6 lg:p-8 space-y-8"
     >
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
+          Profile Settings
+        </h1>
+        <p className="text-slate-500">
+          Manage your personal information and contact details.
+        </p>
+      </div>
       <Card className="border-slate-200/50">
         <CardHeader>
           <div className="flex items-center gap-3">
@@ -113,10 +122,10 @@ export function ProfileDashboard() {
             </div>
             <div>
               <CardTitle className="text-slate-900 tracking-tighter">
-                Profile Settings
+                Personal Information
               </CardTitle>
               <CardDescription className="text-slate-500">
-                Update your personal information
+                Update your personal details below
               </CardDescription>
             </div>
           </div>

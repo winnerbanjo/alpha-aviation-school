@@ -43,7 +43,7 @@ import {
   Upload,
   Loader2,
 } from "lucide-react";
-import { StudentProfileModal } from "./StudentProfileModal";
+import { StudentProfileModal } from "@/components/dashboard/StudentProfileModal";
 import { Modal } from "@/components/ui/modal";
 import { EmptyState } from "@/components/EmptyState";
 import { useToast } from "@/components/ui/toast";

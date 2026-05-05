@@ -50,16 +50,6 @@ export function Sidebar({ role }: SidebarProps) {
       path: "/dashboard/overview",
     },
     {
-      icon: BookOpen,
-      label: "Flight Roadmap",
-      path: "/dashboard/curriculum",
-    },
-    {
-      icon: FileText,
-      label: "Document Vault",
-      path: "/dashboard/documents",
-    },
-    {
       icon: Download,
       label: "Resource Library",
       path: "/dashboard/resources",

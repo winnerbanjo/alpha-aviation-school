@@ -19,11 +19,7 @@ const About = lazy(() =>
 const Contact = lazy(() =>
   import("../pages/Contact").then((m) => ({ default: m.Contact })),
 );
-const RegistrationSuccess = lazy(() =>
-  import("../pages/RegistrationSuccess").then((m) => ({
-    default: m.RegistrationSuccess,
-  })),
-);
+
 
 // Auth & Setup
 const Login = lazy(() =>
@@ -40,18 +36,22 @@ const ForgotPassword = lazy(() =>
 const ResetPassword = lazy(() =>
   import("../pages/ResetPassword").then((m) => ({ default: m.ResetPassword })),
 );
+const VerifyOtp = lazy(() =>
+  import("../pages/VerifyOtp").then((m) => ({ default: m.VerifyOtp })),
+);
 const AdminPortal = lazy(() =>
   import("../pages/AdminPortal").then((m) => ({ default: m.AdminPortal })),
 );
 
-const StudentDashboard = lazy(() =>
-  import("../pages/student/StudentDashboard").then((m) => ({
-    default: m.StudentDashboard,
-  })),
-);
 const AdminDashboard = lazy(() =>
   import("../pages/admin/AdminDashboard").then((m) => ({
     default: m.AdminDashboard,
+  })),
+);
+
+const StudentOverview = lazy(() =>
+  import("../pages/student/StudentOverview").then((m) => ({
+    default: m.StudentOverview,
   })),
 );
 
@@ -75,13 +75,13 @@ export const RoutesConfig = () => {
         { path: "/courses", element: <Courses /> },
         { path: "/about", element: <About /> },
         { path: "/contact", element: <Contact /> },
-        { path: "/registration-success", element: <RegistrationSuccess /> },
       ],
     },
     { path: "/login", element: <Login /> },
     { path: "/enroll", element: <Enroll /> },
     { path: "/forgot-password", element: <ForgotPassword /> },
     { path: "/reset-password", element: <ResetPassword /> },
+    { path: "/verify-otp", element: <VerifyOtp /> },
     { path: "/admin", element: <AdminPortal /> },
     { path: "/admin/portal", element: <Navigate to="/admin" replace /> },
 
@@ -108,10 +108,7 @@ export const RoutesConfig = () => {
           <StudentLayout />
         </ProtectedRoute>
       ),
-      children: [
-        { path: "", element: <Navigate to="overview" replace /> },
-        { path: ":tab", element: <StudentDashboard /> },
-      ],
+      children: [{ path: "", element: <StudentOverview /> }],
     },
   ]);
 

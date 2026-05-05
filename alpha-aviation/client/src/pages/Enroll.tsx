@@ -122,15 +122,44 @@ export function Enroll() {
         role: "student",
       });
 
-      if (response?.data?.token && response?.data?.user) {
-        const { token, user } = response.data;
-        login({ ...user, id: user.id }, token);
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
-        toast("Enrollment successful! Welcome to the academy.", "success");
+      if (response?.success && response?.data?.token) {
+        login(
+          {
+            id: response.data.user.id || response.data.user._id,
+            email: response.data.user.email,
+            role: response.data.user.role,
+            firstName: response.data.user.firstName,
+            lastName: response.data.user.lastName,
+            phone: response.data.user.phone,
+            enrolledCourse: response.data.user.enrolledCourse,
+            selectedCourses: response.data.user.selectedCourses,
+            courseSelections: response.data.user.courseSelections,
+            paymentStatus: response.data.user.paymentStatus,
+            amountDue: response.data.user.amountDue,
+            amountPaid: response.data.user.amountPaid,
+            totalCoursePrice: response.data.user.totalCoursePrice,
+            enrollmentDate: response.data.user.enrollmentDate,
+            emergencyContact: response.data.user.emergencyContact,
+            bio: response.data.user.bio,
+            documentUrl: response.data.user.documentUrl,
+            status: response.data.user.status,
+            paymentReceiptUrl: response.data.user.paymentReceiptUrl,
+            studentIdNumber: response.data.user.studentIdNumber,
+            adminClearance: response.data.user.adminClearance,
+          },
+          response.data.token
+        );
+
+        toast("Account created successfully!", "success");
         navigate("/dashboard", { replace: true });
+      } else if (response?.success && response?.data?.requiresVerification) {
+        navigate(
+          `/verify-otp?purpose=enrollment&email=${encodeURIComponent(formData.email)}&firstName=${encodeURIComponent(formData.firstName)}&lastName=${encodeURIComponent(formData.lastName)}&password=${encodeURIComponent(formData.password)}&courses=${encodeURIComponent(JSON.stringify(formData.selectedCourses))}`,
+          { replace: true }
+        );
+        toast("Verification code sent to your email!", "success");
       } else {
-        navigate("/registration-success");
+        toast("Registration failed. Please try again.", "error");
       }
     } catch (err: any) {
       const message =

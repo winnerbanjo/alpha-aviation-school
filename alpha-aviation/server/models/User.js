@@ -154,6 +154,12 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
+    // Email verification status (for students)
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

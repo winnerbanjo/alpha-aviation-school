@@ -36,7 +36,16 @@ export function StudentCertificate() {
   };
 
   return (
-    <Card className="border-2 border-green-200 bg-gradient-to-br from-green-50 to-white">
+    <div className="p-6 lg:p-8 space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
+          My Certificate
+        </h1>
+        <p className="text-slate-500">
+          Download and view your official graduation certificate.
+        </p>
+      </div>
+      <Card className="border-2 border-green-200 bg-gradient-to-br from-green-50 to-white">
       <CardHeader className="text-center">
         <div className="mx-auto p-4 bg-green-100 rounded-full w-24 h-24 flex items-center justify-center mb-4">
           <GraduationCap className="w-12 h-12 text-green-600" />
@@ -91,5 +100,6 @@ export function StudentCertificate() {
         )}
       </CardContent>
     </Card>
+    </div>
   );
 }

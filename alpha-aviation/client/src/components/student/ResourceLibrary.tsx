@@ -65,11 +65,16 @@ export function ResourceLibrary() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="space-y-6"
+      className="p-6 lg:p-8 space-y-8"
     >
-      <h3 className="text-xl font-semibold tracking-tighter text-slate-900">
-        Course Resources
-      </h3>
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
+          Resource Library
+        </h1>
+        <p className="text-slate-500">
+          Access course materials, study guides, and external resources.
+        </p>
+      </div>
       
       {courseResources.map((course, courseIndex) => (
         <motion.div
