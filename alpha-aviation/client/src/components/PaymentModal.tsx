@@ -24,9 +24,9 @@ export function PaymentModal({ isOpen, onClose, amountDue = 0, userEmail = '' }:
     }).format(amount || 0)
 
   const bankDetails = {
-    accountName: 'Alpha Step Links Aviation School',
-    accountNumber: '1234567890',
-    bank: 'Your Bank Name',
+    accountName: 'Alpha step links aviation school ltd',
+    accountNumber: '1000485345',
+    bank: 'Globus bank',
     reference: userEmail || 'STUDENT-REF'
   }
 
