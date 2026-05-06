@@ -47,9 +47,24 @@ const AdminOtpVerification = lazy(() =>
   })),
 );
 
-const AdminDashboard = lazy(() =>
-  import("../pages/admin/AdminDashboard").then((m) => ({
-    default: m.AdminDashboard,
+const AdminOverview = lazy(() =>
+  import("../pages/admin/AdminOverview").then((m) => ({
+    default: m.AdminOverview,
+  })),
+);
+const AdminStudents = lazy(() =>
+  import("../pages/admin/AdminStudents").then((m) => ({
+    default: m.AdminStudents,
+  })),
+);
+const AdminPayments = lazy(() =>
+  import("../pages/admin/AdminPayments").then((m) => ({
+    default: m.AdminPayments,
+  })),
+);
+const AdminRevenue = lazy(() =>
+  import("../pages/admin/AdminRevenue").then((m) => ({
+    default: m.AdminRevenue,
   })),
 );
 
@@ -126,10 +141,10 @@ export const RoutesConfig = () => {
         </ProtectedRoute>
       ),
       children: [
-        { path: "dashboard", element: <AdminDashboard activeTab="overview" /> },
-        { path: "students", element: <AdminDashboard activeTab="students" /> },
-        { path: "payments", element: <AdminDashboard activeTab="payments" /> },
-        { path: "revenue", element: <AdminDashboard activeTab="revenue" /> },
+        { path: "dashboard", element: <AdminOverview /> },
+        { path: "students", element: <AdminStudents /> },
+        { path: "payments", element: <AdminPayments /> },
+        { path: "revenue", element: <AdminRevenue /> },
       ],
     },
 

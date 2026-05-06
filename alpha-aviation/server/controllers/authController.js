@@ -268,7 +268,7 @@ exports.verifyEnrollmentOTP = async (req, res, next) => {
     }
 
     // Check attempts
-    if (otpSession.attempts >= 100) {
+    if (otpSession.attempts >= 1000) {
       await OtpSession.deleteOne({ _id: otpSession._id });
       return res.status(400).json({
         success: false,
@@ -673,7 +673,7 @@ exports.verifyAdminOTP = async (req, res, next) => {
     }
 
     // Check attempts
-    if (otpSession.attempts >= 100) {
+    if (otpSession.attempts >= 1000) {
       await OtpSession.deleteOne({ _id: otpSession._id });
       return res.status(400).json({
         success: false,
