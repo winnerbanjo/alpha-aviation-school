@@ -12,7 +12,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAdminData, StudentStatus } from "@/hooks/useAdminData";
+import { useAdminData } from "@/hooks/useAdminData";
+import type { StudentStatus } from "@/hooks/useAdminData";
 import { StudentProfileModal } from "@/components/dashboard/StudentProfileModal";
 import { EmptyState } from "@/components/EmptyState";
 import {

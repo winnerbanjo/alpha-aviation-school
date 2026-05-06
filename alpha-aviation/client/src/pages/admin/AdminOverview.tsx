@@ -1,8 +1,12 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Modal } from "@/components/ui/modal";
+import { StudentProfileModal } from "@/components/dashboard/StudentProfileModal";
 import { useAdminData, formatNaira } from "@/hooks/useAdminData";
-import { Users, DollarSign, CheckCircle2, RefreshCw } from "lucide-react";
+import type { StudentStatus } from "@/hooks/useAdminData";
+import { Users, DollarSign, CheckCircle2, RefreshCw, Eye, MessageCircle, Trash2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -11,16 +15,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 
 export function AdminOverview() {
   const {
     enrolledStudents, displayTotalRevenue, displayPendingRevenue,
     safeStudents, loading, error, authError, lastUpdated,
     fetchStudents, fetchFinancialStats,
+    handleMarkAsPaid, handleStudentClick, handleWhatsAppReminder,
+    handleDeleteStudent, handleStudentStatusChange, statusUpdating,
+    confirmDeleteStudent, deleteModalOpen, setDeleteModalOpen, studentToDelete, deletingInProgress,
+    selectedStudent, setSelectedStudent, isProfileModalOpen, setIsProfileModalOpen,
+    handleAdminClearanceChange, handleCertificateUploaded,
   } = useAdminData();
 
-  const recentStudents = safeStudents.slice(0, 5);
+  const recentStudents = safeStudents.slice(0, 10);
 
   return (
     <motion.div
@@ -114,6 +122,7 @@ export function AdminOverview() {
                   <TableHead className="text-slate-900">Student Name</TableHead>
                   <TableHead className="text-slate-900">Payment Status</TableHead>
                   <TableHead className="text-slate-900">Student Status</TableHead>
+                  <TableHead className="text-right text-slate-900">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -124,6 +133,7 @@ export function AdminOverview() {
                         <TableCell><div className="h-3.5 bg-slate-100 rounded w-28" /></TableCell>
                         <TableCell><div className="h-5 bg-slate-100 rounded-full w-16" /></TableCell>
                         <TableCell><div className="h-5 bg-slate-100 rounded-full w-20" /></TableCell>
+                        <TableCell className="text-right"><div className="h-7 bg-slate-100 rounded-lg w-16 ml-auto" /></TableCell>
                       </TableRow>
                     ))
                   : recentStudents.map((student) => (
@@ -135,10 +145,31 @@ export function AdminOverview() {
                             {student.paymentStatus}
                           </Badge>
                         </TableCell>
-                        <TableCell>
-                          <Badge variant={student.status === "active" ? "default" : student.status === "graduated" ? "success" : "destructive"}>
-                            {student.status || "active"}
-                          </Badge>
+                        <TableCell onClick={(e) => e.stopPropagation()}>
+                          <select
+                            value={student.status || "active"}
+                            disabled={statusUpdating !== null}
+                            onChange={(e) => handleStudentStatusChange(student._id, e.target.value as StudentStatus)}
+                            className={`text-sm border rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${student.status === "banned" ? "border-red-300 text-red-700" : student.status === "graduated" ? "border-green-300 text-green-700" : student.status === "suspended" ? "border-amber-300 text-amber-700" : "border-slate-200/50 text-slate-700"}`}
+                          >
+                            <option value="active">Active</option>
+                            <option value="graduated">Graduated</option>
+                            <option value="suspended">Suspended</option>
+                            <option value="banned">Banned</option>
+                          </select>
+                        </TableCell>
+                        <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex items-center justify-end gap-1">
+                            <Button size="sm" variant="ghost" onClick={() => handleStudentClick(student)} className="rounded-full hover:bg-slate-100" title="View">
+                              <Eye className="w-4 h-4 text-slate-600" />
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => handleWhatsAppReminder(student)} className="rounded-full hover:bg-green-50" title="Send Reminder">
+                              <MessageCircle className="w-4 h-4 text-green-600" />
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => handleDeleteStudent(student)} className="rounded-full hover:bg-red-50" title="Delete">
+                              <Trash2 className="w-4 h-4 text-red-600" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -147,6 +178,28 @@ export function AdminOverview() {
           </CardContent>
         </Card>
       )}
+
+      <StudentProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        student={selectedStudent}
+        onMarkAsPaid={handleMarkAsPaid}
+        onWhatsAppReminder={handleWhatsAppReminder}
+        onAdminClearanceChange={handleAdminClearanceChange}
+        onCertificateUploaded={handleCertificateUploaded}
+      />
+
+      <Modal isOpen={deleteModalOpen} onClose={() => { setDeleteModalOpen(false); setStudentToDelete(null); }} title="Delete Student">
+        <div className="space-y-4">
+          <p className="text-slate-600">Are you sure you want to delete <span className="font-semibold text-slate-900">{studentToDelete?.firstName || studentToDelete?.email}</span>? This action cannot be undone.</p>
+          <div className="flex gap-3 justify-end">
+            <Button variant="outline" onClick={() => { setDeleteModalOpen(false); setStudentToDelete(null); }}>Cancel</Button>
+            <Button className="bg-red-600 hover:bg-red-700 text-white" onClick={confirmDeleteStudent} disabled={deletingInProgress}>
+              {deletingInProgress ? "Deleting..." : "Delete"}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </motion.div>
   );
 }
