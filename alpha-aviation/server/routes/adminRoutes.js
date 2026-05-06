@@ -20,6 +20,11 @@ router.patch("/students/:id/status", adminController.updateStudentStatus);
 router.patch("/students/:id/course", adminController.updateStudentCourse);
 router.patch("/students/:id", adminController.updatePaymentStatus);
 
+// Payment verification routes
+router.get("/payments/pending", adminController.getPendingPayments);
+router.post("/payments/:id/approve", adminController.approvePayment);
+router.post("/payments/:id/reject", adminController.rejectPayment);
+
 // User management routes
 router.post("/users", userController.createUser);
 router.put("/users/:id", userController.updateUser);

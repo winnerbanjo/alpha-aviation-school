@@ -128,6 +128,7 @@ export const RoutesConfig = () => {
       children: [
         { path: "dashboard", element: <AdminDashboard activeTab="overview" /> },
         { path: "students", element: <AdminDashboard activeTab="students" /> },
+        { path: "payments", element: <AdminDashboard activeTab="payments" /> },
         { path: "revenue", element: <AdminDashboard activeTab="revenue" /> },
       ],
     },

@@ -17,6 +17,8 @@ import {
   Upload,
   FileText,
   Copy,
+  Clock,
+  XCircle,
 } from "lucide-react";
 import { uploadPaymentReceipt } from "@/api";
 import { formatNaira } from "@/data/courseCatalog";
@@ -36,10 +38,14 @@ export function StudentPayments() {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [uploadingReceipt, setUploadingReceipt] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [rejectionReason, setRejectionReason] = useState<string | null>(null);
 
   const amountDue = user?.amountDue || 0;
   const amountPaid = user?.amountPaid || 0;
-  const isPending = user?.paymentStatus === "Pending";
+  const paymentStatus = user?.paymentStatus || "Pending";
+  const isPending = paymentStatus === "Pending";
+  const isUnderReview = paymentStatus === "Under Review";
+  const isPaid = paymentStatus === "Paid";
   const paymentReceiptUrl = user?.paymentReceiptUrl || "";
 
   const bankDetails = {
@@ -69,6 +75,7 @@ export function StudentPayments() {
 
     try {
       setUploadingReceipt(true);
+      setRejectionReason(null);
       const encodedReceipt = await fileToDataUrl(file);
       const response = await uploadPaymentReceipt(encodedReceipt);
 
@@ -76,17 +83,19 @@ export function StudentPayments() {
         setUser({
           ...user,
           paymentReceiptUrl: response.data.paymentReceiptUrl,
-          status: response.data.status || "Payment Received",
+          paymentStatus: "Under Review",
+          status: response.data.status || user.status,
         });
       }
 
-      toast("Receipt uploaded successfully", "success");
+      toast("Receipt uploaded successfully. Awaiting review.", "success");
       setIsUploadModalOpen(false);
     } catch (error: any) {
-      toast(
-        error.response?.data?.message || "Failed to upload receipt",
-        "error",
-      );
+      const msg = error.response?.data?.message || "Failed to upload receipt";
+      toast(msg, "error");
+      if (msg.toLowerCase().includes("rejected") || msg.toLowerCase().includes("previous")) {
+        setRejectionReason("Your previous receipt was rejected. Please upload a new one.");
+      }
     } finally {
       setUploadingReceipt(false);
     }
@@ -102,6 +111,28 @@ export function StudentPayments() {
           View your billing status, make payments, and upload payment receipts.
         </p>
       </div>
+
+      {rejectionReason && (
+        <div className="p-4 bg-rose-50 border border-rose-200 rounded-lg flex items-start gap-3">
+          <XCircle className="w-5 h-5 text-rose-600 mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-rose-900">Receipt Rejected</p>
+            <p className="text-sm text-rose-700 mt-1">{rejectionReason}</p>
+          </div>
+        </div>
+      )}
+
+      {isUnderReview && (
+        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-3">
+          <Clock className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-blue-900">Under Review</p>
+            <p className="text-sm text-blue-700 mt-1">
+              Your payment receipt has been submitted. Our team will verify it shortly. You will be notified once approved.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="border-slate-200">
@@ -139,13 +170,15 @@ export function StudentPayments() {
         <Card className="border-slate-200">
           <CardContent className="p-6">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-blue-100 text-blue-600 rounded-lg">
-                <CreditCard className="w-6 h-6" />
+              <div className={`p-3 rounded-lg ${isPaid ? "bg-emerald-100 text-emerald-600" : isUnderReview ? "bg-blue-100 text-blue-600" : "bg-amber-100 text-amber-600"}`}>
+                {isPaid ? <CheckCircle2 className="w-6 h-6" /> : isUnderReview ? <Clock className="w-6 h-6" /> : <AlertCircle className="w-6 h-6" />}
               </div>
               <div>
                 <p className="text-sm font-medium text-slate-500">Status</p>
                 <h3 className="text-lg font-bold text-slate-900">
-                  {isPending ? "Pending" : "Paid"}
+                  <Badge className={isPaid ? "bg-emerald-100 text-emerald-800 border-emerald-200" : isUnderReview ? "bg-blue-100 text-blue-800 border-blue-200" : "bg-amber-100 text-amber-800 border-amber-200"}>
+                    {paymentStatus}
+                  </Badge>
                 </h3>
               </div>
             </div>
@@ -213,9 +246,10 @@ export function StudentPayments() {
               <Button
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                 onClick={() => setIsUploadModalOpen(true)}
+                disabled={isUnderReview}
               >
                 <Upload className="w-4 h-4 mr-2" />
-                Upload Receipt
+                {isUnderReview ? "Awaiting Review" : "Upload Receipt"}
               </Button>
             </div>
           </CardContent>

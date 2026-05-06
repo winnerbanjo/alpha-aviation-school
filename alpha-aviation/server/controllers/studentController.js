@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Payment = require('../models/Payment');
 const { mockStudents } = require('../utils/mockData');
 
 // Update student profile
@@ -8,7 +9,6 @@ exports.updateProfile = async (req, res, next) => {
     const userId = req.user.userId;
 
     if (global.useMockData) {
-      // Find mock student and update
       const student = mockStudents.find(s => s._id === userId) || mockStudents[0];
       if (phone !== undefined) student.phone = phone;
       if (bio !== undefined) student.bio = bio;
@@ -75,7 +75,7 @@ exports.updateProfile = async (req, res, next) => {
   }
 };
 
-// Upload document
+// Upload identity document
 exports.uploadDocument = async (req, res, next) => {
   try {
     const { documentUrl } = req.body;
@@ -88,9 +88,7 @@ exports.uploadDocument = async (req, res, next) => {
       return res.status(200).json({
         success: true,
         message: 'Document uploaded successfully (Mock Mode)',
-        data: {
-          documentUrl: student.documentUrl
-        }
+        data: { documentUrl: student.documentUrl }
       });
     }
 
@@ -109,9 +107,7 @@ exports.uploadDocument = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: 'Document uploaded successfully',
-      data: {
-        documentUrl: user.documentUrl
-      }
+      data: { documentUrl: user.documentUrl }
     });
   } catch (error) {
     next(error);
@@ -134,14 +130,14 @@ exports.uploadPaymentReceipt = async (req, res, next) => {
     if (global.useMockData) {
       const student = mockStudents.find(s => s._id === userId) || mockStudents[0];
       student.paymentReceiptUrl = receiptUrl;
-      student.status = 'Payment Received';
+      student.paymentStatus = 'Under Review';
 
       return res.status(200).json({
         success: true,
         message: 'Payment receipt uploaded successfully (Mock Mode)',
         data: {
           paymentReceiptUrl: student.paymentReceiptUrl,
-          status: student.status
+          paymentStatus: student.paymentStatus
         }
       });
     }
@@ -162,9 +158,18 @@ exports.uploadPaymentReceipt = async (req, res, next) => {
       });
     }
 
+    // Create a Payment record for audit trail
+    await Payment.create({
+      student: userId,
+      amount: user.amountDue || user.totalCoursePrice || 0,
+      status: 'pending_review',
+      receiptUrl,
+      reference: `INV-${new Date().getFullYear()}-${user.studentIdNumber || user._id.toString().slice(-4)}`,
+    });
+
+    // Update user's latest receipt and payment status
     user.paymentReceiptUrl = receiptUrl;
-    // Update status to Payment Received (admin will verify and activate)
-    user.status = 'Payment Received';
+    user.paymentStatus = 'Under Review';
     await user.save();
 
     res.status(200).json({
@@ -172,7 +177,7 @@ exports.uploadPaymentReceipt = async (req, res, next) => {
       message: 'Payment receipt uploaded successfully. Our team will verify your payment shortly.',
       data: {
         paymentReceiptUrl: user.paymentReceiptUrl,
-        status: user.status
+        paymentStatus: user.paymentStatus
       }
     });
   } catch (error) {

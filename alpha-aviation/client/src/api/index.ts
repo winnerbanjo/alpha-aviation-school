@@ -282,7 +282,7 @@ export const updateUser = async (
     phone?: string;
     role?: "admin" | "student";
     status?: "active" | "banned" | "graduated" | "suspended";
-    paymentStatus?: "Pending" | "Paid";
+    paymentStatus?: "Pending" | "Under Review" | "Paid";
   },
   config?: AxiosRequestConfig,
 ) => {
@@ -369,6 +369,24 @@ export const createPayment = async (paymentData: {
   paymentMethod?: string;
 }) => {
   const response = await api.post("/payments", paymentData);
+  return response.data;
+};
+
+// Admin payment verification API calls
+export const getPendingPayments = async () => {
+  const response = await api.get("/admin/payments/pending");
+  return response.data;
+};
+
+export const approvePayment = async (paymentId: string) => {
+  const response = await api.post(`/admin/payments/${paymentId}/approve`);
+  return response.data;
+};
+
+export const rejectPayment = async (paymentId: string, reason: string) => {
+  const response = await api.post(`/admin/payments/${paymentId}/reject`, {
+    reason,
+  });
   return response.data;
 };
 

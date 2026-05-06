@@ -1,35 +1,48 @@
 const mongoose = require('mongoose');
 
 const paymentSchema = new mongoose.Schema({
-  user: {
+  student: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: [true, 'User is required']
+    required: [true, 'Student is required'],
+    index: true,
   },
   amount: {
     type: Number,
     required: [true, 'Amount is required'],
-    min: [0, 'Amount must be positive']
+    min: [0, 'Amount must be positive'],
   },
   status: {
     type: String,
-    enum: ['Pending', 'Completed', 'Failed', 'Refunded'],
-    default: 'Pending',
-    required: true
+    enum: ['pending_review', 'approved', 'rejected'],
+    default: 'pending_review',
+    required: true,
   },
-  description: {
+  receiptUrl: {
     type: String,
-    trim: true
+    required: [true, 'Receipt proof is required'],
+    trim: true,
   },
-  paymentMethod: {
+  reference: {
     type: String,
-    trim: true
-  }
+    trim: true,
+  },
+  adminNotes: {
+    type: String,
+    trim: true,
+  },
+  reviewedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  reviewedAt: {
+    type: Date,
+  },
 }, {
-  timestamps: true
+  timestamps: true,
 });
 
 // Index for faster queries
-paymentSchema.index({ user: 1, createdAt: -1 });
+paymentSchema.index({ student: 1, status: 1, createdAt: -1 });
 
 module.exports = mongoose.model('Payment', paymentSchema);

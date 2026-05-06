@@ -23,6 +23,9 @@ import {
   deleteUser as apiDeleteUser,
   bulkDeleteUsers,
   bulkUpdateStatus,
+  getPendingPayments,
+  approvePayment,
+  rejectPayment,
 } from "@/api";
 import {
   Users,
@@ -42,6 +45,10 @@ import {
   UserPlus,
   Upload,
   Loader2,
+  CreditCard,
+  Clock,
+  XCircle,
+  FileText,
 } from "lucide-react";
 import { StudentProfileModal } from "@/components/dashboard/StudentProfileModal";
 import { Modal } from "@/components/ui/modal";
@@ -56,7 +63,7 @@ interface Student {
   firstName?: string;
   lastName?: string;
   enrolledCourse?: string;
-  paymentStatus: "Pending" | "Paid";
+  paymentStatus: "Pending" | "Under Review" | "Paid";
   status?: StudentStatus;
   amountDue: number;
   amountPaid?: number;
@@ -65,6 +72,8 @@ interface Student {
   adminClearance?: boolean;
   certificateUrl?: string;
   studentIdNumber?: string;
+  paymentReceiptUrl?: string;
+  totalCoursePrice?: number;
 }
 
 const courses = [
@@ -76,7 +85,7 @@ const courses = [
   "Ticketing & Reservation Systems (GDS Training)",
 ];
 
-type AdminTab = "overview" | "students" | "revenue";
+type AdminTab = "overview" | "students" | "revenue" | "payments";
 const formatNaira = (amount: number) =>
   new Intl.NumberFormat("en-NG", {
     style: "currency",
@@ -94,7 +103,7 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [totalRevenuePendingCalc, setTotalRevenuePendingCalc] = useState(0);
   const [paymentFilter, setPaymentFilter] = useState<
-    "all" | "Pending" | "Paid"
+    "all" | "Pending" | "Under Review" | "Paid"
   >("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
@@ -127,6 +136,14 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
   const [error, setError] = useState<string | null>(null);
   const [authError, setAuthError] = useState(false);
   const [statusUpdating, setStatusUpdating] = useState<string | null>(null);
+
+  // Payment verification queue
+  const [pendingPayments, setPendingPayments] = useState<any[]>([]);
+  const [loadingPayments, setLoadingPayments] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState<any | null>(null);
+  const [rejectModalOpen, setRejectModalOpen] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+  const [processingPayment, setProcessingPayment] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -139,6 +156,60 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
       controller.abort();
     };
   }, []);
+
+  useEffect(() => {
+    if (activeTab === "payments") {
+      fetchPendingPayments();
+    }
+  }, [activeTab]);
+
+  const fetchPendingPayments = async () => {
+    try {
+      setLoadingPayments(true);
+      const response = await getPendingPayments();
+      if (response?.success) {
+        setPendingPayments(response.data.payments || []);
+      }
+    } catch (error: any) {
+      toast(error.response?.data?.message || "Failed to load pending payments", "error");
+    } finally {
+      setLoadingPayments(false);
+    }
+  };
+
+  const handleApprovePayment = async (paymentId: string) => {
+    try {
+      setProcessingPayment(true);
+      await approvePayment(paymentId);
+      toast("Payment approved successfully", "success");
+      setPendingPayments((prev) => prev.filter((p) => p._id !== paymentId));
+      setSelectedPayment(null);
+    } catch (error: any) {
+      toast(error.response?.data?.message || "Failed to approve payment", "error");
+    } finally {
+      setProcessingPayment(false);
+    }
+  };
+
+  const handleRejectPayment = async () => {
+    if (!selectedPayment || !rejectReason.trim()) {
+      toast("Please provide a rejection reason", "error");
+      return;
+    }
+    try {
+      setProcessingPayment(true);
+      await rejectPayment(selectedPayment._id, rejectReason.trim());
+      toast("Payment rejected", "success");
+      setPendingPayments((prev) => prev.filter((p) => p._id !== selectedPayment._id));
+      setSelectedPayment(null);
+      setRejectModalOpen(false);
+      setRejectReason("");
+    } catch (error: any) {
+      toast(error.response?.data?.message || "Failed to reject payment", "error");
+    } finally {
+      setProcessingPayment(false);
+    }
+  };
 
   // Calculate stats from students array (fallback if API doesn't return data)
   const safeStudents = Array.isArray(students) ? students : [];
@@ -1042,7 +1113,132 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
                         <p className="text-slate-500 text-center py-4">
                           No student data available.
                         </p>
-                      )}
+      )}
+
+      {/* Payment Verification Queue - Show only on Payments tab */}
+      {activeTab === "payments" && (
+        <Card className="border-slate-200">
+          <CardHeader className="border-b border-slate-100 pb-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-lg text-slate-900">
+                  Pending Payment Receipts
+                </CardTitle>
+                <CardDescription>
+                  Review and verify student payment receipts
+                </CardDescription>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={fetchPendingPayments}
+                disabled={loadingPayments}
+              >
+                <RefreshCw className={`w-4 h-4 mr-2 ${loadingPayments ? "animate-spin" : ""}`} />
+                Refresh
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
+            {loadingPayments ? (
+              <div className="flex items-center justify-center py-16">
+                <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+              </div>
+            ) : pendingPayments.length === 0 ? (
+              <div className="text-center py-16">
+                <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
+                <p className="text-lg font-medium text-slate-900 mb-2">All caught up!</p>
+                <p className="text-sm text-slate-500">No pending payment receipts to review.</p>
+              </div>
+            ) : (
+              <div className="space-y-4 py-4">
+                {pendingPayments.map((payment) => {
+                  const student = payment.student || {};
+                  return (
+                    <div
+                      key={payment._id}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-200 gap-4"
+                    >
+                      <div className="flex items-center gap-4">
+                        {payment.receiptUrl ? (
+                          <button
+                            onClick={() => setSelectedPayment(payment)}
+                            className="w-16 h-16 rounded-lg overflow-hidden border-2 border-slate-200 hover:border-blue-400 transition-colors shrink-0"
+                          >
+                            {payment.receiptUrl.endsWith(".pdf") ? (
+                              <div className="w-full h-full bg-slate-100 flex items-center justify-center">
+                                <FileText className="w-6 h-6 text-slate-400" />
+                              </div>
+                            ) : (
+                              <img
+                                src={payment.receiptUrl}
+                                alt="Receipt"
+                                className="w-full h-full object-cover"
+                              />
+                            )}
+                          </button>
+                        ) : (
+                          <div className="w-16 h-16 rounded-lg bg-slate-100 border-2 border-dashed border-slate-200 flex items-center justify-center shrink-0">
+                            <FileText className="w-6 h-6 text-slate-400" />
+                          </div>
+                        )}
+                        <div>
+                          <p className="text-sm font-semibold text-slate-900">
+                            {student.firstName || ""} {student.lastName || ""}
+                          </p>
+                          <p className="text-xs text-slate-500">{student.email}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Badge className="bg-blue-100 text-blue-800 border-blue-200 text-xs">
+                              {formatNaira(payment.amount || student.amountDue || 0)}
+                            </Badge>
+                            {student.studentIdNumber && (
+                              <span className="text-xs text-slate-400">
+                                {student.studentIdNumber}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setSelectedPayment(payment)}
+                          className="text-slate-600"
+                        >
+                          <Eye className="w-4 h-4 mr-1" />
+                          View
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedPayment(payment);
+                            setRejectModalOpen(true);
+                          }}
+                          className="text-rose-600 border-rose-200 hover:bg-rose-50"
+                        >
+                          <XCircle className="w-4 h-4 mr-1" />
+                          Reject
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => handleApprovePayment(payment._id)}
+                          disabled={processingPayment}
+                          className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                        >
+                          <CheckCircle2 className="w-4 h-4 mr-1" />
+                          Approve
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -1268,6 +1464,125 @@ export function AdminDashboard({ activeTab }: { activeTab: AdminTab }) {
           </Card>
         </div>
       )}
+
+      {/* Payment Detail Modal */}
+      <Modal
+        isOpen={!!selectedPayment && !rejectModalOpen}
+        onClose={() => setSelectedPayment(null)}
+        title="Payment Receipt Details"
+      >
+        {selectedPayment && (() => {
+          const student = selectedPayment.student || {};
+          return (
+            <div className="space-y-4">
+              <div className="p-4 bg-slate-50 rounded-lg space-y-2">
+                <p className="text-sm text-slate-500">Student</p>
+                <p className="text-base font-semibold text-slate-900">
+                  {student.firstName || ""} {student.lastName || ""}
+                </p>
+                <p className="text-sm text-slate-500">{student.email}</p>
+              </div>
+              <div className="p-4 bg-slate-50 rounded-lg space-y-2">
+                <p className="text-sm text-slate-500">Amount</p>
+                <p className="text-2xl font-bold text-slate-900">
+                  {formatNaira(selectedPayment.amount || student.amountDue || 0)}
+                </p>
+              </div>
+              {selectedPayment.receiptUrl && (
+                <div>
+                  <p className="text-sm text-slate-500 mb-2">Receipt</p>
+                  {selectedPayment.receiptUrl.endsWith(".pdf") ? (
+                    <div className="p-8 bg-slate-100 rounded-lg text-center">
+                      <FileText className="w-10 h-10 text-slate-400 mx-auto mb-2" />
+                      <p className="text-sm text-slate-600">PDF Receipt</p>
+                      <a
+                        href={selectedPayment.receiptUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-blue-600 hover:underline mt-1 inline-block"
+                      >
+                        Open in new tab
+                      </a>
+                    </div>
+                  ) : (
+                    <div className="rounded-lg overflow-hidden border border-slate-200">
+                      <img
+                        src={selectedPayment.receiptUrl}
+                        alt="Payment Receipt"
+                        className="w-full max-h-80 object-contain bg-slate-50"
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+              <div className="flex gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  className="flex-1 text-rose-600 border-rose-200 hover:bg-rose-50"
+                  onClick={() => setRejectModalOpen(true)}
+                >
+                  <XCircle className="w-4 h-4 mr-2" />
+                  Reject
+                </Button>
+                <Button
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white"
+                  onClick={() => handleApprovePayment(selectedPayment._id)}
+                  disabled={processingPayment}
+                >
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                  Approve Payment
+                </Button>
+              </div>
+            </div>
+          );
+        })()}
+      </Modal>
+
+      {/* Rejection Modal */}
+      <Modal
+        isOpen={rejectModalOpen}
+        onClose={() => {
+          setRejectModalOpen(false);
+          setRejectReason("");
+        }}
+        title="Reject Payment"
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-slate-500">
+            Provide a reason for rejecting this payment. The student will see this message and be asked to upload a new receipt.
+          </p>
+          <textarea
+            className="w-full p-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            rows={4}
+            placeholder="e.g., The receipt is unclear, amount does not match, etc."
+            value={rejectReason}
+            onChange={(e) => setRejectReason(e.target.value)}
+          />
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              className="flex-1"
+              onClick={() => {
+                setRejectModalOpen(false);
+                setRejectReason("");
+              }}
+              disabled={processingPayment}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="flex-1 bg-rose-600 hover:bg-rose-700 text-white"
+              onClick={handleRejectPayment}
+              disabled={!rejectReason.trim() || processingPayment}
+            >
+              {processingPayment ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : null}
+              Confirm Rejection
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
       {/* Student Profile Modal */}
       <StudentProfileModal
