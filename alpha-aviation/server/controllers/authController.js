@@ -89,13 +89,7 @@ const isValidEmail = (email) => {
 // Register new user - with OTP verification
 exports.register = async (req, res, next) => {
   try {
-    const {
-      email,
-      password,
-      firstName,
-      lastName,
-      selectedCourses,
-    } = req.body;
+    const { email, password, firstName, lastName, selectedCourses } = req.body;
 
     // Input validation
     if (!email || !password || !selectedCourses) {
@@ -234,9 +228,17 @@ exports.register = async (req, res, next) => {
 // Verify enrollment OTP and complete registration
 exports.verifyEnrollmentOTP = async (req, res, next) => {
   try {
-    const { email, otp, firstName, lastName, password, selectedCourses } = req.body;
+    const { email, otp, firstName, lastName, password, selectedCourses } =
+      req.body;
 
-    if (!email || !otp || !firstName || !lastName || !password || !selectedCourses) {
+    if (
+      !email ||
+      !otp ||
+      !firstName ||
+      !lastName ||
+      !password ||
+      !selectedCourses
+    ) {
       return res.status(400).json({
         success: false,
         message: "All fields are required",
@@ -266,7 +268,7 @@ exports.verifyEnrollmentOTP = async (req, res, next) => {
     }
 
     // Check attempts
-    if (otpSession.attempts >= 5) {
+    if (otpSession.attempts >= 100) {
       await OtpSession.deleteOne({ _id: otpSession._id });
       return res.status(400).json({
         success: false,
@@ -406,7 +408,8 @@ exports.resendEnrollmentOTP = async (req, res, next) => {
     if (recentOtpCount >= 3) {
       return res.status(429).json({
         success: false,
-        message: "Too many OTP requests. Please wait 15 minutes before trying again.",
+        message:
+          "Too many OTP requests. Please wait 15 minutes before trying again.",
       });
     }
 
@@ -432,7 +435,8 @@ exports.resendEnrollmentOTP = async (req, res, next) => {
     try {
       await sendMail({
         to: email,
-        subject: "Your New Verification Code - Alpha Step Links Aviation School",
+        subject:
+          "Your New Verification Code - Alpha Step Links Aviation School",
         text: `Your new verification code is: ${otp}\n\nThis code will expire in 10 minutes.`,
         html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; padding: 40px 0;">
@@ -540,7 +544,8 @@ exports.login = async (req, res, next) => {
       try {
         await sendMail({
           to: user.email,
-          subject: "Admin Login Verification - Alpha Step Links Aviation School",
+          subject:
+            "Admin Login Verification - Alpha Step Links Aviation School",
           text: `Hello ${user.firstName || "Admin"},\n\nYour verification code is: ${otp}\n\nThis code will expire in 5 minutes.\n\nIf you didn't request this, please secure your account immediately.`,
           html: `
           <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; padding: 40px 0;">
@@ -586,7 +591,7 @@ exports.login = async (req, res, next) => {
       const tempToken = jwt.sign(
         { userId: user._id, role: user.role, purpose: "otp_verification" },
         process.env.JWT_SECRET,
-        { expiresIn: "10m" }
+        { expiresIn: "10m" },
       );
 
       return res.status(200).json({
@@ -668,7 +673,7 @@ exports.verifyAdminOTP = async (req, res, next) => {
     }
 
     // Check attempts
-    if (otpSession.attempts >= 5) {
+    if (otpSession.attempts >= 100) {
       await OtpSession.deleteOne({ _id: otpSession._id });
       return res.status(400).json({
         success: false,
@@ -757,7 +762,8 @@ exports.resendAdminOTP = async (req, res, next) => {
     if (recentOtpCount >= 3) {
       return res.status(429).json({
         success: false,
-        message: "Too many OTP requests. Please wait 15 minutes before trying again.",
+        message:
+          "Too many OTP requests. Please wait 15 minutes before trying again.",
       });
     }
 
