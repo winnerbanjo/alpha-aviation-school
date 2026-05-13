@@ -53,7 +53,7 @@ app.options("*", cors(corsOptions));
 // Rate limiting - strict for auth, moderate for admin API
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // 10 attempts per window
+  max: 100, // 10 attempts per window
   message: {
     success: false,
     message: "Too many attempts, please try again later",
@@ -132,7 +132,10 @@ app.get("/api/debug/mail-test", async (req, res) => {
       text: "If you receive this, Resend is working on production.",
       html: "<p>If you receive this, <strong>Resend is working</strong> on production.</p>",
     });
-    res.json({ success: true, message: "Test email sent successfully via Resend." });
+    res.json({
+      success: true,
+      message: "Test email sent successfully via Resend.",
+    });
   } catch (err) {
     res.status(500).json({
       success: false,
