@@ -42,10 +42,9 @@ export function Login() {
       const { data } = response.data;
 
       if (data?.requiresOTP && data?.tempToken) {
-        // Admin requires OTP verification
         navigate(
           `/verify-otp?purpose=admin_login&email=${encodeURIComponent(email)}&tempToken=${encodeURIComponent(data.tempToken)}`,
-          { replace: true }
+          { replace: true },
         );
         toast("Verification code sent to your email!", "success");
       } else if (data?.token && data.user) {
