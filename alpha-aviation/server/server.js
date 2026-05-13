@@ -19,12 +19,14 @@ const studentRoutes = require("./routes/studentRoutes");
 const errorHandler = require("./middleware/errorHandler");
 
 // Mock mode - disabled by default, enable only for local dev via .env
-global.useMockData = process.env.USE_MOCK_DATA === 'true';
+global.useMockData = process.env.USE_MOCK_DATA === "true";
 
 const app = express();
 
 const allowedOrigins = [
   "https://www.aslaviationschool.co",
+  "http://aslaviationschool.co",
+  "http://www.aslaviationschool.co",
   "https://aslaviationschool.co",
   "http://localhost:5173",
   "http://127.0.0.1:5173",
@@ -52,7 +54,10 @@ app.options("*", cors(corsOptions));
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 10, // 10 attempts per window
-  message: { success: false, message: 'Too many attempts, please try again later' },
+  message: {
+    success: false,
+    message: "Too many attempts, please try again later",
+  },
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -60,7 +65,7 @@ const authLimiter = rateLimit({
 const adminApiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // 100 requests per window for legitimate admin use
-  message: { success: false, message: 'Too many requests' },
+  message: { success: false, message: "Too many requests" },
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -115,6 +120,29 @@ app.get("/api/health", (req, res) => {
     success: true,
     message: "Server running",
   });
+});
+
+// TEMPORARY — Remove after debugging Zoho SMTP on Render
+app.get("/api/debug/mail-test", async (req, res) => {
+  const { sendMail } = require("./utils/mailer");
+  try {
+    await sendMail({
+      to: process.env.ZOHO_USER, // send to self as a test
+      subject: "SMTP Test from Render",
+      text: "If you receive this, SMTP is working on production.",
+      html: "<p>If you receive this, SMTP is working on production.</p>",
+    });
+    res.json({ success: true, message: "Test email sent successfully." });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+      code: err.code,
+      command: err.command,
+      zohoUser: process.env.ZOHO_USER ? "SET" : "MISSING",
+      zohoPass: process.env.ZOHO_PASS ? "SET" : "MISSING",
+    });
+  }
 });
 
 app.use((req, res) => {
