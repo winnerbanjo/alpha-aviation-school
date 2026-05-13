@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   Upload,
   ChevronRight,
+  X,
 } from "lucide-react";
 import { uploadPaymentReceipt, verifyPaystackPayment } from "@/api";
 import { usePaystackPayment } from "react-paystack";
@@ -29,6 +30,7 @@ export function PaymentSteps({
   const [copied, setCopied] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploaded, setUploaded] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   const bankDetails = {
     accountName: "Alpha step links aviation school ltd",
@@ -97,7 +99,7 @@ export function PaymentSteps({
 
   return (
     <AnimatePresence>
-      {!tutionPaid && (
+      {!tutionPaid && isVisible && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -111,6 +113,13 @@ export function PaymentSteps({
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className="w-full max-w-[500px] bg-white rounded-3xl overflow-hidden shadow-2xl relative"
           >
+            <button
+              onClick={() => setIsVisible(false)}
+              className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors z-20"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
             {paymentStep !== "prompt" && (
               <button
                 onClick={() =>
@@ -118,7 +127,7 @@ export function PaymentSteps({
                     paymentStep === "manual" ? "selection" : "prompt",
                   )
                 }
-                className="absolute top-6 left-6 text-slate-400 hover:text-slate-600 transition-colors"
+                className="absolute top-6 left-6 text-slate-400 hover:text-slate-600 transition-colors z-20"
               >
                 <ChevronRight className="w-6 h-6 rotate-180" />
               </button>
