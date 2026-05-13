@@ -122,25 +122,22 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// TEMPORARY — Remove after debugging Zoho SMTP on Render
+// TEMPORARY — Remove after confirming Resend works on Render
 app.get("/api/debug/mail-test", async (req, res) => {
   const { sendMail } = require("./utils/mailer");
   try {
     await sendMail({
-      to: process.env.ZOHO_USER, // send to self as a test
+      to: "support@aslaviationschool.co",
       subject: "SMTP Test from Render",
-      text: "If you receive this, SMTP is working on production.",
-      html: "<p>If you receive this, SMTP is working on production.</p>",
+      text: "If you receive this, Resend is working on production.",
+      html: "<p>If you receive this, <strong>Resend is working</strong> on production.</p>",
     });
-    res.json({ success: true, message: "Test email sent successfully." });
+    res.json({ success: true, message: "Test email sent successfully via Resend." });
   } catch (err) {
     res.status(500).json({
       success: false,
       message: err.message,
-      code: err.code,
-      command: err.command,
-      zohoUser: process.env.ZOHO_USER ? "SET" : "MISSING",
-      zohoPass: process.env.ZOHO_PASS ? "SET" : "MISSING",
+      resendKey: process.env.RESEND_API_KEY ? "SET" : "MISSING",
     });
   }
 });

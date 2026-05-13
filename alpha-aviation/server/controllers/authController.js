@@ -86,7 +86,9 @@ const isValidEmail = (email) => {
   return emailRegex.test(email);
 };
 
-// Register new user - with OTP verification
+// Register new user
+// MODE=production → skip OTP, create student directly and return token
+// MODE=development → send OTP email, require /verify-enrollment-otp step
 exports.register = async (req, res, next) => {
   try {
     const { email, password, firstName, lastName, selectedCourses } = req.body;
@@ -141,7 +143,51 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    // Generate OTP
+    // ─────────────────────────────────────────────────────────────────────────
+    // MODE GUARD
+    //   MODE=production  → direct enrollment, no OTP (email delivery issues bypassed)
+    //   MODE=development → full OTP email verification flow
+    //
+    //   To re-enable OTP: set MODE=development in .env and uncomment the block below
+    // ─────────────────────────────────────────────────────────────────────────
+    if (process.env.MODE === "production") {
+      // ── PRODUCTION: Create student immediately, return token ─────────────
+      const totalCoursePrice = getTotalCoursePrice(courseSelections);
+      const studentIdNumber = await generateStudentIdNumber();
+
+      const user = await User.create({
+        email: email.toLowerCase().trim(),
+        password,
+        role: "student",
+        firstName,
+        lastName,
+        enrolledCourse: normalizedSelectedCourses[0] || "",
+        selectedCourses: normalizedSelectedCourses,
+        courseSelections,
+        paymentStatus: "Pending",
+        amountDue: totalCoursePrice,
+        enrollmentDate: new Date(),
+        totalCoursePrice,
+        studentIdNumber,
+        status: "active",
+        isEmailVerified: false,
+      });
+
+      const token = generateToken(user._id, "student");
+
+      return res.status(201).json({
+        success: true,
+        message: "Account created successfully",
+        data: {
+          token,
+          user: buildUserResponse(user),
+        },
+      });
+    }
+
+    // ── DEVELOPMENT: Full OTP email verification flow ─────────────────────
+    // (Uncomment this block and set MODE=development to restore OTP enforcement)
+    /*
     const otp = generateOTP();
     const hashedOTP = hashOTP(otp);
     const expiresAt = getOTPExpiry(10); // 10 minutes
@@ -211,7 +257,7 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Verification code sent to your email",
       data: {
@@ -219,6 +265,14 @@ exports.register = async (req, res, next) => {
         email: email.toLowerCase().trim(),
         purpose: OTP_PURPOSE.ENROLLMENT,
       },
+    });
+    */
+    // ── END DEVELOPMENT OTP FLOW ──────────────────────────────────────────
+
+    // Safety fallback — reached only if MODE is neither 'production' nor dev block is active
+    return res.status(500).json({
+      success: false,
+      message: "Server misconfiguration: set MODE=production or MODE=development in .env",
     });
   } catch (error) {
     next(error);
