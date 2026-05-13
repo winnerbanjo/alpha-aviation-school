@@ -166,6 +166,13 @@ export const uploadPaymentReceipt = async (receiptUrl: string) => {
   return response.data;
 };
 
+export const verifyPaystackPayment = async (reference: string) => {
+  const response = await api.post("/student/verify-paystack", {
+    reference,
+  });
+  return response.data;
+};
+
 // Admin API calls
 export const getAdminTest = async (config?: AxiosRequestConfig) => {
   // Admin connection tests are allowed up to 60s to survive Render cold starts

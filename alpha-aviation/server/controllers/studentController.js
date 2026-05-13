@@ -2,6 +2,77 @@ const User = require('../models/User');
 const Payment = require('../models/Payment');
 const { sendMail } = require('../utils/mailer');
 const { mockStudents } = require('../utils/mockData');
+const axios = require('axios');
+
+// Verify Paystack payment
+exports.verifyPaystackPayment = async (req, res, next) => {
+  try {
+    const { reference } = req.body;
+    const userId = req.user.userId;
+
+    if (!reference) {
+      return res.status(400).json({
+        success: false,
+        message: 'Transaction reference is required'
+      });
+    }
+
+    // Call Paystack API to verify
+    const response = await axios.get(
+      `https://api.paystack.co/transaction/verify/${reference}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`
+        }
+      }
+    );
+
+    const { status, data } = response.data;
+
+    if (status && data.status === 'success') {
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'User not found'
+        });
+      }
+
+      // Update user status
+      user.paymentStatus = 'Paid';
+      await user.save();
+
+      // Create payment record
+      await Payment.create({
+        student: userId,
+        amount: data.amount / 100, // Convert from kobo
+        status: 'approved',
+        receiptUrl: 'Paystack Payment',
+        reference: reference,
+        adminNotes: 'Verified via Paystack'
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: 'Payment verified successfully',
+        data: {
+          paymentStatus: user.paymentStatus
+        }
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: 'Payment verification failed'
+      });
+    }
+  } catch (error) {
+    console.error('Paystack Verification Error:', error.response?.data || error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Error verifying payment with Paystack'
+    });
+  }
+};
 
 // Update student profile
 exports.updateProfile = async (req, res, next) => {

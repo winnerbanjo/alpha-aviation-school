@@ -9,7 +9,8 @@ import {
   Upload,
   ChevronRight,
 } from "lucide-react";
-import { uploadPaymentReceipt } from "@/api";
+import { uploadPaymentReceipt, verifyPaystackPayment } from "@/api";
+import { usePaystackPayment } from "react-paystack";
 
 interface PaymentStepsProps {
   user: any;
@@ -41,6 +42,35 @@ export function PaymentSteps({
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  const handlePaystackSuccess = async (reference: string) => {
+    try {
+      setUploading(true);
+      await verifyPaystackPayment(reference);
+      setUploaded(true);
+      setTimeout(() => {
+        refreshUser();
+      }, 2000);
+    } catch (error) {
+      console.error("Verification failed", error);
+      alert("Payment verification failed. Please contact support.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const onSuccess = (reference: any) => {
+    handlePaystackSuccess(reference.reference);
+  };
+
+  const paystackConfig = {
+    reference: new Date().getTime().toString(),
+    email: user?.email || "",
+    amount: (user?.amountDue || 0) * 100,
+    publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || "",
+  };
+
+  const initializePayment = usePaystackPayment(paystackConfig);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -162,7 +192,10 @@ export function PaymentSteps({
                     </button>
 
                     <button
-                      onClick={() => alert("Paystack Integration Coming Soon")}
+                      onClick={() => {
+                        // @ts-ignore - types can be tricky with libraries
+                        initializePayment(onSuccess);
+                      }}
                       className="flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-[#0061FF] hover:bg-blue-50/50 transition-all text-left group"
                     >
                       <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">

@@ -9,5 +9,6 @@ router.use(protect);
 router.patch('/profile', studentController.updateProfile);
 router.post('/upload-document', studentController.uploadDocument);
 router.post('/upload-payment-receipt', studentController.uploadPaymentReceipt);
+router.post('/verify-paystack', studentController.verifyPaystackPayment);
 
 module.exports = router;
