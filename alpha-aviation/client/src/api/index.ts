@@ -57,15 +57,11 @@ export const login = async (
     const response = await api.post("/auth/login", { email, password }, config);
     return response;
   } catch (error: any) {
-    // Re-throw with more context for better error handling
     if (error.response) {
-      // Server responded with error status
       throw error;
     } else if (error.request) {
-      // Request made but no response (network error)
       throw new Error("Network Error: Server is unreachable");
     } else {
-      // Something else happened
       throw error;
     }
   }
