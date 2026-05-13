@@ -3,12 +3,16 @@ const nodemailer = require("nodemailer");
 const createTransporter = () => {
   return nodemailer.createTransport({
     host: "smtp.zoho.com",
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false, // Use STARTTLS (port 587). Port 465 is blocked on most cloud hosts.
+    requireTLS: true,
     auth: {
       user: process.env.ZOHO_USER,
       pass: process.env.ZOHO_PASS,
     },
+    connectionTimeout: 10000, // 10s — fail fast instead of hanging
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
   });
 };
 
@@ -32,7 +36,7 @@ const sendMail = async ({ to, subject, text, html, replyTo }) => {
     console.log(`Email sent to ${to}: ${subject}`);
     return result;
   } catch (error) {
-    console.error(`Email failed to ${to}: ${error.message}`);
+    console.error(`Email failed to ${to}: [${error.code || 'ERR'}] ${error.message}`);
     throw error;
   }
 };
