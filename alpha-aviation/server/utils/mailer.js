@@ -20,14 +20,21 @@ const sendMail = async ({ to, subject, text, html, replyTo }) => {
 
   const transporter = createTransporter();
 
-  return transporter.sendMail({
-    from: `"Alpha Step Links Aviation School" <${process.env.ZOHO_USER}>`,
-    to,
-    replyTo,
-    subject,
-    text,
-    html,
-  });
+  try {
+    const result = await transporter.sendMail({
+      from: `"Alpha Step Links Aviation School" <${process.env.ZOHO_USER}>`,
+      to,
+      replyTo,
+      subject,
+      text,
+      html,
+    });
+    console.log(`Email sent to ${to}: ${subject}`);
+    return result;
+  } catch (error) {
+    console.error(`Email failed to ${to}: ${error.message}`);
+    throw error;
+  }
 };
 
 module.exports = { sendMail };

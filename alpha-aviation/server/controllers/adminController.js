@@ -527,8 +527,9 @@ exports.approvePayment = async (req, res, next) => {
           </div>
         `,
       });
+      console.log(`Payment confirmation email sent to: ${student.email}`);
     } catch (mailError) {
-      console.log("Payment confirmation email not sent:", mailError.message);
+      console.error("Payment confirmation email failed:", mailError.message);
     }
 
     res.status(200).json({
@@ -652,7 +653,7 @@ exports.rejectPayment = async (req, res, next) => {
         `,
       });
     } catch (mailError) {
-      console.log("Payment rejection email not sent:", mailError.message);
+      console.error("Payment rejection email failed:", mailError.message);
     }
 
     res.status(200).json({
