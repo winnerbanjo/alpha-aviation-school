@@ -86,7 +86,7 @@ const userSchema = new mongoose.Schema(
     },
     paymentStatus: {
       type: String,
-      enum: ["Pending", "Paid"],
+      enum: ["Pending", "Under Review", "Paid"],
       default: "Pending",
     },
     enrollmentDate: {

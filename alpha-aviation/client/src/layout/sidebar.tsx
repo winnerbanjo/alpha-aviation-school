@@ -40,6 +40,7 @@ export function Sidebar({ role }: SidebarProps) {
       path: "/admin/dashboard",
     },
     { icon: Users, label: "Students", path: "/admin/students" },
+    { icon: CreditCard, label: "Payments", path: "/admin/payments" },
     { icon: Banknote, label: "Revenue", path: "/admin/revenue" },
   ];
 
