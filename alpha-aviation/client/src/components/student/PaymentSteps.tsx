@@ -238,7 +238,7 @@ export function PaymentSteps({
 
                   {!uploaded ? (
                     <div className="space-y-3">
-                      <p className="text-xs text-slate-500 text-center italic">
+                      <p className="text-xs text-orange-600 text-center">
                         After payment, upload your receipt for verification
                       </p>
                       <label className="block">
