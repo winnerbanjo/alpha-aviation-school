@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   CreditCard,
@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { uploadPaymentReceipt, verifyPaystackPayment } from "@/api";
 import { usePaystackPayment } from "react-paystack";
+import { useSearchParams } from "react-router-dom";
 
 interface PaymentStepsProps {
   user: any;
@@ -24,13 +25,34 @@ export function PaymentSteps({
   tutionPaid,
   refreshUser,
 }: PaymentStepsProps) {
-  const [paymentStep, setPaymentStep] = useState<
-    "prompt" | "selection" | "manual"
-  >("prompt");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const stepInUrl = searchParams.get("step") as
+    | "prompt"
+    | "selection"
+    | "manual"
+    | null;
+  const paymentStep = stepInUrl || "prompt";
+
   const [copied, setCopied] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploaded, setUploaded] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+
+  const setPaymentStep = (step: "prompt" | "selection" | "manual") => {
+    setSearchParams({ step });
+    setIsVisible(true);
+  };
+
+  const closeModal = () => {
+    setIsVisible(false);
+    setSearchParams({});
+  };
+
+  useEffect(() => {
+    if (stepInUrl) {
+      setIsVisible(true);
+    }
+  }, [stepInUrl]);
 
   const bankDetails = {
     accountName: "Alpha step links aviation school ltd",
@@ -52,6 +74,7 @@ export function PaymentSteps({
       setUploaded(true);
       setTimeout(() => {
         refreshUser();
+        closeModal();
       }, 2000);
     } catch (error) {
       console.error("Verification failed", error);
@@ -87,6 +110,7 @@ export function PaymentSteps({
         setUploaded(true);
         setTimeout(() => {
           refreshUser();
+          closeModal();
         }, 2000);
       };
       reader.readAsDataURL(file);
@@ -114,7 +138,7 @@ export function PaymentSteps({
             className="w-full max-w-[500px] bg-white rounded-3xl overflow-hidden shadow-2xl relative"
           >
             <button
-              onClick={() => setIsVisible(false)}
+              onClick={closeModal}
               className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors z-20"
             >
               <X className="w-6 h-6" />
