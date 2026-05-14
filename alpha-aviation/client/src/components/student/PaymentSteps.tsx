@@ -9,6 +9,7 @@ import {
   Upload,
   ChevronRight,
   X,
+  FileText,
 } from "lucide-react";
 import { uploadPaymentReceipt, verifyPaystackPayment } from "@/api";
 import { usePaystackPayment } from "react-paystack";
@@ -37,15 +38,18 @@ export function PaymentSteps({
   const [uploading, setUploading] = useState(false);
   const [uploaded, setUploaded] = useState(false);
   const [isVisible, setIsVisible] = useState(false); // Start hidden to check cooldown
+  const [selectedFile, setSelectedFile] = useState<string | null>(null);
 
   const setPaymentStep = (step: "prompt" | "selection" | "manual") => {
     setSearchParams({ step });
     setIsVisible(true);
+    if (step !== "manual") setSelectedFile(null);
   };
 
   const closeModal = () => {
     setIsVisible(false);
     setSearchParams({});
+    setSelectedFile(null);
     // Store current timestamp as last closed time
     localStorage.setItem("payment_modal_last_closed", Date.now().toString());
   };
@@ -107,25 +111,36 @@ export function PaymentSteps({
 
   const initializePayment = usePaystackPayment(paystackConfig);
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if (file.size > 5 * 1024 * 1024) {
+      alert("File size must be under 5MB");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setSelectedFile(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const confirmAndUpload = async () => {
+    if (!selectedFile) return;
+
     try {
       setUploading(true);
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const base64String = reader.result as string;
-        await uploadPaymentReceipt(base64String);
-        setUploaded(true);
-        setTimeout(() => {
-          refreshUser();
-          closeModal();
-        }, 2000);
-      };
-      reader.readAsDataURL(file);
+      await uploadPaymentReceipt(selectedFile);
+      setUploaded(true);
+      setTimeout(() => {
+        refreshUser();
+        closeModal();
+      }, 2000);
     } catch (error) {
       console.error("Upload failed", error);
+      alert("Failed to upload receipt. Please try again.");
     } finally {
       setUploading(false);
     }
@@ -313,65 +328,130 @@ export function PaymentSteps({
                         </p>
                       </div>
 
-                      <div className="bg-slate-50 rounded-2xl p-5 space-y-4 border border-slate-100">
-                        {[
-                          { label: "Bank Name", value: bankDetails.bank },
-                          {
-                            label: "Account Number",
-                            value: bankDetails.accountNumber,
-                          },
-                          {
-                            label: "Account Name",
-                            value: bankDetails.accountName,
-                          },
-                          {
-                            label: "Payment Reference",
-                            value: bankDetails.reference,
-                          },
-                        ].map((item) => (
-                          <div
-                            key={item.label}
-                            className="flex justify-between items-center group"
+                      <AnimatePresence mode="wait">
+                        {!selectedFile ? (
+                          <motion.div
+                            key="bank-details"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            transition={{ duration: 0.2 }}
+                            className="bg-slate-50 rounded-2xl p-5 space-y-4 border border-slate-100"
                           >
-                            <div>
-                              <p className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
-                                {item.label}
-                              </p>
-                              <p className="text-sm font-semibold text-slate-800">
-                                {item.value}
-                              </p>
-                            </div>
+                            {[
+                              { label: "Bank Name", value: bankDetails.bank },
+                              {
+                                label: "Account Number",
+                                value: bankDetails.accountNumber,
+                              },
+                              {
+                                label: "Account Name",
+                                value: bankDetails.accountName,
+                              },
+                              {
+                                label: "Payment Reference",
+                                value: bankDetails.reference,
+                              },
+                            ].map((item) => (
+                              <div
+                                key={item.label}
+                                className="flex justify-between items-center group"
+                              >
+                                <div>
+                                  <p className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+                                    {item.label}
+                                  </p>
+                                  <p className="text-sm font-semibold text-slate-800">
+                                    {item.value}
+                                  </p>
+                                </div>
+                                <button
+                                  onClick={() => copyToClipboard(item.value)}
+                                  className="p-2 hover:bg-white rounded-lg transition-colors"
+                                >
+                                  {copied ? (
+                                    <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                  ) : (
+                                    <Copy className="w-4 h-4 text-slate-400" />
+                                  )}
+                                </button>
+                              </div>
+                            ))}
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            key="preview"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            transition={{ duration: 0.2 }}
+                            className="relative group rounded-3xl overflow-hidden border-2 border-slate-100 aspect-video bg-slate-50"
+                          >
+                            {selectedFile.startsWith("data:application/pdf") ? (
+                              <div className="w-full h-full flex flex-col items-center justify-center gap-3">
+                                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+                                  <FileText className="w-8 h-8 text-slate-400" />
+                                </div>
+                                <span className="text-sm font-medium text-slate-600">
+                                  PDF Document Selected
+                                </span>
+                              </div>
+                            ) : (
+                              <img
+                                src={selectedFile}
+                                alt="Receipt Preview"
+                                className="w-full h-full object-cover"
+                              />
+                            )}
                             <button
-                              onClick={() => copyToClipboard(item.value)}
-                              className="p-2 hover:bg-white rounded-lg transition-colors"
+                              onClick={() => setSelectedFile(null)}
+                              className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur shadow-md rounded-full text-slate-600 hover:text-rose-600 transition-all hover:scale-110"
                             >
-                              {copied ? (
-                                <CheckCircle2 className="w-4 h-4 text-green-500" />
-                              ) : (
-                                <Copy className="w-4 h-4 text-slate-400" />
-                              )}
+                              <X className="w-5 h-5" />
                             </button>
-                          </div>
-                        ))}
-                      </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
 
-                      <div className="space-y-3">
-                        <p className="text-xs text-orange-600 text-center">
-                          After payment, upload your receipt for verification
-                        </p>
-                        <label className="block">
-                          <input
-                            type="file"
-                            className="hidden"
-                            accept="image/*,.pdf"
-                            onChange={handleFileUpload}
+                      <div className="space-y-4">
+                        {!selectedFile ? (
+                          <>
+                            <p className="text-xs text-orange-600 text-center">
+                              After payment, upload your receipt for verification
+                            </p>
+                            <label className="block">
+                              <input
+                                type="file"
+                                className="hidden"
+                                accept="image/*,.pdf"
+                                onChange={handleFileSelect}
+                                disabled={uploading}
+                              />
+                              <div className="w-full py-4 bg-slate-900 text-white rounded-2xl font-semibold flex items-center justify-center gap-2 cursor-pointer hover:bg-slate-800 transition-colors">
+                                <Upload className="w-5 h-5" />
+                                {uploading ? "Uploading..." : "Upload Receipt"}
+                              </div>
+                            </label>
+                          </>
+                        ) : (
+                          <button
+                            onClick={confirmAndUpload}
                             disabled={uploading}
-                          />
-                          <div className="w-full py-4 bg-slate-900 text-white rounded-2xl font-semibold flex items-center justify-center gap-2 cursor-pointer hover:bg-slate-800 transition-colors">
-                            <Upload className="w-5 h-5" />
-                            {uploading ? "Uploading..." : "Upload Receipt"}
-                          </div>
-                        </label>
+                            className="w-full py-4 bg-[#0061FF] text-white rounded-2xl font-semibold flex items-center justify-center gap-2 hover:bg-[#0052E6] transition-all shadow-lg shadow-blue-200 disabled:opacity-50"
+                          >
+                            {uploading ? (
+                              <>
+                                <div className="animate-spin rounded-full h-5 w-5 border-2 border-white/20 border-t-white" />
+                                Uploading...
+                              </>
+                            ) : (
+                              <>
+                                <CheckCircle2 className="w-5 h-5" />
+                                Confirm & Upload Receipt
+                              </>
+                            )}
+                          </button>
+                        )}
                       </div>
                     </motion.div>
                   )}
