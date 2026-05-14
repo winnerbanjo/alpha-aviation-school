@@ -69,6 +69,7 @@ export const useAuthStore = create<AuthState>()(
         localStorage.removeItem("user");
         localStorage.removeItem("userRole");
         localStorage.removeItem("auth-storage");
+        localStorage.removeItem("payment_modal_last_closed");
         set({
           user: null,
           token: null,
