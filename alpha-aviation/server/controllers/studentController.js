@@ -1,8 +1,69 @@
 const User = require("../models/User");
 const Payment = require("../models/Payment");
+const Notification = require("../models/Notification");
 const { sendMail } = require("../utils/mailer");
 const { mockStudents } = require("../utils/mockData");
 const axios = require("axios");
+
+exports.getNotifications = async (req, res, next) => {
+  try {
+    const userId = req.user.userId;
+    const notifications = await Notification.find({ user: userId })
+      .sort({ createdAt: -1 })
+      .limit(50)
+      .lean();
+
+    const unreadCount = notifications.filter((notification) => !notification.readAt).length;
+
+    res.status(200).json({
+      success: true,
+      count: notifications.length,
+      data: { notifications, unreadCount },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.markNotificationRead = async (req, res, next) => {
+  try {
+    const notification = await Notification.findOneAndUpdate(
+      { _id: req.params.id, user: req.user.userId },
+      { $set: { readAt: new Date() } },
+      { new: true },
+    );
+
+    if (!notification) {
+      return res.status(404).json({
+        success: false,
+        message: "Notification not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: { notification },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.markAllNotificationsRead = async (req, res, next) => {
+  try {
+    await Notification.updateMany(
+      { user: req.user.userId, readAt: null },
+      { $set: { readAt: new Date() } },
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Notifications marked as read",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 // Verify Paystack payment
 exports.verifyPaystackPayment = async (req, res, next) => {

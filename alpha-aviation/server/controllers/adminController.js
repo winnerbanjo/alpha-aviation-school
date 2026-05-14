@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Payment = require("../models/Payment");
+const Notification = require("../models/Notification");
 const { sendMail } = require("../utils/mailer");
 
 const getStudentValue = (student) => {
@@ -487,6 +488,22 @@ exports.approvePayment = async (req, res, next) => {
 
     await student.save();
 
+    await Notification.create({
+      user: student._id,
+      type: "payment_approved",
+      title: "Payment receipt approved",
+      message:
+        student.amountDue > 0
+          ? `Your payment of ₦${payment.amount.toLocaleString("en-NG")} has been approved. Remaining balance: ₦${student.amountDue.toLocaleString("en-NG")}.`
+          : `Your payment of ₦${payment.amount.toLocaleString("en-NG")} has been approved. Your tuition is now fully paid.`,
+      metadata: {
+        paymentId: payment._id,
+        amount: payment.amount,
+        amountDue: student.amountDue,
+        amountPaid: student.amountPaid,
+      },
+    });
+
     // Send confirmation email
     try {
       const clientUrl = process.env.CLIENT_URL || "https://www.aslaviationschool.co";
@@ -608,6 +625,17 @@ exports.rejectPayment = async (req, res, next) => {
     // Revert student payment status so they can upload again
     student.paymentStatus = "Pending";
     await student.save();
+
+    await Notification.create({
+      user: student._id,
+      type: "payment_rejected",
+      title: "Payment receipt rejected",
+      message: `Your payment receipt could not be verified. Reason: ${reason.trim()}`,
+      metadata: {
+        paymentId: payment._id,
+        reason: reason.trim(),
+      },
+    });
 
     // Send rejection email
     try {

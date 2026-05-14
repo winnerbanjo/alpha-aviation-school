@@ -174,6 +174,38 @@ export const verifyPaystackPayment = async (reference: string) => {
   return response.data;
 };
 
+export interface NotificationItem {
+  _id: string;
+  type: "payment_approved" | "payment_rejected" | "general";
+  title: string;
+  message: string;
+  metadata?: Record<string, unknown>;
+  readAt?: string | null;
+  createdAt: string;
+}
+
+export const getNotifications = async () => {
+  const response = await api.get("/student/notifications");
+  return response.data as {
+    success: boolean;
+    count: number;
+    data: {
+      notifications: NotificationItem[];
+      unreadCount: number;
+    };
+  };
+};
+
+export const markNotificationRead = async (notificationId: string) => {
+  const response = await api.patch(`/student/notifications/${notificationId}/read`);
+  return response.data;
+};
+
+export const markAllNotificationsRead = async () => {
+  const response = await api.patch("/student/notifications/read-all");
+  return response.data;
+};
+
 // Admin API calls
 export const getAdminTest = async (config?: AxiosRequestConfig) => {
   // Admin connection tests are allowed up to 60s to survive Render cold starts

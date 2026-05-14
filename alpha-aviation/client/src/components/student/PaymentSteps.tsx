@@ -160,6 +160,8 @@ export function PaymentSteps({
     }
   };
 
+  console.log(tutionPaid);
+
   return (
     <AnimatePresence>
       {shouldShowPaymentModal && isVisible && (
@@ -235,7 +237,8 @@ export function PaymentSteps({
                     Processing...
                   </h2>
                   <p className="text-slate-500">
-                    Please hold on while we process your request. This will only take a moment.
+                    Please hold on while we process your request. This will only
+                    take a moment.
                   </p>
                 </motion.div>
               ) : (
@@ -436,7 +439,8 @@ export function PaymentSteps({
                         {!selectedFile ? (
                           <>
                             <p className="text-xs text-orange-600 text-center">
-                              After payment, upload your receipt for verification
+                              After payment, upload your receipt for
+                              verification
                             </p>
                             <label className="block">
                               <input

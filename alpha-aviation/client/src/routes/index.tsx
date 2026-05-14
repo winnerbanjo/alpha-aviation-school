@@ -103,6 +103,11 @@ const StudentRecords = lazy(() =>
     default: m.StudentRecords,
   })),
 );
+const StudentNotifications = lazy(() =>
+  import("../pages/student/StudentNotifications").then((m) => ({
+    default: m.StudentNotifications,
+  })),
+);
 
 // Global Loading fallback
 const PageLoader = () => (
@@ -164,6 +169,7 @@ export const RoutesConfig = () => {
         { path: "resources", element: <StudentResources /> },
         { path: "certificate", element: <StudentCertificate /> },
         { path: "records", element: <StudentRecords /> },
+        { path: "notifications", element: <StudentNotifications /> },
         { path: "profile", element: <StudentProfile /> },
       ],
     },

@@ -14,6 +14,7 @@ import {
   LogOut,
   CreditCard,
   GraduationCap,
+  Bell,
 } from "lucide-react";
 import { useState } from "react";
 import { Logo } from "@/components/Logo";
@@ -74,6 +75,11 @@ export function Sidebar({ role }: SidebarProps) {
       icon: FileText,
       label: "Records",
       path: "/dashboard/records",
+    },
+    {
+      icon: Bell,
+      label: "Notifications",
+      path: "/dashboard/notifications",
     },
     {
       icon: User,
