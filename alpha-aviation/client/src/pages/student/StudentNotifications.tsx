@@ -10,14 +10,21 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+interface NotificationsPageProps {
+  variant?: "student" | "admin";
+}
+
 const getNotificationIcon = (type: NotificationItem["type"]) => {
-  if (type === "payment_approved") return CheckCircle2;
+  if (type === "payment_approved" || type === "payment_confirmed") {
+    return CheckCircle2;
+  }
+  if (type === "payment_submitted") return CreditCard;
   if (type === "payment_rejected") return XCircle;
   return CreditCard;
 };
 
 const getNotificationStyles = (type: NotificationItem["type"]) => {
-  if (type === "payment_approved") {
+  if (type === "payment_approved" || type === "payment_confirmed") {
     return "bg-emerald-50 text-emerald-700 border-emerald-100";
   }
   if (type === "payment_rejected") {
@@ -35,7 +42,9 @@ const formatDate = (value: string) =>
     minute: "2-digit",
   });
 
-export function StudentNotifications() {
+export function StudentNotifications({
+  variant = "student",
+}: NotificationsPageProps) {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -85,7 +94,9 @@ export function StudentNotifications() {
             Notifications
           </h1>
           <p className="text-slate-500">
-            Review payment receipt decisions and account updates.
+            {variant === "admin"
+              ? "Review payment activity and admin alerts."
+              : "Review payment receipt decisions and account updates."}
           </p>
         </div>
         <Button
@@ -124,7 +135,9 @@ export function StudentNotifications() {
                 No notifications yet
               </p>
               <p className="text-sm text-slate-500 mt-1">
-                Payment review updates will appear here.
+                {variant === "admin"
+                  ? "Payment activity alerts will appear here."
+                  : "Payment review updates will appear here."}
               </p>
             </div>
           ) : (

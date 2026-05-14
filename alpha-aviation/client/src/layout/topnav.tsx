@@ -46,8 +46,6 @@ export function TopNav({ role }: TopNavProps) {
   }, []);
 
   useEffect(() => {
-    if (role !== "student") return;
-
     const loadUnreadCount = async () => {
       try {
         const response = await getNotifications();
@@ -65,21 +63,25 @@ export function TopNav({ role }: TopNavProps) {
       <div className="px-6 py-4">
         <div className="flex items-center justify-end gap-4">
           <div className="flex items-center gap-3">
-            {role === "student" && (
-              <button
-                type="button"
-                onClick={() => navigate("/dashboard/notifications")}
-                className="relative h-10 w-10 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors flex items-center justify-center"
-                aria-label="Open notifications"
-              >
-                <Bell className="w-5 h-5" />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">
-                    {unreadCount > 9 ? "9+" : unreadCount}
-                  </span>
-                )}
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() =>
+                navigate(
+                  role === "admin"
+                    ? "/admin/notifications"
+                    : "/dashboard/notifications",
+                )
+              }
+              className="relative h-10 w-10 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors flex items-center justify-center"
+              aria-label="Open notifications"
+            >
+              <Bell className="w-5 h-5" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
+            </button>
 
             <div className="relative" ref={profileRef}>
               <button

@@ -72,6 +72,11 @@ const AdminResources = lazy(() =>
     default: m.AdminResources,
   })),
 );
+const AdminNotifications = lazy(() =>
+  import("../pages/admin/AdminNotifications").then((m) => ({
+    default: m.AdminNotifications,
+  })),
+);
 
 const StudentOverview = lazy(() =>
   import("../pages/student/StudentOverview").then((m) => ({
@@ -156,6 +161,7 @@ export const RoutesConfig = () => {
         { path: "payments", element: <AdminPayments /> },
         { path: "revenue", element: <AdminRevenue /> },
         { path: "resources", element: <AdminResources /> },
+        { path: "notifications", element: <AdminNotifications /> },
       ],
     },
 

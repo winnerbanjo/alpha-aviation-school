@@ -176,7 +176,12 @@ export const verifyPaystackPayment = async (reference: string) => {
 
 export interface NotificationItem {
   _id: string;
-  type: "payment_approved" | "payment_rejected" | "general";
+  type:
+    | "payment_submitted"
+    | "payment_confirmed"
+    | "payment_approved"
+    | "payment_rejected"
+    | "general";
   title: string;
   message: string;
   metadata?: Record<string, unknown>;

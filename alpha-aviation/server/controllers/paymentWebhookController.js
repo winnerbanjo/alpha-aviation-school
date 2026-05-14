@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 const User = require("../models/User");
 const Payment = require("../models/Payment");
+const { notifyPaymentConfirmed } = require("../utils/paymentNotifications");
 
 exports.handlePaystackWebhook = async (req, res) => {
   try {
@@ -22,6 +23,15 @@ exports.handlePaystackWebhook = async (req, res) => {
       const user = await User.findOne({ email });
 
       if (user) {
+        const existingPayment = await Payment.findOne({
+          reference,
+          status: "approved",
+        });
+
+        if (existingPayment) {
+          return res.status(200).send("OK");
+        }
+
         if (user.paymentStatus === "Paid") {
           return res.status(200).send("OK");
         }
@@ -32,7 +42,7 @@ exports.handlePaystackWebhook = async (req, res) => {
         user.amountDue = Math.max(0, (user.amountDue || 0) - paidAmount);
         await user.save();
 
-        await Payment.findOneAndUpdate(
+        const payment = await Payment.findOneAndUpdate(
           { reference: reference },
           {
             student: user._id,
@@ -44,6 +54,12 @@ exports.handlePaystackWebhook = async (req, res) => {
           },
           { upsert: true, new: true },
         );
+
+        await notifyPaymentConfirmed({
+          student: user,
+          payment,
+          source: "Paystack Webhook",
+        });
       }
     }
 
