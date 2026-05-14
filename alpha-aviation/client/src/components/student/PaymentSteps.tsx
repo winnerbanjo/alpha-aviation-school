@@ -17,7 +17,7 @@ import { useSearchParams } from "react-router-dom";
 
 interface PaymentStepsProps {
   user: any;
-  tutionPaid: boolean;
+  tutionPaid: "Pending" | "Paid" | "Under Review" | boolean;
   refreshUser: () => Promise<void>;
 }
 
@@ -40,6 +40,11 @@ export function PaymentSteps({
   const [isVisible, setIsVisible] = useState(false); // Start hidden to check cooldown
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [method, setMethod] = useState<"paystack" | "manual" | null>(null);
+  const paymentStatus =
+    typeof tutionPaid === "string"
+      ? tutionPaid
+      : user?.paymentStatus || (tutionPaid ? "Paid" : "Pending");
+  const shouldShowPaymentModal = paymentStatus === "Pending";
 
   const setPaymentStep = (step: "prompt" | "selection" | "manual") => {
     setSearchParams({ step });
@@ -56,6 +61,12 @@ export function PaymentSteps({
   };
 
   useEffect(() => {
+    if (!shouldShowPaymentModal) {
+      setIsVisible(false);
+      if (stepInUrl) setSearchParams({});
+      return;
+    }
+
     if (stepInUrl) {
       setIsVisible(true);
       return;
@@ -67,7 +78,7 @@ export function PaymentSteps({
     if (!lastClosed || Date.now() - parseInt(lastClosed) > COOLDOWN_MS) {
       setIsVisible(true);
     }
-  }, [stepInUrl]);
+  }, [shouldShowPaymentModal, stepInUrl, setSearchParams]);
 
   const bankDetails = {
     accountName: "Alpha step links aviation school ltd",
@@ -151,7 +162,7 @@ export function PaymentSteps({
 
   return (
     <AnimatePresence>
-      {!tutionPaid && isVisible && (
+      {shouldShowPaymentModal && isVisible && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

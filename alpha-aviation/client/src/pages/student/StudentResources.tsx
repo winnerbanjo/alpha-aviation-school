@@ -52,7 +52,9 @@ const TYPE_ICONS: Record<string, typeof FileText> = {
 
 export function StudentResources() {
   const { user } = useAuthStore();
-  const isPaid = user?.paymentStatus !== "Pending";
+  const paymentStatus = user?.paymentStatus || "Pending";
+  const isPaid = paymentStatus === "Paid";
+  const isUnderReview = paymentStatus === "Under Review";
 
   const handleDownload = (resource: Resource) => {
     if (resource.locked || !isPaid) {
@@ -83,8 +85,9 @@ export function StudentResources() {
                 Resources Locked
               </p>
               <p className="text-sm text-slate-500 mt-1">
-                Course materials will be unlocked once your payment is confirmed
-                by admin. Please complete your payment to access all resources.
+                {isUnderReview
+                  ? "Your receipt is under review. Course materials will be unlocked once admin confirms your payment."
+                  : "Course materials will be unlocked once your payment is confirmed by admin. Please complete your payment to access all resources."}
               </p>
             </div>
           </CardContent>

@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
+type PaymentStatus = "Pending" | "Paid" | "Under Review";
+
 interface User {
   id: string;
   email: string;
@@ -15,7 +17,7 @@ interface User {
   enrolledCourse?: string;
   selectedCourses?: string[];
   courseSelections?: Array<{ title: string; price: number }>;
-  paymentStatus?: "Pending" | "Paid" | "Under Review";
+  paymentStatus?: PaymentStatus;
   amountDue?: number;
   amountPaid?: number;
   totalCoursePrice?: number;
@@ -37,7 +39,7 @@ interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
   hasHydrated: boolean;
-  tutionPaid: boolean;
+  tutionPaid: PaymentStatus;
   login: (user: User, token: string) => void;
   logout: () => void;
   setUser: (user: User) => void;
@@ -51,7 +53,7 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       isAuthenticated: false,
       hasHydrated: false,
-      tutionPaid: false,
+      tutionPaid: "Pending",
       login: (user, token) => {
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
@@ -61,7 +63,7 @@ export const useAuthStore = create<AuthState>()(
           token,
           isAuthenticated: true,
           hasHydrated: true,
-          tutionPaid: user.paymentStatus === "Paid",
+          tutionPaid: user.paymentStatus || "Pending",
         });
       },
       logout: () => {
@@ -75,6 +77,7 @@ export const useAuthStore = create<AuthState>()(
           token: null,
           isAuthenticated: false,
           hasHydrated: true,
+          tutionPaid: "Pending",
         });
       },
       setUser: (user) => {
@@ -84,7 +87,7 @@ export const useAuthStore = create<AuthState>()(
         }
         set({
           user,
-          tutionPaid: user.paymentStatus === "Paid",
+          tutionPaid: user.paymentStatus || "Pending",
         });
       },
       setHasHydrated: (hydrated) => set({ hasHydrated: hydrated }),

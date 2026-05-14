@@ -49,7 +49,7 @@ export function StudentOverview() {
 
   const isGraduated = user?.status === "graduated";
   const isPending = user?.paymentStatus === "Pending";
-  const underReview = user?.status === "Under Review";
+  const isUnderReview = user?.paymentStatus === "Under Review";
   const registeredCourses = user?.courseSelections || [];
 
   return (
@@ -226,13 +226,14 @@ export function StudentOverview() {
                       Go to Payments
                     </Button>
                   </>
-                ) : underReview ? (
+                ) : isUnderReview ? (
                   <div className="text-center py-4">
                     <p className="font-medium text-orange-700">
                       Payment Under Review
                     </p>
                     <p className="text-sm text-slate-500 mb-1">
-                      Please wait for the admin to review your payment.
+                      Your receipt has been submitted. Please wait for admin
+                      verification before your course materials are unlocked.
                     </p>
                   </div>
                 ) : (

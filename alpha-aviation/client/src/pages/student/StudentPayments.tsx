@@ -73,7 +73,7 @@ export function StudentPayments() {
   const refreshUser = async () => {
     try {
       const profile = await getProfile();
-      if (profile) setUser(profile);
+      if (profile?.data?.user) setUser(profile.data.user);
     } catch (error) {
       console.error("Failed to refresh user profile", error);
     }
@@ -247,13 +247,17 @@ export function StudentPayments() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-lg text-slate-900">
-                  Payment Instructions
+                  {isPending ? "Payment Instructions" : "Payment Status"}
                 </CardTitle>
                 <CardDescription>
-                  Complete your tuition fee payment.
+                  {isPending
+                    ? "Complete your tuition fee payment."
+                    : isUnderReview
+                      ? "Your submitted receipt is awaiting admin review."
+                      : "Your tuition payment has been confirmed."}
                 </CardDescription>
               </div>
-              {paymentMethod !== "selection" && !isSuccess && !uploadingReceipt && (
+              {isPending && paymentMethod !== "selection" && !isSuccess && !uploadingReceipt && (
                 <Button
                   variant="ghost"
                   size="sm"
@@ -269,6 +273,42 @@ export function StudentPayments() {
             </div>
           </CardHeader>
           <CardContent className="p-0">
+            {!isPending ? (
+              <div className="p-8 flex flex-col items-center text-center space-y-4">
+                <div
+                  className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                    isPaid
+                      ? "bg-emerald-50 text-emerald-600"
+                      : "bg-blue-50 text-blue-600"
+                  }`}
+                >
+                  {isPaid ? (
+                    <CheckCircle2 className="w-8 h-8" />
+                  ) : (
+                    <Clock className="w-8 h-8" />
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900">
+                    {isPaid ? "Payment Complete" : "Payment Under Review"}
+                  </h3>
+                  <p className="text-sm text-slate-500 mt-1 max-w-sm">
+                    {isPaid
+                      ? "Your payment has been confirmed and your course access is active."
+                      : "Your receipt has been submitted. Admin will verify it before your payment is marked as paid."}
+                  </p>
+                </div>
+                {paymentReceiptUrl && isUnderReview && (
+                  <Button
+                    variant="outline"
+                    onClick={() => window.open(paymentReceiptUrl, "_blank")}
+                  >
+                    <FileText className="w-4 h-4 mr-2" />
+                    View Submitted Receipt
+                  </Button>
+                )}
+              </div>
+            ) : (
             <AnimatePresence mode="wait">
               {isSuccess ? (
                 <motion.div
@@ -455,6 +495,7 @@ export function StudentPayments() {
                 </motion.div>
               )}
             </AnimatePresence>
+            )}
           </CardContent>
         </Card>
 
