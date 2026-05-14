@@ -28,7 +28,10 @@ const allowedOrigins = [
   "http://aslaviationschool.co",
   "http://www.aslaviationschool.co",
   "https://aslaviationschool.co",
+  "https://city-deceiving-roundup.ngrok-free.dev",
   "http://localhost:5173",
+  "https://localhost:5173",
+
   "http://127.0.0.1:5173",
   "http://localhost:3000",
   "http://127.0.0.1:3000",
@@ -36,21 +39,23 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || origin.includes('ngrok-free.dev')) {
+      callback(null, true);
     } else {
-      return callback(new Error("Not allowed by CORS"));
+      callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'ngrok-skip-browser-warning'],
 };
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
-// Rate limiting - strict for auth, moderate for admin API
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // 10 attempts per window

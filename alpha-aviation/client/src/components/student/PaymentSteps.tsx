@@ -168,185 +168,201 @@ export function PaymentSteps({
             )}
 
             <div className="p-8 pt-20 flex flex-col items-center text-center">
-              {paymentStep === "prompt" && (
+              {uploaded ? (
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="space-y-6 w-full"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="space-y-6 w-full py-8"
                 >
-                  <div className="relative">
-                    <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mx-auto relative z-10">
-                      <CreditCard className="w-12 h-12 text-[#0061FF]" />
-                    </div>
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-24 bg-blue-100 rounded-full animate-ping opacity-20" />
+                  <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle2 className="w-10 h-10 text-green-500" />
                   </div>
-
                   <div className="space-y-2">
                     <h2 className="text-2xl font-bold text-slate-900">
-                      Pay your tuition fee now
+                      Payment Successful!
                     </h2>
-                    <p className="text-slate-500 leading-relaxed">
-                      To continue accessing your courses and learning materials,
-                      please complete your tuition fee payment.
+                    <p className="text-slate-500">
+                      Thank you for your payment. Your enrollment status has
+                      been updated.
                     </p>
                   </div>
-
-                  <button
-                    onClick={() => setPaymentStep("selection")}
-                    className="w-full py-4 bg-[#0061FF] text-white rounded-2xl font-semibold shadow-lg shadow-blue-200 hover:bg-[#0052E6] transition-all hover:scale-[1.02] active:scale-[0.98]"
-                  >
-                    Pay Now
-                  </button>
-                </motion.div>
-              )}
-
-              {paymentStep === "selection" && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="space-y-6 w-full"
-                >
-                  <div className="text-left mb-6">
-                    <h2 className="text-xl font-bold text-slate-900">
-                      Select Payment Method
-                    </h2>
-                    <p className="text-sm text-slate-500">
-                      Choose how you'd like to pay your tuition
-                    </p>
-                  </div>
-
-                  <div className="grid gap-4">
-                    <button
-                      onClick={() => setPaymentStep("manual")}
-                      className="flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-[#0061FF] hover:bg-blue-50/50 transition-all text-left group"
-                    >
-                      <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                        <Landmark className="w-6 h-6 text-slate-600 group-hover:text-[#0061FF]" />
-                      </div>
-                      <div>
-                        <p className="font-bold text-slate-900">
-                          Bank Transfer / Manual
-                        </p>
-                        <p className="text-xs text-slate-500">
-                          Upload your receipt after transfer
-                        </p>
-                      </div>
-                      <ChevronRight className="w-5 h-5 text-slate-300 ml-auto" />
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        // @ts-ignore - types can be tricky with libraries
-                        initializePayment(onSuccess);
-                      }}
-                      className="flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-[#0061FF] hover:bg-blue-50/50 transition-all text-left group"
-                    >
-                      <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                        <CreditCard className="w-6 h-6 text-slate-600 group-hover:text-[#0061FF]" />
-                      </div>
-                      <div>
-                        <p className="font-bold text-slate-900">
-                          Pay with Paystack
-                        </p>
-                        <p className="text-xs text-slate-500">
-                          Fast and secure online payment
-                        </p>
-                      </div>
-                      <ChevronRight className="w-5 h-5 text-slate-300 ml-auto" />
-                    </button>
+                  <div className="bg-green-50 text-green-700 p-4 rounded-2xl text-sm font-medium">
+                    Redirecting you to the dashboard...
                   </div>
                 </motion.div>
-              )}
-
-              {paymentStep === "manual" && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="space-y-6 w-full text-left"
-                >
-                  <div>
-                    <h2 className="text-xl font-bold text-slate-900">
-                      Bank Details
-                    </h2>
-                    <p className="text-sm text-slate-500">
-                      Transfer the tuition fee to the account below
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-50 rounded-2xl p-5 space-y-4 border border-slate-100">
-                    {[
-                      { label: "Bank Name", value: bankDetails.bank },
-                      {
-                        label: "Account Number",
-                        value: bankDetails.accountNumber,
-                      },
-                      { label: "Account Name", value: bankDetails.accountName },
-                      {
-                        label: "Payment Reference",
-                        value: bankDetails.reference,
-                      },
-                    ].map((item) => (
-                      <div
-                        key={item.label}
-                        className="flex justify-between items-center group"
-                      >
-                        <div>
-                          <p className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
-                            {item.label}
-                          </p>
-                          <p className="text-sm font-semibold text-slate-800">
-                            {item.value}
-                          </p>
+              ) : (
+                <>
+                  {paymentStep === "prompt" && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="space-y-6 w-full"
+                    >
+                      <div className="relative">
+                        <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mx-auto relative z-10">
+                          <CreditCard className="w-12 h-12 text-[#0061FF]" />
                         </div>
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-24 bg-blue-100 rounded-full animate-ping opacity-20" />
+                      </div>
+
+                      <div className="space-y-2">
+                        <h2 className="text-2xl font-bold text-slate-900">
+                          Pay your tuition fee now
+                        </h2>
+                        <p className="text-slate-500 leading-relaxed">
+                          To continue accessing your courses and learning
+                          materials, please complete your tuition fee payment.
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={() => setPaymentStep("selection")}
+                        className="w-full py-4 bg-[#0061FF] text-white rounded-2xl font-semibold shadow-lg shadow-blue-200 hover:bg-[#0052E6] transition-all hover:scale-[1.02] active:scale-[0.98]"
+                      >
+                        Pay Now
+                      </button>
+                    </motion.div>
+                  )}
+
+                  {paymentStep === "selection" && (
+                    <motion.div
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="space-y-6 w-full"
+                    >
+                      <div className="text-left mb-6">
+                        <h2 className="text-xl font-bold text-slate-900">
+                          Select Payment Method
+                        </h2>
+                        <p className="text-sm text-slate-500">
+                          Choose how you'd like to pay your tuition
+                        </p>
+                      </div>
+
+                      <div className="grid gap-4">
                         <button
-                          onClick={() => copyToClipboard(item.value)}
-                          className="p-2 hover:bg-white rounded-lg transition-colors"
+                          onClick={() => setPaymentStep("manual")}
+                          className="flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-[#0061FF] hover:bg-blue-50/50 transition-all text-left group"
                         >
-                          {copied ? (
-                            <CheckCircle2 className="w-4 h-4 text-green-500" />
-                          ) : (
-                            <Copy className="w-4 h-4 text-slate-400" />
-                          )}
+                          <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                            <Landmark className="w-6 h-6 text-slate-600 group-hover:text-[#0061FF]" />
+                          </div>
+                          <div>
+                            <p className="font-bold text-slate-900">
+                              Bank Transfer / Manual
+                            </p>
+                            <p className="text-xs text-slate-500">
+                              Upload your receipt after transfer
+                            </p>
+                          </div>
+                          <ChevronRight className="w-5 h-5 text-slate-300 ml-auto" />
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            // @ts-ignore - types can be tricky with libraries
+                            initializePayment(onSuccess);
+                          }}
+                          disabled={uploading}
+                          className="flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-[#0061FF] hover:bg-blue-50/50 transition-all text-left group disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                            <CreditCard className="w-6 h-6 text-slate-600 group-hover:text-[#0061FF]" />
+                          </div>
+                          <div>
+                            <p className="font-bold text-slate-900">
+                              Pay with Paystack
+                            </p>
+                            <p className="text-xs text-slate-500">
+                              {uploading
+                                ? "Verifying..."
+                                : "Fast and secure online payment"}
+                            </p>
+                          </div>
+                          <ChevronRight className="w-5 h-5 text-slate-300 ml-auto" />
                         </button>
                       </div>
-                    ))}
-                  </div>
-
-                  {!uploaded ? (
-                    <div className="space-y-3">
-                      <p className="text-xs text-orange-600 text-center">
-                        After payment, upload your receipt for verification
-                      </p>
-                      <label className="block">
-                        <input
-                          type="file"
-                          className="hidden"
-                          accept="image/*,.pdf"
-                          onChange={handleFileUpload}
-                          disabled={uploading}
-                        />
-                        <div className="w-full py-4 bg-slate-900 text-white rounded-2xl font-semibold flex items-center justify-center gap-2 cursor-pointer hover:bg-slate-800 transition-colors">
-                          <Upload className="w-5 h-5" />
-                          {uploading ? "Uploading..." : "Upload Receipt"}
-                        </div>
-                      </label>
-                    </div>
-                  ) : (
-                    <div className="p-4 bg-green-50 rounded-2xl border border-green-100 flex items-center gap-3">
-                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                        <CheckCircle2 className="w-6 h-6 text-green-600" />
-                      </div>
-                      <div>
-                        <p className="font-bold text-green-900">
-                          Receipt Uploaded
-                        </p>
-                        <p className="text-xs text-green-700">
-                          We will verify your payment shortly
-                        </p>
-                      </div>
-                    </div>
+                    </motion.div>
                   )}
-                </motion.div>
+
+                  {paymentStep === "manual" && (
+                    <motion.div
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="space-y-6 w-full text-left"
+                    >
+                      <div>
+                        <h2 className="text-xl font-bold text-slate-900">
+                          Bank Details
+                        </h2>
+                        <p className="text-sm text-slate-500">
+                          Transfer the tuition fee to the account below
+                        </p>
+                      </div>
+
+                      <div className="bg-slate-50 rounded-2xl p-5 space-y-4 border border-slate-100">
+                        {[
+                          { label: "Bank Name", value: bankDetails.bank },
+                          {
+                            label: "Account Number",
+                            value: bankDetails.accountNumber,
+                          },
+                          {
+                            label: "Account Name",
+                            value: bankDetails.accountName,
+                          },
+                          {
+                            label: "Payment Reference",
+                            value: bankDetails.reference,
+                          },
+                        ].map((item) => (
+                          <div
+                            key={item.label}
+                            className="flex justify-between items-center group"
+                          >
+                            <div>
+                              <p className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+                                {item.label}
+                              </p>
+                              <p className="text-sm font-semibold text-slate-800">
+                                {item.value}
+                              </p>
+                            </div>
+                            <button
+                              onClick={() => copyToClipboard(item.value)}
+                              className="p-2 hover:bg-white rounded-lg transition-colors"
+                            >
+                              {copied ? (
+                                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                              ) : (
+                                <Copy className="w-4 h-4 text-slate-400" />
+                              )}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="space-y-3">
+                        <p className="text-xs text-orange-600 text-center">
+                          After payment, upload your receipt for verification
+                        </p>
+                        <label className="block">
+                          <input
+                            type="file"
+                            className="hidden"
+                            accept="image/*,.pdf"
+                            onChange={handleFileUpload}
+                            disabled={uploading}
+                          />
+                          <div className="w-full py-4 bg-slate-900 text-white rounded-2xl font-semibold flex items-center justify-center gap-2 cursor-pointer hover:bg-slate-800 transition-colors">
+                            <Upload className="w-5 h-5" />
+                            {uploading ? "Uploading..." : "Upload Receipt"}
+                          </div>
+                        </label>
+                      </div>
+                    </motion.div>
+                  )}
+                </>
               )}
             </div>
           </motion.div>

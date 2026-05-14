@@ -1,8 +1,8 @@
-const User = require('../models/User');
-const Payment = require('../models/Payment');
-const { sendMail } = require('../utils/mailer');
-const { mockStudents } = require('../utils/mockData');
-const axios = require('axios');
+const User = require("../models/User");
+const Payment = require("../models/Payment");
+const { sendMail } = require("../utils/mailer");
+const { mockStudents } = require("../utils/mockData");
+const axios = require("axios");
 
 // Verify Paystack payment
 exports.verifyPaystackPayment = async (req, res, next) => {
@@ -13,7 +13,7 @@ exports.verifyPaystackPayment = async (req, res, next) => {
     if (!reference) {
       return res.status(400).json({
         success: false,
-        message: 'Transaction reference is required'
+        message: "Transaction reference is required",
       });
     }
 
@@ -22,54 +22,61 @@ exports.verifyPaystackPayment = async (req, res, next) => {
       `https://api.paystack.co/transaction/verify/${reference}`,
       {
         headers: {
-          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`
-        }
-      }
+          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+        },
+      },
     );
 
     const { status, data } = response.data;
 
-    if (status && data.status === 'success') {
+    if (status && data.status === "success") {
       const user = await User.findById(userId);
       if (!user) {
         return res.status(404).json({
           success: false,
-          message: 'User not found'
+          message: "User not found",
         });
       }
+      user.paymentStatus = "Paid";
+      const paidAmount = data.amount / 100;
+      user.amountPaid = (user.amountPaid || 0) + paidAmount;
+      user.amountDue = Math.max(0, (user.amountDue || 0) - paidAmount);
 
-      // Update user status
-      user.paymentStatus = 'Paid';
       await user.save();
 
       // Create payment record
       await Payment.create({
         student: userId,
-        amount: data.amount / 100, // Convert from kobo
-        status: 'approved',
-        receiptUrl: 'Paystack Payment',
+        amount: paidAmount,
+        status: "approved",
+        receiptUrl: "Paystack Online Payment",
         reference: reference,
-        adminNotes: 'Verified via Paystack'
+        adminNotes: "Verified via Paystack transaction",
       });
 
       return res.status(200).json({
         success: true,
-        message: 'Payment verified successfully',
+        message: "Payment verified successfully",
         data: {
-          paymentStatus: user.paymentStatus
-        }
+          paymentStatus: user.paymentStatus,
+          amountPaid: user.amountPaid,
+          amountDue: user.amountDue,
+        },
       });
     } else {
       return res.status(400).json({
         success: false,
-        message: 'Payment verification failed'
+        message: "Payment verification failed",
       });
     }
   } catch (error) {
-    console.error('Paystack Verification Error:', error.response?.data || error.message);
+    console.error(
+      "Paystack Verification Error:",
+      error.response?.data || error.message,
+    );
     res.status(500).json({
       success: false,
-      message: 'Error verifying payment with Paystack'
+      message: "Error verifying payment with Paystack",
     });
   }
 };
@@ -81,54 +88,58 @@ exports.updateProfile = async (req, res, next) => {
     const userId = req.user.userId;
 
     if (global.useMockData) {
-      const student = mockStudents.find(s => s._id === userId) || mockStudents[0];
+      const student =
+        mockStudents.find((s) => s._id === userId) || mockStudents[0];
       if (phone !== undefined) student.phone = phone;
       if (bio !== undefined) student.bio = bio;
-      if (emergencyContact !== undefined) student.emergencyContact = emergencyContact;
+      if (emergencyContact !== undefined)
+        student.emergencyContact = emergencyContact;
 
       return res.status(200).json({
         success: true,
-        message: 'Profile updated successfully (Mock Mode)',
+        message: "Profile updated successfully (Mock Mode)",
         data: {
           user: {
             id: student._id,
             email: student.email,
             firstName: student.firstName,
             lastName: student.lastName,
-            phone: student.phone || phone || '',
-            emergencyContact: student.emergencyContact || emergencyContact || '',
-            bio: student.bio || bio || '',
-            documentUrl: student.documentUrl || ''
-          }
-        }
+            phone: student.phone || phone || "",
+            emergencyContact:
+              student.emergencyContact || emergencyContact || "",
+            bio: student.bio || bio || "",
+            documentUrl: student.documentUrl || "",
+          },
+        },
       });
     }
 
     const user = await User.findById(userId);
-    
+
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: "User not found",
       });
     }
 
-    if (user.role !== 'student') {
+    if (user.role !== "student") {
       return res.status(403).json({
         success: false,
-        message: 'Only students can update their profile'
+        message: "Only students can update their profile",
       });
     }
 
     if (phone !== undefined) user.phone = phone;
     if (bio !== undefined) user.bio = bio;
-    if (emergencyContact !== undefined) user.emergencyContact = emergencyContact;
+    if (emergencyContact !== undefined)
+      user.emergencyContact = emergencyContact;
 
     await user.save();
 
     res.status(200).json({
       success: true,
-      message: 'Profile updated successfully',
+      message: "Profile updated successfully",
       data: {
         user: {
           id: user._id,
@@ -138,9 +149,9 @@ exports.updateProfile = async (req, res, next) => {
           phone: user.phone,
           emergencyContact: user.emergencyContact,
           bio: user.bio,
-          documentUrl: user.documentUrl
-        }
-      }
+          documentUrl: user.documentUrl,
+        },
+      },
     });
   } catch (error) {
     next(error);
@@ -154,22 +165,23 @@ exports.uploadDocument = async (req, res, next) => {
     const userId = req.user.userId;
 
     if (global.useMockData) {
-      const student = mockStudents.find(s => s._id === userId) || mockStudents[0];
+      const student =
+        mockStudents.find((s) => s._id === userId) || mockStudents[0];
       student.documentUrl = documentUrl;
 
       return res.status(200).json({
         success: true,
-        message: 'Document uploaded successfully (Mock Mode)',
-        data: { documentUrl: student.documentUrl }
+        message: "Document uploaded successfully (Mock Mode)",
+        data: { documentUrl: student.documentUrl },
       });
     }
 
     const user = await User.findById(userId);
-    
+
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: "User not found",
       });
     }
 
@@ -178,8 +190,8 @@ exports.uploadDocument = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: 'Document uploaded successfully',
-      data: { documentUrl: user.documentUrl }
+      message: "Document uploaded successfully",
+      data: { documentUrl: user.documentUrl },
     });
   } catch (error) {
     next(error);
@@ -195,38 +207,39 @@ exports.uploadPaymentReceipt = async (req, res, next) => {
     if (!receiptUrl) {
       return res.status(400).json({
         success: false,
-        message: 'Receipt URL is required'
+        message: "Receipt URL is required",
       });
     }
 
     if (global.useMockData) {
-      const student = mockStudents.find(s => s._id === userId) || mockStudents[0];
+      const student =
+        mockStudents.find((s) => s._id === userId) || mockStudents[0];
       student.paymentReceiptUrl = receiptUrl;
-      student.paymentStatus = 'Under Review';
+      student.paymentStatus = "Under Review";
 
       return res.status(200).json({
         success: true,
-        message: 'Payment receipt uploaded successfully (Mock Mode)',
+        message: "Payment receipt uploaded successfully (Mock Mode)",
         data: {
           paymentReceiptUrl: student.paymentReceiptUrl,
-          paymentStatus: student.paymentStatus
-        }
+          paymentStatus: student.paymentStatus,
+        },
       });
     }
 
     const user = await User.findById(userId);
-    
+
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: "User not found",
       });
     }
 
-    if (user.role !== 'student') {
+    if (user.role !== "student") {
       return res.status(403).json({
         success: false,
-        message: 'Only students can upload payment receipts'
+        message: "Only students can upload payment receipts",
       });
     }
 
@@ -234,30 +247,33 @@ exports.uploadPaymentReceipt = async (req, res, next) => {
     await Payment.create({
       student: userId,
       amount: user.amountDue || user.totalCoursePrice || 0,
-      status: 'pending_review',
+      status: "pending_review",
       receiptUrl,
       reference: `INV-${new Date().getFullYear()}-${user.studentIdNumber || user._id.toString().slice(-4)}`,
     });
 
     // Update user's latest receipt and payment status
     user.paymentReceiptUrl = receiptUrl;
-    user.paymentStatus = 'Under Review';
+    user.paymentStatus = "Under Review";
     await user.save();
 
     // Notify admins about the new payment receipt
     try {
-      const admins = await User.find({ role: 'admin' }).select('email');
-      const adminEmails = admins.map(a => a.email).filter(Boolean);
+      const admins = await User.find({ role: "admin" }).select("email");
+      const adminEmails = admins.map((a) => a.email).filter(Boolean);
 
       if (adminEmails.length > 0) {
-        const clientUrl = process.env.CLIENT_URL || 'https://www.aslaviationschool.co';
+        const clientUrl =
+          process.env.CLIENT_URL || "https://www.aslaviationschool.co";
         const amount = user.amountDue || user.totalCoursePrice || 0;
 
-        await Promise.all(adminEmails.map(to => sendMail({
-          to,
-          subject: `New Payment Receipt — ${user.firstName || ''} ${user.lastName || ''}`,
-          text: `A new payment receipt has been uploaded by ${user.firstName || 'Student'} ${user.lastName || ''} (${user.email}).\n\nAmount: ₦${amount.toLocaleString('en-NG')}\nReference: INV-${new Date().getFullYear()}-${user.studentIdNumber || user._id.toString().slice(-4)}\n\nReview it in your dashboard: ${clientUrl}/admin/payments`,
-          html: `
+        await Promise.all(
+          adminEmails.map((to) =>
+            sendMail({
+              to,
+              subject: `New Payment Receipt — ${user.firstName || ""} ${user.lastName || ""}`,
+              text: `A new payment receipt has been uploaded by ${user.firstName || "Student"} ${user.lastName || ""} (${user.email}).\n\nAmount: ₦${amount.toLocaleString("en-NG")}\nReference: INV-${new Date().getFullYear()}-${user.studentIdNumber || user._id.toString().slice(-4)}\n\nReview it in your dashboard: ${clientUrl}/admin/payments`,
+              html: `
             <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; padding: 40px 0;">
               <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
                 <tr>
@@ -274,7 +290,7 @@ exports.uploadPaymentReceipt = async (req, res, next) => {
                       <table width="100%" cellpadding="8" cellspacing="0">
                         <tr>
                           <td style="color: #64748b; font-size: 14px; font-weight: 600;">Student</td>
-                          <td style="color: #0f172a; font-size: 14px; font-weight: 500;">${user.firstName || ''} ${user.lastName || ''}</td>
+                          <td style="color: #0f172a; font-size: 14px; font-weight: 500;">${user.firstName || ""} ${user.lastName || ""}</td>
                         </tr>
                         <tr>
                           <td style="color: #64748b; font-size: 14px; font-weight: 600;">Email</td>
@@ -282,7 +298,7 @@ exports.uploadPaymentReceipt = async (req, res, next) => {
                         </tr>
                         <tr>
                           <td style="color: #64748b; font-size: 14px; font-weight: 600;">Amount</td>
-                          <td style="color: #0f172a; font-size: 14px; font-weight: 600;">₦${amount.toLocaleString('en-NG')}</td>
+                          <td style="color: #0f172a; font-size: 14px; font-weight: 600;">₦${amount.toLocaleString("en-NG")}</td>
                         </tr>
                         <tr>
                           <td style="color: #64748b; font-size: 14px; font-weight: 600;">Reference</td>
@@ -307,19 +323,22 @@ exports.uploadPaymentReceipt = async (req, res, next) => {
               </table>
             </div>
           `,
-        })));
+            }),
+          ),
+        );
       }
     } catch (mailError) {
-      console.log('Admin notification email not sent:', mailError.message);
+      console.log("Admin notification email not sent:", mailError.message);
     }
 
     res.status(200).json({
       success: true,
-      message: 'Payment receipt uploaded successfully. Our team will verify your payment shortly.',
+      message:
+        "Payment receipt uploaded successfully. Our team will verify your payment shortly.",
       data: {
         paymentReceiptUrl: user.paymentReceiptUrl,
-        paymentStatus: user.paymentStatus
-      }
+        paymentStatus: user.paymentStatus,
+      },
     });
   } catch (error) {
     next(error);
