@@ -190,6 +190,20 @@ export function PaymentSteps({
                     Redirecting you to the dashboard...
                   </div>
                 </motion.div>
+              ) : uploading ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="space-y-6 w-full py-12 flex flex-col items-center"
+                >
+                  <div className="animate-spin rounded-full h-16 w-16 border-4 border-slate-100 border-t-[#0061FF] mb-4" />
+                  <h2 className="text-2xl font-bold text-slate-900">
+                    Processing...
+                  </h2>
+                  <p className="text-slate-500">
+                    Please hold on while we process your request. This will only take a moment.
+                  </p>
+                </motion.div>
               ) : (
                 <>
                   {paymentStep === "prompt" && (
@@ -260,8 +274,7 @@ export function PaymentSteps({
 
                         <button
                           onClick={() => {
-                            // @ts-ignore - types can be tricky with libraries
-                            initializePayment(onSuccess);
+                            initializePayment({ onSuccess });
                           }}
                           disabled={uploading}
                           className="flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-[#0061FF] hover:bg-blue-50/50 transition-all text-left group disabled:opacity-50 disabled:cursor-not-allowed"
