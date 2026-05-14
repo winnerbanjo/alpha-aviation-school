@@ -206,6 +206,31 @@ export const markAllNotificationsRead = async () => {
   return response.data;
 };
 
+export interface CourseResourceItem {
+  _id: string;
+  courseTitle: string;
+  title: string;
+  description?: string;
+  type: "pdf" | "video" | "doc" | "link" | "other";
+  size?: string;
+  url: string;
+  isActive?: boolean;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export const getStudentResources = async () => {
+  const response = await api.get("/student/resources");
+  return response.data as {
+    success: boolean;
+    count: number;
+    data: {
+      selectedCourseTitles: string[];
+      resources: CourseResourceItem[];
+    };
+  };
+};
+
 // Admin API calls
 export const getAdminTest = async (config?: AxiosRequestConfig) => {
   // Admin connection tests are allowed up to 60s to survive Render cold starts
@@ -390,6 +415,32 @@ export const uploadCertificate = async (
     { certificateUrl },
     config,
   );
+  return response.data;
+};
+
+export const getAdminResources = async () => {
+  const response = await api.get("/admin/resources");
+  return response.data as {
+    success: boolean;
+    count: number;
+    data: { resources: CourseResourceItem[] };
+  };
+};
+
+export const createCourseResource = async (resourceData: {
+  courseTitle: string;
+  title: string;
+  description?: string;
+  type: CourseResourceItem["type"];
+  size?: string;
+  url: string;
+}) => {
+  const response = await api.post("/admin/resources", resourceData);
+  return response.data;
+};
+
+export const deleteCourseResource = async (resourceId: string) => {
+  const response = await api.delete(`/admin/resources/${resourceId}`);
   return response.data;
 };
 

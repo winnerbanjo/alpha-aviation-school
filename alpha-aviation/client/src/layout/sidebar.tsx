@@ -43,6 +43,7 @@ export function Sidebar({ role }: SidebarProps) {
     { icon: Users, label: "Students", path: "/admin/students" },
     { icon: CreditCard, label: "Payments", path: "/admin/payments" },
     { icon: Banknote, label: "Revenue", path: "/admin/revenue" },
+    { icon: Download, label: "Resources", path: "/admin/resources" },
   ];
 
   const studentNavItems: NavItem[] = [
