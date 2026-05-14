@@ -63,16 +63,7 @@ export function TopNav({ role }: TopNavProps) {
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-slate-200 shadow-sm">
       <div className="px-6 py-4">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-sm font-semibold text-slate-900">
-              {role === "admin" ? "Admin Portal" : "Student Portal"}
-            </p>
-            <p className="text-xs text-slate-500 hidden sm:block">
-              {displayName}
-            </p>
-          </div>
-
+        <div className="flex items-center justify-end gap-4">
           <div className="flex items-center gap-3">
             {role === "student" && (
               <button
