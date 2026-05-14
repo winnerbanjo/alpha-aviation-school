@@ -36,7 +36,7 @@ export function PaymentSteps({
   const [copied, setCopied] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploaded, setUploaded] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false); // Start hidden to check cooldown
 
   const setPaymentStep = (step: "prompt" | "selection" | "manual") => {
     setSearchParams({ step });
@@ -46,10 +46,20 @@ export function PaymentSteps({
   const closeModal = () => {
     setIsVisible(false);
     setSearchParams({});
+    // Store current timestamp as last closed time
+    localStorage.setItem("payment_modal_last_closed", Date.now().toString());
   };
 
   useEffect(() => {
     if (stepInUrl) {
+      setIsVisible(true);
+      return;
+    }
+
+    const lastClosed = localStorage.getItem("payment_modal_last_closed");
+    const COOLDOWN_MS = 10 * 60 * 1000; // 10 minutes
+
+    if (!lastClosed || Date.now() - parseInt(lastClosed) > COOLDOWN_MS) {
       setIsVisible(true);
     }
   }, [stepInUrl]);
