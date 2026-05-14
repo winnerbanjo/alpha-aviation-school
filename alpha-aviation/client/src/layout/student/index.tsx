@@ -27,7 +27,7 @@ export default function StudentLayout() {
       // Silent fail — user may be offline or token expired
     }
   };
-
+  console.log(user);
   useEffect(() => {
     refreshUser();
   }, []);
@@ -60,7 +60,11 @@ export default function StudentLayout() {
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] flex">
-      <PaymentSteps user={user} tutionPaid={tutionPaid} refreshUser={refreshUser} />
+      <PaymentSteps
+        user={user}
+        tutionPaid={tutionPaid}
+        refreshUser={refreshUser}
+      />
       <Sidebar role="student" />
       <div className="flex-1 lg:ml-64 flex flex-col">
         <TopNav role="student" />

@@ -49,6 +49,7 @@ export function StudentOverview() {
 
   const isGraduated = user?.status === "graduated";
   const isPending = user?.paymentStatus === "Pending";
+  const underReview = user?.status === "Under Review";
   const registeredCourses = user?.courseSelections || [];
 
   return (
@@ -58,54 +59,77 @@ export function StudentOverview() {
           Dashboard Overview
         </h1>
         <p className="text-slate-500">
-          Welcome back, {user?.firstName || "Student"}! Here is a summary of your training progress.
+          Welcome back, {user?.firstName || "Student"}! Here is a summary of
+          your training progress.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="border-slate-200 cursor-pointer hover:border-slate-300 transition-colors" onClick={() => navigate("/dashboard/courses")}>
+        <Card
+          className="border-slate-200 cursor-pointer hover:border-slate-300 transition-colors"
+          onClick={() => navigate("/dashboard/courses")}
+        >
           <CardContent className="p-6 flex items-center gap-4">
             <div className="p-3 bg-blue-100 text-blue-600 rounded-lg">
               <BookOpen className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Enrolled Courses</p>
-              <h3 className="text-lg font-bold text-slate-900">{registeredCourses.length}</h3>
+              <p className="text-sm font-medium text-slate-500">
+                Enrolled Courses
+              </p>
+              <h3 className="text-lg font-bold text-slate-900">
+                {registeredCourses.length}
+              </h3>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-slate-200 cursor-pointer hover:border-slate-300 transition-colors" onClick={() => navigate("/dashboard/payments")}>
+        <Card
+          className="border-slate-200 cursor-pointer hover:border-slate-300 transition-colors"
+          onClick={() => navigate("/dashboard/payments")}
+        >
           <CardContent className="p-6 flex items-center gap-4">
             <div className="p-3 bg-emerald-100 text-emerald-600 rounded-lg">
               <DollarSign className="w-6 h-6" />
             </div>
             <div>
               <p className="text-sm font-medium text-slate-500">Total Paid</p>
-              <h3 className="text-lg font-bold text-slate-900">{formatNaira(user?.amountPaid || 0)}</h3>
+              <h3 className="text-lg font-bold text-slate-900">
+                {formatNaira(user?.amountPaid || 0)}
+              </h3>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-slate-200 cursor-pointer hover:border-slate-300 transition-colors" onClick={() => navigate("/dashboard/payments")}>
+        <Card
+          className="border-slate-200 cursor-pointer hover:border-slate-300 transition-colors"
+          onClick={() => navigate("/dashboard/payments")}
+        >
           <CardContent className="p-6 flex items-center gap-4">
             <div className="p-3 bg-rose-100 text-rose-600 rounded-lg">
               <AlertCircle className="w-6 h-6" />
             </div>
             <div>
               <p className="text-sm font-medium text-slate-500">Amount Due</p>
-              <h3 className="text-lg font-bold text-slate-900">{formatNaira(amountDue)}</h3>
+              <h3 className="text-lg font-bold text-slate-900">
+                {formatNaira(amountDue)}
+              </h3>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-slate-200 cursor-pointer hover:border-slate-300 transition-colors" onClick={() => navigate("/dashboard/profile")}>
+        <Card
+          className="border-slate-200 cursor-pointer hover:border-slate-300 transition-colors"
+          onClick={() => navigate("/dashboard/profile")}
+        >
           <CardContent className="p-6 flex items-center gap-4">
             <div className="p-3 bg-indigo-100 text-indigo-600 rounded-lg">
               <FileText className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Identity Document</p>
+              <p className="text-sm font-medium text-slate-500">
+                Identity Document
+              </p>
               <h3 className="text-lg font-bold text-slate-900">
                 {user?.documentUrl ? "Verified" : "Pending"}
               </h3>
@@ -118,7 +142,9 @@ export function StudentOverview() {
         <div className="lg:col-span-2 space-y-8">
           <Card className="shadow-sm border-slate-200">
             <CardHeader className="border-b border-slate-100 pb-4">
-              <CardTitle className="text-lg text-slate-900">Enrollment Details</CardTitle>
+              <CardTitle className="text-lg text-slate-900">
+                Enrollment Details
+              </CardTitle>
             </CardHeader>
             <CardContent className="pt-6 space-y-6">
               <div className="grid grid-cols-2 gap-6">
@@ -132,7 +158,9 @@ export function StudentOverview() {
                 )}
                 {enrollmentDate && (
                   <div>
-                    <p className="text-sm text-slate-500 mb-1">Enrollment Date</p>
+                    <p className="text-sm text-slate-500 mb-1">
+                      Enrollment Date
+                    </p>
                     <p className="text-base font-semibold text-slate-900 flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-slate-400" />
                       {enrollmentDate}
@@ -142,7 +170,9 @@ export function StudentOverview() {
               </div>
 
               <div className="pt-4 border-t border-slate-100">
-                <p className="text-sm text-slate-500 mb-3">Registered Courses</p>
+                <p className="text-sm text-slate-500 mb-3">
+                  Registered Courses
+                </p>
                 <div className="space-y-3">
                   {registeredCourses.map((course) => (
                     <div
@@ -158,7 +188,9 @@ export function StudentOverview() {
                     </div>
                   ))}
                   <div className="flex items-center justify-between p-3 bg-slate-100 rounded-lg mt-2">
-                    <p className="text-sm font-medium text-slate-600">Total Registered Value</p>
+                    <p className="text-sm font-medium text-slate-600">
+                      Total Registered Value
+                    </p>
                     <p className="text-base font-bold text-slate-900">
                       {formatNaira(user?.totalCoursePrice || amountDue)}
                     </p>
@@ -173,7 +205,9 @@ export function StudentOverview() {
           {!isGraduated && (
             <Card className="shadow-sm border-slate-200">
               <CardHeader className="border-b border-slate-100 pb-4">
-                <CardTitle className="text-lg text-slate-900">Payment Status</CardTitle>
+                <CardTitle className="text-lg text-slate-900">
+                  Payment Status
+                </CardTitle>
               </CardHeader>
               <CardContent className="pt-6 space-y-4">
                 {isPending ? (
@@ -192,9 +226,20 @@ export function StudentOverview() {
                       Go to Payments
                     </Button>
                   </>
+                ) : underReview ? (
+                  <div className="text-center py-4">
+                    <p className="font-medium text-orange-700">
+                      Payment Under Review
+                    </p>
+                    <p className="text-sm text-slate-500 mb-1">
+                      Please wait for the admin to review your payment.
+                    </p>
+                  </div>
                 ) : (
                   <div className="text-center py-4">
-                    <p className="font-medium text-green-700">Payment Complete</p>
+                    <p className="font-medium text-green-700">
+                      Payment Complete
+                    </p>
                   </div>
                 )}
               </CardContent>
@@ -203,16 +248,30 @@ export function StudentOverview() {
 
           <Card className="shadow-sm border-slate-200">
             <CardHeader className="border-b border-slate-100 pb-4">
-              <CardTitle className="text-lg text-slate-900">Quick Actions</CardTitle>
+              <CardTitle className="text-lg text-slate-900">
+                Quick Actions
+              </CardTitle>
             </CardHeader>
             <CardContent className="pt-4 grid grid-cols-1 gap-2">
-              <Button variant="ghost" className="justify-start text-slate-600 hover:text-blue-600" onClick={() => navigate("/dashboard/courses")}>
+              <Button
+                variant="ghost"
+                className="justify-start text-slate-600 hover:text-blue-600"
+                onClick={() => navigate("/dashboard/courses")}
+              >
                 <BookOpen className="w-4 h-4 mr-3" /> View My Courses
               </Button>
-              <Button variant="ghost" className="justify-start text-slate-600 hover:text-blue-600" onClick={() => navigate("/dashboard/resources")}>
+              <Button
+                variant="ghost"
+                className="justify-start text-slate-600 hover:text-blue-600"
+                onClick={() => navigate("/dashboard/resources")}
+              >
                 <Download className="w-4 h-4 mr-3" /> Access Resources
               </Button>
-              <Button variant="ghost" className="justify-start text-slate-600 hover:text-blue-600" onClick={() => navigate("/dashboard/certificate")}>
+              <Button
+                variant="ghost"
+                className="justify-start text-slate-600 hover:text-blue-600"
+                onClick={() => navigate("/dashboard/certificate")}
+              >
                 <GraduationCap className="w-4 h-4 mr-3" /> View Certificate
               </Button>
             </CardContent>
@@ -248,7 +307,9 @@ export function StudentOverview() {
                   <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <GraduationCap className="w-10 h-10 text-emerald-600" />
                   </div>
-                  <h2 className="text-2xl font-bold text-emerald-900 mb-2">Congratulations!</h2>
+                  <h2 className="text-2xl font-bold text-emerald-900 mb-2">
+                    Congratulations!
+                  </h2>
                   <p className="text-emerald-700 font-medium">
                     You have officially graduated!
                   </p>
@@ -256,7 +317,9 @@ export function StudentOverview() {
 
                 <div className="p-6 text-center">
                   <p className="text-slate-600 mb-6">
-                    Your hard work has paid off. You can now download your official completion certificate and view your permanent academic records.
+                    Your hard work has paid off. You can now download your
+                    official completion certificate and view your permanent
+                    academic records.
                   </p>
                   <Button
                     className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
