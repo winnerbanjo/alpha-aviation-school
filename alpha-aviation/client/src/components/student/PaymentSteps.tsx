@@ -39,6 +39,7 @@ export function PaymentSteps({
   const [uploaded, setUploaded] = useState(false);
   const [isVisible, setIsVisible] = useState(false); // Start hidden to check cooldown
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [method, setMethod] = useState<"paystack" | "manual" | null>(null);
 
   const setPaymentStep = (step: "prompt" | "selection" | "manual") => {
     setSearchParams({ step });
@@ -83,6 +84,7 @@ export function PaymentSteps({
 
   const handlePaystackSuccess = async (reference: string) => {
     try {
+      setMethod("paystack");
       setUploading(true);
       await verifyPaystackPayment(reference);
       setUploaded(true);
@@ -131,6 +133,7 @@ export function PaymentSteps({
     if (!selectedFile) return;
 
     try {
+      setMethod("manual");
       setUploading(true);
       await uploadPaymentReceipt(selectedFile);
       setUploaded(true);
@@ -194,15 +197,20 @@ export function PaymentSteps({
                   </div>
                   <div className="space-y-2">
                     <h2 className="text-2xl font-bold text-slate-900">
-                      Payment Successful!
+                      {method === "paystack"
+                        ? "Payment Successful!"
+                        : "Receipt Uploaded Successfully!"}
                     </h2>
                     <p className="text-slate-500">
-                      Thank you for your payment. Your enrollment status has
-                      been updated.
+                      {method === "paystack"
+                        ? "Thank you for your payment. Your enrollment status has been updated."
+                        : "Your receipt has been submitted for review. You'll be notified once it has been verified."}
                     </p>
                   </div>
                   <div className="bg-green-50 text-green-700 p-4 rounded-2xl text-sm font-medium">
-                    Redirecting you to the dashboard...
+                    {method === "paystack"
+                      ? "Redirecting you to the dashboard..."
+                      : "Closing in a few seconds..."}
                   </div>
                 </motion.div>
               ) : uploading ? (
