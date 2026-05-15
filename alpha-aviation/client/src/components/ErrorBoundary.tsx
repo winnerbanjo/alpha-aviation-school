@@ -13,6 +13,15 @@ interface State {
   error: Error | null
 }
 
+const CHUNK_LOAD_ERROR_PATTERNS = [
+  'Failed to fetch dynamically imported module',
+  'Loading chunk',
+  'ChunkLoadError',
+  'Importing a module script failed',
+]
+
+const CHUNK_RELOAD_FLAG = 'alpha-aviation-chunk-reload-attempted'
+
 export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
@@ -25,15 +34,41 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Error caught by boundary:', error, errorInfo)
+
+    if (this.isChunkLoadError(error) && !this.hasReloadedForChunkError()) {
+      this.markChunkReloadAttempted()
+      window.location.reload()
+    }
   }
 
   handleReset = () => {
+    if (this.state.error && this.isChunkLoadError(this.state.error)) {
+      window.location.reload()
+      return
+    }
+
     this.setState({ hasError: false, error: null })
-    // TEMPORARILY DISABLED so errors stay visible for debugging: window.location.href = '/'
+  }
+
+  hasReloadedForChunkError() {
+    return window.sessionStorage.getItem(CHUNK_RELOAD_FLAG) === 'true'
+  }
+
+  markChunkReloadAttempted() {
+    window.sessionStorage.setItem(CHUNK_RELOAD_FLAG, 'true')
+  }
+
+  isChunkLoadError(error: Error) {
+    return CHUNK_LOAD_ERROR_PATTERNS.some((pattern) =>
+      error.message.includes(pattern),
+    )
   }
 
   render() {
     if (this.state.hasError) {
+      const isChunkLoadError =
+        this.state.error !== null && this.isChunkLoadError(this.state.error)
+
       return (
         <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center px-4">
           <Card className="border-slate-200/50 max-w-md w-full">
@@ -44,10 +79,12 @@ export class ErrorBoundary extends Component<Props, State> {
                 </div>
               </div>
               <h1 className="text-2xl font-bold tracking-tight text-slate-900 mb-2">
-                System Under Maintenance
+                {isChunkLoadError ? 'Update Required' : 'System Under Maintenance'}
               </h1>
               <p className="text-slate-500 mb-6">
-                We're experiencing a temporary issue. Our team has been notified and is working to resolve it.
+                {isChunkLoadError
+                  ? 'A newer version of the app is available, and one of the page assets could not be loaded. Reloading usually resolves this.'
+                  : "We're experiencing a temporary issue. Our team has been notified and is working to resolve it."}
               </p>
               <div className="space-y-3">
                 <Button
@@ -55,7 +92,7 @@ export class ErrorBoundary extends Component<Props, State> {
                   className="w-full rounded-lg bg-[#0061FF] hover:bg-[#0052E6] text-white"
                 >
                   <RefreshCw className="w-4 h-4 mr-2" />
-                  Try Again
+                  {isChunkLoadError ? 'Reload Page' : 'Try Again'}
                 </Button>
                 <Button
                   onClick={() => { this.setState({ hasError: false, error: null }) }}

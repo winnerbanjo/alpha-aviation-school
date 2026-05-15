@@ -13,6 +13,7 @@ npm install
 ```
 MONGODB_URI=mongodb://localhost:27017/alpha-aviation
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+MODE=development
 PORT=5000
 RESEND_API_KEY=re_...
 ZOHO_USER=support@aslaviationschool.co
@@ -20,6 +21,7 @@ ZOHO_PASS=your-zoho-password
 ```
 
 `RESEND_API_KEY` is the preferred mail transport. `ZOHO_USER` and `ZOHO_PASS` stay in place as a fallback and for the sender identity.
+Set `MODE=development` if you want student registration to go through the email OTP flow. Set `MODE=production` if you want direct enrollment without the enrollment OTP step. If `MODE` is omitted, the server defaults to `production`.
 
 3. Start the server:
 ```bash

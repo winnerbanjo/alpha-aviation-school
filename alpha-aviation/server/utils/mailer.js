@@ -2,15 +2,15 @@ const nodemailer = require("nodemailer");
 const { Resend } = require("resend");
 
 const DEFAULT_FROM_EMAIL =
-  process.env.MAIL_FROM || process.env.ZOHO_USER || "support@aslaviationschool.co";
+  process.env.MAIL_FROM ||
+  process.env.ZOHO_USER ||
+  "support@aslaviationschool.co";
 const FROM_ADDRESS = `"Alpha Step Links Aviation School" <${DEFAULT_FROM_EMAIL}>`;
 
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
 
-/**
- * Keep Zoho SMTP available as a fallback, but prefer Resend when the API key is set.
- * This preserves the existing sender identity while changing the transport layer.
- */
 const createZohoTransporter = () =>
   nodemailer.createTransport({
     host: "smtp.zoho.com",
@@ -63,14 +63,12 @@ const sendViaZoho = async ({ to, subject, text, html, replyTo }) => {
   if (replyTo) mailOptions.replyTo = replyTo;
 
   const info = await transporter.sendMail(mailOptions);
-  console.log(`[mailer] Email sent via Zoho SMTP to ${to} | messageId: ${info.messageId}`);
+  console.log(
+    `[mailer] Email sent via Zoho SMTP to ${to} | messageId: ${info.messageId}`,
+  );
   return info;
 };
 
-/**
- * Sends an email using Resend when configured, otherwise falls back to Zoho SMTP.
- * Throws on failure so callers can return a proper 500.
- */
 const sendMail = async ({ to, subject, text, html, replyTo }) => {
   try {
     if (resend) {

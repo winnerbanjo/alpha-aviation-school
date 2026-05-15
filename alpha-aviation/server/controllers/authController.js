@@ -89,6 +89,9 @@ const isValidEmail = (email) => {
 exports.register = async (req, res, next) => {
   try {
     const { email, password, firstName, lastName, selectedCourses } = req.body;
+    const normalizedEmail =
+      typeof email === "string" ? email.toLowerCase().trim() : "";
+    const mode = process.env.MODE || "production";
 
     // Input validation
     if (!email || !password || !selectedCourses) {
@@ -132,7 +135,7 @@ exports.register = async (req, res, next) => {
     }
 
     // Check if user already exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -140,20 +143,12 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // MODE GUARD
-    //   MODE=production  → direct enrollment, no OTP (email delivery issues bypassed)
-    //   MODE=development → full OTP email verification flow
-    //
-    //   To re-enable OTP: set MODE=development in .env and uncomment the block below
-    // ─────────────────────────────────────────────────────────────────────────
-    if (process.env.MODE === "production") {
-      // ── PRODUCTION: Create student immediately, return token ─────────────
+    if (mode === "production") {
       const totalCoursePrice = getTotalCoursePrice(courseSelections);
       const studentIdNumber = await generateStudentIdNumber();
 
       const user = await User.create({
-        email: email.toLowerCase().trim(),
+        email: normalizedEmail,
         password,
         role: "student",
         firstName,
@@ -182,36 +177,36 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    // ── DEVELOPMENT: Full OTP email verification flow ─────────────────────
-    // (Uncomment this block and set MODE=development to restore OTP enforcement)
-    /*
+    if (mode !== "development") {
+      return res.status(500).json({
+        success: false,
+        message:
+          "Server misconfiguration: set MODE=production or MODE=development in .env",
+      });
+    }
+
     const otp = generateOTP();
     const hashedOTP = hashOTP(otp);
     const expiresAt = getOTPExpiry(10); // 10 minutes
 
     // Delete any existing OTP sessions for this email and purpose
     await OtpSession.deleteMany({
-      email: email.toLowerCase().trim(),
+      email: normalizedEmail,
       purpose: OTP_PURPOSE.ENROLLMENT,
     });
 
     // Create OTP session
     await OtpSession.create({
-      email: email.toLowerCase().trim(),
+      email: normalizedEmail,
       otp: hashedOTP,
       purpose: OTP_PURPOSE.ENROLLMENT,
       expiresAt,
     });
 
-    // Store registration data temporarily (in a cache or DB - using OtpSession metadata)
-    // For simplicity, we'll store in a separate temp collection or re-create on verification
-    // Let's use a temporary approach: store data in the OtpSession or use Redis
-    // For now, we'll require the client to resend data on verification
-
     // Send OTP email
     try {
       await sendMail({
-        to: email,
+        to: normalizedEmail,
         subject: "Verify Your Email - Alpha Step Links Aviation School",
         text: `Hello ${firstName || "Student"},\n\nYour verification code is: ${otp}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request this, please ignore this email.`,
         html: `
@@ -259,18 +254,9 @@ exports.register = async (req, res, next) => {
       message: "Verification code sent to your email",
       data: {
         requiresVerification: true,
-        email: email.toLowerCase().trim(),
+        email: normalizedEmail,
         purpose: OTP_PURPOSE.ENROLLMENT,
       },
-    });
-    */
-    // ── END DEVELOPMENT OTP FLOW ──────────────────────────────────────────
-
-    // Safety fallback — reached only if MODE is neither 'production' nor dev block is active
-    return res.status(500).json({
-      success: false,
-      message:
-        "Server misconfiguration: set MODE=production or MODE=development in .env",
     });
   } catch (error) {
     next(error);
