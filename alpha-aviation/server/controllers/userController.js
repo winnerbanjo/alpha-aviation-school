@@ -109,7 +109,7 @@ exports.updateUser = async (req, res, next) => {
     if (phone !== undefined) user.phone = phone;
     if (role && ['admin', 'student'].includes(role)) user.role = role;
     if (status && ['active', 'banned', 'graduated', 'suspended'].includes(status)) user.status = status;
-    if (paymentStatus && ['Pending', 'Paid'].includes(paymentStatus)) user.paymentStatus = paymentStatus;
+    if (paymentStatus && ['Pending', 'Under Review', 'Paid'].includes(paymentStatus)) user.paymentStatus = paymentStatus;
 
     await user.save();
 

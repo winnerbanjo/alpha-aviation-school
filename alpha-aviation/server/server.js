@@ -28,7 +28,10 @@ const allowedOrigins = [
   "http://aslaviationschool.co",
   "http://www.aslaviationschool.co",
   "https://aslaviationschool.co",
+  "https://city-deceiving-roundup.ngrok-free.dev",
   "http://localhost:5173",
+  "https://localhost:5173",
+  "https://alpha-aviation-school-git-dev-winnerbanjos-projects.vercel.app",
   "http://127.0.0.1:5173",
   "http://localhost:3000",
   "http://127.0.0.1:3000",
@@ -36,24 +39,35 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
+    if (
+      allowedOrigins.indexOf(origin) !== -1 ||
+      origin.includes("ngrok-free.dev")
+    ) {
+      callback(null, true);
     } else {
-      return callback(new Error("Not allowed by CORS"));
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Requested-With",
+    "Accept",
+    "ngrok-skip-browser-warning",
+  ],
 };
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
-// Rate limiting - strict for auth, moderate for admin API
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // 10 attempts per window
+  max: 100, // 10 attempts per window
   message: {
     success: false,
     message: "Too many attempts, please try again later",
@@ -120,26 +134,6 @@ app.get("/api/health", (req, res) => {
     success: true,
     message: "Server running",
   });
-});
-
-// TEMPORARY — Remove after confirming Resend works on Render
-app.get("/api/debug/mail-test", async (req, res) => {
-  const { sendMail } = require("./utils/mailer");
-  try {
-    await sendMail({
-      to: "support@aslaviationschool.co",
-      subject: "SMTP Test from Render",
-      text: "If you receive this, Resend is working on production.",
-      html: "<p>If you receive this, <strong>Resend is working</strong> on production.</p>",
-    });
-    res.json({ success: true, message: "Test email sent successfully via Resend." });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err.message,
-      resendKey: process.env.RESEND_API_KEY ? "SET" : "MISSING",
-    });
-  }
 });
 
 app.use((req, res) => {

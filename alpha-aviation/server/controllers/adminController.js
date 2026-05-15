@@ -1,6 +1,9 @@
 const User = require("../models/User");
 const Payment = require("../models/Payment");
-const { sendMail } = require("../utils/mailer");
+const {
+  notifyPaymentConfirmed,
+  notifyPaymentRejected,
+} = require("../utils/paymentNotifications");
 
 const getStudentValue = (student) => {
   if ((student.amountPaid || 0) > 0) return student.amountPaid || 0;
@@ -151,51 +154,12 @@ exports.updatePaymentStatus = async (req, res, next) => {
 
     await student.save();
 
-    // Send payment confirmation email when marking as Paid
     if (student.paymentStatus === "Paid") {
-      try {
-        const clientUrl =
-          process.env.CLIENT_URL || "https://www.aslaviationschool.co";
-        await sendMail({
-          to: student.email,
-          subject: "Payment Confirmed — Alpha Step Links Aviation School",
-          text: `Hello ${student.firstName || "Student"},\n\nYour payment has been confirmed. Your account is now active and all course materials are unlocked.\n\nLog in to access your dashboard: ${clientUrl}/login`,
-          html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; padding: 40px 0;">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
-              <tr>
-                <td align="center" style="background-color: #020617; padding: 40px 20px;">
-                  <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">Alpha Step Links</h1>
-                  <p style="color: #94a3b8; margin: 8px 0 0 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Aviation School</p>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding: 40px 40px 20px 40px;">
-                  <h2 style="color: #0f172a; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Payment Confirmed</h2>
-                  <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">Hello ${student.firstName || "Student"},</p>
-                  <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">Your payment has been successfully confirmed. All course materials and resources are now unlocked in your student portal.</p>
-                  <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                    <tr>
-                      <td align="center">
-                        <a href="${clientUrl}/login" style="background-color: #0061FF; color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;">Access Your Dashboard</a>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-              <tr>
-                <td style="background-color: #f1f5f9; padding: 30px; text-align: center; border-top: 1px solid #e2e8f0;">
-                  <p style="color: #64748b; font-size: 13px; margin: 0 0 8px 0;">Alpha Step Links Aviation School ensures global standards in training.</p>
-                  <p style="color: #94a3b8; font-size: 12px; margin: 0;">&copy; ${new Date().getFullYear()} Alpha Step Links. All rights reserved.</p>
-                </td>
-              </tr>
-            </table>
-          </div>
-          `,
-        });
-      } catch (mailError) {
-        console.log("Payment confirmation email not sent:", mailError.message);
-      }
+      await notifyPaymentConfirmed({
+        student,
+        payment: { amount: student.amountPaid },
+        source: "Admin Manual Update",
+      });
     }
 
     res.status(200).json({
@@ -245,55 +209,17 @@ exports.batchUpdatePaymentStatus = async (req, res, next) => {
       role: "student",
     });
 
-    const clientUrl =
-      process.env.CLIENT_URL || "https://www.aslaviationschool.co";
-
     const updates = students.map(async (student) => {
       student.paymentStatus = "Paid";
       student.amountPaid = student.amountDue;
       student.amountDue = 0;
       await student.save();
 
-      try {
-        await sendMail({
-          to: student.email,
-          subject: "Payment Confirmed — Alpha Step Links Aviation School",
-          text: `Hello ${student.firstName || "Student"},\n\nYour payment has been confirmed. All course materials are now unlocked.\n\nLog in: ${clientUrl}/login`,
-          html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; padding: 40px 0;">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
-              <tr>
-                <td align="center" style="background-color: #020617; padding: 40px 20px;">
-                  <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">Alpha Step Links</h1>
-                  <p style="color: #94a3b8; margin: 8px 0 0 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Aviation School</p>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding: 40px 40px 20px 40px;">
-                  <h2 style="color: #0f172a; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Payment Confirmed</h2>
-                  <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">Hello ${student.firstName || "Student"},</p>
-                  <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">Your payment has been confirmed. All course materials and resources are now unlocked.</p>
-                  <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                    <tr>
-                      <td align="center">
-                        <a href="${clientUrl}/login" style="background-color: #0061FF; color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;">Access Your Dashboard</a>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-              <tr>
-                <td style="background-color: #f1f5f9; padding: 30px; text-align: center; border-top: 1px solid #e2e8f0;">
-                  <p style="color: #64748b; font-size: 13px; margin: 0;">&copy; ${new Date().getFullYear()} Alpha Step Links. All rights reserved.</p>
-                </td>
-              </tr>
-            </table>
-          </div>
-          `,
-        });
-      } catch (mailError) {
-        console.log(`Batch email failed for ${student.email}:`, mailError.message);
-      }
+      await notifyPaymentConfirmed({
+        student,
+        payment: { amount: student.amountPaid },
+        source: "Admin Batch Update",
+      });
     });
 
     await Promise.all(updates);
@@ -487,50 +413,11 @@ exports.approvePayment = async (req, res, next) => {
 
     await student.save();
 
-    // Send confirmation email
-    try {
-      const clientUrl = process.env.CLIENT_URL || "https://www.aslaviationschool.co";
-      await sendMail({
-        to: student.email,
-        subject: "Payment Confirmed — Alpha Step Links Aviation School",
-        text: `Hello ${student.firstName || "Student"},\n\nYour payment of ₦${payment.amount.toLocaleString("en-NG")} has been confirmed. Your account is now active and all course materials are unlocked.\n\nLog in to access your dashboard: ${clientUrl}/login`,
-        html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; padding: 40px 0;">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
-              <tr>
-                <td align="center" style="background-color: #020617; padding: 40px 20px;">
-                  <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">Alpha Step Links</h1>
-                  <p style="color: #94a3b8; margin: 8px 0 0 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Aviation School</p>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding: 40px 40px 20px 40px;">
-                  <h2 style="color: #0f172a; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Payment Confirmed</h2>
-                  <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">Hello ${student.firstName || "Student"},</p>
-                  <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">Your payment of <strong>₦${payment.amount.toLocaleString("en-NG")}</strong> has been confirmed.</p>
-                  ${student.amountDue > 0 ? `<p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">Remaining balance: <strong>₦${student.amountDue.toLocaleString("en-NG")}</strong></p>` : `<p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">Your account is now fully paid and all course materials are unlocked.</p>`}
-                  <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                    <tr>
-                      <td align="center">
-                        <a href="${clientUrl}/login" style="background-color: #0061FF; color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;">Access Your Dashboard</a>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-              <tr>
-                <td style="background-color: #f1f5f9; padding: 30px; text-align: center; border-top: 1px solid #e2e8f0;">
-                  <p style="color: #64748b; font-size: 13px; margin: 0;">&copy; ${new Date().getFullYear()} Alpha Step Links. All rights reserved.</p>
-                </td>
-              </tr>
-            </table>
-          </div>
-        `,
-      });
-      console.log(`Payment confirmation email sent to: ${student.email}`);
-    } catch (mailError) {
-      console.error("Payment confirmation email failed:", mailError.message);
-    }
+    await notifyPaymentConfirmed({
+      student,
+      payment,
+      source: "Admin Receipt Approval",
+    });
 
     res.status(200).json({
       success: true,
@@ -609,52 +496,11 @@ exports.rejectPayment = async (req, res, next) => {
     student.paymentStatus = "Pending";
     await student.save();
 
-    // Send rejection email
-    try {
-      const clientUrl = process.env.CLIENT_URL || "https://www.aslaviationschool.co";
-      await sendMail({
-        to: student.email,
-        subject: "Payment Review Update — Alpha Step Links Aviation School",
-        text: `Hello ${student.firstName || "Student"},\n\nYour payment receipt could not be verified.\n\nReason: ${reason}\n\nPlease upload a new receipt in your dashboard: ${clientUrl}/login`,
-        html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; padding: 40px 0;">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
-              <tr>
-                <td align="center" style="background-color: #020617; padding: 40px 20px;">
-                  <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">Alpha Step Links</h1>
-                  <p style="color: #94a3b8; margin: 8px 0 0 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Aviation School</p>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding: 40px 40px 20px 40px;">
-                  <h2 style="color: #0f172a; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Action Required</h2>
-                  <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">Hello ${student.firstName || "Student"},</p>
-                  <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">Your uploaded payment receipt could not be verified. Please review the reason below and upload a new receipt.</p>
-                  <div style="background-color: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px; margin: 24px 0;">
-                    <p style="color: #dc2626; font-size: 14px; font-weight: 600; margin: 0 0 8px 0;">Reason:</p>
-                    <p style="color: #991b1b; font-size: 14px; margin: 0;">${reason.trim()}</p>
-                  </div>
-                  <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                    <tr>
-                      <td align="center">
-                        <a href="${clientUrl}/login" style="background-color: #0061FF; color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;">Upload New Receipt</a>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-              <tr>
-                <td style="background-color: #f1f5f9; padding: 30px; text-align: center; border-top: 1px solid #e2e8f0;">
-                  <p style="color: #64748b; font-size: 13px; margin: 0;">&copy; ${new Date().getFullYear()} Alpha Step Links. All rights reserved.</p>
-                </td>
-              </tr>
-            </table>
-          </div>
-        `,
-      });
-    } catch (mailError) {
-      console.error("Payment rejection email failed:", mailError.message);
-    }
+    await notifyPaymentRejected({
+      student,
+      payment,
+      reason: reason.trim(),
+    });
 
     res.status(200).json({
       success: true,

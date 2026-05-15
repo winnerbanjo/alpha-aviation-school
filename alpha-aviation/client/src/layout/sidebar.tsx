@@ -14,6 +14,7 @@ import {
   LogOut,
   CreditCard,
   GraduationCap,
+  Bell,
 } from "lucide-react";
 import { useState } from "react";
 import { Logo } from "@/components/Logo";
@@ -42,6 +43,8 @@ export function Sidebar({ role }: SidebarProps) {
     { icon: Users, label: "Students", path: "/admin/students" },
     { icon: CreditCard, label: "Payments", path: "/admin/payments" },
     { icon: Banknote, label: "Revenue", path: "/admin/revenue" },
+    { icon: Download, label: "Resources", path: "/admin/resources" },
+    { icon: Bell, label: "Notifications", path: "/admin/notifications" },
   ];
 
   const studentNavItems: NavItem[] = [
@@ -74,6 +77,11 @@ export function Sidebar({ role }: SidebarProps) {
       icon: FileText,
       label: "Records",
       path: "/dashboard/records",
+    },
+    {
+      icon: Bell,
+      label: "Notifications",
+      path: "/dashboard/notifications",
     },
     {
       icon: User,

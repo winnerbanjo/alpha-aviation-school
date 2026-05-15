@@ -7,7 +7,7 @@ const { protect } = require("../middleware/protect");
 // Stricter rate limit for login to prevent brute force
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // 5 login attempts per IP
+  max: 10, // 5 login attempts per IP
   message: {
     success: false,
     message: "Too many login attempts, please try again in 15 minutes",
@@ -48,8 +48,16 @@ router.post("/forgot-password", authController.forgotPassword);
 router.post("/reset-password", authController.resetPassword);
 
 // OTP verification routes
-router.post("/verify-enrollment-otp", otpLimiter, authController.verifyEnrollmentOTP);
-router.post("/resend-enrollment-otp", otpLimiter, authController.resendEnrollmentOTP);
+router.post(
+  "/verify-enrollment-otp",
+  otpLimiter,
+  authController.verifyEnrollmentOTP,
+);
+router.post(
+  "/resend-enrollment-otp",
+  otpLimiter,
+  authController.resendEnrollmentOTP,
+);
 router.post("/verify-admin-otp", otpLimiter, authController.verifyAdminOTP);
 router.post("/resend-admin-otp", otpLimiter, authController.resendAdminOTP);
 

@@ -14,7 +14,12 @@ npm install
 MONGODB_URI=mongodb://localhost:27017/alpha-aviation
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 PORT=5000
+RESEND_API_KEY=re_...
+ZOHO_USER=support@aslaviationschool.co
+ZOHO_PASS=your-zoho-password
 ```
+
+`RESEND_API_KEY` is the preferred mail transport. `ZOHO_USER` and `ZOHO_PASS` stay in place as a fallback and for the sender identity.
 
 3. Start the server:
 ```bash

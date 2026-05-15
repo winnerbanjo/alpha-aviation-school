@@ -86,9 +86,6 @@ const isValidEmail = (email) => {
   return emailRegex.test(email);
 };
 
-// Register new user
-// MODE=production → skip OTP, create student directly and return token
-// MODE=development → send OTP email, require /verify-enrollment-otp step
 exports.register = async (req, res, next) => {
   try {
     const { email, password, firstName, lastName, selectedCourses } = req.body;
@@ -272,14 +269,14 @@ exports.register = async (req, res, next) => {
     // Safety fallback — reached only if MODE is neither 'production' nor dev block is active
     return res.status(500).json({
       success: false,
-      message: "Server misconfiguration: set MODE=production or MODE=development in .env",
+      message:
+        "Server misconfiguration: set MODE=production or MODE=development in .env",
     });
   } catch (error) {
     next(error);
   }
 };
 
-// Verify enrollment OTP and complete registration
 exports.verifyEnrollmentOTP = async (req, res, next) => {
   try {
     const { email, otp, firstName, lastName, password, selectedCourses } =
@@ -600,7 +597,7 @@ exports.login = async (req, res, next) => {
           to: user.email,
           subject:
             "Admin Login Verification - Alpha Step Links Aviation School",
-          text: `Hello ${user.firstName || "Admin"},\n\nYour verification code is: ${otp}\n\nThis code will expire in 5 minutes.\n\nIf you didn't request this, please secure your account immediately.`,
+          text: `Hello ${user.firstName || "Admin"},\n\nYour verification code is: ${otp}\n\nThis code will expire in 5 minutes.\n\nIf you didn't request this, please ignore this mail.`,
           html: `
           <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; padding: 40px 0;">
             <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
@@ -620,7 +617,7 @@ exports.login = async (req, res, next) => {
                     <p style="margin: 0; color: #0061FF; font-size: 36px; font-weight: 700; letter-spacing: 8px;">${otp}</p>
                   </div>
                   <p style="color: #64748b; font-size: 14px; line-height: 1.6; margin: 0 0 16px 0;">This code will expire in <strong>5 minutes</strong>.</p>
-                  <p style="color: #ef4444; font-size: 13px; line-height: 1.6; margin: 0;">If you didn't request this, please secure your account immediately.</p>
+                  <p style="color: #ef4444; font-size: 13px; line-height: 1.6; margin: 0;">If you didn't request this, please ignore this mail.</p>
                 </td>
               </tr>
               <tr>

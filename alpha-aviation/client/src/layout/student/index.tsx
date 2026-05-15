@@ -4,6 +4,7 @@ import { Sidebar } from "../sidebar";
 import { TopNav } from "../topnav";
 import { useAuthStore } from "@/store/authStore";
 import { getProfile } from "@/api";
+import { PaymentSteps } from "@/components/student/PaymentSteps";
 
 const OutletLoader = () => (
   <div className="flex items-center justify-center h-full w-full">
@@ -12,7 +13,7 @@ const OutletLoader = () => (
 );
 
 export default function StudentLayout() {
-  const { user, setUser } = useAuthStore();
+  const { user, setUser, tutionPaid } = useAuthStore();
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const refreshUser = async () => {
@@ -26,20 +27,17 @@ export default function StudentLayout() {
       // Silent fail — user may be offline or token expired
     }
   };
-
-  // Refresh on mount
+  console.log(user);
   useEffect(() => {
     refreshUser();
   }, []);
 
-  // Refresh on window focus
   useEffect(() => {
     const onFocus = () => refreshUser();
     window.addEventListener("focus", onFocus);
     return () => window.removeEventListener("focus", onFocus);
   }, [user]);
 
-  // Poll every 60s only when tab is visible
   useEffect(() => {
     pollRef.current = setInterval(() => {
       if (document.visibilityState === "visible") {
@@ -62,6 +60,11 @@ export default function StudentLayout() {
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] flex">
+      <PaymentSteps
+        user={user}
+        tutionPaid={tutionPaid}
+        refreshUser={refreshUser}
+      />
       <Sidebar role="student" />
       <div className="flex-1 lg:ml-64 flex flex-col">
         <TopNav role="student" />

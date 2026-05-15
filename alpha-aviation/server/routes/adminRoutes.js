@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const adminController = require("../controllers/adminController");
 const userController = require("../controllers/userController");
+const resourceController = require("../controllers/resourceController");
 const { protect } = require("../middleware/protect");
 const { adminOnly } = require("../middleware/adminOnly");
 
@@ -24,6 +25,11 @@ router.patch("/students/:id", adminController.updatePaymentStatus);
 router.get("/payments/pending", adminController.getPendingPayments);
 router.post("/payments/:id/approve", adminController.approvePayment);
 router.post("/payments/:id/reject", adminController.rejectPayment);
+
+// Course resource management
+router.get("/resources", resourceController.getAdminResources);
+router.post("/resources", resourceController.createResource);
+router.delete("/resources/:id", resourceController.deleteResource);
 
 // User management routes
 router.post("/users", userController.createUser);

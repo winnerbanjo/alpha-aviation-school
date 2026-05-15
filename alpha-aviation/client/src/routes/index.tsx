@@ -67,6 +67,16 @@ const AdminRevenue = lazy(() =>
     default: m.AdminRevenue,
   })),
 );
+const AdminResources = lazy(() =>
+  import("../pages/admin/AdminResources").then((m) => ({
+    default: m.AdminResources,
+  })),
+);
+const AdminNotifications = lazy(() =>
+  import("../pages/admin/AdminNotifications").then((m) => ({
+    default: m.AdminNotifications,
+  })),
+);
 
 const StudentOverview = lazy(() =>
   import("../pages/student/StudentOverview").then((m) => ({
@@ -101,6 +111,11 @@ const StudentCertificate = lazy(() =>
 const StudentRecords = lazy(() =>
   import("../pages/student/StudentRecords").then((m) => ({
     default: m.StudentRecords,
+  })),
+);
+const StudentNotifications = lazy(() =>
+  import("../pages/student/StudentNotifications").then((m) => ({
+    default: m.StudentNotifications,
   })),
 );
 
@@ -145,6 +160,8 @@ export const RoutesConfig = () => {
         { path: "students", element: <AdminStudents /> },
         { path: "payments", element: <AdminPayments /> },
         { path: "revenue", element: <AdminRevenue /> },
+        { path: "resources", element: <AdminResources /> },
+        { path: "notifications", element: <AdminNotifications /> },
       ],
     },
 
@@ -164,6 +181,7 @@ export const RoutesConfig = () => {
         { path: "resources", element: <StudentResources /> },
         { path: "certificate", element: <StudentCertificate /> },
         { path: "records", element: <StudentRecords /> },
+        { path: "notifications", element: <StudentNotifications /> },
         { path: "profile", element: <StudentProfile /> },
       ],
     },

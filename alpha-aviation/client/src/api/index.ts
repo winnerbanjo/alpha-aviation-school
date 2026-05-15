@@ -7,6 +7,7 @@ const api = axios.create({
   timeout: 30000,
   headers: {
     "Content-Type": "application/json",
+    "ngrok-skip-browser-warning": "true",
   },
 });
 
@@ -57,15 +58,11 @@ export const login = async (
     const response = await api.post("/auth/login", { email, password }, config);
     return response;
   } catch (error: any) {
-    // Re-throw with more context for better error handling
     if (error.response) {
-      // Server responded with error status
       throw error;
     } else if (error.request) {
-      // Request made but no response (network error)
       throw new Error("Network Error: Server is unreachable");
     } else {
-      // Something else happened
       throw error;
     }
   }
@@ -168,6 +165,75 @@ export const uploadPaymentReceipt = async (receiptUrl: string) => {
     receiptUrl,
   });
   return response.data;
+};
+
+export const verifyPaystackPayment = async (reference: string) => {
+  const response = await api.post("/student/verify-paystack", {
+    reference,
+  });
+  return response.data;
+};
+
+export interface NotificationItem {
+  _id: string;
+  type:
+    | "payment_submitted"
+    | "payment_confirmed"
+    | "payment_approved"
+    | "payment_rejected"
+    | "general";
+  title: string;
+  message: string;
+  metadata?: Record<string, unknown>;
+  readAt?: string | null;
+  createdAt: string;
+}
+
+export const getNotifications = async () => {
+  const response = await api.get("/student/notifications");
+  return response.data as {
+    success: boolean;
+    count: number;
+    data: {
+      notifications: NotificationItem[];
+      unreadCount: number;
+    };
+  };
+};
+
+export const markNotificationRead = async (notificationId: string) => {
+  const response = await api.patch(`/student/notifications/${notificationId}/read`);
+  return response.data;
+};
+
+export const markAllNotificationsRead = async () => {
+  const response = await api.patch("/student/notifications/read-all");
+  return response.data;
+};
+
+export interface CourseResourceItem {
+  _id: string;
+  courseTitle: string;
+  title: string;
+  description?: string;
+  type: "pdf" | "video" | "doc" | "link" | "other";
+  size?: string;
+  url: string;
+  isActive?: boolean;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export const getStudentResources = async () => {
+  const response = await api.get("/student/resources");
+  return response.data as {
+    success: boolean;
+    count: number;
+    data: {
+      selectedCourseTitles: string[];
+      resources: CourseResourceItem[];
+    };
+  };
 };
 
 // Admin API calls
@@ -354,6 +420,32 @@ export const uploadCertificate = async (
     { certificateUrl },
     config,
   );
+  return response.data;
+};
+
+export const getAdminResources = async () => {
+  const response = await api.get("/admin/resources");
+  return response.data as {
+    success: boolean;
+    count: number;
+    data: { resources: CourseResourceItem[] };
+  };
+};
+
+export const createCourseResource = async (resourceData: {
+  courseTitle: string;
+  title: string;
+  description?: string;
+  type: CourseResourceItem["type"];
+  size?: string;
+  url: string;
+}) => {
+  const response = await api.post("/admin/resources", resourceData);
+  return response.data;
+};
+
+export const deleteCourseResource = async (resourceId: string) => {
+  const response = await api.delete(`/admin/resources/${resourceId}`);
   return response.data;
 };
 

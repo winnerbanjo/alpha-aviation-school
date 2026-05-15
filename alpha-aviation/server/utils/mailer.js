@@ -1,56 +1,87 @@
+const nodemailer = require("nodemailer");
 const { Resend } = require("resend");
 
-// Lazy-initialized — client is only created when sendMail() is actually called.
-// This prevents a startup crash when RESEND_API_KEY is absent (e.g. MODE=production
-// where enrollment OTP emails are disabled).
-let _resend = null;
+const DEFAULT_FROM_EMAIL =
+  process.env.MAIL_FROM || process.env.ZOHO_USER || "support@aslaviationschool.co";
+const FROM_ADDRESS = `"Alpha Step Links Aviation School" <${DEFAULT_FROM_EMAIL}>`;
 
-const getResendClient = () => {
-  if (!process.env.RESEND_API_KEY) {
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+
+/**
+ * Keep Zoho SMTP available as a fallback, but prefer Resend when the API key is set.
+ * This preserves the existing sender identity while changing the transport layer.
+ */
+const createZohoTransporter = () =>
+  nodemailer.createTransport({
+    host: "smtp.zoho.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.ZOHO_USER,
+      pass: process.env.ZOHO_PASS,
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
+
+const sendViaResend = async ({ to, subject, text, html, replyTo }) => {
+  const { data, error } = await resend.emails.send({
+    from: FROM_ADDRESS,
+    to,
+    subject,
+    text,
+    html,
+    ...(replyTo ? { replyTo } : {}),
+  });
+
+  if (error) {
+    throw new Error(`[mailer] Resend rejected the email: ${error.message}`);
+  }
+
+  console.log(`[mailer] Email sent via Resend to ${to} | id: ${data.id}`);
+  return data;
+};
+
+const sendViaZoho = async ({ to, subject, text, html, replyTo }) => {
+  if (!process.env.ZOHO_USER || !process.env.ZOHO_PASS) {
     const msg =
-      "[mailer] Email not configured: RESEND_API_KEY missing from environment.";
+      "[mailer] Zoho fallback unavailable: ZOHO_USER or ZOHO_PASS missing from environment.";
     console.error(msg);
     throw new Error(msg);
   }
-  if (!_resend) {
-    _resend = new Resend(process.env.RESEND_API_KEY);
-  }
-  return _resend;
+
+  const transporter = createZohoTransporter();
+  const mailOptions = {
+    from: FROM_ADDRESS,
+    to,
+    subject,
+    text,
+    html,
+  };
+
+  if (replyTo) mailOptions.replyTo = replyTo;
+
+  const info = await transporter.sendMail(mailOptions);
+  console.log(`[mailer] Email sent via Zoho SMTP to ${to} | messageId: ${info.messageId}`);
+  return info;
 };
 
-const FROM_ADDRESS = `"Alpha Step Links Aviation School" <support@aslaviationschool.co>`;
-
 /**
- * Sends an email via Resend API (HTTPS — works on all cloud hosts including Render).
+ * Sends an email using Resend when configured, otherwise falls back to Zoho SMTP.
  * Throws on failure so callers can return a proper 500.
  */
 const sendMail = async ({ to, subject, text, html, replyTo }) => {
-  const resend = getResendClient();
-
   try {
-    const payload = {
-      from: FROM_ADDRESS,
-      to,
-      subject,
-      text,
-      html,
-    };
-
-    if (replyTo) payload.replyTo = replyTo;
-
-    const { data, error } = await resend.emails.send(payload);
-
-    if (error) {
-      console.error(`[mailer] Resend API error sending to ${to}:`, error);
-      throw new Error(error.message || "Email send failed");
+    if (resend) {
+      return await sendViaResend({ to, subject, text, html, replyTo });
     }
 
-    console.log(`[mailer] Email sent to ${to} | id: ${data.id}`);
-    return data;
+    return await sendViaZoho({ to, subject, text, html, replyTo });
   } catch (err) {
     console.error(`[mailer] Failed to send email to ${to}: ${err.message}`);
     throw err;
   }
 };
 
-module.exports = { sendMail };
+module.exports = { sendMail, FROM_ADDRESS };
