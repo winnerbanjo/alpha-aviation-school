@@ -300,7 +300,7 @@ export function PaymentSteps({
                           </div>
                           <div>
                             <p className="font-bold text-slate-900">
-                              Bank Transfer / Manual
+                              Bank Transfer
                             </p>
                             <p className="text-xs text-slate-500">
                               Upload your receipt after transfer
