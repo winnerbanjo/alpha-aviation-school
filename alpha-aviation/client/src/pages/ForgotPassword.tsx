@@ -5,6 +5,7 @@ import { ArrowLeft, Mail, GraduationCap } from "lucide-react";
 import { forgotPassword } from "@/api";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast";
+import { NoIndexSEO } from "@/components/seo/NoIndexSEO";
 
 export function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -30,7 +31,13 @@ export function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden">
+    <>
+      <NoIndexSEO
+        title="Forgot Password"
+        description="Request a password reset link for your Alpha Step Links Aviation School account."
+        url="/forgot-password"
+      />
+      <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden">
       {/* Left Panel */}
       <div className="hidden lg:flex lg:w-6/12 h-screen sticky top-0 bg-slate-900 overflow-hidden relative z-10">
         <motion.div
@@ -192,6 +199,7 @@ export function ForgotPassword() {
           </motion.div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

@@ -4,6 +4,7 @@ import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import { login as apiLogin } from "@/api";
 import { motion, AnimatePresence } from "framer-motion";
+import { NoIndexSEO } from "@/components/seo/NoIndexSEO";
 import {
   GraduationCap,
   ArrowLeft,
@@ -97,7 +98,13 @@ export function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden relative">
+    <>
+      <NoIndexSEO
+        title="Student Login"
+        description="Log in to your Alpha Step Links Aviation School student portal to access your dashboard and course progress."
+        url="/login"
+      />
+      <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden relative">
       {/* Left Panel: Cinematic Hero */}
       <div className="hidden lg:flex lg:w-6/12 h-screen sticky top-0 bg-slate-900 overflow-hidden relative z-10">
         <motion.div
@@ -269,6 +276,7 @@ export function Login() {
           </motion.div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

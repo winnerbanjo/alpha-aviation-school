@@ -5,6 +5,7 @@ import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import { Shield, Mail, Lock, AlertCircle } from "lucide-react";
 import { login as apiLogin } from "@/api";
+import { NoIndexSEO } from "@/components/seo/NoIndexSEO";
 
 export function AdminPortal() {
   const [email, setEmail] = useState("");
@@ -120,8 +121,14 @@ export function AdminPortal() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
-      <motion.div
+    <>
+      <NoIndexSEO
+        title="Admin Portal"
+        description="Secure admin sign-in for Alpha Step Links Aviation School."
+        url="/admin"
+      />
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
+        <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
@@ -213,7 +220,8 @@ export function AdminPortal() {
             </a>
           </div>
         </div>
-      </motion.div>
-    </div>
+        </motion.div>
+      </div>
+    </>
   );
 }

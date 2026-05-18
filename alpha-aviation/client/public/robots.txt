@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /login
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /verify-otp
+Disallow: /admin
+Disallow: /dashboard
+
+Sitemap: https://www.aslaviationschool.co/sitemap.xml
