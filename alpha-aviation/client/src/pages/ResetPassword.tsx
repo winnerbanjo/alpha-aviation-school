@@ -5,6 +5,7 @@ import { ArrowLeft, ShieldCheck, Eye, EyeOff } from "lucide-react";
 import { resetPassword } from "@/api";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast";
+import { NoIndexSEO } from "@/components/seo/NoIndexSEO";
 
 export function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -49,7 +50,13 @@ export function ResetPassword() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden">
+    <>
+      <NoIndexSEO
+        title="Reset Password"
+        description="Set a new password for your Alpha Step Links Aviation School account."
+        url="/reset-password"
+      />
+      <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden">
       {/* Left Panel */}
       <div className="hidden lg:flex lg:w-6/12 h-screen sticky top-0 bg-slate-900 overflow-hidden z-10">
         <motion.div
@@ -196,6 +203,7 @@ export function ResetPassword() {
           </motion.div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

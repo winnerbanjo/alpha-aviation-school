@@ -12,6 +12,7 @@ import {
 import { useAuthStore } from "@/store/authStore";
 import { useToast } from "@/components/ui/toast";
 import { Mail, ArrowLeft, RefreshCw, CheckCircle } from "lucide-react";
+import { NoIndexSEO } from "@/components/seo/NoIndexSEO";
 
 type OTPPurpose = "enrollment" | "admin_login";
 
@@ -237,7 +238,13 @@ export function VerifyOtp() {
   const isExpired = timeLeft <= 0;
 
   return (
-    <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden relative">
+    <>
+      <NoIndexSEO
+        title="Verify OTP"
+        description="Verify your one-time code to continue your Alpha Step Links Aviation School enrollment or admin login."
+        url="/verify-otp"
+      />
+      <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden relative">
       {/* Left Panel */}
       <div className="hidden lg:flex lg:w-6/12 h-screen sticky top-0 bg-slate-900 overflow-hidden relative z-10">
         <div className="absolute inset-0 z-0">
@@ -405,6 +412,7 @@ export function VerifyOtp() {
           </motion.div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

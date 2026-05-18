@@ -6,6 +6,7 @@ import { verifyAdminOTP, resendAdminOTP, login as apiLogin } from "@/api";
 import { useAuthStore } from "@/store/authStore";
 import { useToast } from "@/components/ui/toast";
 import { Shield, RefreshCw, CheckCircle, Mail } from "lucide-react";
+import { NoIndexSEO } from "@/components/seo/NoIndexSEO";
 
 export function AdminOtpVerification() {
   const [searchParams] = useSearchParams();
@@ -134,8 +135,14 @@ export function AdminOtpVerification() {
   const isExpired = timeLeft <= 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
-      <motion.div
+    <>
+      <NoIndexSEO
+        title="Admin OTP Verification"
+        description="Verify the one-time code sent to the admin email address."
+        url="/admin/verify-otp"
+      />
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
+        <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
@@ -239,7 +246,8 @@ export function AdminOtpVerification() {
             </div>
           </div>
         </div>
-      </motion.div>
-    </div>
+        </motion.div>
+      </div>
+    </>
   );
 }
