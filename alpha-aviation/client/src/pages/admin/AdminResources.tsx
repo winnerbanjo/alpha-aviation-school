@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FileText, Link as LinkIcon, Loader2, RefreshCw, Trash2, Upload } from "lucide-react";
+import { openResourceInBrowser } from "@/lib/openResource";
 
 const inferResourceType = (file: File): CourseResourceItem["type"] => {
   if (file.type.includes("pdf")) return "pdf";
@@ -31,13 +32,17 @@ const formatFileSize = (bytes: number) => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
-const uploadToCloudinary = async (file: File) => {
+const uploadResource = async (file: File) => {
+  const isPdf =
+    file.type.includes("pdf") || file.name.toLowerCase().endsWith(".pdf");
   const formData = new FormData();
   formData.append("file", file);
   formData.append("upload_preset", "asl-academy");
 
+  const resourceType = isPdf ? "image" : "auto";
+
   const response = await fetch(
-    `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/auto/upload`,
+    `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`,
     { method: "POST", body: formData },
   );
   const data = await response.json();
@@ -96,7 +101,7 @@ export function AdminResources() {
 
     try {
       setUploading(true);
-      const url = await uploadToCloudinary(selectedFile);
+      const url = await uploadResource(selectedFile);
       const response = await createCourseResource({
         courseTitle,
         title: title.trim(),
@@ -312,7 +317,7 @@ export function AdminResources() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => window.open(resource.url, "_blank")}
+                          onClick={() => openResourceInBrowser(resource.url)}
                         >
                           <LinkIcon className="w-4 h-4 mr-1" />
                           Open
