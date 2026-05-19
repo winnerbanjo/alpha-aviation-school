@@ -7,6 +7,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Download, BookOpen, Lock, FileText, Video, Link as LinkIcon } from "lucide-react";
 import { getStudentResources, type CourseResourceItem } from "@/api";
+import { openResourceInBrowser } from "@/lib/openResource";
 
 const TYPE_ICONS: Record<CourseResourceItem["type"], typeof FileText> = {
   pdf: FileText,
@@ -54,7 +55,7 @@ export function StudentResources() {
 
   const handleDownload = (resource: CourseResourceItem) => {
     if (!isPaid) return;
-    window.open(resource.url, "_blank", "noopener,noreferrer");
+    openResourceInBrowser(resource.url);
   };
 
   return (

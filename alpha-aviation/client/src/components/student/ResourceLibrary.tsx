@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { FileText, Download, BookOpen } from 'lucide-react'
 import { COURSE_CATALOG } from '@/data/courseCatalog'
+import { openResourceInBrowser } from '@/lib/openResource'
 
 interface CourseResource {
   courseTitle: string
@@ -51,13 +52,8 @@ export function ResourceLibrary() {
       alert(`PDF for "${file.name}" is not yet available. Please check back later.`)
       return
     }
-    
-    const link = document.createElement('a')
-    link.href = file.url
-    link.download = `${file.name}.pdf`
-    link.target = '_blank'
-    link.rel = 'noopener noreferrer'
-    link.click()
+
+    openResourceInBrowser(file.url)
   }
 
   return (
