@@ -132,6 +132,9 @@ export function StudentSidebar({
             : "-translate-x-full lg:translate-x-0"
         }`}
       >
+        <div className="absolute top-[-100px] w-64 h-64 rounded-full bg-gradient-to-br from-indigo-200/25 to-purple-200/25 blur-3xl pointer-events-none z-0" />
+        <div className="absolute bottom-[-100px] w-64 h-64 rounded-full bg-gradient-to-tr from-purple-200/20 to-sky-200/20 blur-3xl pointer-events-none z-0" />
+
         <div className="flex flex-col flex-1 overflow-y-auto px-5 pt-6 pb-4">
           {/* Brand header */}
           <div className="flex items-center gap-3 px-2 mb-6">
