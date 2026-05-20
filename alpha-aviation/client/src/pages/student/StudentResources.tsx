@@ -1,13 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuthStore } from "@/store/authStore";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Download, BookOpen, Lock, FileText, Video, Link as LinkIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Download, BookOpen, Lock, FileText, Video, Link as LinkIcon, AlertTriangle } from "lucide-react";
 import { getStudentResources, type CourseResourceItem } from "@/api";
 import { openResourceInBrowser } from "@/lib/openResource";
+import { motion } from "framer-motion";
 
 const TYPE_ICONS: Record<CourseResourceItem["type"], typeof FileText> = {
   pdf: FileText,
@@ -59,145 +57,164 @@ export function StudentResources() {
   };
 
   return (
-    <div className="p-6 lg:p-8 space-y-8">
+    <div className="space-y-8 pb-12">
+      {/* Header section */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
+        <h1 className="text-3xl font-black tracking-tight text-slate-900">
           Resource Library
         </h1>
-        <p className="text-slate-500">
-          Download materials for your enrolled programmes.
+        <p className="text-sm font-normal text-slate-500 mt-1">
+          Download study guides, curriculum files, and templates for your enrolled programmes.
         </p>
       </div>
 
+      {/* Locked Alert Banner */}
       {!isPaid && (
-        <Card className="border-l-4 border-l-amber-400 bg-white">
-          <CardContent className="p-6 flex items-start gap-3">
-            <Lock className="w-5 h-5 text-amber-500 mt-0.5" />
-            <div>
-              <p className="text-sm font-semibold text-slate-900">
-                Resources Locked
-              </p>
-              <p className="text-sm text-slate-500 mt-1">
-                {isUnderReview
-                  ? "Your receipt is under review. Course materials will be unlocked once admin confirms your payment."
-                  : "Course materials will be unlocked once your payment is confirmed by admin. Please complete your payment to access all resources."}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-4 rounded-3xl border border-amber-200 bg-amber-50/80 text-amber-900 flex items-start gap-3 shadow-sm backdrop-blur-md"
+        >
+          <Lock className="w-5 h-5 text-amber-600 mt-0.5 shrink-0 animate-pulse" />
+          <div>
+            <p className="text-sm font-bold">Resources Locked</p>
+            <p className="text-xs text-amber-700/90 mt-0.5">
+              {isUnderReview
+                ? "Your tuition payment receipt is currently under administrative verification. Study guides and training materials will unlock automatically once confirmed."
+                : "Ground school training resources will unlock once your tuition payment is confirmed. Please clear your outstanding balance to download materials."}
+            </p>
+          </div>
+        </motion.div>
       )}
 
+      {/* Main Section Content */}
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-900">
+          <h2 className="text-lg font-bold text-slate-900">
             Enrolled Programme Materials
           </h2>
-          <Badge
-            variant="secondary"
-            className={
-              isPaid
-                ? "bg-green-100 text-green-700 hover:bg-green-100 border-none"
-                : "bg-amber-100 text-amber-700 hover:bg-amber-100 border-none"
-            }
-          >
-            {isPaid ? "Unlocked" : "Locked"}
-          </Badge>
+          {isPaid ? (
+            <span className="text-xs font-bold px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-full border border-emerald-100/30 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+              Fully Unlocked
+            </span>
+          ) : (
+            <span className="text-xs font-bold px-2.5 py-1 bg-amber-50 text-amber-600 rounded-full border border-amber-100/30 flex items-center gap-1.5">
+              <Lock className="w-3.5 h-3.5" />
+              Locked
+            </span>
+          )}
         </div>
 
         {loading ? (
-          <Card className="border-slate-200">
-            <CardContent className="p-8 text-center text-sm text-slate-500">
-              Loading resources...
-            </CardContent>
-          </Card>
+          <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-12 text-center shadow-sm">
+            <div className="w-10 h-10 border-4 border-slate-100 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-sm font-medium text-slate-500">Loading resources...</p>
+          </div>
         ) : resourcesByCourse.length === 0 ? (
-          <Card className="border-slate-200">
-            <CardContent className="p-10 text-center">
-              <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <p className="font-semibold text-slate-900">
-                No enrolled programmes found
-              </p>
-              <p className="text-sm text-slate-500 mt-1">
-                Your course materials will appear here after enrollment.
-              </p>
-            </CardContent>
-          </Card>
+          <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-12 text-center shadow-sm">
+            <BookOpen className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+            <h3 className="text-lg font-bold text-slate-900 mb-1">
+              No Enrolled Programmes Found
+            </h3>
+            <p className="text-sm text-slate-500 max-w-sm mx-auto">
+              Your course materials and outlines will appear here automatically after your training track enrollment.
+            </p>
+          </div>
         ) : (
-          resourcesByCourse.map(({ courseTitle, resources: courseResources }) => (
-            <Card key={courseTitle} className="border-slate-200 overflow-hidden">
-              <div className="px-5 py-4 border-b border-slate-100 bg-slate-50 flex items-center gap-3">
-                <div className="p-2 bg-blue-100 text-blue-600 rounded-lg">
-                  <BookOpen className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-slate-900">
-                    {courseTitle}
-                  </h3>
-                  <p className="text-xs text-slate-500">
-                    {courseResources.length} resource
-                    {courseResources.length === 1 ? "" : "s"}
-                  </p>
-                </div>
-              </div>
-              <CardContent className="p-0">
-                {courseResources.length === 0 ? (
-                  <div className="p-6 text-sm text-slate-500">
-                    No resources have been uploaded for this programme yet.
+          <div className="space-y-8">
+            {resourcesByCourse.map(({ courseTitle, resources: courseResources }, cIdx) => (
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: cIdx * 0.1 }}
+                key={courseTitle}
+                className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group"
+              >
+                {/* Course Header Bar */}
+                <div className="px-5 py-4 border-b border-slate-100/80 bg-slate-50/50 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="relative p-2.5 bg-gradient-to-br from-indigo-50 to-indigo-100/60 text-indigo-600 rounded-xl border border-indigo-100/80 shadow-sm flex items-center justify-center w-10 h-10">
+                      <BookOpen className="w-5 h-5 relative z-10" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+                        {courseTitle}
+                      </h3>
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        {courseResources.length} curriculum resource
+                        {courseResources.length === 1 ? "" : "s"} available
+                      </p>
+                    </div>
                   </div>
-                ) : (
-                  courseResources.map((resource, idx) => {
-                    const Icon = TYPE_ICONS[resource.type] || FileText;
+                </div>
 
-                    return (
-                      <div
-                        key={resource._id}
-                        className={`flex items-center justify-between p-4 gap-4 ${
-                          idx !== courseResources.length - 1
-                            ? "border-b border-slate-100"
-                            : ""
-                        }`}
-                      >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <div className="p-2 bg-slate-100 rounded-lg shrink-0">
-                            <Icon className="w-5 h-5 text-slate-500" />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-sm font-medium text-slate-900 truncate">
-                              {resource.title}
-                            </p>
-                            <p className="text-xs text-slate-400">
-                              {resource.type.toUpperCase()}
-                              {resource.size ? ` · ${resource.size}` : ""}
-                            </p>
-                            {resource.description && (
-                              <p className="text-xs text-slate-500 mt-1 line-clamp-2">
-                                {resource.description}
+                {/* Course Resources Body */}
+                <div className="divide-y divide-slate-100">
+                  {courseResources.length === 0 ? (
+                    <div className="p-8 text-center text-sm text-slate-400">
+                      No study guides or material documents uploaded yet for this program.
+                    </div>
+                  ) : (
+                    courseResources.map((resource) => {
+                      const Icon = TYPE_ICONS[resource.type] || FileText;
+
+                      return (
+                        <div
+                          key={resource._id}
+                          className="flex items-center justify-between p-4 sm:p-5 gap-4 hover:bg-slate-50/30 transition-colors"
+                        >
+                          <div className="flex items-center gap-3.5 min-w-0">
+                            {/* Document Type Icon Wrapper */}
+                            <div className="p-2.5 bg-slate-50 border border-slate-100 rounded-xl shrink-0 flex items-center justify-center w-10 h-10 text-slate-500">
+                              <Icon className="w-5 h-5" />
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-sm font-bold text-slate-800 truncate">
+                                {resource.title}
                               </p>
-                            )}
+                              <p className="text-xs text-slate-400 mt-0.5 flex items-center gap-1.5">
+                                <span className="font-bold text-indigo-600/70">{resource.type.toUpperCase()}</span>
+                                {resource.size && (
+                                  <>
+                                    <span>·</span>
+                                    <span>{resource.size}</span>
+                                  </>
+                                )}
+                              </p>
+                              {resource.description && (
+                                <p className="text-xs text-slate-500 mt-1.5 line-clamp-2 leading-relaxed">
+                                  {resource.description}
+                                </p>
+                              )}
+                            </div>
                           </div>
-                        </div>
 
-                        {!isPaid ? (
-                          <div className="flex items-center gap-1.5 text-slate-400 shrink-0">
-                            <Lock className="w-4 h-4" />
-                            <span className="text-xs font-medium">Locked</span>
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() => handleDownload(resource)}
-                            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 hover:bg-blue-50 rounded-lg transition-colors shrink-0"
-                          >
-                            <Download className="w-3.5 h-3.5" />
-                            Open
-                          </button>
-                        )}
-                      </div>
-                    );
-                  })
-                )}
-              </CardContent>
-            </Card>
-          ))
+                          {/* Action Button: Locked vs Download/Open */}
+                          {!isPaid ? (
+                            <div className="flex items-center gap-1.5 text-slate-400 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100 shrink-0">
+                              <Lock className="w-3.5 h-3.5" />
+                              <span className="text-[11px] font-bold">Locked</span>
+                            </div>
+                          ) : (
+                            <Button
+                              onClick={() => handleDownload(resource)}
+                              size="sm"
+                              variant="outline"
+                              className="rounded-xl border-slate-200 hover:bg-indigo-50 hover:text-indigo-600 font-bold text-xs py-1.5 px-3 shrink-0 flex items-center gap-1 transition-all"
+                            >
+                              <Download className="w-3.5 h-3.5" />
+                              <span>Open</span>
+                            </Button>
+                          )}
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
         )}
       </div>
     </div>
