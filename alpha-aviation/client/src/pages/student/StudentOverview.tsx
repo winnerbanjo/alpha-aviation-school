@@ -111,7 +111,7 @@ export function StudentOverview() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`p-4 rounded-3xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.05),0px_0px_0px_1px_rgba(0,0,0,0.08)] backdrop-blur-md ${
+          className={`tuition-banner p-4 rounded-3xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.05),0px_0px_0px_1px_rgba(0,0,0,0.08)] backdrop-blur-md ${
             isUnderReview
               ? "bg-amber-50/80 border-amber-200 text-amber-900"
               : "bg-rose-50/80 border-rose-200 text-rose-900"
