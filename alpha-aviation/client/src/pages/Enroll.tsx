@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { PhoneNumberInput } from "@/components/ui/phone-input";
+import { isValidPhoneNumber } from "@/lib/phone";
 import { register } from "@/api";
 import { useAuthStore } from "@/store/authStore";
 import { COURSE_CATALOG, computeEnrollmentPrice } from "@/data/courseCatalog";
@@ -29,6 +31,7 @@ export function Enroll() {
     firstName: "",
     lastName: "",
     email: "",
+    phone: "",
     password: "",
     showPassword: false,
     selectedCourses: [] as string[],
@@ -93,6 +96,7 @@ export function Enroll() {
       !formData.firstName ||
       !formData.lastName ||
       !formData.email ||
+      !formData.phone ||
       !formData.password
     ) {
       toast("Please fill in all fields to continue", "error");
@@ -100,6 +104,10 @@ export function Enroll() {
     }
     if (formData.password.length < 6) {
       toast("Password must be at least 6 characters", "error");
+      return;
+    }
+    if (!isValidPhoneNumber(formData.phone)) {
+      toast("Please enter a valid phone number", "error");
       return;
     }
     setStep(2);
@@ -118,6 +126,7 @@ export function Enroll() {
         password: formData.password,
         firstName: formData.firstName,
         lastName: formData.lastName,
+        phone: formData.phone,
         selectedCourses: formData.selectedCourses,
         role: "student",
       });
@@ -147,15 +156,15 @@ export function Enroll() {
             studentIdNumber: response.data.user.studentIdNumber,
             adminClearance: response.data.user.adminClearance,
           },
-          response.data.token
+          response.data.token,
         );
 
         toast("Account created successfully!", "success");
         navigate("/dashboard", { replace: true });
       } else if (response?.success && response?.data?.requiresVerification) {
         navigate(
-          `/verify-otp?purpose=enrollment&email=${encodeURIComponent(formData.email)}&firstName=${encodeURIComponent(formData.firstName)}&lastName=${encodeURIComponent(formData.lastName)}&password=${encodeURIComponent(formData.password)}&courses=${encodeURIComponent(JSON.stringify(formData.selectedCourses))}`,
-          { replace: true }
+          `/verify-otp?purpose=enrollment&email=${encodeURIComponent(formData.email)}&firstName=${encodeURIComponent(formData.firstName)}&lastName=${encodeURIComponent(formData.lastName)}&phone=${encodeURIComponent(formData.phone)}&password=${encodeURIComponent(formData.password)}&courses=${encodeURIComponent(JSON.stringify(formData.selectedCourses))}`,
+          { replace: true },
         );
         toast("Verification code sent to your email!", "success");
       } else {
@@ -470,6 +479,20 @@ export function Enroll() {
                         className="w-full bg-white px-5 py-4 border-2 border-slate-300 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
                         placeholder="you@example.com"
                         required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
+                        Phone Number
+                      </label>
+                      <PhoneNumberInput
+                        value={formData.phone}
+                        onChange={(phone) =>
+                          setFormData({ ...formData, phone })
+                        }
+                        required
+                        inputClassName="border-2 border-slate-300 rounded-[1.25rem] py-4 font-medium"
                       />
                     </div>
 

@@ -8,6 +8,16 @@ const {
 const { mockStudents } = require("../utils/mockData");
 const axios = require("axios");
 
+const normalizePhone = (phone) =>
+  typeof phone === "string" && phone.replace(/\D/g, "")
+    ? `+${phone.replace(/\D/g, "")}`
+    : "";
+
+const isValidPhone = (phone) => {
+  const digits = phone.replace(/\D/g, "");
+  return digits.length >= 7 && digits.length <= 15;
+};
+
 exports.getNotifications = async (req, res, next) => {
   try {
     const userId = req.user.userId;
@@ -172,13 +182,23 @@ exports.verifyPaystackPayment = async (req, res, next) => {
 // Update student profile
 exports.updateProfile = async (req, res, next) => {
   try {
-    const { phone, bio, emergencyContact } = req.body;
+    const { phone, bio, emergencyContact, firstName, lastName } = req.body;
     const userId = req.user.userId;
+    const normalizedPhone = phone !== undefined ? normalizePhone(phone) : undefined;
+
+    if (normalizedPhone !== undefined && normalizedPhone && !isValidPhone(normalizedPhone)) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter a valid phone number",
+      });
+    }
 
     if (global.useMockData) {
       const student =
         mockStudents.find((s) => s._id === userId) || mockStudents[0];
-      if (phone !== undefined) student.phone = phone;
+      if (firstName !== undefined) student.firstName = firstName;
+      if (lastName !== undefined) student.lastName = lastName;
+      if (normalizedPhone !== undefined) student.phone = normalizedPhone;
       if (bio !== undefined) student.bio = bio;
       if (emergencyContact !== undefined)
         student.emergencyContact = emergencyContact;
@@ -192,7 +212,7 @@ exports.updateProfile = async (req, res, next) => {
             email: student.email,
             firstName: student.firstName,
             lastName: student.lastName,
-            phone: student.phone || phone || "",
+            phone: student.phone || normalizedPhone || "",
             emergencyContact:
               student.emergencyContact || emergencyContact || "",
             bio: student.bio || bio || "",
@@ -218,7 +238,9 @@ exports.updateProfile = async (req, res, next) => {
       });
     }
 
-    if (phone !== undefined) user.phone = phone;
+    if (firstName !== undefined) user.firstName = firstName;
+    if (lastName !== undefined) user.lastName = lastName;
+    if (normalizedPhone !== undefined) user.phone = normalizedPhone;
     if (bio !== undefined) user.bio = bio;
     if (emergencyContact !== undefined)
       user.emergencyContact = emergencyContact;
@@ -238,6 +260,84 @@ exports.updateProfile = async (req, res, next) => {
           emergencyContact: user.emergencyContact,
           bio: user.bio,
           documentUrl: user.documentUrl,
+        },
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Add or update student phone number
+exports.updatePhone = async (req, res, next) => {
+  try {
+    const phone = normalizePhone(req.body.phone);
+    const userId = req.user.userId;
+
+    if (!phone) {
+      return res.status(400).json({
+        success: false,
+        message: "Phone number is required",
+      });
+    }
+
+    if (!isValidPhone(phone)) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter a valid phone number",
+      });
+    }
+
+    if (global.useMockData) {
+      const student =
+        mockStudents.find((s) => s._id === userId) || mockStudents[0];
+      student.phone = phone;
+
+      return res.status(200).json({
+        success: true,
+        message: "Phone number updated successfully (Mock Mode)",
+        data: {
+          user: {
+            id: student._id,
+            email: student.email,
+            firstName: student.firstName,
+            lastName: student.lastName,
+            phone: student.phone,
+          },
+        },
+      });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (user.role !== "student") {
+      return res.status(403).json({
+        success: false,
+        message: "Only students can update their phone number",
+      });
+    }
+
+    user.phone = phone;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Phone number updated successfully",
+      data: {
+        user: {
+          id: user._id,
+          email: user.email,
+          role: user.role,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          phone: user.phone,
         },
       },
     });
