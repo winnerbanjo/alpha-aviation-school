@@ -1,12 +1,5 @@
 import { useState } from "react";
 import { useAuthStore } from "@/store/authStore";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PhoneNumberInput } from "@/components/ui/phone-input";
 import { isValidPhoneNumber } from "@/lib/phone";
@@ -20,7 +13,9 @@ import {
   CheckCircle2,
   Eye,
   EyeOff,
+  ShieldAlert,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const fileToDataUrl = (file: File) =>
   new Promise<string>((resolve, reject) => {
@@ -84,7 +79,7 @@ export function StudentProfile() {
   };
 
   const handleDocumentUpload = async (file: File) => {
-    if (!file.type.startsWith("image/") && !file.type !== "application/pdf") {
+    if (!file.type.startsWith("image/") && file.type !== "application/pdf") {
       toast("Please upload an image or PDF file", "error");
       return;
     }
@@ -114,43 +109,40 @@ export function StudentProfile() {
   };
 
   return (
-    <div className="p-6 lg:p-8 space-y-8">
+    <div className="space-y-8 pb-12">
+      {/* Header section */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
+        <h1 className="text-3xl font-black tracking-tight text-slate-900">
           Profile Settings
         </h1>
-        <p className="text-slate-500">
-          Manage your personal information, security, and identity documents.
+        <p className="text-sm font-normal text-slate-500 mt-1">
+          Manage your personal information, security credentials, and verification identity documents.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <Card className="border-slate-200">
-          <CardHeader className="border-b border-slate-100 pb-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-lg text-slate-900">
-                  Personal Information
-                </CardTitle>
-                <CardDescription>
-                  Update your name, phone, and bio.
-                </CardDescription>
-              </div>
-              {!editing && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setEditing(true)}
-                >
-                  Edit
-                </Button>
-              )}
+        {/* Card 1: Personal Info */}
+        <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="px-5 py-4 border-b border-slate-100/80 bg-slate-50/50 flex items-center justify-between gap-4">
+            <div>
+              <h3 className="text-base font-bold text-slate-900">Personal Information</h3>
+              <p className="text-[11px] text-slate-400 font-medium mt-0.5">Update your name, contact phone, and profile bio.</p>
             </div>
-          </CardHeader>
-          <CardContent className="pt-6 space-y-5">
-            <div className="grid grid-cols-2 gap-4">
+            {!editing && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setEditing(true)}
+                className="rounded-2xl border-slate-200 hover:bg-slate-50 font-bold text-xs py-1.5 px-3.5 transition-all shadow-sm"
+              >
+                Edit
+              </Button>
+            )}
+          </div>
+          <div className="p-6 space-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-medium text-slate-500 mb-1 block">
+                <label className="text-xs font-bold text-slate-400 mb-1.5 block uppercase tracking-wider">
                   First Name
                 </label>
                 <input
@@ -158,11 +150,11 @@ export function StudentProfile() {
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   disabled={!editing}
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 disabled:bg-slate-50 disabled:text-slate-500"
+                  className="w-full px-4 py-2.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 disabled:bg-slate-50/50 disabled:text-slate-500 transition-all font-bold text-slate-800"
                 />
               </div>
               <div>
-                <label className="text-xs font-medium text-slate-500 mb-1 block">
+                <label className="text-xs font-bold text-slate-400 mb-1.5 block uppercase tracking-wider">
                   Last Name
                 </label>
                 <input
@@ -170,48 +162,48 @@ export function StudentProfile() {
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   disabled={!editing}
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 disabled:bg-slate-50 disabled:text-slate-500"
+                  className="w-full px-4 py-2.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 disabled:bg-slate-50/50 disabled:text-slate-500 transition-all font-bold text-slate-800"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-xs font-medium text-slate-500 mb-1 block">
-                Email
+              <label className="text-xs font-bold text-slate-400 mb-1.5 block uppercase tracking-wider">
+                Email Address
               </label>
               <input
                 type="email"
                 value={user?.email || ""}
                 disabled
-                className="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm bg-slate-50 text-slate-500 cursor-not-allowed"
+                className="w-full px-4 py-2.5 border border-slate-200 rounded-2xl text-sm bg-slate-50/50 text-slate-500 cursor-not-allowed transition-all font-bold"
               />
-              <p className="text-[10px] text-slate-400 mt-1">
-                Email cannot be changed. Contact admin for assistance.
+              <p className="text-[10px] font-bold text-slate-400 mt-1">
+                Email address cannot be changed. Contact registry desk for assistance.
               </p>
             </div>
 
             <div>
-              <label className="text-xs font-medium text-slate-500 mb-1 block">
+              <label className="text-xs font-bold text-slate-400 mb-1.5 block uppercase tracking-wider">
                 Phone Number
               </label>
               <PhoneNumberInput
                 value={phone}
                 onChange={setPhone}
                 disabled={!editing}
-                inputClassName="py-2.5 rounded-lg focus:ring-blue-500/20 focus:border-blue-500"
+                inputClassName="py-2.5 rounded-2xl focus:ring-indigo-500/20 focus:border-indigo-500 font-bold text-slate-800"
               />
             </div>
 
             <div>
-              <label className="text-xs font-medium text-slate-500 mb-1 block">
-                Bio
+              <label className="text-xs font-bold text-slate-400 mb-1.5 block uppercase tracking-wider">
+                Profile Bio
               </label>
               <textarea
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 disabled={!editing}
                 rows={3}
-                className="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 disabled:bg-slate-50 disabled:text-slate-500 resize-none"
+                className="w-full px-4 py-2.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 disabled:bg-slate-50/50 disabled:text-slate-500 resize-none font-bold text-slate-800 leading-relaxed"
                 placeholder="Tell us about yourself..."
               />
             </div>
@@ -219,15 +211,16 @@ export function StudentProfile() {
             {editing && (
               <div className="flex gap-3 pt-2">
                 <Button
-                  className="flex-1 bg-blue-600 hover:bg-blue-700"
+                  className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold py-2.5 text-xs transition-all shadow-sm flex items-center justify-center gap-1.5"
                   onClick={handleSaveProfile}
                   disabled={saving}
                 >
-                  <Save className="w-4 h-4 mr-2" />
-                  {saving ? "Saving..." : "Save Changes"}
+                  <Save className="w-4 h-4" />
+                  <span>{saving ? "Saving..." : "Save Changes"}</span>
                 </Button>
                 <Button
                   variant="outline"
+                  className="rounded-2xl border-slate-200 hover:bg-slate-50 font-bold text-xs py-2.5 px-4 transition-all"
                   onClick={() => {
                     setEditing(false);
                     setFirstName(user?.firstName || "");
@@ -240,33 +233,30 @@ export function StudentProfile() {
                 </Button>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card className="border-slate-200">
-          <CardHeader className="border-b border-slate-100 pb-4">
-            <CardTitle className="text-lg text-slate-900">
-              Identity Document
-            </CardTitle>
-            <CardDescription>
-              Upload your ID card or passport photo for verification.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-6 space-y-4">
+        {/* Card 2: Identity Document */}
+        <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="px-5 py-4 border-b border-slate-100/80 bg-slate-50/50">
+            <h3 className="text-base font-bold text-slate-900">Identity Document</h3>
+            <p className="text-[11px] text-slate-400 font-medium mt-0.5">Upload your ID card or passport photo for clearance verification.</p>
+          </div>
+          <div className="p-6 space-y-4">
             {user?.documentUrl ? (
-              <div className="space-y-3">
-                <div className="p-3 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-green-600" />
-                  <p className="text-sm font-medium text-green-900">
-                    Document Uploaded
-                  </p>
+              <div className="space-y-4">
+                <div className="p-3 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-2 text-emerald-900">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                  <span className="text-xs font-bold">Verification Document Uploaded Successfully</span>
                 </div>
-                <img
-                  src={user.documentUrl}
-                  alt="Identity document"
-                  className="w-full rounded-lg border border-slate-200"
-                />
-                <div className="flex gap-3">
+                <div className="relative rounded-2xl overflow-hidden border border-slate-200/60 aspect-video bg-slate-50 flex items-center justify-center">
+                  <img
+                    src={user.documentUrl}
+                    alt="Identity document"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex">
                   <label className="flex-1">
                     <input
                       type="file"
@@ -278,15 +268,15 @@ export function StudentProfile() {
                       className="hidden"
                       disabled={uploadingDocument}
                     />
-                    <div className="w-full rounded-lg border border-slate-200 hover:border-slate-300 cursor-pointer px-4 py-2.5 flex items-center justify-center text-sm font-medium text-slate-700">
+                    <div className="w-full rounded-2xl border border-slate-200 hover:border-slate-300 cursor-pointer px-4 py-2.5 flex items-center justify-center text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors">
                       <Upload className="w-4 h-4 mr-2" />
-                      {uploadingDocument ? "Uploading..." : "Replace"}
+                      <span>{uploadingDocument ? "Uploading..." : "Replace Uploaded Document"}</span>
                     </div>
                   </label>
                 </div>
               </div>
             ) : (
-              <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg border-dashed">
+              <div className="p-4 bg-slate-50/60 border border-slate-200/80 border-dashed rounded-3xl">
                 <label className="block">
                   <input
                     type="file"
@@ -298,37 +288,34 @@ export function StudentProfile() {
                     className="hidden"
                     disabled={uploadingDocument}
                   />
-                  <div className="flex flex-col items-center justify-center py-8 cursor-pointer hover:opacity-80 transition-opacity">
-                    <FileText className="w-8 h-8 text-slate-400 mb-2" />
-                    <p className="text-sm font-medium text-slate-900 mb-1">
-                      {uploadingDocument
-                        ? "Uploading..."
-                        : "Upload ID or Passport"}
+                  <div className="flex flex-col items-center justify-center py-8 cursor-pointer hover:opacity-85 transition-opacity group">
+                    <div className="w-12 h-12 bg-white rounded-xl border border-slate-100 shadow-sm flex items-center justify-center text-slate-400 mb-3 group-hover:scale-105 transition-transform duration-300">
+                      <FileText className="w-6 h-6 text-slate-500" />
+                    </div>
+                    <p className="text-sm font-bold text-slate-900 mb-1">
+                      {uploadingDocument ? "Uploading..." : "Upload Identity ID / Passport"}
                     </p>
-                    <p className="text-xs text-slate-500">
-                      JPG, PNG, or PDF (Max 5MB)
+                    <p className="text-xs text-slate-400">
+                      JPG, PNG, or PDF formats up to 5MB
                     </p>
                   </div>
                 </label>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
-      <Card className="border-slate-200">
-        <CardHeader className="border-b border-slate-100 pb-4">
-          <CardTitle className="text-lg text-slate-900">
-            Change Password
-          </CardTitle>
-          <CardDescription>
-            Update your portal password.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-6">
+      {/* Card 3: Security & Credentials */}
+      <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+        <div className="px-5 py-4 border-b border-slate-100/80 bg-slate-50/50">
+          <h3 className="text-base font-bold text-slate-900">Change Password</h3>
+          <p className="text-[11px] text-slate-400 font-medium mt-0.5">Update your portal security password key credentials.</p>
+        </div>
+        <div className="p-6">
           <div className="max-w-md space-y-4">
             <div>
-              <label className="text-xs font-medium text-slate-500 mb-1 block">
+              <label className="text-xs font-bold text-slate-400 mb-1.5 block uppercase tracking-wider">
                 Current Password
               </label>
               <div className="relative">
@@ -336,13 +323,13 @@ export function StudentProfile() {
                   type={showCurrent ? "text" : "password"}
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                  className="w-full px-4 py-2.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-bold text-slate-800"
                   placeholder="Enter current password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowCurrent(!showCurrent)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                 >
                   {showCurrent ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -350,7 +337,7 @@ export function StudentProfile() {
             </div>
 
             <div>
-              <label className="text-xs font-medium text-slate-500 mb-1 block">
+              <label className="text-xs font-bold text-slate-400 mb-1.5 block uppercase tracking-wider">
                 New Password
               </label>
               <div className="relative">
@@ -358,14 +345,14 @@ export function StudentProfile() {
                   type={showNew ? "text" : "password"}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                  className="w-full px-4 py-2.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-bold text-slate-800"
                   placeholder="Min. 6 characters"
                   minLength={6}
                 />
                 <button
                   type="button"
                   onClick={() => setShowNew(!showNew)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                 >
                   {showNew ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -373,17 +360,18 @@ export function StudentProfile() {
             </div>
 
             <Button
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold py-2.5 text-xs transition-all shadow-sm flex items-center justify-center gap-1.5"
               disabled={changingPassword || !currentPassword || !newPassword}
               onClick={() => {
                 toast("Password change not yet implemented on server", "error");
               }}
             >
-              {changingPassword ? "Updating..." : "Update Password"}
+              <ShieldAlert className="w-4 h-4" />
+              <span>{changingPassword ? "Updating..." : "Update Password"}</span>
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }
