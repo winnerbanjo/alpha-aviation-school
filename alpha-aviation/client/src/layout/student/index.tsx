@@ -82,7 +82,10 @@ export default function StudentLayout() {
       {/* Main Body */}
       <div className="flex-1 lg:ml-64 flex flex-col h-screen overflow-hidden relative z-10">
         <main className="flex-1 overflow-y-auto relative">
-          <StudentTopNav />
+          <StudentTopNav
+            mobileMenuOpen={mobileMenuOpen}
+            setMobileMenuOpen={setMobileMenuOpen}
+          />
           <div className="p-6 lg:p-8">
             <Suspense fallback={<OutletLoader />}>
               <Outlet />
