@@ -165,6 +165,7 @@ export function AdminStudents() {
                 </TableHead>
                 <TableHead className="text-slate-900">Email</TableHead>
                 <TableHead className="text-slate-900">Student Name</TableHead>
+                <TableHead className="text-slate-900">Phone</TableHead>
                 <TableHead className="text-slate-900">Payment Status</TableHead>
                 <TableHead className="text-slate-900">Student Status</TableHead>
                 <TableHead className="text-right text-slate-900">Actions</TableHead>
@@ -177,6 +178,7 @@ export function AdminStudents() {
                       <TableCell><div className="h-4 w-4 bg-slate-100 rounded" /></TableCell>
                       <TableCell><div className="h-3.5 bg-slate-100 rounded w-40" /></TableCell>
                       <TableCell><div className="h-3.5 bg-slate-100 rounded w-28" /></TableCell>
+                      <TableCell><div className="h-3.5 bg-slate-100 rounded w-24" /></TableCell>
                       <TableCell><div className="h-5 bg-slate-100 rounded-full w-16" /></TableCell>
                       <TableCell><div className="h-5 bg-slate-100 rounded-full w-20" /></TableCell>
                       <TableCell className="text-right"><div className="h-7 bg-slate-100 rounded-lg w-16 ml-auto" /></TableCell>
@@ -184,7 +186,7 @@ export function AdminStudents() {
                   ))
                 : filteredStudents.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="py-16">
+                      <TableCell colSpan={7} className="py-16">
                         <EmptyState type="students" message={searchQuery || paymentFilter !== "all" || statusFilter !== "all" ? "No students found matching your filters. Try adjusting your search or filter settings." : "No students registered yet. Waiting for first enrollment..."} />
                       </TableCell>
                     </TableRow>
@@ -196,6 +198,13 @@ export function AdminStudents() {
                       </TableCell>
                       <TableCell className="font-medium text-slate-900">{student.email}</TableCell>
                       <TableCell>{student.firstName || ""} {student.lastName || ""}{!student.firstName && !student.lastName && "N/A"}</TableCell>
+                      <TableCell>
+                        {student.phone ? (
+                          <span className="text-sm text-slate-700">{student.phone}</span>
+                        ) : (
+                          <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">Missing</span>
+                        )}
+                      </TableCell>
                       <TableCell>
                         <Badge variant={student.paymentStatus === "Paid" ? "success" : "warning"}>{student.paymentStatus}</Badge>
                       </TableCell>

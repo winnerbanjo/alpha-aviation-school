@@ -33,6 +33,7 @@ export function VerifyOtp() {
   // Form data for enrollment
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
 
@@ -44,6 +45,7 @@ export function VerifyOtp() {
     const tempTokenParam = searchParams.get("tempToken");
     const firstNameParam = searchParams.get("firstName");
     const lastNameParam = searchParams.get("lastName");
+    const phoneParam = searchParams.get("phone");
     const passwordParam = searchParams.get("password");
     const coursesParam = searchParams.get("courses");
 
@@ -56,6 +58,7 @@ export function VerifyOtp() {
     if (tempTokenParam) setTempToken(tempTokenParam);
     if (firstNameParam) setFirstName(firstNameParam);
     if (lastNameParam) setLastName(lastNameParam);
+    if (phoneParam) setPhone(phoneParam);
     if (passwordParam) setPassword(passwordParam);
     if (coursesParam) {
       try {
@@ -141,6 +144,7 @@ export function VerifyOtp() {
           otp: otpString,
           firstName,
           lastName,
+          phone,
           password,
           selectedCourses,
         });

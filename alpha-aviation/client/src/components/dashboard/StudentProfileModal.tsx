@@ -166,17 +166,19 @@ export function StudentProfileModal({
               </div>
             </div>
 
-            {student.phone && (
-              <div className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-slate-400" />
-                <div>
-                  <p className="text-xs text-slate-500">Phone</p>
-                  <p className="text-sm font-medium text-slate-900">
-                    {student.phone}
-                  </p>
-                </div>
+            <div className="flex items-center gap-3">
+              <Phone className="w-5 h-5 text-slate-400" />
+              <div>
+                <p className="text-xs text-slate-500">Phone</p>
+                <p
+                  className={`text-sm font-medium ${
+                    student.phone ? "text-slate-900" : "text-amber-600"
+                  }`}
+                >
+                  {student.phone || "Not added yet"}
+                </p>
               </div>
-            )}
+            </div>
 
             {student.enrolledCourse && (
               <div className="flex items-center gap-3">

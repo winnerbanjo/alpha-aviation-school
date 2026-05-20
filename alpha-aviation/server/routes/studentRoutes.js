@@ -12,6 +12,7 @@ router.patch('/notifications/read-all', studentController.markAllNotificationsRe
 router.patch('/notifications/:id/read', studentController.markNotificationRead);
 router.get('/resources', resourceController.getStudentResources);
 router.patch('/profile', studentController.updateProfile);
+router.patch('/phone', studentController.updatePhone);
 router.post('/upload-document', studentController.uploadDocument);
 router.post('/upload-payment-receipt', studentController.uploadPaymentReceipt);
 router.post('/verify-paystack', studentController.verifyPaystackPayment);

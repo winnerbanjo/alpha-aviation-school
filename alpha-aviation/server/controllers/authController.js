@@ -86,9 +86,21 @@ const isValidEmail = (email) => {
   return emailRegex.test(email);
 };
 
+const normalizePhone = (phone) =>
+  typeof phone === "string" && phone.replace(/\D/g, "")
+    ? `+${phone.replace(/\D/g, "")}`
+    : "";
+
+const isValidPhone = (phone) => {
+  if (!phone) return true;
+  const digits = phone.replace(/\D/g, "");
+  return digits.length >= 7 && digits.length <= 15;
+};
+
 exports.register = async (req, res, next) => {
   try {
     const { email, password, firstName, lastName, selectedCourses } = req.body;
+    const phone = normalizePhone(req.body.phone);
     const normalizedEmail =
       typeof email === "string" ? email.toLowerCase().trim() : "";
     const mode = process.env.MODE || "production";
@@ -112,6 +124,13 @@ exports.register = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         message: "Password must be at least 6 characters",
+      });
+    }
+
+    if (!isValidPhone(phone)) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter a valid phone number",
       });
     }
 
@@ -153,6 +172,7 @@ exports.register = async (req, res, next) => {
         role: "student",
         firstName,
         lastName,
+        phone,
         enrolledCourse: normalizedSelectedCourses[0] || "",
         selectedCourses: normalizedSelectedCourses,
         courseSelections,
@@ -267,6 +287,7 @@ exports.verifyEnrollmentOTP = async (req, res, next) => {
   try {
     const { email, otp, firstName, lastName, password, selectedCourses } =
       req.body;
+    const phone = normalizePhone(req.body.phone);
 
     if (
       !email ||
@@ -286,6 +307,13 @@ exports.verifyEnrollmentOTP = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         message: "Invalid OTP format",
+      });
+    }
+
+    if (!isValidPhone(phone)) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter a valid phone number",
       });
     }
 
@@ -344,6 +372,7 @@ exports.verifyEnrollmentOTP = async (req, res, next) => {
       role: "student",
       firstName,
       lastName,
+      phone,
       enrolledCourse: normalizedSelectedCourses[0] || "",
       selectedCourses: normalizedSelectedCourses,
       courseSelections,

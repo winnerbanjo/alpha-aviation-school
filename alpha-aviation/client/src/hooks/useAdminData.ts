@@ -381,12 +381,17 @@ export function useAdminData() {
   };
 
   const handleWhatsAppReminder = (student: Student) => {
+    if (!student.phone?.trim()) {
+      toast("This student has no phone number yet", "error");
+      return;
+    }
+
     const studentName = `${student.firstName || ""} ${student.lastName || ""}`.trim() || "Student";
     const amountDue = student.amountDue || 0;
     const message = encodeURIComponent(
       `Hello ${studentName}, this is Alpha Step Links Aviation School. A reminder of your balance: ${formatNaira(amountDue)}. Please complete your payment to continue your training program. Thank you!`
     );
-    const phone = student.phone || "2341234567890";
+    const phone = student.phone;
     const whatsappUrl = `https://wa.me/${phone.replace(/[^0-9]/g, "")}?text=${message}`;
     window.open(whatsappUrl, "_blank");
   };
@@ -421,7 +426,8 @@ export function useAdminData() {
     if (statusFilter !== "all" && student.status !== statusFilter) return false;
     const searchLower = searchQuery.toLowerCase();
     const fullName = `${student.firstName || ""} ${student.lastName || ""}`.toLowerCase();
-    return student.email.toLowerCase().includes(searchLower) || fullName.includes(searchLower);
+    const phone = (student.phone || "").toLowerCase();
+    return student.email.toLowerCase().includes(searchLower) || fullName.includes(searchLower) || phone.includes(searchLower);
   });
 
   const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
