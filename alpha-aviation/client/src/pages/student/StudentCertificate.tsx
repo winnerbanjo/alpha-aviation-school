@@ -1,14 +1,8 @@
 import { useState } from "react";
 import { useAuthStore } from "@/store/authStore";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { GraduationCap, Download, Loader2, Lock } from "lucide-react";
+import { GraduationCap, Download, Loader2, Lock, Award, AwardIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 export function StudentCertificate() {
   const { user } = useAuthStore();
@@ -39,105 +33,132 @@ export function StudentCertificate() {
 
   if (!isGraduated) {
     return (
-      <div className="p-6 lg:p-8 space-y-8">
+      <div className="space-y-8 pb-12">
+        {/* Header section */}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
+          <h1 className="text-3xl font-black tracking-tight text-slate-900">
             My Certificate
           </h1>
-          <p className="text-slate-500">
+          <p className="text-sm font-normal text-slate-500 mt-1">
             View and download your official graduation certificate.
           </p>
         </div>
-        <Card className="border-slate-200">
-          <CardContent className="p-12 text-center">
-            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-8 h-8 text-slate-400" />
-            </div>
-            <h2 className="text-xl font-semibold text-slate-900 mb-2">
-              Certificate Not Available
-            </h2>
-            <p className="text-sm text-slate-500 max-w-md mx-auto">
-              Your certificate will be available once you have graduated.
-              Complete all courses and pass your assessments to become eligible.
-            </p>
-          </CardContent>
-        </Card>
+
+        {/* Not Available View */}
+        <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-12 text-center shadow-sm max-w-2xl mx-auto">
+          <div className="relative p-4 bg-gradient-to-br from-slate-50 to-slate-100 text-slate-500 rounded-full border border-slate-200/80 shadow-sm flex items-center justify-center w-16 h-16 mx-auto mb-6">
+            <Lock className="w-6 h-6 text-slate-400" />
+          </div>
+          <h2 className="text-lg font-bold text-slate-900 mb-2">
+            Certificate Not Available
+          </h2>
+          <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
+            Your certificate of completion will be available here once you have graduated.
+            Complete all academic tracks, settle outstanding tuition, and pass final clearance checks.
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="p-6 lg:p-8 space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
-          My Certificate
-        </h1>
-        <p className="text-slate-500">
-          View and download your official graduation certificate.
-        </p>
+    <div className="space-y-8 pb-12">
+      {/* Header section */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-3xl font-black tracking-tight text-slate-900">
+            My Certificate
+          </h1>
+          <p className="text-sm font-normal text-slate-500 mt-1">
+            View and download your official graduation certificate.
+          </p>
+        </div>
+        <div className="self-start sm:self-auto">
+          <span className="text-xs font-bold px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-full border border-emerald-100/30 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+            Graduated & Cleared
+          </span>
+        </div>
       </div>
 
-      <div className="flex justify-center">
-        <Badge variant="secondary" className="bg-green-100 text-green-700 hover:bg-green-100 border-none">
-          Graduated
-        </Badge>
-      </div>
+      {/* Diploma Showcase Card Frame */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white/95 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 sm:p-12 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.05),0px_0px_0px_1px_rgba(0,0,0,0.08)] max-w-2xl mx-auto relative overflow-hidden text-center group hover:shadow-md transition-all duration-300"
+      >
+        {/* Decorative Inner Board Frame */}
+        <div className="absolute inset-4 border border-dashed border-slate-200 rounded-2xl pointer-events-none" />
 
-      <Card className="border-2 border-green-200 bg-gradient-to-br from-green-50 to-white max-w-2xl mx-auto">
-        <CardHeader className="text-center">
-          <div className="mx-auto p-4 bg-green-100 rounded-full w-24 h-24 flex items-center justify-center mb-4">
-            <GraduationCap className="w-12 h-12 text-green-600" />
+        {/* Certificate Content wrapper */}
+        <div className="relative z-10 space-y-6">
+          {/* Graduation Cap Badge */}
+          <div className="mx-auto p-4 bg-gradient-to-br from-emerald-50 to-emerald-100/60 text-emerald-600 rounded-full w-20 h-20 flex items-center justify-center border border-emerald-100/80 shadow-sm relative group-hover:scale-105 transition-transform duration-300">
+            <GraduationCap className="w-10 h-10 text-emerald-600" />
           </div>
-          <CardTitle className="text-2xl text-green-900">
-            Certificate of Completion
-          </CardTitle>
-          <CardDescription className="text-green-700">
-            Alpha Step Links Aviation School
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="text-center space-y-4">
+
           <div>
-            <p className="text-sm text-slate-500">This certifies that</p>
-            <p className="text-2xl font-bold text-slate-900">
+            <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest">
+              Alpha Step Links Aviation School
+            </p>
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight mt-2">
+              Certificate of Completion
+            </h2>
+          </div>
+
+          <div className="w-16 h-px bg-slate-200 mx-auto" />
+
+          {/* Student details */}
+          <div className="space-y-1">
+            <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">This certifies that</p>
+            <p className="text-2xl font-extrabold text-slate-950 tracking-tight font-serif">
               {user?.firstName} {user?.lastName}
             </p>
           </div>
-          <div>
-            <p className="text-sm text-slate-500">has successfully completed</p>
-            <p className="text-lg font-semibold text-slate-800">
+
+          <div className="space-y-1">
+            <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">has successfully completed the course of study in</p>
+            <p className="text-base font-bold text-slate-800 max-w-md mx-auto">
               {user?.selectedCourses?.join(", ") || user?.enrolledCourse}
             </p>
           </div>
+
           {user?.studentIdNumber && (
-            <p className="text-sm text-slate-500">
+            <p className="text-[11px] font-bold text-slate-400/90 uppercase tracking-wider">
               Student ID: {user.studentIdNumber}
             </p>
           )}
-          {user?.certificateUrl ? (
-            <button
-              onClick={() => handleCertDownload(user.certificateUrl!)}
-              disabled={isDownloading}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:bg-green-400 rounded-md mt-4 transition-colors"
-            >
-              {isDownloading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Downloading…
-                </>
-              ) : (
-                <>
-                  <Download className="w-4 h-4" />
-                  Download Certificate
-                </>
-              )}
-            </button>
-          ) : (
-            <p className="text-sm text-slate-500 mt-4">
-              Certificate not available yet. Your admin will upload it after final review.
-            </p>
-          )}
-        </CardContent>
-      </Card>
+
+          {/* Download and Print button */}
+          <div className="pt-4">
+            {user?.certificateUrl ? (
+              <Button
+                onClick={() => handleCertDownload(user.certificateUrl!)}
+                disabled={isDownloading}
+                className="inline-flex items-center justify-center gap-2 px-6 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 rounded-2xl transition-all shadow-sm shrink-0"
+              >
+                {isDownloading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Downloading Credential...</span>
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-4 h-4" />
+                    <span>Download Certificate (PDF)</span>
+                  </>
+                )}
+              </Button>
+            ) : (
+              <div className="p-3 bg-slate-50 border border-slate-100 rounded-2xl inline-flex items-center gap-2 text-xs font-bold text-slate-500">
+                <Award className="w-4 h-4 text-indigo-500" />
+                <span>Certificate loading... Awaiting final administrative registry release.</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 }
