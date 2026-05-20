@@ -47,7 +47,7 @@ export function StudentTopNav() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 bg-transparent py-4 px-6 lg:px-8">
+    <header className="sticky top-0 z-30 bg-white/20  py-4 px-6 lg:px-8 backdrop-blur-md">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         {/* Greetings and motivational message */}
         <div>
@@ -60,25 +60,7 @@ export function StudentTopNav() {
         </div>
 
         {/* Action controls (badges, notifications, share/logout) */}
-        <div className="flex items-center h-10 gap-3 self-end sm:self-auto">
-          {/* Tuition Status Badge */}
-          {tutionPaid === "Paid" ? (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-              <GraduationCap className="w-3.5 h-3.5" />
-              Active Student
-            </span>
-          ) : tutionPaid === "Under Review" ? (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-              <AlertTriangle className="w-3.5 h-3.5" />
-              Receipt Under Review
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
-              <Plane className="w-3.5 h-3.5" />
-              Tuition Outstanding
-            </span>
-          )}
-
+        <div className="flex items-center  gap-3 self-end sm:self-auto">
           {/* Notifications Bell */}
           <button
             type="button"

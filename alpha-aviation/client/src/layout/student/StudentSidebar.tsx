@@ -126,7 +126,7 @@ export function StudentSidebar({
 
       {/* Sidebar aside */}
       <aside
-        className={`fixed left-0 top-0 h-full w-64 bg-white/75 backdrop-blur-xl border-r border-slate-200/60 z-40 transition-transform duration-300 ease-out flex flex-col justify-between ${
+        className={`fixed left-0 top-0 h-full w-64 bg-[#f8fafc]   backdrop-blur-xl border-r border-slate-200/60 z-40 transition-transform duration-300 ease-out flex flex-col justify-between ${
           mobileMenuOpen
             ? "translate-x-0"
             : "-translate-x-full lg:translate-x-0"

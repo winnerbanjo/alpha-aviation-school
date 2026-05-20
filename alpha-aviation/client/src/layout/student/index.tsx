@@ -61,10 +61,10 @@ export default function StudentLayout() {
   }, [user]);
 
   return (
-    <div className="min-h-screen bg-white relative flex overflow-x-hidden">
+    <div className="h-screen bg-white relative flex overflow-hidden">
       {/* Premium background mesh lights */}
       <div className="absolute top-[-100px] right-[-100px] w-[500px] h-[500px] rounded-full bg-gradient-to-br from-indigo-200/25 to-purple-200/25 blur-3xl pointer-events-none z-0" />
-
+      {/* <div className="absolute bottom-[-100px] left-[-100px] w-[500px] h-[500px] rounded-full bg-gradient-to-br from-indigo-200/25 to-purple-200/25 blur-3xl pointer-events-none z-0" /> */}
       {/* Global prompts */}
       <PaymentSteps
         user={user}
@@ -80,12 +80,14 @@ export default function StudentLayout() {
       />
 
       {/* Main Body */}
-      <div className="flex-1 lg:ml-64 flex flex-col relative z-10">
-        <StudentTopNav />
-        <main className="flex-1 p-6 lg:p-8 overflow-y-auto">
-          <Suspense fallback={<OutletLoader />}>
-            <Outlet />
-          </Suspense>
+      <div className="flex-1 lg:ml-64 flex flex-col h-screen overflow-hidden relative z-10">
+        <main className="flex-1 overflow-y-auto relative">
+          <StudentTopNav />
+          <div className="p-6 lg:p-8">
+            <Suspense fallback={<OutletLoader />}>
+              <Outlet />
+            </Suspense>
+          </div>
         </main>
       </div>
     </div>

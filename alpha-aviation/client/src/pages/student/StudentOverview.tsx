@@ -13,6 +13,7 @@ import {
   FileText,
   ShieldCheck,
   Hourglass,
+  Award,
 } from "lucide-react";
 import { formatNaira } from "@/data/courseCatalog";
 import { useNavigate } from "react-router-dom";
@@ -78,6 +79,24 @@ export function StudentOverview() {
     return "Welcome to Alpha Aviation! To begin training, please complete your tuition payment and upload your identity verification document under Profile Settings.";
   };
 
+  const Tabs = [
+    {
+      title: "enrolled courses",
+      subTitle: "enrolledCourses",
+      icon: BookOpen,
+    },
+    {
+      title: "tuition paid",
+      subTitle: "tuitionPaid",
+      icon: CreditCard,
+    },
+    {
+      title: "amount due",
+      subTitle: "amountDue",
+      icon: CreditCard,
+    },
+  ];
+
   return (
     <div className="space-y-8 pb-12">
       {/* Dynamic Payment/Under Review Alert Banners */}
@@ -85,7 +104,7 @@ export function StudentOverview() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`p-4 rounded-3xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm backdrop-blur-md ${
+          className={`p-4 rounded-3xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.05),0px_0px_0px_1px_rgba(0,0,0,0.08)] backdrop-blur-md ${
             isUnderReview
               ? "bg-amber-50/80 border-amber-200 text-amber-900"
               : "bg-rose-50/80 border-rose-200 text-rose-900"
@@ -129,18 +148,43 @@ export function StudentOverview() {
         {/* Card 1: Registered Courses Count */}
         <div
           onClick={() => navigate("/dashboard/courses")}
-          className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 relative overflow-hidden shadow-sm hover:shadow-md hover:border-slate-300/80 transition-all cursor-pointer group"
+          className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 relative overflow-hidden shadow-[0px_6px_24px_0px_rgba(0,0,0,0.05),0px_0px_0px_1px_rgba(0,0,0,0.08)]  hover:border-slate-300/80 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between">
-            <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl border border-indigo-100/50">
-              <BookOpen className="w-5 h-5" />
+            <div className="relative p-3 bg-gradient-to-br from-indigo-50 to-indigo-100/60 text-indigo-600 rounded-2xl border border-indigo-100/80 shadow-sm overflow-hidden flex items-center justify-center w-12 h-12">
+              <div className="absolute inset-0 bg-indigo-200/20 blur-sm rounded-full scale-75" />
+              <svg
+                className="w-6 h-6 relative z-10 text-indigo-600"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
+                <path
+                  d="M22 10L12 5L2 10L12 15L22 10Z"
+                  fill="currentColor"
+                  fillOpacity="0.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M6 12.5V17C6 18 8.5 19.5 12 19.5C15.5 19.5 18 18 18 17V12.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M20 10.5V14"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </div>
-            <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full">
               Ground school
             </span>
           </div>
           <div className="mt-4">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+            <p className="text-sm font-bold text-slate-500 uppercase tracking-wider">
               Enrolled Courses
             </p>
             <h3 className="text-3xl font-black text-slate-900 mt-1">
@@ -152,18 +196,52 @@ export function StudentOverview() {
         {/* Card 2: Tuition Paid (Real DB value) */}
         <div
           onClick={() => navigate("/dashboard/payments")}
-          className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 shadow-sm hover:shadow-md hover:border-slate-300/80 transition-all cursor-pointer group"
+          className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.05),0px_0px_0px_1px_rgba(0,0,0,0.08)]  hover:border-slate-300/80 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between">
-            <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100/50">
-              <CheckCircle2 className="w-5 h-5" />
+            <div className="relative p-3 bg-gradient-to-br from-emerald-50 to-emerald-100/60 text-emerald-600 rounded-2xl border border-emerald-100/80 shadow-sm overflow-hidden flex items-center justify-center w-12 h-12">
+              <div className="absolute inset-0 bg-emerald-200/20 blur-sm rounded-full scale-75" />
+              <svg
+                className="w-6 h-6 relative z-10 text-emerald-600"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
+                <rect
+                  x="2"
+                  y="5"
+                  width="20"
+                  height="14"
+                  rx="2"
+                  fill="currentColor"
+                  fillOpacity="0.2"
+                />
+                <path
+                  d="M2 9H22"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M6 14H10"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M15 14L17 16L21 12"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </div>
-            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full">
               Tuition paid
             </span>
           </div>
           <div className="mt-4">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+            <p className="text-sm font-bold text-slate-500 uppercase tracking-wider">
               Total Paid
             </p>
             <h3 className="text-2xl font-black text-slate-900 mt-1 truncate">
@@ -175,22 +253,87 @@ export function StudentOverview() {
         {/* Card 3: Amount Due (Real DB value) */}
         <div
           onClick={() => navigate("/dashboard/payments")}
-          className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 shadow-sm hover:shadow-md hover:border-slate-300/80 transition-all cursor-pointer group"
+          className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.05),0px_0px_0px_1px_rgba(0,0,0,0.08)]  hover:border-slate-300/80 transition-all cursor-pointer group"
         >
           <div className="flex items-center justify-between">
             <div
-              className={`p-3 rounded-2xl border ${amountDue > 0 ? "bg-rose-50 text-rose-600 border-rose-100/50" : "bg-emerald-50 text-emerald-600 border-emerald-100/50"}`}
+              className={`relative p-3 rounded-2xl border shadow-sm overflow-hidden flex items-center justify-center w-12 h-12 ${amountDue > 0 ? "bg-gradient-to-br from-rose-50 to-rose-100/60 text-rose-600 border-rose-100/80" : "bg-gradient-to-br from-emerald-50 to-emerald-100/60 text-emerald-600 border-emerald-100/80"}`}
             >
-              <AlertCircle className="w-5 h-5" />
+              <div
+                className={`absolute inset-0 blur-sm rounded-full scale-75 ${amountDue > 0 ? "bg-rose-200/20" : "bg-emerald-200/20"}`}
+              />
+              {amountDue > 0 ? (
+                <svg
+                  className="w-6 h-6 relative z-10 text-rose-600"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                >
+                  <path
+                    d="M5 3H19C20.1046 3 21 3.89543 21 5V21L18 19L15 21L12 19L9 21L6 19L3 21V5C3 3.89543 3.89543 3 5 3Z"
+                    fill="currentColor"
+                    fillOpacity="0.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M9 13H15"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M9 17H13"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M12 7V9"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <circle
+                    cx="12"
+                    cy="11"
+                    r="0.5"
+                    fill="currentColor"
+                    stroke="none"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  className="w-6 h-6 relative z-10 text-emerald-600"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                >
+                  <path
+                    d="M5 3H19C20.1046 3 21 3.89543 21 5V21L18 19L15 21L12 19L9 21L6 19L3 21V5C3 3.89543 3.89543 3 5 3Z"
+                    fill="currentColor"
+                    fillOpacity="0.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M9 11L11 13L15 9"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                  />
+                </svg>
+              )}
             </div>
             <span
-              className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${amountDue > 0 ? "text-rose-600 bg-rose-50" : "text-emerald-600 bg-emerald-50"}`}
+              className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${amountDue > 0 ? "text-rose-600 bg-rose-50" : "text-emerald-600 bg-emerald-50"}`}
             >
               {amountDue > 0 ? "Outstanding" : "Settled"}
             </span>
           </div>
           <div className="mt-4">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+            <p className="text-sm font-bold text-slate-500 uppercase tracking-wider">
               Amount Due
             </p>
             <h3 className="text-2xl font-black text-slate-900 mt-1 truncate">
@@ -198,200 +341,23 @@ export function StudentOverview() {
             </h3>
           </div>
         </div>
-
-        {/* Card 4: Document Verification (Real DB Value / Placeholder graphic) */}
-        {/* <div
-          onClick={() => navigate("/dashboard/profile")}
-          className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 relative overflow-hidden shadow-sm hover:shadow-md hover:border-slate-300/80 transition-all cursor-pointer group"
-        > */}
-        {/* <div className="flex items-center justify-between">
-            <div
-              className={`p-3 rounded-2xl border ${user?.documentUrl ? "bg-emerald-50 text-emerald-600 border-emerald-100/50" : "bg-amber-50 text-amber-600 border-amber-100/50"}`}
-            >
-              <FileText className="w-5 h-5" />
-            </div>
-            <span
-              className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${user?.documentUrl ? "text-emerald-600 bg-emerald-50" : "text-amber-600 bg-amber-50"}`}
-            >
-              {user?.documentUrl ? "Uploaded" : "Pending"}
-            </span>
-          </div> */}
-        {/* <div className="mt-4 pr-12">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-              Identity ID
-            </p>
-            <h3 className="text-xl font-black text-slate-900 mt-1.5 truncate">
-              {user?.documentUrl ? "Verified Document" : "Verify Profile"}
-            </h3>
-          </div> */}
-
-        {/* Avatar overlay graphic */}
-        {/* <div className="absolute right-0 bottom-0 w-20 h-20 pointer-events-none transition-transform group-hover:scale-105 duration-300 flex items-end justify-end">
-            {!avatarError ? (
-              <img
-                src="/student_pilot_3d.png"
-                alt=""
-                onError={() => setAvatarError(true)}
-                className="w-18 h-18 object-contain"
-              />
-            ) : (
-              <div className="w-14 h-14 mr-2 mb-2 bg-gradient-to-tr from-purple-100 to-indigo-100 border border-indigo-200 text-indigo-600 rounded-full flex items-center justify-center shadow-inner relative">
-                <GraduationCap className="w-6 h-6 text-indigo-600" />
-              </div>
-            )}
-          </div> */}
-        {/* </div> */}
       </div>
 
       {/* Main Content Layout Panels */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Hand: Subject Performance & Status Updates */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* Course Syllabus / Module Performance */}
-          <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-lg font-bold text-slate-900">
-                  Registered Ground Courses
-                </h3>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Ground school courses registered under your enrollment track
-                </p>
-              </div>
-              <BookOpen className="w-5 h-5 text-indigo-500" />
-            </div>
-
-            {registeredCourses.length > 0 ? (
-              <div className="space-y-5">
-                {registeredCourses.map((course, idx) => {
-                  // Determine actual display parameters based on clearance status
-                  const isCleared = user?.adminClearance;
-                  const progressValue = isCleared
-                    ? 100
-                    : isUnderReview
-                      ? 35
-                      : 0;
-                  const colorGradient =
-                    idx % 2 === 0
-                      ? "from-indigo-500 to-purple-600"
-                      : "from-blue-500 to-indigo-600";
-
-                  return (
-                    <div key={course.title} className="space-y-2">
-                      <div className="flex justify-between items-center text-xs font-bold">
-                        <span className="text-slate-700">{course.title}</span>
-                        <span className="text-indigo-600">
-                          {isCleared
-                            ? "Unlocked"
-                            : isUnderReview
-                              ? "Pending Approval"
-                              : "Locked"}{" "}
-                          ({progressValue}%)
-                        </span>
-                      </div>
-                      <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${progressValue}%` }}
-                          transition={{ duration: 1, ease: "easeOut" }}
-                          className={`h-full bg-gradient-to-r ${colorGradient} rounded-full`}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <BookOpen className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                <p className="text-xs text-slate-500">
-                  No courses selected yet.
-                </p>
-                <Button
-                  onClick={() => navigate("/dashboard/courses")}
-                  className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-2xl px-4 py-2 text-xs"
-                >
-                  Browse Course Catalog
-                </Button>
-              </div>
-            )}
-
-            {/* Profile Action Logs */}
-            <div className="mt-8 pt-6 border-t border-slate-100">
-              <h4 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-4">
-                Academic & Profile Checklists
-              </h4>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3.5 bg-slate-50/80 rounded-2xl border border-slate-100">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`p-2.5 rounded-xl ${isPaid ? "bg-emerald-50 text-emerald-600" : isUnderReview ? "bg-amber-50 text-amber-600" : "bg-rose-50 text-rose-600"}`}
-                    >
-                      <CreditCard className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold text-slate-900">
-                        Tuition Settlement
-                      </p>
-                      <p className="text-[10px] text-slate-400 mt-0.5 font-medium">
-                        Payment verification milestone
-                      </p>
-                    </div>
-                  </div>
-                  <span
-                    className={`text-xs font-extrabold px-2.5 py-1 rounded-full ${isPaid ? "bg-emerald-50 text-emerald-600" : isUnderReview ? "bg-amber-50 text-amber-600" : "bg-rose-50 text-rose-600"}`}
-                  >
-                    {isPaid
-                      ? "Completed"
-                      : isUnderReview
-                        ? "Under Review"
-                        : "Pending"}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between p-3.5 bg-slate-50/80 rounded-2xl border border-slate-100">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`p-2.5 rounded-xl ${user?.documentUrl ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"}`}
-                    >
-                      <FileText className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold text-slate-900">
-                        Identity Document Verification
-                      </p>
-                      <p className="text-[10px] text-slate-400 mt-0.5 font-medium">
-                        Profile document compliance check
-                      </p>
-                    </div>
-                  </div>
-                  <span
-                    className={`text-xs font-extrabold px-2.5 py-1 rounded-full ${user?.documentUrl ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"}`}
-                  >
-                    {user?.documentUrl ? "Uploaded" : "Required"}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Hand: Clearances & Academic Outlines */}
-        <div className="space-y-8">
-          {/* Clearance Readiness SVG Gauge */}
-          <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
-            <div>
-              <h3 className="text-lg font-bold text-slate-900 mb-6">
+        {/* Merged Course Progress & Ground Courses Row Card */}
+        <div className="lg:col-span-3 bg-white/90 backdrop-blur-md  rounded-3xl p-6 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.05),0px_0px_0px_1px_rgba(0,0,0,0.08)]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+            {/* Left Column: Gauge */}
+            <div className="flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-slate-100 pb-6 md:pb-0 md:pr-8">
+              <h3 className="text-base font-bold text-slate-500 uppercase tracking-wider mb-4 text-center">
                 Course Progress
               </h3>
-
-              {/* SVG concentric circular progress gauge */}
-              <div className="relative w-44 h-44 mx-auto flex items-center justify-center">
+              <div className="relative w-36 h-36 flex items-center justify-center">
                 <svg
                   className="w-full h-full transform -rotate-90"
                   viewBox="0 0 100 100"
                 >
-                  {/* Outer circle track */}
                   <circle
                     cx="50"
                     cy="50"
@@ -400,7 +366,6 @@ export function StudentOverview() {
                     stroke="#f1f5f9"
                     strokeWidth="10"
                   />
-                  {/* Outer circle progress */}
                   <motion.circle
                     cx="50"
                     cy="50"
@@ -416,7 +381,6 @@ export function StudentOverview() {
                     transition={{ duration: 1.5, ease: "easeInOut" }}
                     strokeLinecap="round"
                   />
-                  {/* Definitions for Gradients */}
                   <defs>
                     <linearGradient
                       id="clearanceGrad"
@@ -430,17 +394,157 @@ export function StudentOverview() {
                     </linearGradient>
                   </defs>
                 </svg>
-                {/* Center score */}
                 <div className="absolute text-center">
                   <span className="text-2xl font-black text-slate-900">
                     {clearanceScore}%
                   </span>
                 </div>
               </div>
+            </div>
 
-              {/* Legends list */}
+            {/* Right Column: Registered Ground Courses */}
+            <div className="md:col-span-2 space-y-4">
+              {registeredCourses.length > 0 ? (
+                <div className="space-y-5">
+                  {registeredCourses.map((course, idx) => {
+                    const isCleared = user?.adminClearance;
+                    const progressValue = isCleared
+                      ? 100
+                      : isUnderReview
+                        ? 35
+                        : 0;
+                    const colorGradient =
+                      idx % 2 === 0
+                        ? "from-indigo-500 to-purple-600"
+                        : "from-blue-500 to-indigo-600";
+                    return (
+                      <div key={course.title} className="space-y-1.5">
+                        <div className="flex justify-between items-center text-sm font-bold">
+                          <span className="text-slate-700 truncate max-w-[70%]">
+                            {course.title}
+                          </span>
+                          <span className="text-indigo-600 shrink-0">
+                            ({progressValue}%)
+                          </span>
+                        </div>
+                        <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${progressValue}%` }}
+                            transition={{ duration: 1, ease: "easeOut" }}
+                            className={`h-full bg-gradient-to-r ${colorGradient} rounded-full`}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-4">
+                  <BookOpen className="w-6 h-6 text-slate-300 mx-auto mb-1" />
+                  <p className="text-xs text-slate-500">
+                    No courses selected yet.
+                  </p>
+                  <Button
+                    onClick={() => navigate("/dashboard/courses")}
+                    className="mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-2xl px-3 py-1.5 text-[11px]"
+                  >
+                    Browse Course Catalog
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
+        </div>
+
+        {/* Academic & Profile Checklists Card */}
+        <div className="lg:col-span-2 bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.05),0px_0px_0px_1px_rgba(0,0,0,0.08)]">
+          <h3 className="text-lg font-bold text-slate-900 mb-4">
+            Academic & Profile Checklists
+          </h3>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-3.5 bg-slate-50/80 rounded-2xl border border-slate-100">
+              <div className="flex items-center gap-3">
+                <div
+                  className={`p-2.5 rounded-xl ${isPaid ? "bg-emerald-50 text-emerald-600" : isUnderReview ? "bg-amber-50 text-amber-600" : "bg-rose-50 text-rose-600"}`}
+                >
+                  <CreditCard className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-slate-900">
+                    Tuition Settlement
+                  </p>
+                  <p className="text-sm text-slate-500 mt-0.5">
+                    Payment milestone
+                  </p>
+                </div>
+              </div>
+              <span
+                className={`text-sm font-bold px-3 py-1 rounded-full ${isPaid ? "bg-emerald-50 text-emerald-600" : isUnderReview ? "bg-amber-50 text-amber-600" : "bg-rose-50 text-rose-600"}`}
+              >
+                {isPaid
+                  ? "Completed"
+                  : isUnderReview
+                    ? "Under Review"
+                    : "Pending"}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between p-3.5 bg-slate-50/80 rounded-2xl border border-slate-100">
+              <div className="flex items-center gap-3">
+                <div
+                  className={`p-2.5 rounded-xl ${isGraduated ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"}`}
+                >
+                  <Award className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-slate-900">
+                    Graduation Status
+                  </p>
+                  <p className="text-sm text-slate-500 mt-0.5">
+                    Ground school graduation clearance
+                  </p>
+                </div>
+              </div>
+              <span
+                className={`text-sm font-bold px-3 py-1 rounded-full ${isGraduated ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"}`}
+              >
+                {isGraduated ? "Graduated" : "Not Yet"}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Profile Info Card */}
+        <div className="lg:col-span-1 bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.05),0px_0px_0px_1px_rgba(0,0,0,0.08)]">
+          <h3 className="text-lg font-bold text-slate-900 mb-4">
+            Student Profile
+          </h3>
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-14 h-14 bg-gradient-to-br from-indigo-100 to-purple-100 text-indigo-600 rounded-full flex items-center justify-center font-black text-2xl shrink-0 shadow-inner border border-indigo-200/50">
+              {user?.firstName?.[0]}
+              {user?.lastName?.[0]}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h4 className="text-base font-bold text-slate-900 truncate">
+                {user?.firstName} {user?.lastName}
+              </h4>
+              <p className="text-sm text-slate-500 truncate">{user?.email}</p>
+              {user?.studentIdNumber && (
+                <p className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md inline-block mt-1">
+                  ID: {user.studentIdNumber}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <Button
+            onClick={() => navigate("/dashboard/profile")}
+            variant="outline"
+            className="w-full rounded-2xl py-2.5 text-sm font-bold border-indigo-100 text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 transition-colors"
+          >
+            Go to Profile
+          </Button>
         </div>
       </div>
 

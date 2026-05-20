@@ -74,6 +74,7 @@ export const register = async (userData: {
   role?: "admin" | "student";
   firstName?: string;
   lastName?: string;
+  phone?: string;
   selectedCourses?: string[];
   amountDue?: number;
 }) => {
@@ -108,6 +109,7 @@ export const verifyEnrollmentOTP = async (data: {
   firstName: string;
   lastName: string;
   password: string;
+  phone?: string;
   selectedCourses: string[];
 }) => {
   const response = await api.post("/auth/verify-enrollment-otp", data);
@@ -146,12 +148,21 @@ export const updateStudentProfile = async (
   phone?: string,
   bio?: string,
   emergencyContact?: string,
+  firstName?: string,
+  lastName?: string,
 ) => {
   const response = await api.patch("/student/profile", {
     phone,
     bio,
     emergencyContact,
+    firstName,
+    lastName,
   });
+  return response.data;
+};
+
+export const updateStudentPhone = async (phone: string) => {
+  const response = await api.patch("/student/phone", { phone });
   return response.data;
 };
 

@@ -8,11 +8,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { PhoneNumberInput } from "@/components/ui/phone-input";
+import { isValidPhoneNumber } from "@/lib/phone";
 import { useToast } from "@/components/ui/toast";
-import { uploadDocument, getProfile } from "@/api";
+import { uploadDocument, updateStudentProfile } from "@/api";
 import {
   User,
-  Phone,
   FileText,
   Upload,
   Save,
@@ -51,12 +52,23 @@ export function StudentProfile() {
       toast("First name and last name are required", "error");
       return;
     }
+    if (phone && !isValidPhoneNumber(phone)) {
+      toast("Please enter a valid phone number", "error");
+      return;
+    }
 
     try {
       setSaving(true);
-      await getProfile();
+      const response = await updateStudentProfile(
+        phone,
+        bio,
+        undefined,
+        firstName,
+        lastName,
+      );
       setUser({
         ...user!,
+        ...response?.data?.user,
         firstName,
         lastName,
         phone,
@@ -182,17 +194,12 @@ export function StudentProfile() {
               <label className="text-xs font-medium text-slate-500 mb-1 block">
                 Phone Number
               </label>
-              <div className="relative">
-                <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  disabled={!editing}
-                  className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 disabled:bg-slate-50 disabled:text-slate-500"
-                  placeholder="e.g. +234 800 000 0000"
-                />
-              </div>
+              <PhoneNumberInput
+                value={phone}
+                onChange={setPhone}
+                disabled={!editing}
+                inputClassName="py-2.5 rounded-lg focus:ring-blue-500/20 focus:border-blue-500"
+              />
             </div>
 
             <div>
