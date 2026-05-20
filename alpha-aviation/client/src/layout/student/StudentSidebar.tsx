@@ -111,19 +111,6 @@ export function StudentSidebar({
 
   return (
     <>
-      {/* Mobile Menu Toggle Button */}
-      <button
-        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2.5 bg-white/95 text-slate-800 rounded-xl shadow-md border border-slate-200/80 hover:bg-slate-50 transition-all duration-200"
-        aria-label="Toggle menu"
-      >
-        {mobileMenuOpen ? (
-          <X className="w-5 h-5" />
-        ) : (
-          <Menu className="w-5 h-5" />
-        )}
-      </button>
-
       {/* Sidebar aside */}
       <aside
         className={`fixed left-0 top-0 h-full w-64 bg-[#f8fafc]   backdrop-blur-xl border-r border-slate-200/60 z-40 transition-transform duration-300 ease-out flex flex-col justify-between ${

@@ -48,6 +48,13 @@ export function StudentOverview() {
   const isGraduated = user?.status === "graduated";
   const isPending = user?.paymentStatus === "Pending";
   const isUnderReview = user?.paymentStatus === "Under Review";
+  const displayName = user?.firstName || "Student";
+  const getGreeting = () => {
+    const hours = new Date().getHours();
+    if (hours < 12) return "Good morning";
+    if (hours < 18) return "Good afternoon";
+    return "Good evening";
+  };
   const isPaid = user?.paymentStatus === "Paid";
   const registeredCourses = user?.courseSelections || [];
 
@@ -142,6 +149,16 @@ export function StudentOverview() {
           )}
         </motion.div>
       )}
+
+      {/* Mobile Greeting (visible on mobile only) */}
+      <div className="block lg:hidden px-1">
+        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+          {getGreeting()}, {displayName}!
+        </h2>
+        <p className="text-sm font-normal text-slate-500 mt-1">
+          Ready to soar to new heights in your training today?
+        </p>
+      </div>
 
       {/* Core Real Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -480,7 +497,7 @@ export function StudentOverview() {
                 </div>
               </div>
               <span
-                className={`text-sm font-bold px-3 py-1 rounded-full ${isPaid ? "bg-emerald-50 text-emerald-600" : isUnderReview ? "bg-amber-50 text-amber-600" : "bg-rose-50 text-rose-600"}`}
+                className={`text-xs sm:text-sm font-bold px-3 py-1 rounded-full ${isPaid ? "bg-emerald-50 text-emerald-600" : isUnderReview ? "bg-amber-50 text-amber-600" : "bg-rose-50 text-rose-600"}`}
               >
                 {isPaid
                   ? "Completed"
@@ -502,12 +519,12 @@ export function StudentOverview() {
                     Graduation Status
                   </p>
                   <p className="text-sm text-slate-500 mt-0.5">
-                    Ground school graduation clearance
+                    Graduation clearance
                   </p>
                 </div>
               </div>
               <span
-                className={`text-sm font-bold px-3 py-1 rounded-full ${isGraduated ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"}`}
+                className={`text-xs sm:text-sm font-bold px-3 py-1 rounded-full ${isGraduated ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"}`}
               >
                 {isGraduated ? "Graduated" : "Not Yet"}
               </span>
