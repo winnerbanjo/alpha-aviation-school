@@ -140,7 +140,7 @@ export function StudentOverview() {
           </div>
           {isPending && (
             <Button
-              onClick={() => navigate("/dashboard/payments")}
+              onClick={() => navigate("?step=selection")}
               className="bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-2xl py-2 px-4 text-xs transition-all shadow-sm shrink-0"
             >
               <CreditCard className="w-3.5 h-3.5 mr-2" />
