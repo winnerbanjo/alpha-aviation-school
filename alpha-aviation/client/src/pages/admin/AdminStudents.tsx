@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Modal } from "@/components/ui/modal";
@@ -17,10 +15,14 @@ import type { StudentStatus } from "@/hooks/useAdminData";
 import { StudentProfileModal } from "@/components/dashboard/StudentProfileModal";
 import { EmptyState } from "@/components/EmptyState";
 import {
-  Search, MessageCircle, RefreshCw, Eye, Trash2, UserPlus, Upload,
-  Loader2, ChevronLeft, ChevronRight, Pencil, EyeOff, X,
+  Search, MessageCircle, Eye, Trash2, UserPlus, Upload,
+  Loader2, ChevronLeft, ChevronRight,
 } from "lucide-react";
-import { useToast } from "@/components/ui/toast";
+import {
+  AdminPageHeader,
+  AdminPageShell,
+  AdminPanel,
+} from "@/components/admin/AdminDashboardUI";
 
 const courses = [
   "Aviation Fundamentals & Strategy",
@@ -49,39 +51,23 @@ export function AdminStudents() {
     userFormData, setUserFormData, csvModalOpen, setCsvModalOpen, csvPreview, csvFile,
     isProfileModalOpen, setIsProfileModalOpen, selectedStudent, statusUpdating,
   } = useAdminData();
-
-  const { toast } = useToast();
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="space-y-8 p-6"
-    >
+    <AdminPageShell>
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600">
+        <div className="p-4 bg-red-50 border border-red-200 rounded-3xl text-red-700 text-sm font-medium">
           Server Error: {error}
         </div>
       )}
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">Student Management</h1>
-          <p className="text-slate-500">View and manage all enrolled students</p>
-          {lastUpdated && (
-            <p className="text-xs text-slate-400 mt-1">Last updated: {lastUpdated.toLocaleString()}</p>
-          )}
-        </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <Button variant="ghost" size="sm" onClick={() => { fetchStudents(); fetchFinancialStats(); }} className="rounded-full">
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Refresh
-          </Button>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Student Management"
+        description="Search, update, import, and manage enrolled students."
+        meta={lastUpdated ? `Last updated: ${lastUpdated.toLocaleString()}` : undefined}
+        onRefresh={() => { fetchStudents(); fetchFinancialStats(); }}
+      />
 
-      <div className="flex flex-col gap-4">
+      <AdminPanel className="p-5">
+        <div className="flex flex-col gap-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="relative flex-1 max-w-md w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -90,22 +76,22 @@ export function AdminStudents() {
               placeholder="Search by name or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 border border-slate-200/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 focus:border-[#0061FF] text-slate-900"
+              className="w-full pl-10 pr-4 py-2.5 border border-slate-200/70 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-slate-900 bg-white"
             />
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-500 font-medium">Payment:</span>
-              <div className="flex gap-1 border border-slate-200/50 rounded-lg p-1">
-                <button onClick={() => setPaymentFilter("all")} className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${paymentFilter === "all" ? "bg-[#0061FF] text-white" : "text-slate-600 hover:text-slate-900"}`}>All</button>
-                <button onClick={() => setPaymentFilter("Pending")} className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${paymentFilter === "Pending" ? "bg-[#007bff] text-white" : "text-slate-600 hover:text-slate-900"}`}>Pending</button>
-                <button onClick={() => setPaymentFilter("Paid")} className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${paymentFilter === "Paid" ? "bg-green-100 text-green-900" : "text-slate-600 hover:text-slate-900"}`}>Paid</button>
+              <div className="flex gap-1 border border-slate-200/70 rounded-2xl p-1 bg-white">
+                <button onClick={() => setPaymentFilter("all")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${paymentFilter === "all" ? "bg-indigo-600 text-white" : "text-slate-600 hover:text-slate-900"}`}>All</button>
+                <button onClick={() => setPaymentFilter("Pending")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${paymentFilter === "Pending" ? "bg-amber-100 text-amber-900" : "text-slate-600 hover:text-slate-900"}`}>Pending</button>
+                <button onClick={() => setPaymentFilter("Paid")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${paymentFilter === "Paid" ? "bg-emerald-100 text-emerald-900" : "text-slate-600 hover:text-slate-900"}`}>Paid</button>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-500 font-medium">Status:</span>
-              <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }} className="text-sm border border-slate-200/50 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 bg-white">
+              <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }} className="text-sm border border-slate-200/70 rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-white">
                 <option value="all">All</option>
                 <option value="active">Active</option>
                 <option value="graduated">Graduated</option>
@@ -115,7 +101,7 @@ export function AdminStudents() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-500 font-medium">Show:</span>
-              <select value={itemsPerPage} onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }} className="text-sm border border-slate-200/50 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 bg-white">
+              <select value={itemsPerPage} onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }} className="text-sm border border-slate-200/70 rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-white">
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
@@ -128,35 +114,45 @@ export function AdminStudents() {
         <div className="flex flex-wrap gap-2">
           {selectedStudents.size > 0 && (
             <>
-              <Button onClick={handleBatchMarkAsPaid} className="rounded-full bg-[#0061FF] hover:bg-[#0052E6] text-white transition-all hover:scale-105">
+              <Button onClick={handleBatchMarkAsPaid} className="rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white">
                 Mark {selectedStudents.size} as Paid
               </Button>
-              <Button onClick={() => setBulkSuspendModalOpen(true)} variant="outline" className="rounded-full border-amber-200 text-amber-700 hover:bg-amber-50">
+              <Button onClick={() => setBulkSuspendModalOpen(true)} variant="outline" className="rounded-2xl border-amber-200 text-amber-700 hover:bg-amber-50">
                 Suspend
               </Button>
-              <Button onClick={() => setBulkDeleteModalOpen(true)} variant="outline" className="rounded-full border-red-200 text-red-600 hover:bg-red-50">
+              <Button onClick={() => setBulkDeleteModalOpen(true)} variant="outline" className="rounded-2xl border-red-200 text-red-600 hover:bg-red-50">
                 <Trash2 className="w-4 h-4 mr-1" />
                 Delete ({selectedStudents.size})
               </Button>
             </>
           )}
-          <Button onClick={() => { setEditingUser(null); setUserFormData({ email: "", password: "", role: "student", firstName: "", lastName: "", phone: "" }); setUserModalOpen(true); }} className="rounded-full bg-green-600 hover:bg-green-700 text-white transition-all hover:scale-105">
+          <Button onClick={() => { setEditingUser(null); setUserFormData({ email: "", password: "", role: "student", firstName: "", lastName: "", phone: "" }); setUserModalOpen(true); }} className="rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white">
             <UserPlus className="w-4 h-4 mr-2" />
             Add User
           </Button>
-          <Button onClick={() => setCsvModalOpen(true)} variant="outline" className="rounded-full border-slate-200/50">
+          <Button onClick={() => setCsvModalOpen(true)} variant="outline" className="rounded-2xl border-slate-200/70 bg-white">
             <Upload className="w-4 h-4 mr-2" />
             Import CSV
           </Button>
-          <Button onClick={handleInvite} variant="outline" className="rounded-full border-slate-200/50">
+          <Button onClick={handleInvite} variant="outline" className="rounded-2xl border-slate-200/70 bg-white">
             <MessageCircle className="w-4 h-4 mr-2" />
             Invite via WhatsApp
           </Button>
         </div>
-      </div>
+        </div>
+      </AdminPanel>
 
-      <Card className="border-slate-200/50">
-        <CardContent className="p-0 overflow-x-auto">
+      <AdminPanel>
+        <div className="px-5 py-4 border-b border-slate-100/80 bg-slate-50/50 flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-base font-bold text-slate-900">Student Directory</h2>
+            <p className="text-xs text-slate-500 mt-0.5">Manage student records, payment status, and account status.</p>
+          </div>
+          <span className="text-xs font-bold px-2.5 py-1 bg-indigo-50 text-indigo-600 rounded-full border border-indigo-100/30">
+            {filteredStudents.length} records
+          </span>
+        </div>
+        <div className="p-0 overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -192,7 +188,7 @@ export function AdminStudents() {
                     </TableRow>
                   )
                 : paginatedStudents.map((student) => (
-                    <TableRow key={student._id} className="cursor-pointer hover:bg-slate-50 transition-colors">
+                    <TableRow key={student._id} className="cursor-pointer hover:bg-slate-50/70 transition-colors">
                       <TableCell onClick={(e) => e.stopPropagation()}>
                         <input type="checkbox" checked={selectedStudents.has(student._id)} onChange={() => toggleStudentSelection(student._id)} className="rounded border-slate-300" />
                       </TableCell>
@@ -244,20 +240,20 @@ export function AdminStudents() {
                 Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, filteredStudents.length)} of {filteredStudents.length} students
               </p>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)} className="rounded-full">
+                <Button variant="outline" size="sm" disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)} className="rounded-2xl">
                   <ChevronLeft className="w-4 h-4" />
                   Previous
                 </Button>
                 <span className="text-sm text-slate-500">Page {currentPage} of {totalPages}</span>
-                <Button variant="outline" size="sm" disabled={currentPage >= totalPages} onClick={() => setCurrentPage((p) => p + 1)} className="rounded-full">
+                <Button variant="outline" size="sm" disabled={currentPage >= totalPages} onClick={() => setCurrentPage((p) => p + 1)} className="rounded-2xl">
                   Next
                   <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </AdminPanel>
 
       {/* Student Profile Modal */}
       <StudentProfileModal
@@ -397,6 +393,6 @@ export function AdminStudents() {
           </div>
         </div>
       </Modal>
-    </motion.div>
+    </AdminPageShell>
   );
 }

@@ -1,12 +1,16 @@
-import { motion } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Modal } from "@/components/ui/modal";
 import { StudentProfileModal } from "@/components/dashboard/StudentProfileModal";
 import { useAdminData, formatNaira } from "@/hooks/useAdminData";
 import type { StudentStatus } from "@/hooks/useAdminData";
-import { Users, DollarSign, CheckCircle2, RefreshCw, Eye, MessageCircle, Trash2 } from "lucide-react";
+import { Users, DollarSign, CheckCircle2, Eye, MessageCircle, Trash2 } from "lucide-react";
+import {
+  AdminMetricCard,
+  AdminPageHeader,
+  AdminPageShell,
+  AdminPanel,
+} from "@/components/admin/AdminDashboardUI";
 import {
   Table,
   TableBody,
@@ -31,90 +35,39 @@ export function AdminOverview() {
   const recentStudents = safeStudents.slice(0, 10);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="space-y-8 p-6"
-    >
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">Command Center</h1>
-          <p className="text-slate-500">Overview of your aviation school operations</p>
-          {lastUpdated && (
-            <p className="text-xs text-slate-400 mt-1">Last updated: {lastUpdated.toLocaleString()}</p>
-          )}
-        </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => { fetchStudents(); fetchFinancialStats(); }}
-          className="rounded-full"
-        >
-          <RefreshCw className="w-4 h-4 mr-2" />
-          Refresh
-        </Button>
-      </div>
+    <AdminPageShell>
+      <AdminPageHeader
+        title="Command Center"
+        description="Overview of enrollments, payments, and recent student activity."
+        meta={lastUpdated ? `Last updated: ${lastUpdated.toLocaleString()}` : undefined}
+        onRefresh={() => { fetchStudents(); fetchFinancialStats(); }}
+      />
 
       {safeStudents.length === 0 && !loading && (
-        <div className="p-4 rounded-lg bg-slate-100 border border-slate-200/50 text-slate-700">
-          <p className="font-medium">No students registered yet. Waiting for first enrollment...</p>
+        <div className="p-4 rounded-3xl bg-slate-50/90 border border-slate-200/60 text-slate-700 shadow-sm">
+          <p className="text-sm font-bold">No students registered yet.</p>
+          <p className="text-xs text-slate-500 mt-1">New enrollments will appear in this command center automatically.</p>
         </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <Card className="border-slate-200/50 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-slate-500 mb-1">Enrolled Students</p>
-                  <p className="text-3xl font-bold tracking-tight text-slate-900">{enrolledStudents}</p>
-                </div>
-                <div className="p-3 bg-[#0061FF]/10 rounded-lg">
-                  <Users className="w-6 h-6 text-[#0061FF]" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <Card className="border-slate-200/50 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-slate-500 mb-1">Revenue Pending</p>
-                  <p className="text-3xl font-bold tracking-tight text-slate-900">{formatNaira(displayPendingRevenue)}</p>
-                </div>
-                <div className="p-3 bg-[#007bff] rounded-lg">
-                  <DollarSign className="w-6 h-6 text-white" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-          <Card className="border-slate-200/50 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-slate-500 mb-1">Total Revenue</p>
-                  <p className="text-3xl font-bold tracking-tight text-slate-900">{formatNaira(displayTotalRevenue)}</p>
-                </div>
-                <div className="p-3 bg-green-100 rounded-lg">
-                  <CheckCircle2 className="w-6 h-6 text-green-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        <AdminMetricCard label="Enrolled Students" value={enrolledStudents} helper="Total student accounts in the system" icon={Users} accent="indigo" badge="Live" />
+        <AdminMetricCard label="Revenue Pending" value={formatNaira(displayPendingRevenue)} helper="Expected from pending tuition records" icon={DollarSign} accent="amber" />
+        <AdminMetricCard label="Total Revenue" value={formatNaira(displayTotalRevenue)} helper="Verified paid tuition revenue" icon={CheckCircle2} accent="emerald" badge="Verified" />
       </div>
 
       {recentStudents.length > 0 && (
-        <Card className="border-slate-200/50">
-          <CardContent className="p-0 overflow-x-auto">
+        <AdminPanel>
+          <div className="px-5 py-4 border-b border-slate-100/80 bg-slate-50/50 flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-base font-bold text-slate-900">Recent Students</h2>
+              <p className="text-xs text-slate-500 mt-0.5">Latest enrolled students and account status.</p>
+            </div>
+            <span className="text-xs font-bold px-2.5 py-1 bg-indigo-50 text-indigo-600 rounded-full border border-indigo-100/30">
+              {recentStudents.length} shown
+            </span>
+          </div>
+          <div className="p-0 overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -137,7 +90,7 @@ export function AdminOverview() {
                       </TableRow>
                     ))
                   : recentStudents.map((student) => (
-                      <TableRow key={student._id} className="hover:bg-slate-50 transition-colors">
+                      <TableRow key={student._id} className="hover:bg-slate-50/70 transition-colors">
                         <TableCell className="font-medium text-slate-900">{student.email}</TableCell>
                         <TableCell>{student.firstName || ""} {student.lastName || ""}</TableCell>
                         <TableCell>
@@ -175,8 +128,8 @@ export function AdminOverview() {
                     ))}
               </TableBody>
             </Table>
-          </CardContent>
-        </Card>
+          </div>
+        </AdminPanel>
       )}
 
       <StudentProfileModal
@@ -200,6 +153,6 @@ export function AdminOverview() {
           </div>
         </div>
       </Modal>
-    </motion.div>
+    </AdminPageShell>
   );
 }
