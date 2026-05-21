@@ -360,6 +360,12 @@ export const updateUser = async (
     role?: "admin" | "student";
     status?: "active" | "banned" | "graduated" | "suspended";
     paymentStatus?: "Pending" | "Under Review" | "Paid";
+    amountDue?: number;
+    amountPaid?: number;
+    totalCoursePrice?: number;
+    enrolledCourse?: string;
+    studentIdNumber?: string;
+    adminClearance?: boolean;
   },
   config?: AxiosRequestConfig,
 ) => {
