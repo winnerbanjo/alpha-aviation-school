@@ -203,7 +203,7 @@ export function VerifyOtp() {
           );
 
           toast("Welcome back, Admin!", "success");
-          navigate("/admin/dashboard", { replace: true });
+          navigate("/admin/dashboard/overview", { replace: true });
         }
       }
     } catch (err: any) {

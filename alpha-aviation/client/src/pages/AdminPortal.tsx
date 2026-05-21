@@ -31,7 +31,7 @@ export function AdminPortal() {
   }, [sessionExpired, authFailed]);
 
   if (isAuthenticated && user?.role === "admin") {
-    return <Navigate to="/admin/dashboard" replace />;
+    return <Navigate to="/admin/dashboard/overview" replace />;
   }
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -94,7 +94,7 @@ export function AdminPortal() {
         inner.token,
       );
 
-      navigate("/admin/dashboard", { replace: true });
+      navigate("/admin/dashboard/overview", { replace: true });
     } catch (err: any) {
       if (err.response?.status === 401) {
         setError("Invalid email or password");
