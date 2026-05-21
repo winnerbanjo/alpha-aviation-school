@@ -20,23 +20,7 @@ import {
 import { motion } from "framer-motion";
 import { uploadCertificate } from "@/api";
 import { useToast } from "@/components/ui/toast";
-
-interface Student {
-  _id: string;
-  email: string;
-  firstName?: string;
-  lastName?: string;
-  enrolledCourse?: string;
-  paymentStatus: "Pending" | "Paid";
-  amountDue: number;
-  amountPaid?: number;
-  enrollmentDate?: string;
-  phone?: string;
-  adminClearance?: boolean;
-  status?: "active" | "banned" | "graduated" | "suspended";
-  certificateUrl?: string;
-  studentIdNumber?: string;
-}
+import type { Student } from "@/hooks/useAdminData";
 
 interface StudentProfileModalProps {
   isOpen: boolean;
