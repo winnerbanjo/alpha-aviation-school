@@ -80,7 +80,9 @@ export function Login() {
 
         toast(`Welcome back, ${userData.firstName}!`, "success");
         navigate(
-          userData.role === "admin" ? "/admin/dashboard" : "/dashboard",
+          userData.role === "admin"
+            ? "/admin/dashboard/overview"
+            : "/dashboard",
           {
             replace: true,
           },

@@ -354,12 +354,19 @@ export const updateUser = async (
   userId: string,
   userData: {
     email?: string;
+    password?: string;
     firstName?: string;
     lastName?: string;
     phone?: string;
     role?: "admin" | "student";
     status?: "active" | "banned" | "graduated" | "suspended";
     paymentStatus?: "Pending" | "Under Review" | "Paid";
+    amountDue?: number;
+    amountPaid?: number;
+    totalCoursePrice?: number;
+    enrolledCourse?: string;
+    studentIdNumber?: string;
+    adminClearance?: boolean;
   },
   config?: AxiosRequestConfig,
 ) => {

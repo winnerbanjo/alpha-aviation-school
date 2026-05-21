@@ -1,13 +1,16 @@
 import { useEffect } from "react";
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { useAdminData, formatNaira } from "@/hooks/useAdminData";
 import {
-  RefreshCw, Eye, CheckCircle2, XCircle, FileText, Loader2, Clock,
+  Eye, CheckCircle2, XCircle, FileText, Loader2,
 } from "lucide-react";
+import {
+  AdminPageHeader,
+  AdminPageShell,
+  AdminPanel,
+} from "@/components/admin/AdminDashboardUI";
 
 export function AdminPayments() {
   const {
@@ -22,33 +25,35 @@ export function AdminPayments() {
   }, []);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="space-y-8 p-6"
-    >
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">Payment Verification</h1>
-          <p className="text-slate-500">Review and verify student payment receipts</p>
-        </div>
-        <Button variant="outline" size="sm" onClick={fetchPendingPayments} disabled={loadingPayments} className="rounded-full">
-          <RefreshCw className={`w-4 h-4 mr-2 ${loadingPayments ? "animate-spin" : ""}`} />
-          Refresh
-        </Button>
-      </div>
+    <AdminPageShell>
+      <AdminPageHeader
+        title="Payment Verification"
+        description="Review submitted receipts and approve or reject tuition payments."
+        onRefresh={fetchPendingPayments}
+        refreshing={loadingPayments}
+      />
 
-      <Card className="border-slate-200">
-        <CardContent className="pt-6">
+      <AdminPanel>
+        <div className="px-5 py-4 border-b border-slate-100/80 bg-slate-50/50 flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-base font-bold text-slate-900">Pending Receipts</h2>
+            <p className="text-xs text-slate-500 mt-0.5">Receipts awaiting admin review and clearance.</p>
+          </div>
+          <span className="text-xs font-bold px-2.5 py-1 bg-amber-50 text-amber-700 rounded-full border border-amber-100">
+            {pendingPayments.length} pending
+          </span>
+        </div>
+        <div className="p-5">
           {loadingPayments ? (
             <div className="flex items-center justify-center py-16">
-              <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+              <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
             </div>
           ) : pendingPayments.length === 0 ? (
             <div className="text-center py-16">
-              <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
-              <p className="text-lg font-medium text-slate-900 mb-2">All caught up!</p>
+              <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center mx-auto mb-4">
+                <CheckCircle2 className="w-8 h-8" />
+              </div>
+              <p className="text-lg font-bold text-slate-900 mb-2">All caught up</p>
               <p className="text-sm text-slate-500">No pending payment receipts to review.</p>
             </div>
           ) : (
@@ -56,10 +61,10 @@ export function AdminPayments() {
               {pendingPayments.map((payment) => {
                 const student = payment.student || {};
                 return (
-                  <div key={payment._id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-200 gap-4">
+                  <div key={payment._id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-50/70 rounded-2xl border border-slate-200/70 gap-4 hover:bg-white hover:shadow-sm transition-all">
                     <div className="flex items-center gap-4">
                       {payment.receiptUrl ? (
-                        <button onClick={() => setSelectedPayment(payment)} className="w-16 h-16 rounded-lg overflow-hidden border-2 border-slate-200 hover:border-blue-400 transition-colors shrink-0">
+                        <button onClick={() => setSelectedPayment(payment)} className="w-16 h-16 rounded-2xl overflow-hidden border border-slate-200 hover:border-indigo-300 transition-colors shrink-0 bg-white">
                           {payment.receiptUrl.endsWith(".pdf") ? (
                             <div className="w-full h-full bg-slate-100 flex items-center justify-center">
                               <FileText className="w-6 h-6 text-slate-400" />
@@ -69,17 +74,17 @@ export function AdminPayments() {
                           )}
                         </button>
                       ) : (
-                        <div className="w-16 h-16 rounded-lg bg-slate-100 border-2 border-dashed border-slate-200 flex items-center justify-center shrink-0">
+                        <div className="w-16 h-16 rounded-2xl bg-slate-100 border-2 border-dashed border-slate-200 flex items-center justify-center shrink-0">
                           <FileText className="w-6 h-6 text-slate-400" />
                         </div>
                       )}
-                      <div>
-                        <p className="text-sm font-semibold text-slate-900">
+                      <div className="min-w-0">
+                        <p className="text-sm font-bold text-slate-900">
                           {student.firstName || ""} {student.lastName || ""}
                         </p>
                         <p className="text-xs text-slate-500">{student.email}</p>
                         <div className="flex items-center gap-2 mt-1">
-                          <Badge className="bg-blue-100 text-blue-800 border-blue-200 text-xs">
+                          <Badge className="bg-indigo-50 text-indigo-700 border-indigo-100 text-xs">
                             {formatNaira(payment.amount || student.amountDue || 0)}
                           </Badge>
                           {student.studentIdNumber && (
@@ -89,15 +94,15 @@ export function AdminPayments() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button variant="outline" size="sm" onClick={() => setSelectedPayment(payment)} className="text-slate-600">
+                      <Button variant="outline" size="sm" onClick={() => setSelectedPayment(payment)} className="rounded-xl text-slate-600">
                         <Eye className="w-4 h-4 mr-1" />
                         View
                       </Button>
-                      <Button variant="outline" size="sm" onClick={() => { setSelectedPayment(payment); setRejectModalOpen(true); }} className="text-rose-600 border-rose-200 hover:bg-rose-50">
+                      <Button variant="outline" size="sm" onClick={() => { setSelectedPayment(payment); setRejectModalOpen(true); }} className="rounded-xl text-rose-600 border-rose-200 hover:bg-rose-50">
                         <XCircle className="w-4 h-4 mr-1" />
                         Reject
                       </Button>
-                      <Button size="sm" onClick={() => handleApprovePayment(payment._id)} disabled={processingPayment} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                      <Button size="sm" onClick={() => handleApprovePayment(payment._id)} disabled={processingPayment} className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white">
                         <CheckCircle2 className="w-4 h-4 mr-1" />
                         Approve
                       </Button>
@@ -107,8 +112,8 @@ export function AdminPayments() {
               })}
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </AdminPanel>
 
       {/* Payment Detail Modal */}
       <Modal isOpen={!!selectedPayment && !rejectModalOpen} onClose={() => setSelectedPayment(null)} title="Payment Receipt Details">
@@ -170,6 +175,6 @@ export function AdminPayments() {
           </div>
         </div>
       </Modal>
-    </motion.div>
+    </AdminPageShell>
   );
 }

@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
 import { COURSE_CATALOG } from "@/data/courseCatalog";
 import {
   createCourseResource,
@@ -11,8 +10,13 @@ import { useToast } from "@/components/ui/toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { FileText, Link as LinkIcon, Loader2, RefreshCw, Trash2, Upload } from "lucide-react";
+import { FileText, Link as LinkIcon, Loader2, Trash2, Upload } from "lucide-react";
 import { openResourceInBrowser } from "@/lib/openResource";
+import {
+  AdminPageHeader,
+  AdminPageShell,
+  AdminPanel,
+} from "@/components/admin/AdminDashboardUI";
 
 const inferResourceType = (file: File): CourseResourceItem["type"] => {
   if (file.type.includes("pdf")) return "pdf";
@@ -141,35 +145,16 @@ export function AdminResources() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="space-y-8 p-6"
-    >
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
-            Course Resources
-          </h1>
-          <p className="text-slate-500">
-            Upload and manage materials shown to students by enrolled programme.
-          </p>
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={loadResources}
-          disabled={loading}
-          className="rounded-full"
-        >
-          <RefreshCw className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`} />
-          Refresh
-        </Button>
-      </div>
+    <AdminPageShell>
+      <AdminPageHeader
+        title="Course Resources"
+        description="Upload and manage materials shown to students by enrolled programme."
+        onRefresh={loadResources}
+        refreshing={loading}
+      />
 
-      <Card className="border-slate-200">
-        <CardHeader className="border-b border-slate-100">
+      <AdminPanel>
+        <CardHeader className="border-b border-slate-100/80 bg-slate-50/50">
           <CardTitle className="text-lg text-slate-900">Upload Resource</CardTitle>
         </CardHeader>
         <CardContent className="pt-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -219,7 +204,7 @@ export function AdminResources() {
             <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
               File
             </label>
-            <label className="flex items-center justify-between gap-3 border-2 border-dashed border-slate-200 rounded-xl p-4 cursor-pointer hover:bg-slate-50">
+            <label className="flex items-center justify-between gap-3 border-2 border-dashed border-slate-200 rounded-2xl p-4 cursor-pointer hover:bg-slate-50 transition-colors">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="p-2 bg-slate-100 rounded-lg">
                   <Upload className="w-5 h-5 text-slate-500" />
@@ -247,7 +232,7 @@ export function AdminResources() {
             <Button
               onClick={handleUpload}
               disabled={uploading}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white"
             >
               {uploading ? (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -258,7 +243,7 @@ export function AdminResources() {
             </Button>
           </div>
         </CardContent>
-      </Card>
+      </AdminPanel>
 
       <div className="space-y-4">
         {loading ? (
@@ -269,7 +254,7 @@ export function AdminResources() {
           </Card>
         ) : (
           resourcesByCourse.map(({ courseTitle, resources }) => (
-            <Card key={courseTitle} className="border-slate-200 overflow-hidden">
+            <AdminPanel key={courseTitle}>
               <div className="px-5 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between gap-4">
                 <div>
                   <h2 className="text-sm font-bold text-slate-900">
@@ -284,7 +269,7 @@ export function AdminResources() {
                   Programme
                 </Badge>
               </div>
-              <CardContent className="p-0">
+              <div className="p-0">
                 {resources.length === 0 ? (
                   <div className="p-5 text-sm text-slate-500">
                     No resources uploaded for this programme.
@@ -340,11 +325,11 @@ export function AdminResources() {
                     </div>
                   ))
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </AdminPanel>
           ))
         )}
       </div>
-    </motion.div>
+    </AdminPageShell>
   );
 }

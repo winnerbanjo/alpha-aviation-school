@@ -107,7 +107,7 @@ export function AdminOtpVerification() {
           response.data.token
         );
         toast("Welcome back, Admin!", "success");
-        navigate("/admin/dashboard", { replace: true });
+        navigate("/admin/dashboard/overview", { replace: true });
       }
     } catch (err: any) {
       const message = err.response?.data?.message || "Invalid verification code. Please try again.";

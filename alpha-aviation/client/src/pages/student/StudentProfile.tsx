@@ -116,7 +116,8 @@ export function StudentProfile() {
           Profile Settings
         </h1>
         <p className="text-sm font-normal text-slate-500 mt-1">
-          Manage your personal information, security credentials, and verification identity documents.
+          Manage your personal information, security credentials, and
+          verification identity documents.
         </p>
       </div>
 
@@ -125,8 +126,12 @@ export function StudentProfile() {
         <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
           <div className="px-5 py-4 border-b border-slate-100/80 bg-slate-50/50 flex items-center justify-between gap-4">
             <div>
-              <h3 className="text-base font-bold text-slate-900">Personal Information</h3>
-              <p className="text-[11px] text-slate-400 font-medium mt-0.5">Update your name, contact phone, and profile bio.</p>
+              <h3 className="text-base font-bold text-slate-900">
+                Personal Information
+              </h3>
+              <p className="text-[11px] text-slate-400 font-medium mt-0.5">
+                Update your name, contact phone, and profile bio.
+              </p>
             </div>
             {!editing && (
               <Button
@@ -178,7 +183,8 @@ export function StudentProfile() {
                 className="w-full px-4 py-2.5 border border-slate-200 rounded-2xl text-sm bg-slate-50/50 text-slate-500 cursor-not-allowed transition-all font-bold"
               />
               <p className="text-[10px] font-bold text-slate-400 mt-1">
-                Email address cannot be changed. Contact registry desk for assistance.
+                Email address cannot be changed. Contact registry desk for
+                assistance.
               </p>
             </div>
 
@@ -239,15 +245,21 @@ export function StudentProfile() {
         {/* Card 2: Identity Document */}
         <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
           <div className="px-5 py-4 border-b border-slate-100/80 bg-slate-50/50">
-            <h3 className="text-base font-bold text-slate-900">Identity Document</h3>
-            <p className="text-[11px] text-slate-400 font-medium mt-0.5">Upload your ID card or passport photo for clearance verification.</p>
+            <h3 className="text-base font-bold text-slate-900">
+              Identity Document
+            </h3>
+            <p className="text-[11px] text-slate-400 font-medium mt-0.5">
+              Upload your ID card or passport photo for clearance verification.
+            </p>
           </div>
           <div className="p-6 space-y-4">
             {user?.documentUrl ? (
               <div className="space-y-4">
                 <div className="p-3 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-2 text-emerald-900">
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-                  <span className="text-xs font-bold">Verification Document Uploaded Successfully</span>
+                  <span className="text-xs font-bold">
+                    Verification Document Uploaded Successfully
+                  </span>
                 </div>
                 <div className="relative rounded-2xl overflow-hidden border border-slate-200/60 aspect-video bg-slate-50 flex items-center justify-center">
                   <img
@@ -270,7 +282,11 @@ export function StudentProfile() {
                     />
                     <div className="w-full rounded-2xl border border-slate-200 hover:border-slate-300 cursor-pointer px-4 py-2.5 flex items-center justify-center text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors">
                       <Upload className="w-4 h-4 mr-2" />
-                      <span>{uploadingDocument ? "Uploading..." : "Replace Uploaded Document"}</span>
+                      <span>
+                        {uploadingDocument
+                          ? "Uploading..."
+                          : "Replace Uploaded Document"}
+                      </span>
                     </div>
                   </label>
                 </div>
@@ -293,7 +309,9 @@ export function StudentProfile() {
                       <FileText className="w-6 h-6 text-slate-500" />
                     </div>
                     <p className="text-sm font-bold text-slate-900 mb-1">
-                      {uploadingDocument ? "Uploading..." : "Upload Identity ID / Passport"}
+                      {uploadingDocument
+                        ? "Uploading..."
+                        : "Upload Identity ID / Passport"}
                     </p>
                     <p className="text-xs text-slate-400">
                       JPG, PNG, or PDF formats up to 5MB
@@ -309,8 +327,12 @@ export function StudentProfile() {
       {/* Card 3: Security & Credentials */}
       <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
         <div className="px-5 py-4 border-b border-slate-100/80 bg-slate-50/50">
-          <h3 className="text-base font-bold text-slate-900">Change Password</h3>
-          <p className="text-[11px] text-slate-400 font-medium mt-0.5">Update your portal security password key credentials.</p>
+          <h3 className="text-base font-bold text-slate-900">
+            Change Password
+          </h3>
+          <p className="text-[11px] text-slate-400 font-medium mt-0.5">
+            Update your portal security password key credentials.
+          </p>
         </div>
         <div className="p-6">
           <div className="max-w-md space-y-4">
@@ -331,7 +353,11 @@ export function StudentProfile() {
                   onClick={() => setShowCurrent(!showCurrent)}
                   className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                 >
-                  {showCurrent ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showCurrent ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
                 </button>
               </div>
             </div>
@@ -354,7 +380,11 @@ export function StudentProfile() {
                   onClick={() => setShowNew(!showNew)}
                   className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                 >
-                  {showNew ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showNew ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
                 </button>
               </div>
             </div>
@@ -367,7 +397,9 @@ export function StudentProfile() {
               }}
             >
               <ShieldAlert className="w-4 h-4" />
-              <span>{changingPassword ? "Updating..." : "Update Password"}</span>
+              <span>
+                {changingPassword ? "Updating..." : "Update Password"}
+              </span>
             </Button>
           </div>
         </div>

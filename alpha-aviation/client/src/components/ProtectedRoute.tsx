@@ -21,7 +21,7 @@ export function ProtectedRoute({ adminOnly, children }: ProtectedRouteProps) {
   }
 
   if (!token) {
-    return <Navigate to="/login" replace />
+    return <Navigate to={adminOnly ? "/admin" : "/login"} replace />
   }
 
   if (adminOnly && userRole !== 'admin') {
@@ -29,7 +29,7 @@ export function ProtectedRoute({ adminOnly, children }: ProtectedRouteProps) {
   }
 
   if (!adminOnly && userRole === 'admin') {
-    return <Navigate to="/admin/dashboard" replace />
+    return <Navigate to="/admin/dashboard/overview" replace />
   }
 
   return <>{children}</>

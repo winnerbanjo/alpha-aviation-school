@@ -25,6 +25,7 @@ export type StudentStatusType = StudentStatus;
 export interface Student {
   _id: string;
   email: string;
+  role?: "admin" | "student";
   firstName?: string;
   lastName?: string;
   enrolledCourse?: string;
@@ -40,6 +41,23 @@ export interface Student {
   paymentReceiptUrl?: string;
   totalCoursePrice?: number;
 }
+
+const emptyUserFormData = {
+  email: "",
+  password: "",
+  role: "student" as "admin" | "student",
+  firstName: "",
+  lastName: "",
+  phone: "",
+  status: "active" as StudentStatus,
+  paymentStatus: "Pending" as "Pending" | "Under Review" | "Paid",
+  amountDue: "",
+  amountPaid: "",
+  totalCoursePrice: "",
+  enrolledCourse: "",
+  studentIdNumber: "",
+  adminClearance: false,
+};
 
 export const formatNaira = (amount: number) =>
   new Intl.NumberFormat("en-NG", {
@@ -67,14 +85,7 @@ export function useAdminData() {
   const [deletingInProgress, setDeletingInProgress] = useState(false);
   const [userModalOpen, setUserModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<Student | null>(null);
-  const [userFormData, setUserFormData] = useState({
-    email: "",
-    password: "",
-    role: "student" as "admin" | "student",
-    firstName: "",
-    lastName: "",
-    phone: "",
-  });
+  const [userFormData, setUserFormData] = useState(emptyUserFormData);
   const [csvModalOpen, setCsvModalOpen] = useState(false);
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [csvPreview, setCsvPreview] = useState<any[]>([]);
@@ -244,6 +255,27 @@ export function useAdminData() {
     setDeleteModalOpen(true);
   };
 
+  const handleEditUser = (student: Student) => {
+    setEditingUser(student);
+    setUserFormData({
+      email: student.email || "",
+      password: "",
+      role: student.role || "student",
+      firstName: student.firstName || "",
+      lastName: student.lastName || "",
+      phone: student.phone || "",
+      status: student.status || "active",
+      paymentStatus: student.paymentStatus || "Pending",
+      amountDue: student.amountDue !== undefined ? String(student.amountDue) : "",
+      amountPaid: student.amountPaid !== undefined ? String(student.amountPaid) : "",
+      totalCoursePrice: student.totalCoursePrice !== undefined ? String(student.totalCoursePrice) : "",
+      enrolledCourse: student.enrolledCourse || "",
+      studentIdNumber: student.studentIdNumber || "",
+      adminClearance: Boolean(student.adminClearance),
+    });
+    setUserModalOpen(true);
+  };
+
   const confirmDeleteStudent = async () => {
     if (!studentToDelete) return;
     try {
@@ -293,10 +325,21 @@ export function useAdminData() {
       if (editingUser) {
         await updateUser(editingUser._id, {
           email: userFormData.email,
+          ...(userFormData.password.trim()
+            ? { password: userFormData.password.trim() }
+            : {}),
           firstName: userFormData.firstName,
           lastName: userFormData.lastName,
           phone: userFormData.phone,
           role: userFormData.role,
+          status: userFormData.status,
+          paymentStatus: userFormData.paymentStatus,
+          amountDue: Number(userFormData.amountDue || 0),
+          amountPaid: Number(userFormData.amountPaid || 0),
+          totalCoursePrice: Number(userFormData.totalCoursePrice || 0),
+          enrolledCourse: userFormData.enrolledCourse,
+          studentIdNumber: userFormData.studentIdNumber,
+          adminClearance: userFormData.adminClearance,
         });
         toast("User updated", "success");
       } else {
@@ -305,7 +348,7 @@ export function useAdminData() {
       }
       await fetchStudents();
       setUserModalOpen(false);
-      setUserFormData({ email: "", password: "", role: "student", firstName: "", lastName: "", phone: "" });
+      setUserFormData(emptyUserFormData);
       setEditingUser(null);
     } catch (error) {
       toast("Failed to save user", "error");
@@ -503,7 +546,7 @@ export function useAdminData() {
     fetchStudents, fetchFinancialStats, fetchPendingPayments,
     handleMarkAsPaid, handleStudentClick, handleBatchMarkAsPaid, handleCourseChange,
     handleStudentStatusChange, handleDeleteStudent, confirmDeleteStudent,
-    handleBulkDelete, handleBulkSuspend, handleSaveUser, handleCsvFileChange,
+    handleBulkDelete, handleBulkSuspend, handleEditUser, handleSaveUser, handleCsvFileChange,
     handleCsvUpload, handleAdminClearanceChange, handleCertificateUploaded,
     handleWhatsAppReminder, handleInvite, toggleStudentSelection, toggleSelectAll,
     handleApprovePayment, handleRejectPayment,

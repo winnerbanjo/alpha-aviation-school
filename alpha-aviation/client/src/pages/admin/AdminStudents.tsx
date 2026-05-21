@@ -1,46 +1,29 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Modal } from "@/components/ui/modal";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { useAdminData } from "@/hooks/useAdminData";
-import type { StudentStatus } from "@/hooks/useAdminData";
 import { StudentProfileModal } from "@/components/dashboard/StudentProfileModal";
-import { EmptyState } from "@/components/EmptyState";
 import {
-  Search, MessageCircle, RefreshCw, Eye, Trash2, UserPlus, Upload,
-  Loader2, ChevronLeft, ChevronRight, Pencil, EyeOff, X,
+  Search, MessageCircleMore, Trash2, UserPlus, Upload,
+  Loader2, ChevronLeft, ChevronRight,
 } from "lucide-react";
-import { useToast } from "@/components/ui/toast";
-
-const courses = [
-  "Aviation Fundamentals & Strategy",
-  "Elite Cabin Crew & Safety Operations",
-  "Travel & Tourism Management",
-  "Airline Customer Service & Passenger Handling",
-  "Aviation Safety & Security Awareness",
-  "Ticketing & Reservation Systems (GDS Training)",
-];
+import { AdminStudentTable } from "@/components/admin/AdminStudentTable";
+import { AdminUserModal } from "@/components/admin/AdminUserModal";
+import {
+  AdminPageHeader,
+  AdminPageShell,
+  AdminPanel,
+} from "@/components/admin/AdminDashboardUI";
 
 export function AdminStudents() {
   const {
-    loading, error, authError, lastUpdated, searchQuery, setSearchQuery,
+    loading, error, lastUpdated, searchQuery, setSearchQuery,
     paymentFilter, setPaymentFilter, statusFilter, setStatusFilter,
     currentPage, setCurrentPage, itemsPerPage, setItemsPerPage,
-    selectedStudents, setSelectedStudents, filteredStudents, paginatedStudents,
+    selectedStudents, filteredStudents, paginatedStudents,
     totalPages, fetchStudents, fetchFinancialStats,
-    handleMarkAsPaid, handleStudentClick, handleBatchMarkAsPaid, handleCourseChange,
+    handleMarkAsPaid, handleStudentClick, handleBatchMarkAsPaid,
     handleStudentStatusChange, handleDeleteStudent, confirmDeleteStudent,
-    handleBulkDelete, handleBulkSuspend, handleSaveUser, handleCsvFileChange,
+    handleBulkDelete, handleBulkSuspend, handleEditUser, handleSaveUser, handleCsvFileChange,
     handleCsvUpload, handleAdminClearanceChange, handleCertificateUploaded,
     handleWhatsAppReminder, handleInvite, toggleStudentSelection, toggleSelectAll,
     deleteModalOpen, setDeleteModalOpen, studentToDelete, deletingInProgress,
@@ -49,39 +32,23 @@ export function AdminStudents() {
     userFormData, setUserFormData, csvModalOpen, setCsvModalOpen, csvPreview, csvFile,
     isProfileModalOpen, setIsProfileModalOpen, selectedStudent, statusUpdating,
   } = useAdminData();
-
-  const { toast } = useToast();
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="space-y-8 p-6"
-    >
+    <AdminPageShell>
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600">
+        <div className="p-4 bg-red-50 border border-red-200 rounded-3xl text-red-700 text-sm font-medium">
           Server Error: {error}
         </div>
       )}
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">Student Management</h1>
-          <p className="text-slate-500">View and manage all enrolled students</p>
-          {lastUpdated && (
-            <p className="text-xs text-slate-400 mt-1">Last updated: {lastUpdated.toLocaleString()}</p>
-          )}
-        </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <Button variant="ghost" size="sm" onClick={() => { fetchStudents(); fetchFinancialStats(); }} className="rounded-full">
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Refresh
-          </Button>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Student Management"
+        description="Search, update, import, and manage enrolled students."
+        meta={lastUpdated ? `Last updated: ${lastUpdated.toLocaleString()}` : undefined}
+        onRefresh={() => { fetchStudents(); fetchFinancialStats(); }}
+      />
 
-      <div className="flex flex-col gap-4">
+      <AdminPanel className="p-5">
+        <div className="flex flex-col gap-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="relative flex-1 max-w-md w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -90,22 +57,22 @@ export function AdminStudents() {
               placeholder="Search by name or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 border border-slate-200/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 focus:border-[#0061FF] text-slate-900"
+              className="w-full pl-10 pr-4 py-2.5 border border-slate-200/70 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-slate-900 bg-white"
             />
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-500 font-medium">Payment:</span>
-              <div className="flex gap-1 border border-slate-200/50 rounded-lg p-1">
-                <button onClick={() => setPaymentFilter("all")} className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${paymentFilter === "all" ? "bg-[#0061FF] text-white" : "text-slate-600 hover:text-slate-900"}`}>All</button>
-                <button onClick={() => setPaymentFilter("Pending")} className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${paymentFilter === "Pending" ? "bg-[#007bff] text-white" : "text-slate-600 hover:text-slate-900"}`}>Pending</button>
-                <button onClick={() => setPaymentFilter("Paid")} className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${paymentFilter === "Paid" ? "bg-green-100 text-green-900" : "text-slate-600 hover:text-slate-900"}`}>Paid</button>
+              <div className="flex gap-1 border border-slate-200/70 rounded-2xl p-1 bg-white">
+                <button onClick={() => setPaymentFilter("all")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${paymentFilter === "all" ? "bg-indigo-600 text-white" : "text-slate-600 hover:text-slate-900"}`}>All</button>
+                <button onClick={() => setPaymentFilter("Pending")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${paymentFilter === "Pending" ? "bg-amber-100 text-amber-900" : "text-slate-600 hover:text-slate-900"}`}>Pending</button>
+                <button onClick={() => setPaymentFilter("Paid")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${paymentFilter === "Paid" ? "bg-emerald-100 text-emerald-900" : "text-slate-600 hover:text-slate-900"}`}>Paid</button>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-500 font-medium">Status:</span>
-              <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }} className="text-sm border border-slate-200/50 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 bg-white">
+              <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }} className="text-sm border border-slate-200/70 rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-white">
                 <option value="all">All</option>
                 <option value="active">Active</option>
                 <option value="graduated">Graduated</option>
@@ -115,7 +82,7 @@ export function AdminStudents() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-500 font-medium">Show:</span>
-              <select value={itemsPerPage} onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }} className="text-sm border border-slate-200/50 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 bg-white">
+              <select value={itemsPerPage} onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }} className="text-sm border border-slate-200/70 rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-white">
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
@@ -128,136 +95,79 @@ export function AdminStudents() {
         <div className="flex flex-wrap gap-2">
           {selectedStudents.size > 0 && (
             <>
-              <Button onClick={handleBatchMarkAsPaid} className="rounded-full bg-[#0061FF] hover:bg-[#0052E6] text-white transition-all hover:scale-105">
+              <Button onClick={handleBatchMarkAsPaid} className="rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white">
                 Mark {selectedStudents.size} as Paid
               </Button>
-              <Button onClick={() => setBulkSuspendModalOpen(true)} variant="outline" className="rounded-full border-amber-200 text-amber-700 hover:bg-amber-50">
+              <Button onClick={() => setBulkSuspendModalOpen(true)} variant="outline" className="rounded-2xl border-amber-200 text-amber-700 hover:bg-amber-50">
                 Suspend
               </Button>
-              <Button onClick={() => setBulkDeleteModalOpen(true)} variant="outline" className="rounded-full border-red-200 text-red-600 hover:bg-red-50">
+              <Button onClick={() => setBulkDeleteModalOpen(true)} variant="outline" className="rounded-2xl border-red-200 text-red-600 hover:bg-red-50">
                 <Trash2 className="w-4 h-4 mr-1" />
                 Delete ({selectedStudents.size})
               </Button>
             </>
           )}
-          <Button onClick={() => { setEditingUser(null); setUserFormData({ email: "", password: "", role: "student", firstName: "", lastName: "", phone: "" }); setUserModalOpen(true); }} className="rounded-full bg-green-600 hover:bg-green-700 text-white transition-all hover:scale-105">
+          <Button onClick={() => { setEditingUser(null); setUserFormData({ email: "", password: "", role: "student", firstName: "", lastName: "", phone: "", status: "active", paymentStatus: "Pending", amountDue: "", amountPaid: "", totalCoursePrice: "", enrolledCourse: "", studentIdNumber: "", adminClearance: false }); setUserModalOpen(true); }} className="rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white">
             <UserPlus className="w-4 h-4 mr-2" />
             Add User
           </Button>
-          <Button onClick={() => setCsvModalOpen(true)} variant="outline" className="rounded-full border-slate-200/50">
+          <Button onClick={() => setCsvModalOpen(true)} variant="outline" className="rounded-2xl border-slate-200/70 bg-white">
             <Upload className="w-4 h-4 mr-2" />
             Import CSV
           </Button>
-          <Button onClick={handleInvite} variant="outline" className="rounded-full border-slate-200/50">
-            <MessageCircle className="w-4 h-4 mr-2" />
+          <Button onClick={handleInvite} variant="outline" className="rounded-2xl border-slate-200/70 bg-white">
+            <MessageCircleMore className="w-4 h-4 mr-2" />
             Invite via WhatsApp
           </Button>
         </div>
-      </div>
+        </div>
+      </AdminPanel>
 
-      <Card className="border-slate-200/50">
-        <CardContent className="p-0 overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-12">
-                  <input type="checkbox" checked={selectedStudents.size === filteredStudents.length && filteredStudents.length > 0} onChange={toggleSelectAll} className="rounded border-slate-300" />
-                </TableHead>
-                <TableHead className="text-slate-900">Email</TableHead>
-                <TableHead className="text-slate-900">Student Name</TableHead>
-                <TableHead className="text-slate-900">Phone</TableHead>
-                <TableHead className="text-slate-900">Payment Status</TableHead>
-                <TableHead className="text-slate-900">Student Status</TableHead>
-                <TableHead className="text-right text-slate-900">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading
-                ? Array.from({ length: 8 }).map((_, i) => (
-                    <TableRow key={i} className="animate-pulse">
-                      <TableCell><div className="h-4 w-4 bg-slate-100 rounded" /></TableCell>
-                      <TableCell><div className="h-3.5 bg-slate-100 rounded w-40" /></TableCell>
-                      <TableCell><div className="h-3.5 bg-slate-100 rounded w-28" /></TableCell>
-                      <TableCell><div className="h-3.5 bg-slate-100 rounded w-24" /></TableCell>
-                      <TableCell><div className="h-5 bg-slate-100 rounded-full w-16" /></TableCell>
-                      <TableCell><div className="h-5 bg-slate-100 rounded-full w-20" /></TableCell>
-                      <TableCell className="text-right"><div className="h-7 bg-slate-100 rounded-lg w-16 ml-auto" /></TableCell>
-                    </TableRow>
-                  ))
-                : filteredStudents.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={7} className="py-16">
-                        <EmptyState type="students" message={searchQuery || paymentFilter !== "all" || statusFilter !== "all" ? "No students found matching your filters. Try adjusting your search or filter settings." : "No students registered yet. Waiting for first enrollment..."} />
-                      </TableCell>
-                    </TableRow>
-                  )
-                : paginatedStudents.map((student) => (
-                    <TableRow key={student._id} className="cursor-pointer hover:bg-slate-50 transition-colors">
-                      <TableCell onClick={(e) => e.stopPropagation()}>
-                        <input type="checkbox" checked={selectedStudents.has(student._id)} onChange={() => toggleStudentSelection(student._id)} className="rounded border-slate-300" />
-                      </TableCell>
-                      <TableCell className="font-medium text-slate-900">{student.email}</TableCell>
-                      <TableCell>{student.firstName || ""} {student.lastName || ""}{!student.firstName && !student.lastName && "N/A"}</TableCell>
-                      <TableCell>
-                        {student.phone ? (
-                          <span className="text-sm text-slate-700">{student.phone}</span>
-                        ) : (
-                          <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">Missing</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={student.paymentStatus === "Paid" ? "success" : "warning"}>{student.paymentStatus}</Badge>
-                      </TableCell>
-                      <TableCell onClick={(e) => e.stopPropagation()}>
-                        <select
-                          value={student.status || "active"}
-                          disabled={statusUpdating !== null}
-                          onChange={(e) => handleStudentStatusChange(student._id, e.target.value as StudentStatus)}
-                          className={`text-sm border rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${student.status === "banned" ? "border-red-300 text-red-700" : student.status === "graduated" ? "border-green-300 text-green-700" : student.status === "suspended" ? "border-amber-300 text-amber-700" : "border-slate-200/50 text-slate-700"}`}
-                        >
-                          <option value="active">Active</option>
-                          <option value="graduated">Graduated</option>
-                          <option value="suspended">Suspended</option>
-                          <option value="banned">Banned</option>
-                        </select>
-                      </TableCell>
-                      <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-end gap-1">
-                          <Button size="sm" variant="ghost" onClick={() => handleStudentClick(student)} className="rounded-full hover:bg-slate-100" title="View">
-                            <Eye className="w-4 h-4 text-slate-600" />
-                          </Button>
-                          <Button size="sm" variant="ghost" onClick={() => handleWhatsAppReminder(student)} className="rounded-full hover:bg-green-50" title="Send Reminder">
-                            <MessageCircle className="w-4 h-4 text-green-600" />
-                          </Button>
-                          <Button size="sm" variant="ghost" onClick={() => handleDeleteStudent(student)} className="rounded-full hover:bg-red-50" title="Delete">
-                            <Trash2 className="w-4 h-4 text-red-600" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-            </TableBody>
-          </Table>
-          {filteredStudents.length > 0 && (
-            <div className="flex items-center justify-between p-4 border-t border-slate-200">
-              <p className="text-sm text-slate-500">
-                Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, filteredStudents.length)} of {filteredStudents.length} students
-              </p>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)} className="rounded-full">
-                  <ChevronLeft className="w-4 h-4" />
-                  Previous
-                </Button>
-                <span className="text-sm text-slate-500">Page {currentPage} of {totalPages}</span>
-                <Button variant="outline" size="sm" disabled={currentPage >= totalPages} onClick={() => setCurrentPage((p) => p + 1)} className="rounded-full">
-                  Next
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
-              </div>
+      <AdminPanel>
+        <div className="px-5 py-4 border-b border-slate-100/80 bg-slate-50/50 flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-base font-bold text-slate-900">Student Directory</h2>
+            <p className="text-xs text-slate-500 mt-0.5">Manage student records, payment status, and account status.</p>
+          </div>
+          <span className="text-xs font-bold px-2.5 py-1 bg-indigo-50 text-indigo-600 rounded-full border border-indigo-100/30">
+            {filteredStudents.length} records
+          </span>
+        </div>
+        <AdminStudentTable
+          students={paginatedStudents}
+          loading={loading}
+          selectable
+          selectedStudents={selectedStudents}
+          allSelected={selectedStudents.size === filteredStudents.length && filteredStudents.length > 0}
+          emptyMessage={searchQuery || paymentFilter !== "all" || statusFilter !== "all" ? "No students found matching your filters. Try adjusting your search or filter settings." : "No students registered yet. Waiting for first enrollment..."}
+          statusUpdating={statusUpdating}
+          onToggleSelectAll={toggleSelectAll}
+          onToggleStudentSelection={toggleStudentSelection}
+          onStatusChange={handleStudentStatusChange}
+          onView={handleStudentClick}
+          onEdit={handleEditUser}
+          onWhatsApp={handleWhatsAppReminder}
+          onDelete={handleDeleteStudent}
+        />
+        {filteredStudents.length > 0 && (
+          <div className="flex items-center justify-between p-4 border-t border-slate-200 bg-slate-50/30">
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, filteredStudents.length)} of {filteredStudents.length} students
+            </p>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)} className="rounded-xl border-slate-200 text-slate-600 hover:text-slate-900 bg-white font-bold text-xs shadow-sm">
+                <ChevronLeft className="w-4 h-4 mr-1" />
+                Previous
+              </Button>
+              <span className="text-xs font-bold text-slate-600 px-3 py-1.5 bg-slate-100/80 rounded-xl">Page {currentPage} of {totalPages}</span>
+              <Button variant="outline" size="sm" disabled={currentPage >= totalPages} onClick={() => setCurrentPage((p) => p + 1)} className="rounded-xl border-slate-200 text-slate-600 hover:text-slate-900 bg-white font-bold text-xs shadow-sm">
+                Next
+                <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </div>
+        )}
+      </AdminPanel>
 
       {/* Student Profile Modal */}
       <StudentProfileModal
@@ -307,48 +217,14 @@ export function AdminStudents() {
         </div>
       </Modal>
 
-      {/* Add/Edit User Modal */}
-      <Modal isOpen={userModalOpen} onClose={() => { setUserModalOpen(false); setEditingUser(null); }} title={editingUser ? "Edit User" : "Add New User"}>
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-1 block">First Name</label>
-              <input type="text" value={userFormData.firstName} onChange={(e) => setUserFormData((prev) => ({ ...prev, firstName: e.target.value }))} className="w-full p-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="John" />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-1 block">Last Name</label>
-              <input type="text" value={userFormData.lastName} onChange={(e) => setUserFormData((prev) => ({ ...prev, lastName: e.target.value }))} className="w-full p-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Doe" />
-            </div>
-          </div>
-          <div>
-            <label className="text-sm font-medium text-slate-700 mb-1 block">Email</label>
-            <input type="email" value={userFormData.email} onChange={(e) => setUserFormData((prev) => ({ ...prev, email: e.target.value }))} className="w-full p-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="john@example.com" />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-slate-700 mb-1 block">Phone</label>
-            <input type="text" value={userFormData.phone} onChange={(e) => setUserFormData((prev) => ({ ...prev, phone: e.target.value }))} className="w-full p-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="+234..." />
-          </div>
-          {!editingUser && (
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-1 block">Password</label>
-              <input type="text" value={userFormData.password} onChange={(e) => setUserFormData((prev) => ({ ...prev, password: e.target.value }))} className="w-full p-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Temporary password" />
-            </div>
-          )}
-          <div>
-            <label className="text-sm font-medium text-slate-700 mb-1 block">Role</label>
-            <select value={userFormData.role} onChange={(e) => setUserFormData((prev) => ({ ...prev, role: e.target.value as "admin" | "student" }))} className="w-full p-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="student">Student</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
-          <div className="flex gap-2 pt-2">
-            <Button variant="outline" className="flex-1" onClick={() => { setUserModalOpen(false); setEditingUser(null); }}>Cancel</Button>
-            <Button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white" onClick={handleSaveUser}>
-              {editingUser ? "Update User" : "Create User"}
-            </Button>
-          </div>
-        </div>
-      </Modal>
+      <AdminUserModal
+        isOpen={userModalOpen}
+        editingUser={editingUser}
+        userFormData={userFormData}
+        setUserFormData={setUserFormData}
+        onClose={() => { setUserModalOpen(false); setEditingUser(null); }}
+        onSave={handleSaveUser}
+      />
 
       {/* CSV Import Modal */}
       <Modal isOpen={csvModalOpen} onClose={() => { setCsvModalOpen(false); setCsvFile(null); setCsvPreview([]); }} title="Import Users via CSV">
@@ -397,6 +273,6 @@ export function AdminStudents() {
           </div>
         </div>
       </Modal>
-    </motion.div>
+    </AdminPageShell>
   );
 }

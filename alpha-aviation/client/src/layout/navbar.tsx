@@ -14,7 +14,7 @@ export function Navbar({ scrolled = false }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const dashboardPath =
-    user?.role === "admin" ? "/admin/dashboard" : "/dashboard";
+    user?.role === "admin" ? "/admin/dashboard/overview" : "/dashboard";
 
   return (
     <>

@@ -149,20 +149,44 @@ export const RoutesConfig = () => {
 
     // Core Admin Layout
     {
-      path: "/admin",
+      path: "/admin/dashboard",
       element: (
         <ProtectedRoute adminOnly>
           <AdminLayout />
         </ProtectedRoute>
       ),
       children: [
-        { path: "dashboard", element: <AdminOverview /> },
+        {
+          path: "",
+          element: <Navigate to="/admin/dashboard/overview" replace />,
+        },
+        { path: "overview", element: <AdminOverview /> },
         { path: "students", element: <AdminStudents /> },
         { path: "payments", element: <AdminPayments /> },
         { path: "revenue", element: <AdminRevenue /> },
         { path: "resources", element: <AdminResources /> },
         { path: "notifications", element: <AdminNotifications /> },
       ],
+    },
+    {
+      path: "/admin/students",
+      element: <Navigate to="/admin/dashboard/students" replace />,
+    },
+    {
+      path: "/admin/payments",
+      element: <Navigate to="/admin/dashboard/payments" replace />,
+    },
+    {
+      path: "/admin/revenue",
+      element: <Navigate to="/admin/dashboard/revenue" replace />,
+    },
+    {
+      path: "/admin/resources",
+      element: <Navigate to="/admin/dashboard/resources" replace />,
+    },
+    {
+      path: "/admin/notifications",
+      element: <Navigate to="/admin/dashboard/notifications" replace />,
     },
 
     // Core Student Layout

@@ -83,7 +83,22 @@ exports.createUser = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { email, firstName, lastName, phone, role, status, paymentStatus } = req.body;
+    const {
+      email,
+      password,
+      firstName,
+      lastName,
+      phone,
+      role,
+      status,
+      paymentStatus,
+      amountDue,
+      amountPaid,
+      totalCoursePrice,
+      enrolledCourse,
+      studentIdNumber,
+      adminClearance,
+    } = req.body;
 
     const user = await User.findById(id);
     if (!user) {
@@ -104,12 +119,46 @@ exports.updateUser = async (req, res, next) => {
       user.email = email;
     }
 
+    if (password !== undefined && password !== '') {
+      if (String(password).length < 6) {
+        return res.status(400).json({
+          success: false,
+          message: 'Password must be at least 6 characters'
+        });
+      }
+      user.password = password;
+    }
+
     if (firstName !== undefined) user.firstName = firstName;
     if (lastName !== undefined) user.lastName = lastName;
     if (phone !== undefined) user.phone = phone;
     if (role && ['admin', 'student'].includes(role)) user.role = role;
     if (status && ['active', 'banned', 'graduated', 'suspended'].includes(status)) user.status = status;
     if (paymentStatus && ['Pending', 'Under Review', 'Paid'].includes(paymentStatus)) user.paymentStatus = paymentStatus;
+    if (amountDue !== undefined) user.amountDue = Math.max(0, Number(amountDue) || 0);
+    if (amountPaid !== undefined) user.amountPaid = Math.max(0, Number(amountPaid) || 0);
+    if (totalCoursePrice !== undefined) user.totalCoursePrice = Math.max(0, Number(totalCoursePrice) || 0);
+    if (enrolledCourse !== undefined) user.enrolledCourse = enrolledCourse;
+    if (adminClearance !== undefined) user.adminClearance = Boolean(adminClearance);
+
+    if (studentIdNumber !== undefined && studentIdNumber !== user.studentIdNumber) {
+      const cleanStudentId = String(studentIdNumber || '').trim();
+      if (cleanStudentId) {
+        const exists = await User.findOne({
+          studentIdNumber: cleanStudentId,
+          _id: { $ne: user._id },
+        });
+        if (exists) {
+          return res.status(400).json({
+            success: false,
+            message: 'Student ID number already in use'
+          });
+        }
+        user.studentIdNumber = cleanStudentId;
+      } else {
+        user.studentIdNumber = undefined;
+      }
+    }
 
     await user.save();
 
@@ -122,8 +171,15 @@ exports.updateUser = async (req, res, next) => {
         role: user.role,
         firstName: user.firstName,
         lastName: user.lastName,
+        phone: user.phone,
         status: user.status,
         paymentStatus: user.paymentStatus,
+        amountDue: user.amountDue,
+        amountPaid: user.amountPaid,
+        totalCoursePrice: user.totalCoursePrice,
+        enrolledCourse: user.enrolledCourse,
+        studentIdNumber: user.studentIdNumber,
+        adminClearance: user.adminClearance,
       }
     });
   } catch (error) {
