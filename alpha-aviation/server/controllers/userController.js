@@ -85,6 +85,7 @@ exports.updateUser = async (req, res, next) => {
     const { id } = req.params;
     const {
       email,
+      password,
       firstName,
       lastName,
       phone,
@@ -116,6 +117,16 @@ exports.updateUser = async (req, res, next) => {
         });
       }
       user.email = email;
+    }
+
+    if (password !== undefined && password !== '') {
+      if (String(password).length < 6) {
+        return res.status(400).json({
+          success: false,
+          message: 'Password must be at least 6 characters'
+        });
+      }
+      user.password = password;
     }
 
     if (firstName !== undefined) user.firstName = firstName;

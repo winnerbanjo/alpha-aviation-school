@@ -56,12 +56,23 @@ export function AdminUserModal({
             <input type="text" value={userFormData.phone} onChange={(e) => setUserFormData((prev: any) => ({ ...prev, phone: e.target.value }))} className="w-full p-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="+234..." />
           </div>
         </div>
-        {!editingUser && (
-          <div>
-            <label className="text-sm font-medium text-slate-700 mb-1 block">Password</label>
-            <input type="text" value={userFormData.password} onChange={(e) => setUserFormData((prev: any) => ({ ...prev, password: e.target.value }))} className="w-full p-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Temporary password" />
-          </div>
-        )}
+        <div>
+          <label className="text-sm font-medium text-slate-700 mb-1 block">
+            {editingUser ? "New Password" : "Password"}
+          </label>
+          <input
+            type="text"
+            value={userFormData.password}
+            onChange={(e) => setUserFormData((prev: any) => ({ ...prev, password: e.target.value }))}
+            className="w-full p-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder={editingUser ? "Leave blank to keep current password" : "Temporary password"}
+          />
+          {editingUser && (
+            <p className="text-xs text-slate-500 mt-1">
+              Only fill this field if you want to reset the user's password.
+            </p>
+          )}
+        </div>
         <div>
           <label className="text-sm font-medium text-slate-700 mb-1 block">Role</label>
           <select value={userFormData.role} onChange={(e) => setUserFormData((prev: any) => ({ ...prev, role: e.target.value as "admin" | "student" }))} className="w-full p-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">

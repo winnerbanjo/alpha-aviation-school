@@ -325,6 +325,9 @@ export function useAdminData() {
       if (editingUser) {
         await updateUser(editingUser._id, {
           email: userFormData.email,
+          ...(userFormData.password.trim()
+            ? { password: userFormData.password.trim() }
+            : {}),
           firstName: userFormData.firstName,
           lastName: userFormData.lastName,
           phone: userFormData.phone,
