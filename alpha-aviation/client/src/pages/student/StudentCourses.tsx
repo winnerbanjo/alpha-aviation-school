@@ -64,6 +64,76 @@ export function StudentCourses() {
         )}
       </div>
 
+      {/* Global 4-Week Timeline (Shared across all courses) */}
+      {isPaid && courseTracks.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 shadow-sm mb-8"
+        >
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+            <div>
+              <h2 className="text-lg font-bold text-slate-900">Ground School Timeline</h2>
+              <p className="text-xs text-slate-500 mt-1">All selected courses share this 4-week training schedule.</p>
+            </div>
+            
+            <div className="mt-4 md:mt-0 flex flex-col md:items-end">
+              <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100">
+                <Calendar className="w-3.5 h-3.5" />
+                <span>
+                  {new Date(courseTracks[0].startDate).toLocaleDateString("en-NG", { month: "short", day: "numeric" })} 
+                  {" → "} 
+                  {new Date(courseTracks[0].endDate).toLocaleDateString("en-NG", { month: "short", day: "numeric", year: "numeric" })}
+                </span>
+              </div>
+              <div className={`mt-2 flex items-center gap-1.5 text-xs font-bold ${courseTracks[0].daysRemaining <= 7 && courseTracks[0].status === "active" ? "text-amber-600" : "text-indigo-600"}`}>
+                <Clock className="w-3.5 h-3.5" />
+                {courseTracks[0].status === "completed"
+                  ? "Training Period Completed"
+                  : courseTracks[0].status === "expired"
+                  ? "Training Period Expired"
+                  : `${courseTracks[0].daysRemaining} days left`}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[courseTracks[0].week1Progress, courseTracks[0].week2Progress, courseTracks[0].week3Progress, courseTracks[0].week4Progress].map((wp, wi) => {
+              const weekNum = wi + 1;
+              const currentWeek = courseTracks[0].currentWeek || 1;
+              const label = weekLabel(weekNum, currentWeek);
+              const barColor = weekColor(wp, weekNum, currentWeek);
+              const isCurrent = weekNum === currentWeek;
+              
+              return (
+                <div key={weekNum} className={`rounded-2xl p-4 border transition-all ${isCurrent ? "border-indigo-200/70 bg-indigo-50/50 shadow-sm" : "border-slate-100 bg-slate-50/50"}`}>
+                  <div className="flex justify-between items-center mb-2">
+                    <p className={`text-[11px] font-bold uppercase tracking-wide ${isCurrent ? "text-indigo-600" : "text-slate-400"}`}>
+                      Week {weekNum}
+                    </p>
+                    <p className={`text-[11px] font-bold ${isCurrent ? "text-indigo-500" : wp >= 100 ? "text-emerald-600" : "text-slate-400"}`}>
+                      {wp}%
+                    </p>
+                  </div>
+                  <div className="w-full h-2.5 bg-slate-200/60 rounded-full overflow-hidden mb-2">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${wp}%` }}
+                      transition={{ duration: 0.8, delay: wi * 0.1, ease: "easeOut" }}
+                      className={`h-full ${barColor} rounded-full`}
+                    />
+                  </div>
+                  <p className="text-[10px] text-slate-500 font-medium flex items-center justify-between">
+                    {label}
+                    {isCurrent && <span className="flex w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </motion.div>
+      )}
+
       {/* No courses state */}
       {courseSelections.length === 0 ? (
         <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-12 text-center shadow-sm">
@@ -89,17 +159,6 @@ export function StudentCourses() {
             const fallbackProgress = isCleared ? 100 : isUnderReview ? 35 : 0;
             const overallProgress = track ? track.overallProgress : fallbackProgress;
             const currentWeek = track?.currentWeek ?? 1;
-
-            const weekProgresses = track
-              ? [track.week1Progress, track.week2Progress, track.week3Progress, track.week4Progress]
-              : [fallbackProgress, 0, 0, 0];
-
-            const startFormatted = track
-              ? new Date(track.startDate).toLocaleDateString("en-NG", { month: "short", day: "numeric", year: "numeric" })
-              : null;
-            const endFormatted = track
-              ? new Date(track.endDate).toLocaleDateString("en-NG", { month: "short", day: "numeric", year: "numeric" })
-              : null;
 
             return (
               <motion.div
@@ -154,61 +213,9 @@ export function StudentCourses() {
                   </div>
                 </div>
 
-                {/* 4-week breakdown — only shown when a track exists */}
-                {track && (
-                  <div>
-                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Weekly Breakdown</p>
-                    <div className="grid grid-cols-4 gap-2">
-                      {weekProgresses.map((wp, wi) => {
-                        const weekNum = wi + 1;
-                        const label = weekLabel(weekNum, currentWeek);
-                        const barColor = weekColor(wp, weekNum, currentWeek);
-                        const isCurrent = weekNum === currentWeek;
-                        return (
-                          <div key={weekNum} className={`rounded-2xl p-3 border transition-all ${isCurrent ? "border-indigo-200/70 bg-indigo-50/50" : "border-slate-100 bg-slate-50/50"}`}>
-                            <p className={`text-[10px] font-bold uppercase tracking-wide mb-1.5 ${isCurrent ? "text-indigo-600" : "text-slate-400"}`}>
-                              Wk {weekNum}
-                            </p>
-                            <div className="w-full h-2 bg-slate-200/60 rounded-full overflow-hidden mb-1.5">
-                              <motion.div
-                                initial={{ width: 0 }}
-                                animate={{ width: `${wp}%` }}
-                                transition={{ duration: 0.8, delay: wi * 0.1, ease: "easeOut" }}
-                                className={`h-full ${barColor} rounded-full`}
-                              />
-                            </div>
-                            <p className={`text-[10px] font-bold ${isCurrent ? "text-indigo-500" : wp >= 100 ? "text-emerald-600" : "text-slate-400"}`}>
-                              {wp}%
-                            </p>
-                            <p className="text-[9px] text-slate-400 mt-0.5">{label}</p>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* Date range & countdown */}
-                {track && (
-                  <div className="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
-                      <Calendar className="w-3.5 h-3.5" />
-                      <span>{startFormatted} → {endFormatted}</span>
-                    </div>
-                    <div className={`flex items-center gap-1.5 text-xs font-bold ${track.daysRemaining <= 7 && track.status === "active" ? "text-amber-600" : "text-slate-500"}`}>
-                      <Clock className="w-3.5 h-3.5" />
-                      {track.status === "completed"
-                        ? "Course completed"
-                        : track.daysRemaining > 0
-                        ? `${track.daysRemaining} days left`
-                        : "Track ended"}
-                    </div>
-                  </div>
-                )}
-
                 {/* Pre-payment fallback note */}
                 {!track && !isPaid && (
-                  <div className="pt-3 border-t border-slate-100">
+                  <div className="pt-3 border-t border-slate-100 mt-2">
                     <p className="text-xs text-slate-400 italic">4-week track activates after payment confirmation.</p>
                   </div>
                 )}

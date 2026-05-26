@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, ChevronLeft, ChevronRight, Loader2, AlertTriangle } from "lucide-react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { motion, AnimatePresence } from "framer-motion";
@@ -76,8 +77,8 @@ export function SecureViewer({ isOpen, onClose, resource }: SecureViewerProps) {
     setNumPages(numPages);
   };
 
-  return (
-    <div className="fixed inset-0 z-[9999] border border-red-500 h-screen top-0 flex items-center justify-center bg-slate-900/95 backdrop-blur-sm select-none">
+  return createPortal(
+    <div className="fixed inset-0 w-full z-[9999] h-screen top-0 flex items-center justify-center bg-slate-900/95 backdrop-blur-sm select-none">
       {/* Header */}
       <div className="absolute top-0 left-0 right-0 h-16 bg-slate-900/50 border-b border-white/10 flex items-center justify-between px-6 z-10">
         <div className="flex flex-col">
@@ -192,6 +193,7 @@ export function SecureViewer({ isOpen, onClose, resource }: SecureViewerProps) {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </div>,
+    document.body
   );
 }
