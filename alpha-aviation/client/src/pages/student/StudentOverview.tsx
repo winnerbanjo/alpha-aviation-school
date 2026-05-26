@@ -36,19 +36,19 @@ export function StudentOverview() {
     if (user?.paymentStatus === "Paid") {
       getMyCourseTracks()
         .then((res) => { if (res?.success) setCourseTracks(res.data.tracks); })
-        .catch(() => {});
+        .catch(() => { });
     }
   }, [user?.paymentStatus]);
 
   const amountDue = user?.amountDue || 0;
-  const amountPaid = user?.amountPaid || 0;
+  const amountPaid = user?.paymentStatus === "Paid" ? user?.totalCoursePrice : user?.amountPaid || 0;
   const totalCoursePrice = user?.totalCoursePrice || 0;
   const enrollmentDate = user?.enrollmentDate
     ? new Date(user.enrollmentDate).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
     : null;
 
   const isGraduated = user?.status === "graduated";
@@ -121,11 +121,10 @@ export function StudentOverview() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`tuition-banner p-4 rounded-3xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.05),0px_0px_0px_1px_rgba(0,0,0,0.08)] backdrop-blur-md ${
-            isUnderReview
-              ? "bg-amber-50/80 border-amber-200 text-amber-900"
-              : "bg-rose-50/80 border-rose-200 text-rose-900"
-          }`}
+          className={`tuition-banner p-4 rounded-3xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.05),0px_0px_0px_1px_rgba(0,0,0,0.08)] backdrop-blur-md ${isUnderReview
+            ? "bg-amber-50/80 border-amber-200 text-amber-900"
+            : "bg-rose-50/80 border-rose-200 text-rose-900"
+            }`}
         >
           <div className="flex items-center gap-3">
             <div
@@ -272,7 +271,7 @@ export function StudentOverview() {
               Total Paid
             </p>
             <h3 className="text-2xl font-black text-slate-900 mt-1 truncate">
-              {formatNaira(amountPaid)}
+              {amountPaid}
             </h3>
           </div>
         </div>
@@ -423,7 +422,7 @@ export function StudentOverview() {
                 </svg>
                 <div className="absolute text-center">
                   <span className="text-2xl font-black text-slate-900">
-                    {clearanceScore}%
+                    {avgTrackProgress}%
                   </span>
                 </div>
               </div>

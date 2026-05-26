@@ -21,21 +21,35 @@ function computeTrackMeta(track) {
   // Auto time-progress: how much of the 28-day window has elapsed
   const timeProgress = Math.min(100, Math.round((elapsedMs / FOUR_WEEKS_MS) * 100));
 
-  // Average of admin-set weekly values
-  const weekValues = [
-    track.week1Progress || 0,
-    track.week2Progress || 0,
-    track.week3Progress || 0,
-    track.week4Progress || 0,
-  ];
-  const avgWeekProgress = Math.round(
-    weekValues.reduce((a, b) => a + b, 0) / 4,
-  );
+  // Calculate each week's time-based progress (0 to 100)
+  const msPerWeek = 7 * 86400000;
+  const calcWeekTimeProgress = (weekIndex) => {
+    const weekStartMs = weekIndex * msPerWeek;
+    if (elapsedMs <= weekStartMs) return 0;
+    if (elapsedMs >= weekStartMs + msPerWeek) return 100;
+    return Math.round(((elapsedMs - weekStartMs) / msPerWeek) * 100);
+  };
 
-  // Overall = the higher of: time elapsed (floor) vs manually entered average
+  const week1Progress = Math.max(track.week1Progress || 0, calcWeekTimeProgress(0));
+  const week2Progress = Math.max(track.week2Progress || 0, calcWeekTimeProgress(1));
+  const week3Progress = Math.max(track.week3Progress || 0, calcWeekTimeProgress(2));
+  const week4Progress = Math.max(track.week4Progress || 0, calcWeekTimeProgress(3));
+
+  const avgWeekProgress = Math.round((week1Progress + week2Progress + week3Progress + week4Progress) / 4);
+
+  // Overall = the higher of: time elapsed (floor) vs entered average
   const overallProgress = Math.max(timeProgress, avgWeekProgress);
 
-  return { daysRemaining, currentWeek, timeProgress, overallProgress };
+  return {
+    daysRemaining,
+    currentWeek,
+    timeProgress,
+    overallProgress,
+    week1Progress,
+    week2Progress,
+    week3Progress,
+    week4Progress,
+  };
 }
 
 /**

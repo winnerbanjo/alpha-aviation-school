@@ -21,7 +21,7 @@ export function StudentCourses() {
       setLoadingTracks(true);
       getMyCourseTracks()
         .then((res) => { if (res?.success) setCourseTracks(res.data.tracks); })
-        .catch(() => {})
+        .catch(() => { })
         .finally(() => setLoadingTracks(false));
     }
   }, [isPaid]);
@@ -76,13 +76,13 @@ export function StudentCourses() {
               <h2 className="text-lg font-bold text-slate-900">Ground School Timeline</h2>
               <p className="text-xs text-slate-500 mt-1">All selected courses share this 4-week training schedule.</p>
             </div>
-            
+
             <div className="mt-4 md:mt-0 flex flex-col md:items-end">
               <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100">
                 <Calendar className="w-3.5 h-3.5" />
                 <span>
-                  {new Date(courseTracks[0].startDate).toLocaleDateString("en-NG", { month: "short", day: "numeric" })} 
-                  {" → "} 
+                  {new Date(courseTracks[0].startDate).toLocaleDateString("en-NG", { month: "short", day: "numeric" })}
+                  {" → "}
                   {new Date(courseTracks[0].endDate).toLocaleDateString("en-NG", { month: "short", day: "numeric", year: "numeric" })}
                 </span>
               </div>
@@ -91,8 +91,8 @@ export function StudentCourses() {
                 {courseTracks[0].status === "completed"
                   ? "Training Period Completed"
                   : courseTracks[0].status === "expired"
-                  ? "Training Period Expired"
-                  : `${courseTracks[0].daysRemaining} days left`}
+                    ? "Training Period Expired"
+                    : `${courseTracks[0].daysRemaining} days left`}
               </div>
             </div>
           </div>
@@ -104,7 +104,7 @@ export function StudentCourses() {
               const label = weekLabel(weekNum, currentWeek);
               const barColor = weekColor(wp, weekNum, currentWeek);
               const isCurrent = weekNum === currentWeek;
-              
+
               return (
                 <div key={weekNum} className={`rounded-2xl p-4 border transition-all ${isCurrent ? "border-indigo-200/70 bg-indigo-50/50 shadow-sm" : "border-slate-100 bg-slate-50/50"}`}>
                   <div className="flex justify-between items-center mb-2">
@@ -184,34 +184,10 @@ export function StudentCourses() {
                       <p className="text-xs font-semibold text-slate-500 mt-0.5">Tuition: {formatNaira(course.price)}</p>
                     </div>
                   </div>
-                  {track && (
-                    <span className={`shrink-0 text-[11px] font-bold px-2.5 py-1 rounded-full border ${
-                      track.status === "completed"
-                        ? "bg-emerald-50 text-emerald-700 border-emerald-200/60"
-                        : track.status === "expired"
-                        ? "bg-rose-50 text-rose-600 border-rose-200/60"
-                        : "bg-indigo-50 text-indigo-700 border-indigo-100/60"
-                    }`}>
-                      {track.status === "completed" ? "Completed" : track.status === "expired" ? "Expired" : `Week ${currentWeek}/4`}
-                    </span>
-                  )}
+
                 </div>
 
-                {/* Overall progress */}
-                <div className="space-y-1.5">
-                  <div className="flex justify-between items-center text-sm font-bold">
-                    <span className="text-slate-600">Overall Progress</span>
-                    <span className="text-indigo-600">{overallProgress}% Completed</span>
-                  </div>
-                  <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${overallProgress}%` }}
-                      transition={{ duration: 1.2, ease: "easeOut" }}
-                      className={`h-full bg-gradient-to-r ${cardGradient} rounded-full`}
-                    />
-                  </div>
-                </div>
+
 
                 {/* Pre-payment fallback note */}
                 {!track && !isPaid && (
