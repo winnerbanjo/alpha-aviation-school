@@ -15,6 +15,9 @@ import {
   getPendingPayments,
   approvePayment,
   rejectPayment,
+  getCourseTrackStats,
+  updateWeekProgress,
+  type CourseTrackStats,
 } from "@/api";
 import { useToast } from "@/components/ui/toast";
 
@@ -34,12 +37,14 @@ export interface Student {
   amountDue: number;
   amountPaid?: number;
   enrollmentDate?: string;
+  paymentConfirmedAt?: string;
   phone?: string;
   adminClearance?: boolean;
   certificateUrl?: string;
   studentIdNumber?: string;
   paymentReceiptUrl?: string;
   totalCoursePrice?: number;
+  courseSelections?: Array<{ title: string; price: number }>;
 }
 
 const emptyUserFormData = {
@@ -103,6 +108,14 @@ export function useAdminData() {
   const [rejectReason, setRejectReason] = useState("");
   const [processingPayment, setProcessingPayment] = useState(false);
 
+  // Course tracking stats
+  const [courseTrackStats, setCourseTrackStats] = useState<CourseTrackStats>({
+    activeTracks: 0,
+    completedTracks: 0,
+    expiringThisWeek: 0,
+    avgProgressAll: 0,
+  });
+
   const { toast } = useToast();
   const fetchStudentsRef = useRef<((signal?: AbortSignal) => Promise<void>) | null>(null);
   const fetchFinancialStatsRef = useRef<((signal?: AbortSignal) => Promise<void>) | null>(null);
@@ -151,6 +164,16 @@ export function useAdminData() {
     }
   }, []);
 
+  const fetchCourseTrackStats = useCallback(async (signal?: AbortSignal) => {
+    try {
+      const response = await getCourseTrackStats();
+      if (response?.success) setCourseTrackStats(response.data);
+    } catch (err: any) {
+      if (err?.name === "CanceledError" || err?.code === "ERR_CANCELED" || err?.name === "AbortError") return;
+      // Non-fatal — stats default to 0
+    }
+  }, []);
+
   fetchStudentsRef.current = fetchStudents;
   fetchFinancialStatsRef.current = fetchFinancialStats;
 
@@ -158,8 +181,9 @@ export function useAdminData() {
     const controller = new AbortController();
     fetchStudents(controller.signal);
     fetchFinancialStats(controller.signal);
+    fetchCourseTrackStats(controller.signal);
     return () => controller.abort();
-  }, [fetchStudents, fetchFinancialStats]);
+  }, [fetchStudents, fetchFinancialStats, fetchCourseTrackStats]);
 
   const safeStudents = Array.isArray(students) ? students : [];
   const calculatedTotalRevenue = safeStudents
@@ -529,6 +553,25 @@ export function useAdminData() {
     }
   };
 
+  const handleUpdateWeekProgress = async (
+    trackId: string,
+    data: {
+      week1Progress?: number;
+      week2Progress?: number;
+      week3Progress?: number;
+      week4Progress?: number;
+    },
+  ) => {
+    try {
+      await updateWeekProgress(trackId, data);
+      // Refresh stats so admin KPI cards stay current
+      fetchCourseTrackStats();
+      toast("Progress updated", "success");
+    } catch (error: any) {
+      toast(error.response?.data?.message || "Failed to update progress", "error");
+    }
+  };
+
   return {
     students, loading, searchQuery, setSearchQuery, selectedStudents, setSelectedStudents,
     totalRevenue, totalRevenuePendingCalc, paymentFilter, setPaymentFilter, statusFilter, setStatusFilter,
@@ -549,6 +592,7 @@ export function useAdminData() {
     handleBulkDelete, handleBulkSuspend, handleEditUser, handleSaveUser, handleCsvFileChange,
     handleCsvUpload, handleAdminClearanceChange, handleCertificateUploaded,
     handleWhatsAppReminder, handleInvite, toggleStudentSelection, toggleSelectAll,
-    handleApprovePayment, handleRejectPayment,
+    handleApprovePayment, handleRejectPayment, handleUpdateWeekProgress,
+    courseTrackStats, fetchCourseTrackStats,
   };
 }

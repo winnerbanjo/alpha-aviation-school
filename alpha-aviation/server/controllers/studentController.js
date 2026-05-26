@@ -5,6 +5,7 @@ const {
   notifyPaymentConfirmed,
   notifyReceiptUploaded,
 } = require("../utils/paymentNotifications");
+const { initializeCourseTracks } = require("../utils/courseTrackService");
 const { mockStudents } = require("../utils/mockData");
 const axios = require("axios");
 
@@ -133,8 +134,15 @@ exports.verifyPaystackPayment = async (req, res, next) => {
       const paidAmount = data.amount / 100;
       user.amountPaid = (user.amountPaid || 0) + paidAmount;
       user.amountDue = Math.max(0, (user.amountDue || 0) - paidAmount);
+      // Stamp the payment confirmation time (only on first confirmation)
+      if (!user.paymentConfirmedAt) {
+        user.paymentConfirmedAt = new Date();
+      }
 
       await user.save();
+
+      // Initialise 4-week course tracks for each enrolled course
+      await initializeCourseTracks(user);
 
       // Create payment record
       const payment = await Payment.create({

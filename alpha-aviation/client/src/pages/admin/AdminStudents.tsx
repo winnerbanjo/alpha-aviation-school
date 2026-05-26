@@ -31,6 +31,7 @@ export function AdminStudents() {
     userModalOpen, setUserModalOpen, editingUser, setEditingUser,
     userFormData, setUserFormData, csvModalOpen, setCsvModalOpen, csvPreview, csvFile,
     isProfileModalOpen, setIsProfileModalOpen, selectedStudent, statusUpdating,
+    handleUpdateWeekProgress,
   } = useAdminData();
   return (
     <AdminPageShell>
@@ -178,6 +179,7 @@ export function AdminStudents() {
         onWhatsAppReminder={handleWhatsAppReminder}
         onAdminClearanceChange={handleAdminClearanceChange}
         onCertificateUploaded={handleCertificateUploaded}
+        onUpdateWeekProgress={handleUpdateWeekProgress}
       />
 
       {/* Delete Confirmation Modal */}

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const studentController = require('../controllers/studentController');
 const resourceController = require('../controllers/resourceController');
+const courseTrackController = require('../controllers/courseTrackController');
 const { protect } = require('../middleware/protect');
 
 // All student routes require authentication
@@ -16,5 +17,6 @@ router.patch('/phone', studentController.updatePhone);
 router.post('/upload-document', studentController.uploadDocument);
 router.post('/upload-payment-receipt', studentController.uploadPaymentReceipt);
 router.post('/verify-paystack', studentController.verifyPaystackPayment);
+router.get('/course-tracks', courseTrackController.getMyCourseTracks);
 
 module.exports = router;

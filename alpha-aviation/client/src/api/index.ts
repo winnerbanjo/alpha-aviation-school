@@ -500,4 +500,82 @@ export const rejectPayment = async (paymentId: string, reason: string) => {
   return response.data;
 };
 
+// ─── Course Tracking ──────────────────────────────────────────────────────────
+
+export interface CourseTrackItem {
+  _id: string;
+  courseTitle: string;
+  coursePrice: number;
+  startDate: string;
+  endDate: string;
+  week1Progress: number;
+  week2Progress: number;
+  week3Progress: number;
+  week4Progress: number;
+  overallProgress: number;
+  /** Computed server-side: 1–4 */
+  currentWeek: number;
+  /** Computed server-side: days left until endDate */
+  daysRemaining: number;
+  /** Computed server-side: % of 28-day window elapsed */
+  timeProgress: number;
+  status: "active" | "completed" | "expired";
+}
+
+export interface CourseTrackStats {
+  activeTracks: number;
+  completedTracks: number;
+  expiringThisWeek: number;
+  avgProgressAll: number;
+}
+
+/** Student: fetch own course tracks */
+export const getMyCourseTracks = async () => {
+  const response = await api.get("/student/course-tracks");
+  return response.data as {
+    success: boolean;
+    count: number;
+    data: { tracks: CourseTrackItem[] };
+  };
+};
+
+/** Admin: fetch a specific student's course tracks */
+export const getStudentCourseTracks = async (studentId: string) => {
+  const response = await api.get(`/admin/course-tracks/${studentId}`);
+  return response.data as {
+    success: boolean;
+    count: number;
+    data: { tracks: CourseTrackItem[] };
+  };
+};
+
+/** Admin: update per-week progress for a single track */
+export const updateWeekProgress = async (
+  trackId: string,
+  data: {
+    week1Progress?: number;
+    week2Progress?: number;
+    week3Progress?: number;
+    week4Progress?: number;
+  },
+) => {
+  const response = await api.patch(
+    `/admin/course-tracks/${trackId}/progress`,
+    data,
+  );
+  return response.data as {
+    success: boolean;
+    data: { track: CourseTrackItem };
+  };
+};
+
+/** Admin: aggregate course tracking KPIs for the overview dashboard */
+export const getCourseTrackStats = async () => {
+  const response = await api.get("/admin/course-tracks/stats");
+  return response.data as {
+    success: boolean;
+    data: CourseTrackStats;
+  };
+};
+
 export default api;
