@@ -208,9 +208,9 @@ export default function Footer() {
               Campus
             </h5>
             <div className="text-sm text-gray-500 space-y-1 font-medium leading-relaxed">
-              <p>7 Chief Tajudeen Odubiyi St,</p>
-              <p>Ilasamaja, Lagos,</p>
-              <p>Nigeria.</p>
+              <p>4 Wahab Irawo St,</p>
+              <p>Peace Estate, Ago Palace, </p>
+              <p>Lagos, Nigeria.</p>
             </div>
           </div>
 

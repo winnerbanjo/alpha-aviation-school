@@ -3,6 +3,7 @@ const router = express.Router();
 const adminController = require("../controllers/adminController");
 const userController = require("../controllers/userController");
 const resourceController = require("../controllers/resourceController");
+const courseTrackController = require("../controllers/courseTrackController");
 const { protect } = require("../middleware/protect");
 const { adminOnly } = require("../middleware/adminOnly");
 
@@ -39,5 +40,10 @@ router.post("/users/bulk-import", userController.bulkImportUsers);
 router.post("/users/bulk-delete", userController.bulkDeleteUsers);
 router.post("/users/bulk-status", userController.bulkUpdateUserStatus);
 router.post("/users/:id/certificate", userController.uploadCertificate);
+
+// Course tracking routes
+router.get("/course-tracks/stats", courseTrackController.getCourseTrackStats);
+router.get("/course-tracks/:studentId", courseTrackController.getStudentCourseTracks);
+router.patch("/course-tracks/:trackId/progress", courseTrackController.updateWeekProgress);
 
 module.exports = router;

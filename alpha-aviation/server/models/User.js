@@ -93,6 +93,10 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    paymentConfirmedAt: {
+      type: Date,
+      default: null,
+    },
     amountDue: {
       type: Number,
       default: 0,

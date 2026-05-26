@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const User = require("../models/User");
 const Payment = require("../models/Payment");
 const { notifyPaymentConfirmed } = require("../utils/paymentNotifications");
+const { initializeCourseTracks } = require("../utils/courseTrackService");
 
 exports.handlePaystackWebhook = async (req, res) => {
   try {
@@ -40,7 +41,14 @@ exports.handlePaystackWebhook = async (req, res) => {
         const paidAmount = amount / 100;
         user.amountPaid = (user.amountPaid || 0) + paidAmount;
         user.amountDue = Math.max(0, (user.amountDue || 0) - paidAmount);
+        // Stamp the payment confirmation time (only on first confirmation)
+        if (!user.paymentConfirmedAt) {
+          user.paymentConfirmedAt = new Date();
+        }
         await user.save();
+
+        // Initialise 4-week course tracks for each enrolled course
+        await initializeCourseTracks(user);
 
         const payment = await Payment.findOneAndUpdate(
           { reference: reference },

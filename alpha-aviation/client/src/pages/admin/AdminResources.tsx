@@ -21,13 +21,7 @@ import {
 const inferResourceType = (file: File): CourseResourceItem["type"] => {
   if (file.type.includes("pdf")) return "pdf";
   if (file.type.includes("video")) return "video";
-  if (
-    file.type.includes("word") ||
-    file.name.toLowerCase().endsWith(".doc") ||
-    file.name.toLowerCase().endsWith(".docx")
-  ) {
-    return "doc";
-  }
+  // Word docs are no longer natively supported to enforce secure viewing.
   return "other";
 };
 
@@ -214,13 +208,14 @@ export function AdminResources() {
                     {selectedFile ? selectedFile.name : "Choose resource file"}
                   </p>
                   <p className="text-xs text-slate-500">
-                    PDF, document, video, image, or other supported Cloudinary file.
+                    PDF, video, or image file (Word docs not supported for security).
                   </p>
                 </div>
               </div>
               <input
                 type="file"
                 className="hidden"
+                accept="application/pdf,video/*,image/*"
                 onChange={(event) =>
                   setSelectedFile(event.target.files?.[0] || null)
                 }

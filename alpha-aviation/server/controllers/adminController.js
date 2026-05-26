@@ -4,6 +4,9 @@ const {
   notifyPaymentConfirmed,
   notifyPaymentRejected,
 } = require("../utils/paymentNotifications");
+const {
+  initializeCourseTracks,
+} = require("../utils/courseTrackService");
 
 const getStudentValue = (student) => {
   if ((student.amountPaid || 0) > 0) return student.amountPaid || 0;
@@ -150,11 +153,16 @@ exports.updatePaymentStatus = async (req, res, next) => {
     if (student.paymentStatus === "Paid") {
       student.amountPaid = student.amountDue;
       student.amountDue = 0;
+      // Stamp payment confirmation time (only on first confirmation)
+      if (!student.paymentConfirmedAt) {
+        student.paymentConfirmedAt = new Date();
+      }
     }
 
     await student.save();
 
     if (student.paymentStatus === "Paid") {
+      await initializeCourseTracks(student);
       await notifyPaymentConfirmed({
         student,
         payment: { amount: student.amountPaid },
@@ -213,7 +221,11 @@ exports.batchUpdatePaymentStatus = async (req, res, next) => {
       student.paymentStatus = "Paid";
       student.amountPaid = student.amountDue;
       student.amountDue = 0;
+      if (!student.paymentConfirmedAt) {
+        student.paymentConfirmedAt = new Date();
+      }
       await student.save();
+      await initializeCourseTracks(student);
 
       await notifyPaymentConfirmed({
         student,
@@ -409,9 +421,18 @@ exports.approvePayment = async (req, res, next) => {
 
     if (student.amountDue <= 0) {
       student.paymentStatus = "Paid";
+      // Stamp payment confirmation time (only on first confirmation)
+      if (!student.paymentConfirmedAt) {
+        student.paymentConfirmedAt = new Date();
+      }
     }
 
     await student.save();
+
+    // Initialise 4-week course tracks for each enrolled course
+    if (student.paymentStatus === "Paid") {
+      await initializeCourseTracks(student);
+    }
 
     await notifyPaymentConfirmed({
       student,

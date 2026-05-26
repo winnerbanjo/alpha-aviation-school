@@ -4,25 +4,22 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/authStore";
 import {
   AlertCircle,
-  CheckCircle2,
   Sparkles,
   BookOpen,
   X,
   CreditCard,
   GraduationCap,
-  FileText,
-  ShieldCheck,
-  Hourglass,
   Award,
 } from "lucide-react";
 import { formatNaira } from "@/data/courseCatalog";
 import { useNavigate } from "react-router-dom";
+import { getMyCourseTracks, type CourseTrackItem } from "@/api";
 
 export function StudentOverview() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const [showGradModal, setShowGradModal] = useState(false);
-  const [avatarError, setAvatarError] = useState(false);
+  const [courseTracks, setCourseTracks] = useState<CourseTrackItem[]>([]);
 
   useEffect(() => {
     if (user?.status === "graduated") {
@@ -34,15 +31,24 @@ export function StudentOverview() {
     }
   }, [user]);
 
+  // Fetch real course tracks when payment is confirmed
+  useEffect(() => {
+    if (user?.paymentStatus === "Paid") {
+      getMyCourseTracks()
+        .then((res) => { if (res?.success) setCourseTracks(res.data.tracks); })
+        .catch(() => { });
+    }
+  }, [user?.paymentStatus]);
+
   const amountDue = user?.amountDue || 0;
-  const amountPaid = user?.amountPaid || 0;
+  const amountPaid = user?.paymentStatus === "Paid" ? user?.totalCoursePrice : user?.amountPaid || 0;
   const totalCoursePrice = user?.totalCoursePrice || 0;
   const enrollmentDate = user?.enrollmentDate
     ? new Date(user.enrollmentDate).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
     : null;
 
   const isGraduated = user?.status === "graduated";
@@ -58,16 +64,20 @@ export function StudentOverview() {
   const isPaid = user?.paymentStatus === "Paid";
   const registeredCourses = user?.courseSelections || [];
 
-  // Compute a real Clearance Score (out of 100) based on DB values
+  // Clearance Score: 50 pts payment + up to 50 pts from real track progress
+  const avgTrackProgress = courseTracks.length
+    ? Math.round(courseTracks.reduce((s, t) => s + t.overallProgress, 0) / courseTracks.length)
+    : 0;
   let clearanceScore = 0;
   if (isPaid) {
-    clearanceScore += 50;
+    clearanceScore = 50 + Math.round(avgTrackProgress / 2);
   } else if (isUnderReview) {
     clearanceScore += 25;
   }
-  if (user?.documentUrl) {
-    clearanceScore += 50;
+  if (user?.documentUrl && !isPaid) {
+    clearanceScore = Math.min(100, clearanceScore + 25);
   }
+  clearanceScore = Math.min(100, clearanceScore);
 
   // Dynamic AI Insight text based on real database attributes
   const getAIInsight = () => {
@@ -111,11 +121,10 @@ export function StudentOverview() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`tuition-banner p-4 rounded-3xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.05),0px_0px_0px_1px_rgba(0,0,0,0.08)] backdrop-blur-md ${
-            isUnderReview
-              ? "bg-amber-50/80 border-amber-200 text-amber-900"
-              : "bg-rose-50/80 border-rose-200 text-rose-900"
-          }`}
+          className={`tuition-banner p-4 rounded-3xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.05),0px_0px_0px_1px_rgba(0,0,0,0.08)] backdrop-blur-md ${isUnderReview
+            ? "bg-amber-50/80 border-amber-200 text-amber-900"
+            : "bg-rose-50/80 border-rose-200 text-rose-900"
+            }`}
         >
           <div className="flex items-center gap-3">
             <div
@@ -262,7 +271,7 @@ export function StudentOverview() {
               Total Paid
             </p>
             <h3 className="text-2xl font-black text-slate-900 mt-1 truncate">
-              {formatNaira(amountPaid)}
+              {amountPaid}
             </h3>
           </div>
         </div>
@@ -413,7 +422,7 @@ export function StudentOverview() {
                 </svg>
                 <div className="absolute text-center">
                   <span className="text-2xl font-black text-slate-900">
-                    {clearanceScore}%
+                    {avgTrackProgress}%
                   </span>
                 </div>
               </div>
@@ -424,25 +433,14 @@ export function StudentOverview() {
               {registeredCourses.length > 0 ? (
                 <div className="space-y-5">
                   {registeredCourses.map((course, idx) => {
-                    const isCleared = user?.adminClearance;
-                    const progressValue = isCleared
-                      ? 100
-                      : isUnderReview
-                        ? 35
-                        : 0;
-                    const colorGradient =
-                      idx % 2 === 0
-                        ? "from-indigo-500 to-purple-600"
-                        : "from-blue-500 to-indigo-600";
+                    const track = courseTracks.find((t) => t.courseTitle === course.title);
+                    const progressValue = track ? track.overallProgress : (user?.adminClearance ? 100 : isUnderReview ? 35 : 0);
+                    const colorGradient = idx % 2 === 0 ? "from-indigo-500 to-purple-600" : "from-blue-500 to-indigo-600";
                     return (
                       <div key={course.title} className="space-y-1.5">
                         <div className="flex justify-between items-center text-sm font-bold">
-                          <span className="text-slate-700 truncate max-w-[70%]">
-                            {course.title}
-                          </span>
-                          <span className="text-indigo-600 shrink-0">
-                            ({progressValue}%)
-                          </span>
+                          <span className="text-slate-700 truncate max-w-[70%]">{course.title}</span>
+                          <span className="text-indigo-600 shrink-0">({progressValue}%)</span>
                         </div>
                         <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
                           <motion.div
@@ -452,6 +450,13 @@ export function StudentOverview() {
                             className={`h-full bg-gradient-to-r ${colorGradient} rounded-full`}
                           />
                         </div>
+                        {track && (
+                          <p className="text-[11px] text-slate-400 font-medium">
+                            Week {track.currentWeek} of 4
+                            {track.daysRemaining > 0 ? ` · ${track.daysRemaining} days remaining` : " · Track ended"}
+                            {" · "}<span className={track.status === "completed" ? "text-emerald-600" : track.status === "expired" ? "text-rose-500" : "text-indigo-500"}>{track.status.charAt(0).toUpperCase() + track.status.slice(1)}</span>
+                          </p>
+                        )}
                       </div>
                     );
                   })}

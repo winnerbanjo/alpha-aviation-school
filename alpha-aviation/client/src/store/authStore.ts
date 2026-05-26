@@ -32,6 +32,8 @@ interface User {
   adminClearance?: boolean;
   // Certificate
   certificateUrl?: string;
+  // Course tracking
+  paymentConfirmedAt?: string;
 }
 
 interface AuthState {
