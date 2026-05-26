@@ -43,6 +43,11 @@ function computeTrackMeta(track) {
  * Uses $setOnInsert — safe to call from any payment trigger point without
  * creating duplicates.
  *
+ * Start date priority:
+ *   1. student.paymentConfirmedAt  (new students — set at payment confirmation)
+ *   2. student.createdAt           (legacy students — already Paid before tracking existed)
+ *   3. new Date()                  (safety fallback)
+ *
  * @param {import('../models/User')} student  - Full Mongoose User document
  */
 async function initializeCourseTracks(student) {
@@ -50,11 +55,13 @@ async function initializeCourseTracks(student) {
     return;
   }
 
-  // The confirmed-payment timestamp is the single source of truth for the
-  // 4-week clock start. Fall back to now only as a safety net.
+  // Resolve the best available start date for the 4-week clock
   const startDate = student.paymentConfirmedAt
     ? new Date(student.paymentConfirmedAt)
+    : student.createdAt
+    ? new Date(student.createdAt)
     : new Date();
+
   const endDate = new Date(startDate.getTime() + FOUR_WEEKS_MS);
 
   const ops = student.courseSelections.map((course) => ({

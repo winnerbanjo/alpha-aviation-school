@@ -1,15 +1,24 @@
 const CourseTrack = require("../models/CourseTrack");
 const User = require("../models/User");
-const { enrichTracks } = require("../utils/courseTrackService");
+const { enrichTracks, initializeCourseTracks } = require("../utils/courseTrackService");
 
 // ─── Student: get own course tracks ───────────────────────────────────────────
 
 exports.getMyCourseTracks = async (req, res, next) => {
   try {
     const userId = req.user.userId;
-    const tracks = await CourseTrack.find({ student: userId }).sort({
-      startDate: 1,
-    });
+
+    let tracks = await CourseTrack.find({ student: userId }).sort({ startDate: 1 });
+
+    // ——— Legacy backfill: Paid student with no tracks yet ———
+    // Covers students who were already Paid before this tracking system existed.
+    if (tracks.length === 0) {
+      const student = await User.findById(userId);
+      if (student && student.paymentStatus === "Paid" && student.courseSelections?.length > 0) {
+        await initializeCourseTracks(student);
+        tracks = await CourseTrack.find({ student: userId }).sort({ startDate: 1 });
+      }
+    }
 
     const enriched = enrichTracks(tracks);
 
@@ -41,16 +50,22 @@ exports.getStudentCourseTracks = async (req, res, next) => {
   try {
     const { studentId } = req.params;
 
-    const student = await User.findById(studentId).select("_id role");
+    const student = await User.findById(studentId).select(
+      "_id role paymentStatus courseSelections paymentConfirmedAt createdAt",
+    );
     if (!student || student.role !== "student") {
       return res
         .status(404)
         .json({ success: false, message: "Student not found" });
     }
 
-    const tracks = await CourseTrack.find({ student: studentId }).sort({
-      startDate: 1,
-    });
+    let tracks = await CourseTrack.find({ student: studentId }).sort({ startDate: 1 });
+
+    // ——— Legacy backfill: Paid student with no tracks yet ———
+    if (tracks.length === 0 && student.paymentStatus === "Paid" && student.courseSelections?.length > 0) {
+      await initializeCourseTracks(student);
+      tracks = await CourseTrack.find({ student: studentId }).sort({ startDate: 1 });
+    }
     const enriched = enrichTracks(tracks);
 
     res.status(200).json({
