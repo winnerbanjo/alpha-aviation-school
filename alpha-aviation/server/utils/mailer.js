@@ -4,7 +4,7 @@ const { Resend } = require("resend");
 const DEFAULT_FROM_EMAIL =
   process.env.MAIL_FROM ||
   process.env.ZOHO_USER ||
-  "support@aslaviationschool.co";
+  "info@aslaviationschool.co";
 const FROM_ADDRESS = `"Alpha Step Links Aviation School" <${DEFAULT_FROM_EMAIL}>`;
 
 const resend = process.env.RESEND_API_KEY
