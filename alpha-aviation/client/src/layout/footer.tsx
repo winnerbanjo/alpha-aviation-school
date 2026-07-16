@@ -29,12 +29,16 @@ export default function Footer() {
       to: "",
     },
     {
-      label: "support@aslaviationschool.co",
-      to: "mailto:support@aslaviationschool.co",
+      label: "info@aslaviationschool.co",
+      to: "mailto:info@aslaviationschool.co",
     },
     {
-      label: "0814 025 7174",
-      to: "tel:+2348140257174",
+      label: "+44 7827 870141",
+      to: "tel:+447827870141",
+    },
+    {
+      label: "+44 7345 067286",
+      to: "tel:+447345067286",
     },
   ];
 
@@ -205,12 +209,13 @@ export default function Footer() {
 
           <div>
             <h5 className="font-bold text-white uppercase text-xs tracking-[0.2em] mb-6">
-              Campus
+              OFFICE
             </h5>
             <div className="text-sm text-gray-500 space-y-1 font-medium leading-relaxed">
-              <p>4 Wahab Irawo St,</p>
-              <p>Peace Estate, Ago Palace, </p>
-              <p>Lagos, Nigeria.</p>
+              <p>2nd Floor, College Road</p>
+              <p>17 King Edwards Road</p>
+              <p>Ruislip HA4 7AE</p>
+              <p>United Kingdom</p>
             </div>
           </div>
 
