@@ -36,10 +36,6 @@ export default function Footer() {
       label: "+44 7827 870141",
       to: "tel:+447827870141",
     },
-    {
-      label: "+44 7345 067286",
-      to: "tel:+447345067286",
-    },
   ];
 
   const Social = [
@@ -211,11 +207,24 @@ export default function Footer() {
             <h5 className="font-bold text-white uppercase text-xs tracking-[0.2em] mb-6">
               OFFICE
             </h5>
-            <div className="text-sm text-gray-500 space-y-1 font-medium leading-relaxed">
-              <p>2nd Floor, College Road</p>
-              <p>17 King Edwards Road</p>
-              <p>Ruislip HA4 7AE</p>
-              <p>United Kingdom</p>
+            <div className="text-sm text-gray-500 space-y-6 font-medium leading-relaxed">
+              <div className="space-y-1">
+                <p className="text-white font-bold text-xs uppercase tracking-[0.16em]">
+                  United Kingdom Headquarters
+                </p>
+                <p>2nd Floor, College Road</p>
+                <p>17 King Edwards Road</p>
+                <p>Ruislip HA4 7AE</p>
+                <p>United Kingdom</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-white font-bold text-xs uppercase tracking-[0.16em]">
+                  Nigerian Office
+                </p>
+                <p>7 Chief Tajudeen Odubiyi St</p>
+                <p>Ilasamaja, Lagos 102214</p>
+                <p>Nigeria</p>
+              </div>
             </div>
           </div>
 
@@ -224,15 +233,34 @@ export default function Footer() {
               Get in Touch
             </h5>
             <div className="flex flex-col space-y-3">
-              {Links.slice(6, 8).map((link, index) => (
+              <a
+                className="text-gray-500 hover:text-white text-sm font-medium transition-all duration-300 break-all"
+                href="mailto:info@aslaviationschool.co"
+              >
+                info@aslaviationschool.co
+              </a>
+              <div>
+                <p className="text-white font-bold text-xs uppercase tracking-[0.16em] mb-1">
+                  UK Phone Number
+                </p>
                 <a
-                  key={index}
                   className="text-gray-500 hover:text-white text-sm font-medium transition-all duration-300 break-all"
-                  href={link.to}
+                  href="tel:+447827870141"
                 >
-                  {link.label}
+                  +44 7827 870141
                 </a>
-              ))}
+              </div>
+              <div>
+                <p className="text-white font-bold text-xs uppercase tracking-[0.16em] mb-1">
+                  Nigerian Phone Number
+                </p>
+                <a
+                  className="text-gray-500 hover:text-white text-sm font-medium transition-all duration-300 break-all"
+                  href="tel:+2348140257174"
+                >
+                  +234 814 025 7174
+                </a>
+              </div>
             </div>
           </div>
         </div>

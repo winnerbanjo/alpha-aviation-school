@@ -79,7 +79,7 @@ export function About() {
               <div className="space-y-6">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-slate-900 leading-tight uppercase tracking-tight">
                   Defining the <br className="hidden sm:block" /> Future of
-                  Flight.
+                  Education.
                 </h2>
                 <p className="text-base sm:text-lg text-slate-500 font-medium leading-relaxed max-w-xl mx-auto md:mx-0">
                   Alpha Step Links Aviation School is a certified and
@@ -119,9 +119,9 @@ export function About() {
               className="relative aspect-video sm:aspect-square lg:aspect-video rounded-3xl overflow-hidden shadow-2xl group"
             >
               <img
-                src="https://images.unsplash.com/photo-1544016768-982d1554f0b9?auto=format&fit=crop&q=80"
+                src="/graduants.jpg"
                 alt="Legacy Excellence"
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                className="w-full h-full object-top object-cover transition-transform duration-1000 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-tr from-slate-950/40 to-transparent" />
               <div className="absolute bottom-6 left-6 sm:bottom-10 sm:left-10 p-4 sm:p-6 bg-white shadow-xl rounded-2xl border border-slate-100">
