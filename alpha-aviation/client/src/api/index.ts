@@ -578,4 +578,95 @@ export const getCourseTrackStats = async () => {
   };
 };
 
+// ─── Agent API calls ──────────────────────────────────────────────────────────
+
+export const agentRegister = async (data: {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  agencyName?: string;
+}) => {
+  const response = await api.post("/auth/register", { ...data, role: "agent" });
+  return response.data;
+};
+
+export const getAgentProfile = async () => {
+  const response = await api.get("/agent/profile");
+  return response.data;
+};
+
+export const getAgentStats = async () => {
+  const response = await api.get("/agent/stats");
+  return response.data;
+};
+
+export const getAgentStudents = async () => {
+  const response = await api.get("/agent/students");
+  return response.data;
+};
+
+export const registerStudentAsAgent = async (data: {
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  selectedCourses: string[];
+  password: string;
+}) => {
+  const response = await api.post("/agent/students/register", data);
+  return response.data;
+};
+
+export const uploadPaymentForStudent = async (studentId: string, data: {
+  receiptUrl: string;
+  amount?: number;
+}) => {
+  const response = await api.post(`/agent/students/${studentId}/pay/upload`, data);
+  return response.data;
+};
+
+export const getAgentPayments = async () => {
+  const response = await api.get("/agent/payments");
+  return response.data;
+};
+
+// ─── Admin — Agent Management ────────────────────────────────────────────────
+
+export const getAdminAgents = async () => {
+  const response = await api.get("/admin/agents");
+  return response.data;
+};
+
+export const getAdminPendingAgents = async () => {
+  const response = await api.get("/admin/agents/pending");
+  return response.data;
+};
+
+export const approveAgent = async (agentId: string) => {
+  const response = await api.patch(`/admin/agents/${agentId}/approve`);
+  return response.data;
+};
+
+export const rejectAgent = async (agentId: string, reason: string) => {
+  const response = await api.patch(`/admin/agents/${agentId}/reject`, { reason });
+  return response.data;
+};
+
+export const suspendAgent = async (agentId: string) => {
+  const response = await api.patch(`/admin/agents/${agentId}/suspend`);
+  return response.data;
+};
+
+export const reactivateAgent = async (agentId: string) => {
+  const response = await api.patch(`/admin/agents/${agentId}/reactivate`);
+  return response.data;
+};
+
+export const getAgentStudentsAdmin = async (agentId: string) => {
+  const response = await api.get(`/admin/agents/${agentId}/students`);
+  return response.data;
+};
+
 export default api;

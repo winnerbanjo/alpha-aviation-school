@@ -14,6 +14,7 @@ const authRoutes = require("./routes/authRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const studentRoutes = require("./routes/studentRoutes");
+const agentRoutes = require("./routes/agentRoutes");
 
 // Error handler
 const errorHandler = require("./middleware/errorHandler");
@@ -130,6 +131,7 @@ app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/admin", adminApiLimiter, protect, admin, adminRoutes);
 app.use("/api/student", studentRoutes);
+app.use('/api/agent', agentRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({

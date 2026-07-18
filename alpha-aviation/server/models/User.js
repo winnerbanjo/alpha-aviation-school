@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["admin", "student"],
+      enum: ["admin", "student", "agent"],
       default: "student",
       required: true,
     },
@@ -163,6 +163,40 @@ const userSchema = new mongoose.Schema(
     isEmailVerified: {
       type: Boolean,
       default: false,
+    },
+
+    // ─── Agent-specific fields ───────────────────────────────────────
+    agentStatus: {
+      type: String,
+      enum: ["pending", "approved", "rejected", "suspended"],
+      default: "pending",
+    },
+    agencyName: {
+      type: String,
+      trim: true,
+    },
+    agentCode: {
+      type: String,
+      unique: true,
+      sparse: true,
+      trim: true,
+    },
+    agentNotes: {
+      type: String,
+      trim: true,
+    },
+
+    // ─── Student-agent link (set when agent registers a student) ─────
+    enrolledByAgent: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+    // Agent's payment status for this specific student's tuition
+    agentPaymentStatus: {
+      type: String,
+      enum: ["Pending", "Paid"],
+      default: "Pending",
     },
   },
   {

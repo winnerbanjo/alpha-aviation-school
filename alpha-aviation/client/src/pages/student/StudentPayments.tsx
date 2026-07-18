@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { useAuthStore } from "@/store/authStore";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   CreditCard,
   CheckCircle2,
-  AlertCircle,
   Upload,
   FileText,
   Copy,
@@ -21,6 +19,14 @@ import { formatNaira } from "@/data/courseCatalog";
 import { useToast } from "@/components/ui/toast";
 import { usePaystackPayment } from "react-paystack";
 import { motion, AnimatePresence } from "framer-motion";
+
+type ApiError = {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+};
 
 export function StudentPayments() {
   const { user, setUser } = useAuthStore();
@@ -72,7 +78,7 @@ export function StudentPayments() {
 
   const initializePayment = usePaystackPayment(paystackConfig);
 
-  const handlePaystackSuccess = async (reference: any) => {
+  const handlePaystackSuccess = async (reference: { reference: string }) => {
     try {
       setUploadingReceipt(true);
       await verifyPaystackPayment(reference.reference);
@@ -82,8 +88,9 @@ export function StudentPayments() {
         refreshUser();
         setIsSuccess(false);
       }, 3000);
-    } catch (error: any) {
-      toast(error.response?.data?.message || "Payment verification failed", "error");
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      toast(apiError.response?.data?.message || "Payment verification failed", "error");
     } finally {
       setUploadingReceipt(false);
     }
@@ -129,8 +136,9 @@ export function StudentPayments() {
         setPaymentMethod("selection");
         setSelectedFile(null);
       }, 3000);
-    } catch (error: any) {
-      const msg = error.response?.data?.message || "Failed to upload receipt";
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      const msg = apiError.response?.data?.message || "Failed to upload receipt";
       toast(msg, "error");
       if (msg.toLowerCase().includes("rejected") || msg.toLowerCase().includes("previous")) {
         setRejectionReason("Your previous receipt was rejected. Please upload a new one.");
@@ -152,6 +160,107 @@ export function StudentPayments() {
         </p>
       </div>
 
+      {/* ─── AGENT-MANAGED PAYMENT VIEW ─────────────────────────────────────── */}
+      {user?.enrolledByAgent ? (
+        <div className="space-y-5">
+          {/* Status card */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`p-5 rounded-3xl border backdrop-blur-md shadow-sm ${
+              user.agentPaymentStatus === "Paid"
+                ? "bg-emerald-50/80 border-emerald-200"
+                : "bg-amber-50/80 border-amber-200"
+            }`}
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className={`p-2.5 rounded-2xl ${user.agentPaymentStatus === "Paid" ? "bg-emerald-100" : "bg-amber-100"}`}>
+                {user.agentPaymentStatus === "Paid"
+                  ? <CheckCircle2 className="w-5 h-5 text-emerald-700" />
+                  : <Clock className="w-5 h-5 text-amber-700" />
+                }
+              </div>
+              <div>
+                <p className={`font-bold text-sm ${user.agentPaymentStatus === "Paid" ? "text-emerald-900" : "text-amber-900"}`}>
+                  {user.agentPaymentStatus === "Paid" ? "Tuition Fully Paid" : "Tuition Payment Pending"}
+                </p>
+                <p className={`text-xs mt-0.5 ${user.agentPaymentStatus === "Paid" ? "text-emerald-700" : "text-amber-700"}`}>
+                  {user.agentPaymentStatus === "Paid"
+                    ? "Your enrollment agent has completed your tuition payment."
+                    : "Your enrollment agent is processing your tuition payment."}
+                </p>
+              </div>
+            </div>
+
+            {/* Amount summary */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-white/70 rounded-2xl px-4 py-3 border border-white/50">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Fees</p>
+                <p className="text-base font-black text-slate-900 mt-0.5">{formatNaira(user.totalCoursePrice || 0)}</p>
+              </div>
+              <div className="bg-white/70 rounded-2xl px-4 py-3 border border-white/50">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Amount Paid</p>
+                <p className={`text-base font-black mt-0.5 ${user.agentPaymentStatus === "Paid" ? "text-emerald-700" : "text-slate-900"}`}>
+                  {formatNaira(user.amountPaid || 0)}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Agent contact card */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white border border-slate-200/60 rounded-3xl p-5 shadow-[0px_4px_20px_0px_rgba(0,0,0,0.05)]"
+          >
+            <div className="flex items-center gap-2 mb-4">
+              <ShieldCheck className="w-4 h-4 text-indigo-600" />
+              <h2 className="text-sm font-bold text-slate-900">Your Enrollment Agent</h2>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between py-2.5 border-b border-slate-100">
+                <span className="text-xs text-slate-500 font-medium">Agent Name</span>
+                <span className="text-sm font-bold text-slate-900">{user.enrolledByAgent.agentName}</span>
+              </div>
+              {user.enrolledByAgent.agencyName && (
+                <div className="flex items-center justify-between py-2.5 border-b border-slate-100">
+                  <span className="text-xs text-slate-500 font-medium">Agency</span>
+                  <span className="text-sm font-bold text-slate-900">{user.enrolledByAgent.agencyName}</span>
+                </div>
+              )}
+              {user.enrolledByAgent.agentCode && (
+                <div className="flex items-center justify-between py-2.5 border-b border-slate-100">
+                  <span className="text-xs text-slate-500 font-medium">Agent Code</span>
+                  <span className="font-mono text-sm font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 rounded-lg px-2 py-0.5">
+                    {user.enrolledByAgent.agentCode}
+                  </span>
+                </div>
+              )}
+              {user.enrolledByAgent.agentEmail && (
+                <div className="flex items-center justify-between py-2.5 border-b border-slate-100">
+                  <span className="text-xs text-slate-500 font-medium">Email</span>
+                  <a href={`mailto:${user.enrolledByAgent.agentEmail}`} className="text-sm font-bold text-indigo-600 hover:text-indigo-800">
+                    {user.enrolledByAgent.agentEmail}
+                  </a>
+                </div>
+              )}
+              {user.enrolledByAgent.agentPhone && (
+                <div className="flex items-center justify-between py-2.5">
+                  <span className="text-xs text-slate-500 font-medium">Phone</span>
+                  <a href={`tel:${user.enrolledByAgent.agentPhone}`} className="text-sm font-bold text-slate-900">
+                    {user.enrolledByAgent.agentPhone}
+                  </a>
+                </div>
+              )}
+            </div>
+            <p className="text-xs text-slate-400 mt-4 bg-slate-50 rounded-2xl px-4 py-3">
+              Your tuition is managed by your enrollment agent. For any billing queries, please contact your agent directly using the details above.
+            </p>
+          </motion.div>
+        </div>
+      ) : (
+        <>
       {/* Alert Banners */}
       {rejectionReason && (
         <motion.div
@@ -563,6 +672,8 @@ export function StudentPayments() {
           </div>
         )}
       </div>
+      </>
+      )}
     </div>
   );
 }

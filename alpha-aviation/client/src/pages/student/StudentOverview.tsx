@@ -10,6 +10,10 @@ import {
   CreditCard,
   GraduationCap,
   Award,
+  Building2,
+  Mail,
+  Phone,
+  ShieldCheck,
 } from "lucide-react";
 import { formatNaira } from "@/data/courseCatalog";
 import { useNavigate } from "react-router-dom";
@@ -116,8 +120,63 @@ export function StudentOverview() {
 
   return (
     <div className="space-y-8 pb-12">
-      {/* Dynamic Payment/Under Review Alert Banners */}
-      {!isGraduated && (isPending || isUnderReview) && (
+      {/* ─── Agent Context Banner (for students enrolled via agent) ─────────── */}
+      {user?.enrolledByAgent && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-r from-indigo-50/80 to-purple-50/80 border border-indigo-200/60 rounded-3xl p-5 shadow-[0px_4px_20px_0px_rgba(99,102,241,0.08)] backdrop-blur-md"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <div className="p-3 bg-indigo-100 border border-indigo-200/60 rounded-2xl shrink-0">
+                <ShieldCheck className="w-5 h-5 text-indigo-600" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-black uppercase tracking-wider text-indigo-600 mb-0.5">Enrolled via Agent</p>
+                <p className="text-sm font-bold text-slate-900">
+                  {user.enrolledByAgent.agentName}
+                  {user.enrolledByAgent.agencyName && (
+                    <span className="text-slate-500 font-normal"> · {user.enrolledByAgent.agencyName}</span>
+                  )}
+                </p>
+                <div className="flex flex-wrap gap-3 mt-1">
+                  {user.enrolledByAgent.agentCode && (
+                    <span className="font-mono text-[10px] font-bold text-indigo-700 bg-indigo-100 border border-indigo-200 rounded-md px-1.5 py-0.5">
+                      {user.enrolledByAgent.agentCode}
+                    </span>
+                  )}
+                  {user.enrolledByAgent.agentEmail && (
+                    <span className="text-xs text-slate-500 flex items-center gap-1">
+                      <Mail className="w-3 h-3" />
+                      {user.enrolledByAgent.agentEmail}
+                    </span>
+                  )}
+                  {user.enrolledByAgent.agentPhone && (
+                    <span className="text-xs text-slate-500 flex items-center gap-1">
+                      <Phone className="w-3 h-3" />
+                      {user.enrolledByAgent.agentPhone}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="shrink-0">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Tuition Status</p>
+              <span className={`text-sm font-black px-3 py-1.5 rounded-xl ${
+                user.agentPaymentStatus === "Paid"
+                  ? "text-emerald-700 bg-emerald-50 border border-emerald-200"
+                  : "text-amber-700 bg-amber-50 border border-amber-200"
+              }`}>
+                {user.agentPaymentStatus === "Paid" ? "✓ Paid by Agent" : "Pending Payment"}
+              </span>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Dynamic Payment/Under Review Alert Banners — hidden for agent-enrolled students */}
+      {!isGraduated && !user?.enrolledByAgent && (isPending || isUnderReview) && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}

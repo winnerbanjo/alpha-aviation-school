@@ -22,6 +22,7 @@ exports.protect = async (req, res, next) => {
       req.user = {
         userId: decoded.userId,
         role: decoded.role || (String(decoded.userId || '').includes('admin') ? 'admin' : 'student'),
+        agentStatus: 'approved',
       };
       return next();
     }
@@ -34,10 +35,19 @@ exports.protect = async (req, res, next) => {
       });
     }
 
+    // Agents must be approved to access any protected route
+    if (user.role === 'agent' && user.agentStatus !== 'approved') {
+      return res.status(403).json({
+        success: false,
+        message: 'Your agent account is pending admin approval. You will receive an email once approved.',
+      });
+    }
+
     req.user = {
       userId: user._id.toString(),
       role: user.role,
-      email: user.email
+      email: user.email,
+      agentStatus: user.agentStatus,
     };
     return next();
   } catch (error) {
@@ -47,3 +57,4 @@ exports.protect = async (req, res, next) => {
     });
   }
 };
+

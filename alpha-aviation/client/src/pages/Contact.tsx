@@ -91,22 +91,22 @@ export function Contact() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.12 * index, duration: 0.45 }}
                 >
-                  <div
-                    className="h-full min-h-64 bg-white border border-slate-200 rounded-2xl p-8 shadow-[0px_8px_30px_rgba(15,23,42,0.06)] hover:border-[#0061FF]/40 hover:shadow-[0px_14px_40px_rgba(15,23,42,0.1)] transition-all flex flex-col"
-                  >
+                  <div className="h-full min-h-64 bg-white border border-slate-200 rounded-2xl p-8 shadow-[0px_8px_30px_rgba(15,23,42,0.06)] hover:border-[#0061FF]/40 hover:shadow-[0px_14px_40px_rgba(15,23,42,0.1)] transition-all flex flex-col">
                     <div className="w-12 h-12 rounded-2xl bg-[#0061FF]/10 text-[#0061FF] flex items-center justify-center mb-6">
                       <Icon className="w-6 h-6" />
                     </div>
                     <h2 className="text-xl font-bold text-slate-900 mb-3">
                       {card.title}
                     </h2>
-                    <div className="space-y-5">
+                    <div className="flex flex-col justify-between gap-4 h-full">
                       {card.items.map((item) => (
                         <a
                           key={`${card.title}-${item.value}`}
                           href={item.href}
                           target={item.external ? "_blank" : undefined}
-                          rel={item.external ? "noopener noreferrer" : undefined}
+                          rel={
+                            item.external ? "noopener noreferrer" : undefined
+                          }
                           className="block group"
                         >
                           {item.label && (

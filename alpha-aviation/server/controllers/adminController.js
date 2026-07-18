@@ -421,10 +421,15 @@ exports.approvePayment = async (req, res, next) => {
 
     if (student.amountDue <= 0) {
       student.paymentStatus = "Paid";
+      if (student.enrolledByAgent) {
+        student.agentPaymentStatus = "Paid";
+      }
       // Stamp payment confirmation time (only on first confirmation)
       if (!student.paymentConfirmedAt) {
         student.paymentConfirmedAt = new Date();
       }
+    } else if (student.enrolledByAgent) {
+      student.agentPaymentStatus = "Pending";
     }
 
     await student.save();
@@ -515,6 +520,9 @@ exports.rejectPayment = async (req, res, next) => {
 
     // Revert student payment status so they can upload again
     student.paymentStatus = "Pending";
+    if (student.enrolledByAgent) {
+      student.agentPaymentStatus = "Pending";
+    }
     await student.save();
 
     await notifyPaymentRejected({
@@ -537,6 +545,160 @@ exports.rejectPayment = async (req, res, next) => {
           paymentStatus: student.paymentStatus,
         },
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+// ─── AGENT MANAGEMENT ────────────────────────────────────────────────────
+
+// Get all agents (all statuses)
+exports.getAllAgents = async (req, res, next) => {
+  try {
+    const agents = await User.find({ role: 'agent' }).select('-password').sort({ createdAt: -1 });
+    // Enrich with student count per agent
+    const enriched = await Promise.all(
+      agents.map(async (agent) => {
+        const studentCount = await User.countDocuments({ enrolledByAgent: agent._id, role: 'student' });
+        return { ...agent.toObject(), studentCount };
+      })
+    );
+    res.status(200).json({ success: true, count: enriched.length, data: { agents: enriched } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get only pending agents (for Agent Requests tab)
+exports.getPendingAgents = async (req, res, next) => {
+  try {
+    const agents = await User.find({ role: 'agent', agentStatus: 'pending' }).select('-password').sort({ createdAt: -1 });
+    res.status(200).json({ success: true, count: agents.length, data: { agents } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Approve an agent
+exports.approveAgent = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const agent = await User.findOne({ _id: id, role: 'agent' });
+    if (!agent) return res.status(404).json({ success: false, message: 'Agent not found' });
+
+    agent.agentStatus = 'approved';
+    await agent.save();
+
+    // Email the agent
+    const { sendMail } = require('../utils/mailer');
+    const clientUrl = process.env.CLIENT_URL || 'https://www.aslaviationschool.co';
+    try {
+      await sendMail({
+        to: agent.email,
+        subject: 'Agent Account Approved — Alpha Step Links Aviation School',
+        text: `Hello ${agent.firstName},\n\nGreat news! Your agent account has been approved.\n\nYour Agent Code: ${agent.agentCode}\n\nYou can now log in and start registering students: ${clientUrl}/agent/login\n\nThank you for partnering with us.`,
+        html: `<div style="font-family:sans-serif;padding:24px;max-width:560px"><div style="background:#020617;padding:24px;border-radius:10px 10px 0 0;text-align:center"><h1 style="color:#fff;margin:0;font-size:22px">Alpha Step Links</h1><p style="color:#94a3b8;margin:4px 0 0;font-size:12px;text-transform:uppercase;letter-spacing:2px">Aviation School</p></div><div style="background:#fff;padding:32px;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 10px 10px"><h2 style="color:#0f172a;font-size:20px;margin:0 0 16px">Your Agent Account is Approved! 🎉</h2><p style="color:#475569;line-height:1.6">Hello ${agent.firstName},</p><p style="color:#475569;line-height:1.6">Your application has been reviewed and approved. You can now log in to your agent dashboard and start registering students.</p><div style="background:#f1f5f9;border-radius:8px;padding:16px;margin:20px 0"><p style="margin:0 0 4px;color:#64748b;font-size:12px;text-transform:uppercase;font-weight:700">Your Agent Code</p><p style="margin:0;color:#4f46e5;font-size:22px;font-weight:700;letter-spacing:4px">${agent.agentCode}</p></div><a href="${clientUrl}/agent/login" style="display:inline-block;background:#4f46e5;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px">Access Agent Dashboard</a></div></div>`,
+      });
+    } catch (_) { /* non-blocking */ }
+
+    res.status(200).json({
+      success: true,
+      message: 'Agent approved successfully',
+      data: { agent: { id: agent._id, email: agent.email, agentStatus: agent.agentStatus, agentCode: agent.agentCode } },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Reject an agent
+exports.rejectAgent = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
+    if (!reason || !reason.trim()) {
+      return res.status(400).json({ success: false, message: 'A rejection reason is required' });
+    }
+
+    const agent = await User.findOne({ _id: id, role: 'agent' });
+    if (!agent) return res.status(404).json({ success: false, message: 'Agent not found' });
+
+    agent.agentStatus = 'rejected';
+    agent.agentNotes = reason.trim();
+    await agent.save();
+
+    const { sendMail } = require('../utils/mailer');
+    try {
+      await sendMail({
+        to: agent.email,
+        subject: 'Agent Application Update — Alpha Step Links Aviation School',
+        text: `Hello ${agent.firstName},\n\nWe have reviewed your agent application and unfortunately we are unable to approve it at this time.\n\nReason: ${reason.trim()}\n\nIf you believe this is an error, please contact our support team.`,
+        html: `<div style="font-family:sans-serif;padding:24px;max-width:560px"><div style="background:#020617;padding:24px;border-radius:10px 10px 0 0;text-align:center"><h1 style="color:#fff;margin:0;font-size:22px">Alpha Step Links</h1><p style="color:#94a3b8;margin:4px 0 0;font-size:12px;text-transform:uppercase;letter-spacing:2px">Aviation School</p></div><div style="background:#fff;padding:32px;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 10px 10px"><h2 style="color:#0f172a;font-size:20px;margin:0 0 16px">Application Update</h2><p style="color:#475569;line-height:1.6">Hello ${agent.firstName},</p><p style="color:#475569;line-height:1.6">We have reviewed your agent application and are unable to approve it at this time.</p><div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:16px;margin:20px 0"><p style="margin:0 0 4px;color:#dc2626;font-size:12px;text-transform:uppercase;font-weight:700">Reason</p><p style="margin:0;color:#7f1d1d;font-size:14px">${reason.trim()}</p></div><p style="color:#64748b;font-size:13px">If you believe this is an error, please contact our support team.</p></div></div>`,
+      });
+    } catch (_) { /* non-blocking */ }
+
+    res.status(200).json({
+      success: true,
+      message: 'Agent rejected',
+      data: { agent: { id: agent._id, email: agent.email, agentStatus: agent.agentStatus } },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Suspend an agent
+exports.suspendAgent = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const agent = await User.findOne({ _id: id, role: 'agent' });
+    if (!agent) return res.status(404).json({ success: false, message: 'Agent not found' });
+
+    agent.agentStatus = 'suspended';
+    await agent.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Agent suspended',
+      data: { agent: { id: agent._id, email: agent.email, agentStatus: agent.agentStatus } },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Reactivate a suspended/rejected agent
+exports.reactivateAgent = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const agent = await User.findOne({ _id: id, role: 'agent' });
+    if (!agent) return res.status(404).json({ success: false, message: 'Agent not found' });
+
+    agent.agentStatus = 'approved';
+    await agent.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Agent reactivated',
+      data: { agent: { id: agent._id, email: agent.email, agentStatus: agent.agentStatus } },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get students enrolled under a specific agent (admin view)
+exports.getAgentStudentsAdmin = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const students = await User.find({ enrolledByAgent: id, role: 'student' })
+      .select('-password')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: students.length,
+      data: { students },
     });
   } catch (error) {
     next(error);
