@@ -1,10 +1,43 @@
+import { useEffect } from "react";
 import { Clock, Mail, LogOut, XCircle, AlertTriangle } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import { useNavigate } from "react-router-dom";
+import { getProfile } from "@/api";
 
 export function AgentPending() {
-  const { user, logout } = useAuthStore();
+  const { user, setUser, logout } = useAuthStore();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getProfile()
+      .then((res) => {
+        if (res?.data?.user) {
+          setUser({ ...user, ...res.data.user });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        const res = await getProfile();
+        if (res?.data?.user && res.data.user.agentStatus === "approved") {
+          setUser(res.data.user);
+          navigate("/agent/dashboard/overview", { replace: true });
+        }
+      } catch {
+        /* silent */
+      }
+    }, 15000);
+    return () => clearInterval(interval);
+  }, [navigate, setUser]);
+
+  useEffect(() => {
+    if (user?.agentStatus === "approved") {
+      navigate("/agent/dashboard/overview", { replace: true });
+    }
+  }, [user?.agentStatus, navigate]);
 
   const handleLogout = () => {
     logout();
