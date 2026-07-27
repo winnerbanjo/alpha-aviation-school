@@ -10,7 +10,9 @@ import {
   CreditCard,
   GraduationCap,
   Award,
+  Building2,
 } from "lucide-react";
+import { AgentBanner } from "@/components/agent/AgentBanner";
 import { formatNaira } from "@/data/courseCatalog";
 import { useNavigate } from "react-router-dom";
 import { getMyCourseTracks, type CourseTrackItem } from "@/api";
@@ -116,8 +118,16 @@ export function StudentOverview() {
 
   return (
     <div className="space-y-8 pb-12">
-      {/* Dynamic Payment/Under Review Alert Banners */}
-      {!isGraduated && (isPending || isUnderReview) && (
+      {/* ─── Agent Context Banner (for students enrolled via agent) ─────────── */}
+      {user?.enrolledByAgent && (
+        <AgentBanner
+          agent={user.enrolledByAgent}
+          paymentStatus={user.agentPaymentStatus || "Pending"}
+        />
+      )}
+
+      {/* Dynamic Payment/Under Review Alert Banners — hidden for agent-enrolled students */}
+      {!isGraduated && !user?.enrolledByAgent && (isPending || isUnderReview) && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}

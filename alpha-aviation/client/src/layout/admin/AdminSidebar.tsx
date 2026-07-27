@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   Banknote,
   Bell,
   CreditCard,
   Download,
+  Handshake,
   LayoutDashboard,
   LogOut,
   Settings,
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { useAuthStore } from "@/store/authStore";
+import { getAdminPendingAgents } from "@/api";
 
 interface AdminSidebarProps {
   mobileMenuOpen: boolean;
@@ -25,6 +27,13 @@ export function AdminSidebar({
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
   const [searchQuery] = useState("");
+  const [pendingAgentCount, setPendingAgentCount] = useState(0);
+
+  useEffect(() => {
+    getAdminPendingAgents()
+      .then((res) => { if (res?.success) setPendingAgentCount(res.count || 0); })
+      .catch(() => {});
+  }, []);
 
   const groups = [
     {
@@ -34,21 +43,31 @@ export function AdminSidebar({
           icon: LayoutDashboard,
           label: "Command Center",
           path: "/admin/dashboard/overview",
+          badge: 0,
         },
         {
           icon: Users,
           label: "Students",
           path: "/admin/dashboard/students",
+          badge: 0,
         },
         {
           icon: CreditCard,
           label: "Payments",
           path: "/admin/dashboard/payments",
+          badge: 0,
         },
         {
           icon: Banknote,
           label: "Revenue",
           path: "/admin/dashboard/revenue",
+          badge: 0,
+        },
+        {
+          icon: Handshake,
+          label: "Agent Requests",
+          path: "/admin/dashboard/agents",
+          badge: pendingAgentCount,
         },
       ],
     },
@@ -59,11 +78,13 @@ export function AdminSidebar({
           icon: Download,
           label: "Resources",
           path: "/admin/dashboard/resources",
+          badge: 0,
         },
         {
           icon: Bell,
           label: "Notifications",
           path: "/admin/dashboard/notifications",
+          badge: 0,
         },
       ],
     },
@@ -135,7 +156,12 @@ export function AdminSidebar({
                         }
                       >
                         <Icon className="w-4.5 h-4.5" />
-                        {item.label}
+                        <span className="flex-1">{item.label}</span>
+                        {item.badge > 0 && (
+                          <span className="ml-auto min-w-5 h-5 bg-rose-500 text-white text-[10px] font-black rounded-full flex items-center justify-center px-1">
+                            {item.badge > 9 ? "9+" : item.badge}
+                          </span>
+                        )}
                       </NavLink>
                     );
                   })}

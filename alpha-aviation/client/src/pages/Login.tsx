@@ -1,22 +1,26 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import { login as apiLogin } from "@/api";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { NoIndexSEO } from "@/components/seo/NoIndexSEO";
 import {
   GraduationCap,
   ArrowLeft,
   ArrowRight,
-  Shield,
-  Plane,
-  Star,
-  Check,
   Eye,
   EyeOff,
 } from "lucide-react";
 import { useToast } from "@/components/ui/toast";
+
+type ApiError = {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+};
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -25,8 +29,14 @@ export function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuthStore();
   const { toast } = useToast();
+  const isAgentLogin = location.pathname.startsWith("/agent");
+  const loginTitle = isAgentLogin ? "Agent Login" : "Student Login";
+  const loginDescription = isAgentLogin
+    ? "Sign in to manage student enrollments, tuition uploads, and agent records."
+    : "Log in to access your dashboard and course progress.";
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,6 +69,7 @@ export function Login() {
             firstName: userData.firstName,
             lastName: userData.lastName,
             phone: userData.phone,
+            // Student fields
             enrolledCourse: userData.enrolledCourse,
             selectedCourses: userData.selectedCourses,
             courseSelections: userData.courseSelections,
@@ -74,25 +85,40 @@ export function Login() {
             paymentReceiptUrl: userData.paymentReceiptUrl,
             studentIdNumber: userData.studentIdNumber,
             adminClearance: userData.adminClearance,
+            // Agent context for students enrolled via agent
+            enrolledByAgent: userData.enrolledByAgent || null,
+            agentPaymentStatus: userData.agentPaymentStatus,
+            // Agent-specific fields
+            agentStatus: userData.agentStatus,
+            agencyName: userData.agencyName,
+            agentCode: userData.agentCode,
           },
           token,
         );
 
-        toast(`Welcome back, ${userData.firstName}!`, "success");
-        navigate(
-          userData.role === "admin"
-            ? "/admin/dashboard/overview"
-            : "/dashboard",
-          {
-            replace: true,
-          },
-        );
+        toast(`Welcome back, ${userData.firstName || userData.email}!`, "success");
+
+        if (userData.role === "admin") {
+          navigate("/admin/dashboard/overview", { replace: true });
+        } else if (userData.role === "agent") {
+          if (userData.agentStatus === "pending") {
+            navigate("/agent/pending", { replace: true });
+          } else if (userData.agentStatus === "approved") {
+            navigate("/agent/dashboard/overview", { replace: true });
+          } else {
+            // rejected / suspended — show pending page with status message
+            navigate("/agent/pending", { replace: true });
+          }
+        } else {
+          navigate("/dashboard", { replace: true });
+        }
       } else {
         toast("Login failed. Check your credentials.", "error");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const apiError = err as ApiError;
       const message =
-        err.response?.data?.message || "Invalid credentials. Please try again.";
+        apiError.response?.data?.message || "Invalid credentials. Please try again.";
       toast(message, "error");
     } finally {
       setLoading(false);
@@ -102,9 +128,9 @@ export function Login() {
   return (
     <>
       <NoIndexSEO
-        title="Student Login"
-        description="Log in to your Alpha Step Links Aviation School student portal to access your dashboard and course progress."
-        url="/login"
+        title={loginTitle}
+        description={loginDescription}
+        url={isAgentLogin ? "/agent/login" : "/login"}
       />
       <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden relative">
       {/* Left Panel: Cinematic Hero */}
@@ -152,7 +178,7 @@ export function Login() {
                 Deck.
               </h1>
               <p className="text-white/60 text-lg leading-relaxed max-w-sm font-medium">
-                Log in to access your dashboard and course progress.
+                {loginDescription}
               </p>
             </motion.div>
           </div>
@@ -195,10 +221,10 @@ export function Login() {
                 </div>
               </div>
               <h2 className="text-4xl font-semibold tracking-tighter text-slate-900 mb-2">
-                Student Login
+                {loginTitle}
               </h2>
               <p className="text-slate-400 text-sm font-medium">
-                Enter your credentials to enter your dashboard.
+                Enter your credentials to access your portal.
               </p>
             </div>
 
@@ -258,12 +284,12 @@ export function Login() {
 
             <div className="mt-12 text-center space-y-4">
               <p className="text-sm text-slate-400 font-medium">
-                New to the academy?{" "}
+                {isAgentLogin ? "New partner?" : "New to the academy?"}{" "}
                 <Link
-                  to="/enroll"
+                  to={isAgentLogin ? "/agent/register" : "/enroll"}
                   className="text-[#0061FF] font-bold hover:underline underline-offset-4"
                 >
-                  Start Enrollment
+                  {isAgentLogin ? "Apply as Agent" : "Start Enrollment"}
                 </Link>
               </p>
               <p className="text-sm text-slate-400 font-medium">

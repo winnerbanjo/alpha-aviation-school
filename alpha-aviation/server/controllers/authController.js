@@ -22,8 +22,21 @@ const generateToken = (userId, role = "student") => {
     throw new Error("JWT_SECRET is not defined");
   }
 
+  // admin: 24h, agent: 7d, student: 7d
   const expiresIn = role === "admin" ? "24h" : "7d";
   return jwt.sign({ userId, role }, secret, { expiresIn });
+};
+
+// Generate unique agent code: AGT-YYYY-XXXX
+const generateAgentCode = async () => {
+  let agentCode = "";
+  let exists = true;
+  while (exists) {
+    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+    agentCode = `AGT-${new Date().getFullYear()}-${randomSuffix}`;
+    exists = await User.exists({ agentCode });
+  }
+  return agentCode;
 };
 
 const buildUserResponse = (user) => {
@@ -45,6 +58,38 @@ const buildUserResponse = (user) => {
     };
   }
 
+  // Agent gets agent-specific profile
+  if (user.role === "agent") {
+    return {
+      ...base,
+      agentStatus: user.agentStatus || "pending",
+      agencyName: user.agencyName || "",
+      agentCode: user.agentCode || "",
+      agentCommission: user.agentCommission || 0,
+      agentNotes: user.agentNotes || "",
+    };
+  }
+
+  // Build enrolledByAgent context if student was registered by an agent
+  let enrolledByAgentData = null;
+  if (user.enrolledByAgent) {
+    // If populated (object), use it; if ObjectId, use raw
+    const agent = user.enrolledByAgent;
+    if (typeof agent === "object" && agent.firstName) {
+      enrolledByAgentData = {
+        agentId: agent._id || agent.id,
+        agentName: `${agent.firstName || ""} ${agent.lastName || ""}`.trim(),
+        agencyName: agent.agencyName || "",
+        agentCode: agent.agentCode || "",
+        agentEmail: agent.email || "",
+        agentPhone: agent.phone || "",
+      };
+    } else {
+      // Not populated — just return the ID
+      enrolledByAgentData = { agentId: agent.toString() };
+    }
+  }
+
   // Student gets full profile
   return {
     ...base,
@@ -64,6 +109,8 @@ const buildUserResponse = (user) => {
     studentIdNumber: user.studentIdNumber || "",
     certificateUrl: user.certificateUrl || "",
     adminClearance: user.adminClearance || false,
+    enrolledByAgent: enrolledByAgentData,
+    agentPaymentStatus: user.agentPaymentStatus || "Pending",
   };
 };
 
@@ -99,12 +146,66 @@ const isValidPhone = (phone) => {
 
 exports.register = async (req, res, next) => {
   try {
-    const { email, password, firstName, lastName, selectedCourses } = req.body;
+    const { email, password, firstName, lastName, selectedCourses, role: requestedRole, agencyName } = req.body;
     const phone = normalizePhone(req.body.phone);
     const normalizedEmail =
       typeof email === "string" ? email.toLowerCase().trim() : "";
     const mode = process.env.MODE || "production";
 
+    // ── Agent registration path ────────────────────────────────────────
+    if (requestedRole === "agent") {
+      if (!email || !password || !firstName || !lastName) {
+        return res.status(400).json({
+          success: false,
+          message: "Email, password, first name, and last name are required for agent registration",
+        });
+      }
+      if (!isValidEmail(email)) {
+        return res.status(400).json({ success: false, message: "Invalid email format" });
+      }
+      if (password.length < 6) {
+        return res.status(400).json({ success: false, message: "Password must be at least 6 characters" });
+      }
+      const existingAgent = await User.findOne({ email: normalizedEmail });
+      if (existingAgent) {
+        return res.status(400).json({ success: false, message: "An account with this email already exists" });
+      }
+      const agentCode = await generateAgentCode();
+      const agent = await User.create({
+        email: normalizedEmail,
+        password,
+        role: "agent",
+        firstName,
+        lastName,
+        phone,
+        agencyName: agencyName || "",
+        agentStatus: "pending",
+        agentCode,
+      });
+
+      // Notify admin of new agent application
+      try {
+        const adminEmail = process.env.ADMIN_EMAIL || "info@alphasteplinksaviationschool.com";
+        await sendMail({
+          to: adminEmail,
+          subject: "New Agent Application — Alpha Step Links Aviation School",
+          text: `A new agent has applied.\n\nName: ${firstName} ${lastName}\nAgency: ${agencyName || "N/A"}\nEmail: ${normalizedEmail}\nAgent Code: ${agentCode}\n\nPlease review in the Admin Dashboard → Agent Requests.`,
+          html: `<div style="font-family: sans-serif; padding: 20px;"><h2>New Agent Application</h2><p><strong>Name:</strong> ${firstName} ${lastName}</p><p><strong>Agency:</strong> ${agencyName || "N/A"}</p><p><strong>Email:</strong> ${normalizedEmail}</p><p><strong>Agent Code:</strong> ${agentCode}</p><p>Please review in the <strong>Admin Dashboard → Agent Requests</strong>.</p></div>`,
+        });
+      } catch (_) { /* non-blocking */ }
+
+      const token = generateToken(agent._id, "agent");
+      return res.status(201).json({
+        success: true,
+        message: "Agent application submitted. Awaiting admin approval.",
+        data: {
+          token,
+          user: buildUserResponse(agent),
+        },
+      });
+    }
+
+    // ── Student registration path (existing) ──────────────────────────
     // Input validation
     if (!email || !password || !selectedCourses) {
       return res.status(400).json({
@@ -585,6 +686,41 @@ exports.login = async (req, res, next) => {
       });
     }
 
+    // Agent login — check approval status
+    if (user.role === "agent") {
+      if (user.agentStatus === "pending") {
+        return res.status(403).json({
+          success: false,
+          message: "Your agent account is awaiting admin approval. You will receive an email once approved.",
+          data: { agentStatus: "pending" },
+        });
+      }
+      if (user.agentStatus === "rejected") {
+        return res.status(403).json({
+          success: false,
+          message: "Your agent application was not approved. Please contact support for more information.",
+          data: { agentStatus: "rejected" },
+        });
+      }
+      if (user.agentStatus === "suspended") {
+        return res.status(403).json({
+          success: false,
+          message: "Your agent account has been suspended. Please contact the admin.",
+          data: { agentStatus: "suspended" },
+        });
+      }
+      // Approved agent — direct login (no OTP)
+      const token = generateToken(user._id, "agent");
+      return res.status(200).json({
+        success: true,
+        message: "Login successful",
+        data: {
+          token,
+          user: buildUserResponse(user),
+        },
+      });
+    }
+
     // If admin, send OTP and require second factor
     if (user.role === "admin") {
       // Generate OTP
@@ -907,7 +1043,9 @@ exports.resendAdminOTP = async (req, res, next) => {
 // Get current user profile
 exports.getProfile = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.userId);
+    // Populate enrolledByAgent so student dashboard can show agent details
+    const user = await User.findById(req.user.userId)
+      .populate("enrolledByAgent", "firstName lastName email phone agencyName agentCode");
 
     if (!user) {
       return res.status(404).json({

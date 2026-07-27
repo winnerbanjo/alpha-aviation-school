@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect, useRef, useState } from "react";
-import { Bell, ChevronDown, LogOut, Settings, User } from "lucide-react";
+import { Bell, Building2, ChevronDown, LogOut, Settings, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getNotifications } from "@/api";
 
@@ -101,6 +101,12 @@ export function TopNav({ role }: TopNavProps) {
                   <p className="text-xs text-slate-500 truncate max-w-36">
                     {user?.email}
                   </p>
+                  {user?.enrolledByAgent && (
+                    <p className="text-[10px] text-indigo-500 truncate max-w-36 flex items-center gap-1">
+                      <Building2 className="w-3 h-3 shrink-0" />
+                      via {user.enrolledByAgent.agentName}
+                    </p>
+                  )}
                 </div>
                 <ChevronDown className="w-4 h-4 text-slate-400" />
               </button>
@@ -122,6 +128,12 @@ export function TopNav({ role }: TopNavProps) {
                         <p className="text-xs text-slate-500 truncate">
                           {user?.email}
                         </p>
+                        {user?.enrolledByAgent && (
+                          <p className="text-[10px] text-indigo-500 truncate flex items-center gap-1">
+                            <Building2 className="w-3 h-3 shrink-0" />
+                            Enrolled via {user.enrolledByAgent.agentName}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>

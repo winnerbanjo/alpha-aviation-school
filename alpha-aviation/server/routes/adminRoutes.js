@@ -46,4 +46,13 @@ router.get("/course-tracks/stats", courseTrackController.getCourseTrackStats);
 router.get("/course-tracks/:studentId", courseTrackController.getStudentCourseTracks);
 router.patch("/course-tracks/:trackId/progress", courseTrackController.updateWeekProgress);
 
+// Agent management routes
+router.get("/agents", adminController.getAllAgents);
+router.get("/agents/pending", adminController.getPendingAgents);
+router.patch("/agents/:id/approve", adminController.approveAgent);
+router.patch("/agents/:id/reject", adminController.rejectAgent);
+router.patch("/agents/:id/suspend", adminController.suspendAgent);
+router.patch("/agents/:id/reactivate", adminController.reactivateAgent);
+router.get("/agents/:id/students", adminController.getAgentStudentsAdmin);
+
 module.exports = router;

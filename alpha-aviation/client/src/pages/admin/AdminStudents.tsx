@@ -17,7 +17,7 @@ import {
 export function AdminStudents() {
   const {
     loading, error, lastUpdated, searchQuery, setSearchQuery,
-    paymentFilter, setPaymentFilter, statusFilter, setStatusFilter,
+    paymentFilter, setPaymentFilter, enrollmentFilter, setEnrollmentFilter, statusFilter, setStatusFilter,
     currentPage, setCurrentPage, itemsPerPage, setItemsPerPage,
     selectedStudents, filteredStudents, paginatedStudents,
     totalPages, fetchStudents, fetchFinancialStats,
@@ -69,6 +69,14 @@ export function AdminStudents() {
                 <button onClick={() => setPaymentFilter("all")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${paymentFilter === "all" ? "bg-indigo-600 text-white" : "text-slate-600 hover:text-slate-900"}`}>All</button>
                 <button onClick={() => setPaymentFilter("Pending")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${paymentFilter === "Pending" ? "bg-amber-100 text-amber-900" : "text-slate-600 hover:text-slate-900"}`}>Pending</button>
                 <button onClick={() => setPaymentFilter("Paid")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${paymentFilter === "Paid" ? "bg-emerald-100 text-emerald-900" : "text-slate-600 hover:text-slate-900"}`}>Paid</button>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-slate-500 font-medium">Enrolled:</span>
+              <div className="flex gap-1 border border-slate-200/70 rounded-2xl p-1 bg-white">
+                <button onClick={() => setEnrollmentFilter("all")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${enrollmentFilter === "all" ? "bg-indigo-600 text-white" : "text-slate-600 hover:text-slate-900"}`}>All</button>
+                <button onClick={() => setEnrollmentFilter("self")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${enrollmentFilter === "self" ? "bg-purple-100 text-purple-900" : "text-slate-600 hover:text-slate-900"}`}>Self</button>
+                <button onClick={() => setEnrollmentFilter("agent")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${enrollmentFilter === "agent" ? "bg-cyan-100 text-cyan-900" : "text-slate-600 hover:text-slate-900"}`}>Agent</button>
               </div>
             </div>
             <div className="flex items-center gap-2">

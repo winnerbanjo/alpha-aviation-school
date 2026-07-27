@@ -3,10 +3,19 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 type PaymentStatus = "Pending" | "Paid" | "Under Review";
 
+interface EnrolledByAgent {
+  agentId: string;
+  agentName: string;
+  agencyName?: string;
+  agentCode?: string;
+  agentEmail: string;
+  agentPhone?: string;
+}
+
 interface User {
   id: string;
   email: string;
-  role: "student" | "admin";
+  role: "student" | "admin" | "agent";
   firstName?: string;
   lastName?: string;
   phone?: string;
@@ -34,6 +43,15 @@ interface User {
   certificateUrl?: string;
   // Course tracking
   paymentConfirmedAt?: string;
+  // Agent context for students enrolled via agent
+  enrolledByAgent?: EnrolledByAgent | null;
+  agentPaymentStatus?: "Pending" | "Paid";
+  // Agent-specific fields
+  agentStatus?: "pending" | "approved" | "rejected" | "suspended";
+  agencyName?: string;
+  agentCode?: string;
+  agentCommission?: number;
+  agentNotes?: string;
 }
 
 interface AuthState {

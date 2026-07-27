@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Student, StudentStatus } from "@/hooks/useAdminData";
+import { Building2 } from "lucide-react";
 import {
   ChevronDown,
   MessageCircleMore,
@@ -199,6 +200,12 @@ export function AdminStudentTable({
                         <span className="text-xs text-slate-500 font-normal mt-0.5 truncate">
                           {student.email}
                         </span>
+                        {student.enrolledByAgent && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-cyan-700 bg-cyan-50 border border-cyan-200 rounded-md px-1.5 py-0.5 mt-1 w-fit">
+                            <Building2 className="w-3 h-3" />
+                            {student.enrolledByAgent.agencyName || `${student.enrolledByAgent.firstName || ""} ${student.enrolledByAgent.lastName || ""}`.trim() || "Agent"}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </TableCell>
