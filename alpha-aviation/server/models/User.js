@@ -181,6 +181,11 @@ const userSchema = new mongoose.Schema(
       sparse: true,
       trim: true,
     },
+    agentCommission: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
     agentNotes: {
       type: String,
       trim: true,

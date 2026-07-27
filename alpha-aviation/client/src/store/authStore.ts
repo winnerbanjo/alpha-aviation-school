@@ -50,6 +50,7 @@ interface User {
   agentStatus?: "pending" | "approved" | "rejected" | "suspended";
   agencyName?: string;
   agentCode?: string;
+  agentCommission?: number;
   agentNotes?: string;
 }
 

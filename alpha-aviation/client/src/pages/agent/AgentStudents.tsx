@@ -1,11 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 import {
   Users, Plus, Search, CreditCard, CheckCircle2, Clock, X, Upload, Eye, EyeOff,
-  AlertCircle, Copy, Check
+  AlertCircle, Copy, Check, ChevronRight, Building2, FileText, Landmark
 } from "lucide-react";
-import { getAgentStudents, registerStudentAsAgent, uploadPaymentForStudent } from "@/api";
+import { getAgentStudents, registerStudentAsAgent, uploadPaymentForStudent, paystackPayForStudent } from "@/api";
 import { COURSE_CATALOG, formatNaira } from "@/data/courseCatalog";
 import { useToast } from "@/components/ui/toast";
+import { usePaystackPayment } from "react-paystack";
+import { useAuthStore } from "@/store/authStore";
 
 type ApiError = {
   response?: {
@@ -43,6 +45,7 @@ interface PayForm {
 }
 
 export function AgentStudents() {
+  const { user: agent } = useAuthStore();
   const [students, setStudents] = useState<AgentStudent[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -55,6 +58,9 @@ export function AgentStudents() {
   const [newCredentials, setNewCredentials] = useState<{ email: string; password: string } | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [payMethod, setPayMethod] = useState<"select" | "paystack" | "manual">("select");
+  const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [paySuccess, setPaySuccess] = useState(false);
 
   const { toast } = useToast();
 
@@ -69,6 +75,48 @@ export function AgentStudents() {
   }, []);
 
   useEffect(() => { loadStudents(); }, [loadStudents]);
+
+  const paystackConfig = {
+    reference: `AGT-${agent?.id || "agent"}-${Date.now()}`,
+    email: agent?.email || "",
+    amount: (showPayModal?.totalCoursePrice || 0) * 100,
+    publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || "",
+  };
+
+  const initializePayment = usePaystackPayment(paystackConfig);
+
+  const handlePaystackSuccess = async (ref: { reference: string }) => {
+    if (!showPayModal) return;
+    try {
+      setPayLoading(true);
+      const res = await paystackPayForStudent(showPayModal._id, ref.reference);
+      await loadStudents();
+      setPaySuccess(true);
+      toast("Payment successful via Paystack!", "success");
+      setTimeout(() => {
+        setShowPayModal(null);
+        setPayMethod("select");
+        setPaySuccess(false);
+      }, 2000);
+    } catch (err: unknown) {
+      const apiError = err as ApiError;
+      toast(apiError.response?.data?.message || "Paystack payment failed", "error");
+    } finally {
+      setPayLoading(false);
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast("File size must be under 5MB", "error");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onloadend = () => setSelectedFile(reader.result as string);
+    reader.readAsDataURL(file);
+  };
 
   const filtered = students.filter(
     (s) =>
@@ -120,15 +168,17 @@ export function AgentStudents() {
   const handlePay = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!showPayModal) return;
-    if (!payForm.receiptUrl) { toast("Please provide the receipt URL", "error"); return; }
+    if (!selectedFile) { toast("Please select a receipt file to upload", "error"); return; }
     try {
       setPayLoading(true);
       await uploadPaymentForStudent(showPayModal._id, {
-        receiptUrl: payForm.receiptUrl,
+        receiptUrl: selectedFile,
         amount: payForm.amount ? Number(payForm.amount) : undefined,
       });
       await loadStudents();
       setShowPayModal(null);
+      setPayMethod("select");
+      setSelectedFile(null);
       setPayForm({ receiptUrl: "", amount: "" });
       toast("Payment receipt submitted for review!", "success");
     } catch (err: unknown) {
@@ -385,56 +435,123 @@ export function AgentStudents() {
       {/* Pay Modal */}
       {showPayModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl w-full max-w-md shadow-xl">
+          <div className="bg-white rounded-xl w-full max-w-md shadow-xl max-h-[90vh] overflow-y-auto">
             <div className="border-b border-slate-100 px-6 py-4 flex items-center justify-between">
               <div>
-                <h2 className="text-base font-semibold text-slate-900">Upload Payment Receipt</h2>
+                <h2 className="text-base font-semibold text-slate-900">Pay for Student</h2>
                 <p className="text-xs text-slate-500">{showPayModal.firstName} {showPayModal.lastName}</p>
               </div>
-              <button onClick={() => setShowPayModal(null)} className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors">
+              <button onClick={() => { setShowPayModal(null); setPayMethod("select"); setSelectedFile(null); setPaySuccess(false); }} className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors">
                 <X className="w-5 h-5 text-slate-500" />
               </button>
             </div>
-            <form onSubmit={handlePay} className="p-6 space-y-4">
-              <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-                <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Amount Due</p>
-                <p className="text-xl font-semibold text-slate-900">{formatNaira(showPayModal.totalCoursePrice)}</p>
+
+            {paySuccess ? (
+              <div className="p-8 text-center space-y-4">
+                <div className="w-16 h-16 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center justify-center mx-auto">
+                  <CheckCircle2 className="w-8 h-8 text-emerald-500" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900">Payment Successful!</h3>
+                <p className="text-sm text-slate-500">The payment has been processed and is awaiting admin confirmation.</p>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                  Receipt / Bank Transfer Proof URL <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <Upload className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            ) : payMethod === "select" ? (
+              <div className="p-6 space-y-4">
+                <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-center">
+                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Amount Due</p>
+                  <p className="text-2xl font-bold text-slate-900 mt-1">{formatNaira(showPayModal.totalCoursePrice)}</p>
+                </div>
+
+                <button
+                  onClick={() => initializePayment({ onSuccess: handlePaystackSuccess })}
+                  disabled={payLoading}
+                  className="w-full flex items-center gap-4 p-4 rounded-2xl border border-slate-200 hover:border-indigo-600 hover:bg-indigo-50/30 transition-all text-left group"
+                >
+                  <div className="w-12 h-12 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center group-hover:bg-indigo-100 transition-colors shrink-0">
+                    <CreditCard className="w-6 h-6 text-slate-500 group-hover:text-indigo-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-slate-900 text-sm">Pay Online (Instant)</p>
+                    <p className="text-xs text-slate-500 mt-0.5">Instant verification via Paystack</p>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-slate-300 shrink-0" />
+                </button>
+
+                <button
+                  onClick={() => setPayMethod("manual")}
+                  className="w-full flex items-center gap-4 p-4 rounded-2xl border border-slate-200 hover:border-indigo-600 hover:bg-indigo-50/30 transition-all text-left group"
+                >
+                  <div className="w-12 h-12 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center group-hover:bg-indigo-100 transition-colors shrink-0">
+                    <Landmark className="w-6 h-6 text-slate-500 group-hover:text-indigo-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-slate-900 text-sm">Manual Bank Transfer</p>
+                    <p className="text-xs text-slate-500 mt-0.5">Upload receipt for manual review</p>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-slate-300 shrink-0" />
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handlePay} className="p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5">
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Amount Due</p>
+                    <p className="text-lg font-semibold text-slate-900">{formatNaira(showPayModal.totalCoursePrice)}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { setPayMethod("select"); setSelectedFile(null); setPayForm({ receiptUrl: "", amount: "" }); }}
+                    className="text-xs font-medium text-indigo-600 hover:text-indigo-800"
+                  >
+                    Change Method
+                  </button>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Upload Bank Receipt</label>
+                  {!selectedFile ? (
+                    <label className="block border-2 border-dashed border-slate-200 rounded-2xl p-8 hover:bg-slate-50/50 hover:border-indigo-400 transition-all cursor-pointer text-center group">
+                      <input type="file" accept="image/*,.pdf" onChange={handleFileSelect} className="hidden" />
+                      <Upload className="w-8 h-8 text-slate-300 mx-auto mb-3 group-hover:text-indigo-500 group-hover:scale-110 transition-all" />
+                      <p className="text-sm font-bold text-slate-900">Click to upload receipt</p>
+                      <p className="text-xs text-slate-400 mt-1">PNG, JPG or PDF up to 5MB</p>
+                    </label>
+                  ) : (
+                    <div className="relative rounded-2xl overflow-hidden border border-slate-200 aspect-video bg-slate-50 flex items-center justify-center">
+                      {selectedFile.startsWith("data:application/pdf") ? (
+                        <div className="flex flex-col items-center gap-2">
+                          <FileText className="w-12 h-12 text-slate-300" />
+                          <span className="text-xs font-bold text-slate-500">PDF Document Selected</span>
+                        </div>
+                      ) : (
+                        <img src={selectedFile} alt="Receipt preview" className="w-full h-full object-cover" />
+                      )}
+                      <button type="button" onClick={() => setSelectedFile(null)} className="absolute top-3 right-3 p-1.5 bg-white/90 backdrop-blur shadow-sm rounded-full text-slate-600 hover:text-rose-600 transition-all">
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Amount Paid (₦) <span className="text-slate-400 font-normal">(optional — defaults to full balance)</span></label>
                   <input
-                    type="url"
-                    required
-                    value={payForm.receiptUrl}
-                    onChange={(e) => setPayForm(p => ({ ...p, receiptUrl: e.target.value }))}
-                    placeholder="https://drive.google.com/..."
-                    className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20"
+                    type="number"
+                    value={payForm.amount}
+                    onChange={(e) => setPayForm(p => ({ ...p, amount: e.target.value }))}
+                    placeholder={String(showPayModal.totalCoursePrice)}
+                    className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20"
                   />
                 </div>
-                <p className="text-xs text-slate-400 mt-1.5">Upload your bank receipt to Google Drive, Cloudinary, or similar and paste the link here.</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Amount Paid (₦) <span className="text-slate-400 font-normal">(optional — defaults to full balance)</span></label>
-                <input
-                  type="number"
-                  value={payForm.amount}
-                  onChange={(e) => setPayForm(p => ({ ...p, amount: e.target.value }))}
-                  placeholder={String(showPayModal.totalCoursePrice)}
-                  className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20"
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={payLoading}
-                className="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-2.5 rounded-lg text-sm transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                {payLoading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Upload className="w-4 h-4" /> Submit for Admin Review</>}
-              </button>
-            </form>
+
+                <button
+                  type="submit"
+                  disabled={payLoading || !selectedFile}
+                  className="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-2.5 rounded-lg text-sm transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {payLoading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Upload className="w-4 h-4" /> Submit for Admin Review</>}
+                </button>
+              </form>
+            )}
           </div>
         </div>
       )}

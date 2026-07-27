@@ -65,6 +65,7 @@ const buildUserResponse = (user) => {
       agentStatus: user.agentStatus || "pending",
       agencyName: user.agencyName || "",
       agentCode: user.agentCode || "",
+      agentCommission: user.agentCommission || 0,
       agentNotes: user.agentNotes || "",
     };
   }

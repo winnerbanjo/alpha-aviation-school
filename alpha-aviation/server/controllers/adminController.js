@@ -50,8 +50,13 @@ exports.getAllStudents = async (req, res, next) => {
       });
     }
 
-    const students = await User.find({ role: "student" })
+    const filter = { role: "student" };
+    if (req.query.excludeAgentStudents === 'true') {
+      filter.enrolledByAgent = null;
+    }
+    const students = await User.find(filter)
       .select("-password")
+      .populate("enrolledByAgent", "firstName lastName email agencyName agentCode")
       .sort({ createdAt: -1 });
 
     const list = Array.isArray(students) ? students : [];

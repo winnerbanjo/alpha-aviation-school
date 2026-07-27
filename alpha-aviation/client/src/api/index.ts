@@ -627,6 +627,11 @@ export const uploadPaymentForStudent = async (studentId: string, data: {
   return response.data;
 };
 
+export const paystackPayForStudent = async (studentId: string, reference: string) => {
+  const response = await api.post(`/agent/students/${studentId}/pay/paystack`, { reference });
+  return response.data;
+};
+
 export const getAgentPayments = async () => {
   const response = await api.get("/agent/payments");
   return response.data;

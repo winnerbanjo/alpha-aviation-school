@@ -246,6 +246,90 @@ exports.uploadPaymentForStudent = async (req, res, next) => {
   }
 };
 
+// ─── POST /api/agent/students/:id/pay/paystack ────────────────────────────
+// Agent pays for a student via Paystack
+exports.paystackPayForStudent = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { reference } = req.body;
+    const agentId = req.user.userId;
+
+    if (!reference) {
+      return res.status(400).json({ success: false, message: 'Paystack transaction reference is required' });
+    }
+
+    const student = await User.findOne({ _id: id, enrolledByAgent: agentId, role: 'student' });
+    if (!student) {
+      return res.status(404).json({ success: false, message: 'Student not found or not enrolled under your account' });
+    }
+
+    if (student.paymentStatus === 'Paid') {
+      return res.status(400).json({ success: false, message: 'Student tuition is already fully paid' });
+    }
+
+    // Verify Paystack transaction
+    const axios = require('axios');
+    const response = await axios.get(
+      `https://api.paystack.co/transaction/verify/${reference}`,
+      { headers: { Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}` } },
+    );
+
+    const { status, data } = response.data;
+    if (!status || data.status !== 'success') {
+      return res.status(400).json({ success: false, message: 'Paystack verification failed. Transaction may not be successful.' });
+    }
+
+    const paidAmount = data.amount / 100;
+    const agentDoc = await User.findById(agentId).select('email firstName lastName agentCode');
+    const paymentReference = `AGT-${agentId}-STU-${id}-${Date.now()}`;
+
+    const payment = await Payment.create({
+      student: student._id,
+      amount: paidAmount,
+      status: 'approved',
+      receiptUrl: 'Paystack Online Payment',
+      reference: paymentReference,
+      adminNotes: `Paystack payment by Agent: ${agentDoc?.firstName || ''} ${agentDoc?.lastName || ''} (${agentDoc?.agentCode || agentId})`,
+    });
+
+    // Update student financials
+    student.amountPaid = (student.amountPaid || 0) + paidAmount;
+    student.amountDue = Math.max(0, (student.totalCoursePrice || student.amountDue || 0) - paidAmount);
+
+    if (student.amountDue <= 0) {
+      student.paymentStatus = 'Paid';
+      student.agentPaymentStatus = 'Paid';
+      if (!student.paymentConfirmedAt) {
+        student.paymentConfirmedAt = new Date();
+      }
+    } else {
+      student.agentPaymentStatus = 'Paid';
+    }
+
+    await student.save();
+
+    // Initialize course tracks if fully paid
+    const { initializeCourseTracks } = require('../utils/courseTrackService');
+    if (student.paymentStatus === 'Paid') {
+      await initializeCourseTracks(student);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Payment successful via Paystack',
+      data: {
+        paymentId: payment._id,
+        reference: paymentReference,
+        amount: paidAmount,
+        studentPaymentStatus: student.paymentStatus,
+        agentPaymentStatus: student.agentPaymentStatus,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // ─── GET /api/agent/payments ─────────────────────────────────────────────
 exports.getAgentPayments = async (req, res, next) => {
   try {

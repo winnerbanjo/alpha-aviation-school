@@ -18,6 +18,7 @@ router.post('/students/register', agentController.registerStudent);
 
 // Payments for students
 router.post('/students/:id/pay/upload', agentController.uploadPaymentForStudent);
+router.post('/students/:id/pay/paystack', agentController.paystackPayForStudent);
 
 // Payment history
 router.get('/payments', agentController.getAgentPayments);

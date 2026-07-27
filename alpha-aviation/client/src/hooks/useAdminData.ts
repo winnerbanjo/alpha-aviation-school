@@ -25,6 +25,15 @@ export type StudentStatus = "active" | "banned" | "graduated" | "suspended";
 
 export type StudentStatusType = StudentStatus;
 
+export interface EnrolledByAgent {
+  _id: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  agencyName?: string;
+  agentCode?: string;
+}
+
 export interface Student {
   _id: string;
   email: string;
@@ -45,6 +54,7 @@ export interface Student {
   paymentReceiptUrl?: string;
   totalCoursePrice?: number;
   courseSelections?: Array<{ title: string; price: number }>;
+  enrolledByAgent?: EnrolledByAgent | null;
 }
 
 const emptyUserFormData = {
@@ -79,6 +89,7 @@ export function useAdminData() {
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [totalRevenuePendingCalc, setTotalRevenuePendingCalc] = useState(0);
   const [paymentFilter, setPaymentFilter] = useState<"all" | "Pending" | "Under Review" | "Paid">("all");
+  const [enrollmentFilter, setEnrollmentFilter] = useState<"all" | "self" | "agent">("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -491,6 +502,8 @@ export function useAdminData() {
   const filteredStudents = safeStudents.filter((student) => {
     if (paymentFilter !== "all" && student.paymentStatus !== paymentFilter) return false;
     if (statusFilter !== "all" && student.status !== statusFilter) return false;
+    if (enrollmentFilter === "self" && student.enrolledByAgent) return false;
+    if (enrollmentFilter === "agent" && !student.enrolledByAgent) return false;
     const searchLower = searchQuery.toLowerCase();
     const fullName = `${student.firstName || ""} ${student.lastName || ""}`.toLowerCase();
     const phone = (student.phone || "").toLowerCase();
@@ -574,7 +587,7 @@ export function useAdminData() {
 
   return {
     students, loading, searchQuery, setSearchQuery, selectedStudents, setSelectedStudents,
-    totalRevenue, totalRevenuePendingCalc, paymentFilter, setPaymentFilter, statusFilter, setStatusFilter,
+    totalRevenue, totalRevenuePendingCalc,     paymentFilter, setPaymentFilter, enrollmentFilter, setEnrollmentFilter, statusFilter, setStatusFilter,
     selectedStudent, setSelectedStudent, currentPage, setCurrentPage, itemsPerPage, setItemsPerPage,
     deleteModalOpen, setDeleteModalOpen, studentToDelete, setStudentToDelete,
     bulkDeleteModalOpen, setBulkDeleteModalOpen, bulkSuspendModalOpen, setBulkSuspendModalOpen,
