@@ -125,9 +125,18 @@ export function StudentSidebar({
         <div className="flex flex-col flex-1 overflow-y-auto px-5 pt-6 pb-4">
           {/* Brand header */}
           <div className="flex items-center gap-3 px-2 mb-6">
-            <div className="p-2 ">
+            <div className="p-2">
               <Logo showText={false} size="sm" className="text-white" />
             </div>
+            {user?.enrolledByAgent && (() => {
+              const nameParts = (user.enrolledByAgent?.agentName || "").split(" ").filter(Boolean);
+              const initials = nameParts.map((p: string) => p[0]).join("").toUpperCase().slice(0, 2) || "AG";
+              return (
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold border-2 border-white shadow-md shrink-0" title={user.enrolledByAgent?.agentName || "Agent"}>
+                  {initials}
+                </div>
+              );
+            })()}
           </div>
 
           {/* Search bar */}
