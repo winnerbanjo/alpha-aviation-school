@@ -506,8 +506,24 @@ export function AgentStudents() {
                   </button>
                 </div>
 
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Bank Transfer Details</p>
+                  <div className="flex items-center justify-between py-1.5 border-b border-slate-200/60 last:border-b-0">
+                    <span className="text-xs text-slate-500">Account Name</span>
+                    <span className="text-sm font-bold text-slate-900">Alpha step links aviation school ltd</span>
+                  </div>
+                  <div className="flex items-center justify-between py-1.5 border-b border-slate-200/60 last:border-b-0">
+                    <span className="text-xs text-slate-500">Account Number</span>
+                    <span className="text-sm font-bold text-slate-900">1000485345</span>
+                  </div>
+                  <div className="flex items-center justify-between py-1.5">
+                    <span className="text-xs text-slate-500">Bank</span>
+                    <span className="text-sm font-bold text-slate-900">Globus bank</span>
+                  </div>
+                </div>
+
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Upload Bank Receipt</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Upload Payment Receipt</label>
                   {!selectedFile ? (
                     <label className="block border-2 border-dashed border-slate-200 rounded-2xl p-8 hover:bg-slate-50/50 hover:border-indigo-400 transition-all cursor-pointer text-center group">
                       <input type="file" accept="image/*,.pdf" onChange={handleFileSelect} className="hidden" />
@@ -530,17 +546,6 @@ export function AgentStudents() {
                       </button>
                     </div>
                   )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">Amount Paid (₦) <span className="text-slate-400 font-normal">(optional — defaults to full balance)</span></label>
-                  <input
-                    type="number"
-                    value={payForm.amount}
-                    onChange={(e) => setPayForm(p => ({ ...p, amount: e.target.value }))}
-                    placeholder={String(showPayModal.totalCoursePrice)}
-                    className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20"
-                  />
                 </div>
 
                 <button
