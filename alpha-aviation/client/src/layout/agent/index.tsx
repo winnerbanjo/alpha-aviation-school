@@ -65,10 +65,10 @@ export default function AgentLayout() {
   return (
     <div className="h-screen bg-white flex overflow-hidden">
       {/* Sidebar */}
-      <aside className={`fixed left-0 top-0 h-full w-64 bg-slate-950 border-r border-slate-800 z-40 transition-transform duration-300 ease-out flex flex-col justify-between ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
+      <aside className={`fixed left-0 top-0 h-full w-64 bg-brand-navy border-r border-slate-800 z-40 transition-transform duration-300 ease-out flex flex-col justify-between ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
         <div className="flex flex-col flex-1 overflow-y-auto px-4 pt-6 pb-4">
           <div className="flex items-center gap-3 px-2 mb-8">
-            <Logo showText={false} size="sm" className="text-white" />
+            <Logo showText={false} size="sm" variant="white" className="text-white" />
           </div>
 
           <div className="px-2 mb-6">

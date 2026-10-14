@@ -84,10 +84,10 @@ export function TrustGrid() {
               className="group relative p-8 sm:p-12 border-b border-r border-white/5 hover:bg-white/[0.02] transition-all duration-500 overflow-hidden"
             >
               {/* Animated Glow on Hover */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#0061FF]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#1239B8]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
               <div className="relative z-10 space-y-6">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-900 flex items-center justify-center text-[#FF6B35] border border-white/10 group-hover:border-[#FF6B35]/50 transition-colors">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-900 flex items-center justify-center text-[#F4C520] border border-white/10 group-hover:border-[#F4C520]/50 transition-colors">
                   <Icon
                     icon={feature.icon}
                     width="20"

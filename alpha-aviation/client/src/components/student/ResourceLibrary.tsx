@@ -81,7 +81,7 @@ export function ResourceLibrary() {
           className="space-y-3"
         >
           <div className="flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-[#0061FF]" />
+            <BookOpen className="w-5 h-5 text-[#1239B8]" />
             <h4 className="text-lg font-semibold text-slate-800">
               {course.courseTitle}
             </h4>
@@ -114,7 +114,7 @@ export function ResourceLibrary() {
                           <span className="text-xs text-slate-500">{file.size}</span>
                         </div>
                       </div>
-                      <Download className="w-4 h-4 text-slate-400 group-hover:text-[#0061FF] group-hover:scale-110 transition-all flex-shrink-0" />
+                      <Download className="w-4 h-4 text-slate-400 group-hover:text-[#1239B8] group-hover:scale-110 transition-all flex-shrink-0" />
                     </div>
                   </CardContent>
                 </Card>

@@ -286,13 +286,13 @@ export function VerifyOtp() {
                   <>
                     Verify Your
                     <br />
-                    <span className="italic text-[#0061FF]">Email</span>
+                    <span className="italic text-[#1239B8]">Email</span>
                   </>
                 ) : (
                   <>
                     Admin
                     <br />
-                    <span className="italic text-[#0061FF]">Verification</span>
+                    <span className="italic text-[#1239B8]">Verification</span>
                   </>
                 )}
               </h1>
@@ -316,8 +316,8 @@ export function VerifyOtp() {
           >
             <div className="mb-12">
               <div className="inline-flex justify-center mb-6">
-                <div className="p-3 bg-[#0061FF]/10 rounded-full border border-[#0061FF]/20 shadow-sm shadow-[#0061FF]/10">
-                  <Mail className="w-8 h-8 text-[#0061FF]" />
+                <div className="p-3 bg-[#1239B8]/10 rounded-full border border-[#1239B8]/20 shadow-sm shadow-[#1239B8]/10">
+                  <Mail className="w-8 h-8 text-[#1239B8]" />
                 </div>
               </div>
               <h2 className="text-4xl font-semibold tracking-tighter text-slate-900 mb-2">
@@ -346,7 +346,7 @@ export function VerifyOtp() {
                       value={digit}
                       onChange={(e) => handleOtpChange(index, e.target.value)}
                       onKeyDown={(e) => handleKeyDown(index, e)}
-                      className="w-14 h-14 text-center text-2xl font-bold bg-white border-2 border-slate-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#0061FF]/20 focus:border-[#0061FF] text-slate-900 transition-all"
+                      className="w-14 h-14 text-center text-2xl font-bold bg-white border-2 border-slate-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#1239B8]/20 focus:border-[#1239B8] text-slate-900 transition-all"
                       autoFocus={index === 0}
                     />
                   ))}
@@ -394,7 +394,7 @@ export function VerifyOtp() {
                 type="button"
                 onClick={handleResend}
                 disabled={resending}
-                className="inline-flex items-center gap-2 text-[#0061FF] font-bold hover:underline underline-offset-4 transition-colors disabled:opacity-50"
+                className="inline-flex items-center gap-2 text-[#1239B8] font-bold hover:underline underline-offset-4 transition-colors disabled:opacity-50"
               >
                 <RefreshCw className={`w-4 h-4 ${resending ? "animate-spin" : ""}`} />
                 {resending ? "Sending..." : "Resend Code"}

@@ -59,7 +59,7 @@ export function Navbar({ scrolled = false }: NavbarProps) {
                 </Link>
                 <Button
                   onClick={logout}
-                  className="rounded-full text-[13px] font-medium bg-slate-900 hover:bg-black text-white h-9 px-6 transition-all"
+                  className="rounded-full text-[13px] font-medium bg-brand-navy hover:bg-brand-blue text-white h-9 px-6 transition-all"
                 >
                   Logout
                 </Button>
@@ -75,7 +75,7 @@ export function Navbar({ scrolled = false }: NavbarProps) {
                   </Button>
                 </Link>
                 <Link to="/enroll">
-                  <Button className="rounded-full bg-slate-900 hover:bg-black text-white text-[13px] font-medium h-9 px-6 shadow-sm transition-all">
+                  <Button className="rounded-full bg-brand-navy hover:bg-brand-blue text-white text-[13px] font-medium h-9 px-6 shadow-sm transition-all">
                     Enroll Now
                   </Button>
                 </Link>
@@ -83,16 +83,6 @@ export function Navbar({ scrolled = false }: NavbarProps) {
             )}
           </div>
 
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-slate-900 p-2 mr-2 hover:bg-slate-100 rounded-full lg:hidden transition-colors"
-          >
-            {mobileMenuOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
-          </button>
         </nav>
       </div>
 
@@ -170,7 +160,7 @@ export function Navbar({ scrolled = false }: NavbarProps) {
                     logout();
                     setMobileMenuOpen(false);
                   }}
-                  className="w-full rounded-full bg-slate-900 text-white hover:bg-black py-6 text-base font-medium shadow-none"
+                  className="w-full rounded-full bg-brand-navy text-white hover:bg-brand-blue py-6 text-base font-medium shadow-none"
                 >
                   Logout
                 </Button>
@@ -183,7 +173,7 @@ export function Navbar({ scrolled = false }: NavbarProps) {
                   </Button>
                 </Link>
                 <Link to="/enroll" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full rounded-full bg-slate-900 hover:bg-black text-white py-6 text-base font-medium">
+                  <Button className="w-full rounded-full bg-brand-navy hover:bg-brand-blue text-white py-6 text-base font-medium">
                     Enroll Now
                   </Button>
                 </Link>

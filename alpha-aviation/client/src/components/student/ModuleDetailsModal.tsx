@@ -136,7 +136,7 @@ export function ModuleDetailsModal({
                   transition={{ delay: index * 0.1 }}
                   className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg"
                 >
-                  <div className="w-1.5 h-1.5 bg-[#0061FF] rounded-full" />
+                  <div className="w-1.5 h-1.5 bg-[#1239B8] rounded-full" />
                   <span className="text-sm text-slate-700">{topic}</span>
                 </motion.div>
               ))}

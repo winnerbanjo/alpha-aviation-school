@@ -69,7 +69,7 @@ export function HeroSection() {
             className="flex flex-col sm:flex-row items-start sm:items-center gap-6 pt-6"
           >
             <Link to="/enroll" className="w-full sm:w-auto">
-              <button className="w-full sm:w-auto group relative bg-[#FF6B35] hover:bg-[#E55A26] text-white px-8 lg:px-10 py-4 lg:py-6 rounded-full font-bold transition-all shadow-2xl shadow-orange-950/20 flex items-center justify-center gap-4 overflow-hidden">
+              <button className="w-full sm:w-auto group relative bg-[#F4C520] hover:bg-brand-light text-brand-navy px-8 lg:px-10 py-4 lg:py-6 rounded-full font-bold transition-all shadow-2xl shadow-brand-navy/20 flex items-center justify-center gap-4 overflow-hidden">
                 <span className="relative z-10 uppercase tracking-widest text-xs lg:text-sm">
                   Start Your Journey
                 </span>

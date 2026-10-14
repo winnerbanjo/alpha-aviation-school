@@ -117,8 +117,8 @@ export function ProfileDashboard() {
       <Card className="border-slate-200/50">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#0061FF]/10 rounded-lg">
-              <User className="w-5 h-5 text-[#0061FF]" />
+            <div className="p-2 bg-[#1239B8]/10 rounded-lg">
+              <User className="w-5 h-5 text-[#1239B8]" />
             </div>
             <div>
               <CardTitle className="text-slate-900 tracking-tighter">
@@ -193,7 +193,7 @@ export function ProfileDashboard() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+234 XXX XXX XXXX"
-              className="w-full px-4 py-2.5 border border-slate-200/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 focus:border-[#0061FF] text-slate-900"
+              className="w-full px-4 py-2.5 border border-slate-200/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1239B8]/20 focus:border-[#1239B8] text-slate-900"
             />
           </div>
 
@@ -208,7 +208,7 @@ export function ProfileDashboard() {
               value={emergencyContact}
               onChange={(e) => setEmergencyContact(e.target.value)}
               placeholder="+234 XXX XXX XXXX"
-              className="w-full px-4 py-2.5 border border-slate-200/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 focus:border-[#0061FF] text-slate-900"
+              className="w-full px-4 py-2.5 border border-slate-200/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1239B8]/20 focus:border-[#1239B8] text-slate-900"
             />
             <p className="text-xs text-slate-400 mt-1">
               Contact person in case of emergency
@@ -227,7 +227,7 @@ export function ProfileDashboard() {
               placeholder="Tell us about yourself..."
               rows={4}
               maxLength={500}
-              className="w-full px-4 py-2.5 border border-slate-200/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0061FF]/20 focus:border-[#0061FF] text-slate-900 resize-none"
+              className="w-full px-4 py-2.5 border border-slate-200/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1239B8]/20 focus:border-[#1239B8] text-slate-900 resize-none"
             />
             <p className="text-xs text-slate-400 mt-1">
               {bio.length}/500 characters
@@ -238,7 +238,7 @@ export function ProfileDashboard() {
           <Button
             onClick={handleSave}
             disabled={loading}
-            className="w-full rounded-full bg-[#0061FF] hover:bg-[#0052E6] text-white shadow-sm transition-all duration-300 hover:scale-105"
+            className="w-full rounded-full bg-[#1239B8] hover:bg-[#071A4A] text-white shadow-sm transition-all duration-300 hover:scale-105"
           >
             <Save className="w-4 h-4 mr-2" />
             {saved ? "Saved!" : loading ? "Saving..." : "Save Changes"}

@@ -103,7 +103,7 @@ export function CurriculumTimeline({ course }: CurriculumTimelineProps) {
                 {/* Content */}
                 <div className="flex-1 pt-1">
                   <p
-                    className={`text-sm font-medium transition-colors group-hover:text-[#0061FF] ${
+                    className={`text-sm font-medium transition-colors group-hover:text-[#1239B8] ${
                       module.completed ? "text-slate-900" : "text-slate-500"
                     }`}
                   >

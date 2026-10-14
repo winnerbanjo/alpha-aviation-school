@@ -74,8 +74,8 @@ export function PaymentModal({ isOpen, onClose, amountDue = 0, userEmail = '' }:
         className="space-y-6"
       >
         {/* Payment Method Badge */}
-        <div className="flex items-center gap-2 p-3 bg-[#0061FF]/10 rounded-lg">
-          <DollarSign className="w-5 h-5 text-[#0061FF]" />
+        <div className="flex items-center gap-2 p-3 bg-[#1239B8]/10 rounded-lg">
+          <DollarSign className="w-5 h-5 text-[#1239B8]" />
           <p className="text-sm font-bold text-slate-900">
             Payment Method: Bank Transfer
           </p>
@@ -173,7 +173,7 @@ export function PaymentModal({ isOpen, onClose, amountDue = 0, userEmail = '' }:
                 }
               }}
             />
-            <div className="w-full rounded-lg bg-[#0061FF] hover:bg-[#0052E6] text-white transition-all hover:scale-[1.02] cursor-pointer px-4 py-2.5 flex items-center justify-center">
+            <div className="w-full rounded-lg bg-[#1239B8] hover:bg-[#071A4A] text-white transition-all hover:scale-[1.02] cursor-pointer px-4 py-2.5 flex items-center justify-center">
               <Upload className="w-4 h-4 mr-2" />
               {uploadingReceipt ? 'Uploading Receipt...' : 'Upload Receipt'}
             </div>

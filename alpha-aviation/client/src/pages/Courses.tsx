@@ -166,7 +166,7 @@ export function Courses() {
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-block text-[10px] sm:text-[11px] font-extrabold text-[#FF6B35] uppercase tracking-[0.6em] mb-6 sm:mb-8"
+            className="inline-block text-[10px] sm:text-[11px] font-extrabold text-[#F4C520] uppercase tracking-[0.6em] mb-6 sm:mb-8"
           >
             Institutional Mastery
           </motion.span>
@@ -220,7 +220,7 @@ export function Courses() {
                 className="group p-8 sm:p-12 border-b border-r border-slate-100 hover:bg-slate-50 transition-all duration-500"
               >
                 <div className="space-y-6">
-                  <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-[#FF6B35] border border-slate-100 group-hover:border-[#FF6B35]/30 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-[#F4C520] border border-slate-100 group-hover:border-[#F4C520]/30 transition-colors">
                     <Icon icon="material-symbols:verified-outline" width="20" />
                   </div>
                   <h3 className="text-lg sm:text-xl font-bold text-slate-950 uppercase tracking-tight leading-tight">
@@ -259,7 +259,7 @@ export function Courses() {
             viewport={{ once: true }}
             className="mb-20 text-center"
           >
-            <span className="text-[10px] font-extrabold text-[#FF6B35] uppercase tracking-[0.6em] mb-6 block">
+            <span className="text-[10px] font-extrabold text-[#F4C520] uppercase tracking-[0.6em] mb-6 block">
               Global Standards
             </span>
             <h2 className="text-2xl sm:text-4xl lg:text-5xl font-semibold text-white uppercase tracking-tight mb-4 italic">
@@ -279,7 +279,7 @@ export function Courses() {
               >
                 <div className="flex-1 space-y-8">
                   <div className="flex items-center justify-between">
-                    <div className="w-12 h-12 rounded-2xl bg-slate-950 flex items-center justify-center text-[#FF6B35] border border-white/5 group-hover:border-[#FF6B35]/30 transition-all">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-950 flex items-center justify-center text-[#F4C520] border border-white/5 group-hover:border-[#F4C520]/30 transition-all">
                       <Icon icon={course.icon} width="24" />
                     </div>
                     <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-950 px-3 py-1 rounded-full border border-white/5">
@@ -296,9 +296,9 @@ export function Courses() {
                   <div>
                     <button
                       onClick={() => toggleCourse(course.id)}
-                      className="flex items-center gap-4 text-xs font-extrabold text-[#FF6B35] uppercase tracking-[0.2em] group/btn"
+                      className="flex items-center gap-4 text-xs font-extrabold text-[#F4C520] uppercase tracking-[0.2em] group/btn"
                     >
-                      <span className="border-b border-[#FF6B35]/0 group-hover/btn:border-[#FF6B35] transition-all">
+                      <span className="border-b border-[#F4C520]/0 group-hover/btn:border-[#F4C520] transition-all">
                         {expandedCourse === course.id
                           ? "Collapse Curriculum"
                           : "View Full Curriculum"}
@@ -327,7 +327,7 @@ export function Courses() {
                                 key={idx}
                                 className="flex items-start gap-4 text-slate-400 group/item"
                               >
-                                <span className="h-1.5 w-1.5 rounded-full bg-[#FF6B35]/30 mt-1.5 shrink-0 group-hover/item:bg-[#FF6B35] transition-colors" />
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#F4C520]/30 mt-1.5 shrink-0 group-hover/item:bg-[#F4C520] transition-colors" />
                                 <span className="text-[13px] font-medium leading-relaxed">
                                   {item}
                                 </span>
@@ -356,7 +356,7 @@ export function Courses() {
           <Icon
             icon="ri:double-quotes-l"
             width="60"
-            className="text-[#FF6B35] mx-auto opacity-20"
+            className="text-[#F4C520] mx-auto opacity-20"
           />
           <h2 className="text-2xl md:text-4xl font-semibold text-slate-900 uppercase leading-[1.1] italic">
             "We don't just train aviation staff; we engineer the next generation

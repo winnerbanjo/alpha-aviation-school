@@ -18,7 +18,7 @@ export function AboutSummary() {
             >
               Defining the <br />
               New Standards <br />
-              <span className="text-[#0061FF]">of Excellence.</span>
+              <span className="text-[#1239B8]">of Excellence.</span>
             </motion.h2>
 
             <motion.p
@@ -44,7 +44,7 @@ export function AboutSummary() {
                 <Icon
                   icon="ph:globe-hemisphere-west-fill"
                   width="28"
-                  className="sm:w-8 text-[#FF6B35]"
+                  className="sm:w-8 text-[#F4C520]"
                 />
                 <h4 className="font-bold text-slate-900 text-xs sm:text-sm uppercase tracking-widest">
                   Global Reach
@@ -57,7 +57,7 @@ export function AboutSummary() {
                 <Icon
                   icon="ph:star-four-fill"
                   width="28"
-                  className="sm:w-8 text-[#0061FF]"
+                  className="sm:w-8 text-[#1239B8]"
                 />
                 <h4 className="font-bold text-slate-900 text-xs sm:text-sm uppercase tracking-widest">
                   IATA Aligned
@@ -87,8 +87,8 @@ export function AboutSummary() {
             </div>
 
             {/* Decorative Accents */}
-            <div className="absolute -top-8 -right-8 w-32 h-32 bg-[#FF6B35]/10 rounded-full blur-3xl hidden sm:block" />
-            <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-[#0061FF]/10 rounded-full blur-3xl hidden sm:block" />
+            <div className="absolute -top-8 -right-8 w-32 h-32 bg-[#F4C520]/10 rounded-full blur-3xl hidden sm:block" />
+            <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-[#1239B8]/10 rounded-full blur-3xl hidden sm:block" />
 
             <div className="absolute -bottom-6 -right-6 sm:bottom-10 sm:-left-10 bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-xl z-20">
               <div className="flex items-center gap-3 sm:gap-4">

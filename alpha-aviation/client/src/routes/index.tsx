@@ -3,6 +3,7 @@ import { useRoutes, Navigate } from "react-router-dom";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 
 import GeneralLayout from "../layout/general";
+import NotFound from "../pages/NotFound";
 import StudentLayout from "../layout/student/index";
 import AdminLayout from "../layout/admin/index";
 import AgentLayout from "../layout/agent/index";
@@ -145,6 +146,7 @@ export const RoutesConfig = () => {
       ],
     },
     { path: "/agent", element: <Navigate to="/agent/dashboard/overview" replace /> },
+    { path: "*", element: <NotFound /> },
   ]);
 
   return <Suspense fallback={<PageLoader />}>{routes}</Suspense>;

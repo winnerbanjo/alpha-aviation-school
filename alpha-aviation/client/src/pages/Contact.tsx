@@ -68,7 +68,7 @@ export function Contact() {
             </span>
             <h1 className="text-5xl sm:text-7xl font-bold tracking-tight text-slate-900 mb-6 leading-[1.1]">
               Let's Start Your <br />
-              <span className="text-[#FF6B35]">Aviation Journey.</span>
+              <span className="text-[#F4C520]">Aviation Journey.</span>
             </h1>
             <p className="text-xl text-slate-500 max-w-2xl mx-auto">
               Have questions about our programs? Our team is here to help you
@@ -91,8 +91,8 @@ export function Contact() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.12 * index, duration: 0.45 }}
                 >
-                  <div className="h-full min-h-64 bg-white border border-slate-200 rounded-2xl p-8 shadow-[0px_8px_30px_rgba(15,23,42,0.06)] hover:border-[#0061FF]/40 hover:shadow-[0px_14px_40px_rgba(15,23,42,0.1)] transition-all flex flex-col">
-                    <div className="w-12 h-12 rounded-2xl bg-[#0061FF]/10 text-[#0061FF] flex items-center justify-center mb-6">
+                  <div className="h-full min-h-64 bg-white border border-slate-200 rounded-2xl p-8 shadow-[0px_8px_30px_rgba(15,23,42,0.06)] hover:border-[#1239B8]/40 hover:shadow-[0px_14px_40px_rgba(15,23,42,0.1)] transition-all flex flex-col">
+                    <div className="w-12 h-12 rounded-2xl bg-[#1239B8]/10 text-[#1239B8] flex items-center justify-center mb-6">
                       <Icon className="w-6 h-6" />
                     </div>
                     <h2 className="text-xl font-bold text-slate-900 mb-3">
@@ -114,7 +114,7 @@ export function Contact() {
                               {item.label}
                             </span>
                           )}
-                          <span className="block text-slate-500 leading-relaxed break-words group-hover:text-[#0061FF] transition-colors">
+                          <span className="block text-slate-500 leading-relaxed break-words group-hover:text-[#1239B8] transition-colors">
                             {item.value}
                           </span>
                         </a>

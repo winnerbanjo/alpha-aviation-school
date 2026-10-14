@@ -53,7 +53,7 @@ export function PhoneNumberInput({
         value={country.iso}
         onChange={handleCountryChange}
         disabled={disabled}
-        className="w-[122px] shrink-0 rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-semibold text-slate-800 outline-none transition focus:border-[#0061FF] focus:ring-4 focus:ring-[#0061FF]/10 disabled:bg-slate-50 disabled:text-slate-500"
+        className="w-[122px] shrink-0 rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-semibold text-slate-800 outline-none transition focus:border-[#1239B8] focus:ring-4 focus:ring-[#1239B8]/10 disabled:bg-slate-50 disabled:text-slate-500"
         aria-label="Country code"
       >
         {COUNTRIES.map((item) => (
@@ -80,7 +80,7 @@ export function PhoneNumberInput({
         pattern="[0-9]*"
         autoComplete="tel-national"
         autoFocus={autoFocus}
-        className={`min-w-0 flex-1 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#0061FF] focus:ring-4 focus:ring-[#0061FF]/10 disabled:bg-slate-50 disabled:text-slate-500 ${inputClassName}`}
+        className={`min-w-0 flex-1 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#1239B8] focus:ring-4 focus:ring-[#1239B8]/10 disabled:bg-slate-50 disabled:text-slate-500 ${inputClassName}`}
         placeholder="8012345678"
         aria-label="Phone number"
       />

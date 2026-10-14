@@ -232,7 +232,7 @@ export function PaymentSteps({
                   animate={{ opacity: 1 }}
                   className="space-y-6 w-full py-12 flex flex-col items-center"
                 >
-                  <div className="animate-spin rounded-full h-16 w-16 border-4 border-slate-100 border-t-[#0061FF] mb-4" />
+                  <div className="animate-spin rounded-full h-16 w-16 border-4 border-slate-100 border-t-[#1239B8] mb-4" />
                   <h2 className="text-2xl font-bold text-slate-900">
                     Processing...
                   </h2>
@@ -251,7 +251,7 @@ export function PaymentSteps({
                     >
                       <div className="relative">
                         <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mx-auto relative z-10">
-                          <CreditCard className="w-12 h-12 text-[#0061FF]" />
+                          <CreditCard className="w-12 h-12 text-[#1239B8]" />
                         </div>
                         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-24 bg-blue-100 rounded-full animate-ping opacity-20" />
                       </div>
@@ -268,7 +268,7 @@ export function PaymentSteps({
 
                       <button
                         onClick={() => setPaymentStep("selection")}
-                        className="w-full py-4 bg-[#0061FF] text-white rounded-2xl font-semibold shadow-lg shadow-blue-200 hover:bg-[#0052E6] transition-all hover:scale-[1.02] active:scale-[0.98]"
+                        className="w-full py-4 bg-[#1239B8] text-white rounded-2xl font-semibold shadow-lg shadow-blue-200 hover:bg-[#071A4A] transition-all hover:scale-[1.02] active:scale-[0.98]"
                       >
                         Pay Now
                       </button>
@@ -293,10 +293,10 @@ export function PaymentSteps({
                       <div className="grid gap-4">
                         <button
                           onClick={() => setPaymentStep("manual")}
-                          className="flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-[#0061FF] hover:bg-blue-50/50 transition-all text-left group"
+                          className="flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-[#1239B8] hover:bg-blue-50/50 transition-all text-left group"
                         >
                           <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                            <Landmark className="w-6 h-6 text-slate-600 group-hover:text-[#0061FF]" />
+                            <Landmark className="w-6 h-6 text-slate-600 group-hover:text-[#1239B8]" />
                           </div>
                           <div>
                             <p className="font-bold text-slate-900">
@@ -314,10 +314,10 @@ export function PaymentSteps({
                             initializePayment({ onSuccess });
                           }}
                           disabled={uploading}
-                          className="flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-[#0061FF] hover:bg-blue-50/50 transition-all text-left group disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-[#1239B8] hover:bg-blue-50/50 transition-all text-left group disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                            <CreditCard className="w-6 h-6 text-slate-600 group-hover:text-[#0061FF]" />
+                            <CreditCard className="w-6 h-6 text-slate-600 group-hover:text-[#1239B8]" />
                           </div>
                           <div>
                             <p className="font-bold text-slate-900">
@@ -460,7 +460,7 @@ export function PaymentSteps({
                           <button
                             onClick={confirmAndUpload}
                             disabled={uploading}
-                            className="w-full py-4 bg-[#0061FF] text-white rounded-2xl font-semibold flex items-center justify-center gap-2 hover:bg-[#0052E6] transition-all shadow-lg shadow-blue-200 disabled:opacity-50"
+                            className="w-full py-4 bg-[#1239B8] text-white rounded-2xl font-semibold flex items-center justify-center gap-2 hover:bg-[#071A4A] transition-all shadow-lg shadow-blue-200 disabled:opacity-50"
                           >
                             {uploading ? (
                               <>

@@ -50,7 +50,7 @@ export function About() {
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-block text-[10px] sm:text-[11px] font-extrabold text-[#FF6B35] uppercase tracking-[0.6em] mb-6 sm:mb-8"
+            className="inline-block text-[10px] sm:text-[11px] font-extrabold text-[#F4C520] uppercase tracking-[0.6em] mb-6 sm:mb-8"
           >
             Institutional Legacy
           </motion.span>
@@ -128,7 +128,7 @@ export function About() {
                 <Icon
                   icon="mdi:airplane-marker"
                   width="24"
-                  className="sm:w-8 text-[#FF6B35]"
+                  className="sm:w-8 text-[#F4C520]"
                 />
               </div>
             </motion.div>
@@ -166,7 +166,7 @@ export function About() {
                 className="group p-8 sm:p-12 border-b border-r border-slate-100 hover:bg-slate-50 transition-all duration-500"
               >
                 <div className="relative z-10 space-y-6 text-center md:text-left">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-50 flex items-center justify-center text-[#FF6B35] border border-slate-100 group-hover:border-[#FF6B35]/30 transition-colors mx-auto md:mx-0">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-50 flex items-center justify-center text-[#F4C520] border border-slate-100 group-hover:border-[#F4C520]/30 transition-colors mx-auto md:mx-0">
                     <Icon
                       icon={v.icon}
                       width="20"
@@ -215,7 +215,7 @@ export function About() {
             <span className="text-[9px] sm:text-[10px] font-extrabold text-slate-500 uppercase tracking-[0.5em]">
               The Vision
             </span>
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white leading-[1.2] sm:leading-[1.1] uppercase italic text-[#FF6B35]">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white leading-[1.2] sm:leading-[1.1] uppercase italic text-[#F4C520]">
               "To inspire and train aviation professionals across continents,
               fostering innovation and safety."
             </h3>

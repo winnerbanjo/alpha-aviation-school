@@ -89,7 +89,7 @@ export class ErrorBoundary extends Component<Props, State> {
               <div className="space-y-3">
                 <Button
                   onClick={this.handleReset}
-                  className="w-full rounded-lg bg-[#0061FF] hover:bg-[#0052E6] text-white"
+                  className="w-full rounded-lg bg-[#1239B8] hover:bg-[#071A4A] text-white"
                 >
                   <RefreshCw className="w-4 h-4 mr-2" />
                   {isChunkLoadError ? 'Reload Page' : 'Try Again'}

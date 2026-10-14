@@ -202,7 +202,7 @@ export function TrainingCourses() {
                     </div>
                   </div>
 
-                  <div className="h-8 w-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-[#FF6B35]/10 group-hover:text-[#FF6B35] transition-all">
+                  <div className="h-8 w-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-[#F4C520]/10 group-hover:text-[#F4C520] transition-all">
                     <Icon
                       icon="material-symbols:arrow-outward"
                       width="18"

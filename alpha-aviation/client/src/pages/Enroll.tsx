@@ -193,7 +193,7 @@ export function Enroll() {
       heading: (
         <>
           Your Career in <br /> Aviation Starts{" "}
-          <span className="italic text-[#0061FF]">Here.</span>
+          <span className="italic text-[#1239B8]">Here.</span>
         </>
       ),
       sub: "Create your account in seconds. No commitment yet — just your details.",
@@ -201,7 +201,7 @@ export function Enroll() {
     {
       heading: (
         <>
-          Choose Your <br /> <span className="italic text-[#0061FF]">Path</span>{" "}
+          Choose Your <br /> <span className="italic text-[#1239B8]">Path</span>{" "}
           to Success.
         </>
       ),
@@ -211,7 +211,7 @@ export function Enroll() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden relative">
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-[#0061FF]/[0.02] pointer-events-none z-0" />
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-[#1239B8]/[0.02] pointer-events-none z-0" />
 
       {/* ── Left Panel ── */}
       <div className="hidden lg:flex lg:w-6/12 h-screen top-0 bg-slate-900 overflow-hidden relative z-10">
@@ -286,7 +286,7 @@ export function Enroll() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="absolute -bottom-1 -right-1 bg-[#0061FF] rounded-lg p-1 border border-white/20">
+                  <div className="absolute -bottom-1 -right-1 bg-[#1239B8] rounded-lg p-1 border border-white/20">
                     <Check className="w-3 h-3 text-white" />
                   </div>
                 </div>
@@ -301,7 +301,7 @@ export function Enroll() {
                     {[1, 2, 3, 4, 5].map((i) => (
                       <Star
                         key={i}
-                        className="w-2.5 h-2.5 text-[#0061FF] fill-[#0061FF]"
+                        className="w-2.5 h-2.5 text-[#1239B8] fill-[#1239B8]"
                       />
                     ))}
                   </div>
@@ -380,9 +380,9 @@ export function Enroll() {
                     key={s}
                     className={`h-1.5 rounded-full transition-all duration-500 ease-out ${
                       step === s
-                        ? "w-10 bg-[#0061FF]"
+                        ? "w-10 bg-[#1239B8]"
                         : step > s
-                          ? "w-4 bg-[#0061FF]/30"
+                          ? "w-4 bg-[#1239B8]/30"
                           : "w-4 bg-slate-100"
                     }`}
                   />
@@ -392,7 +392,7 @@ export function Enroll() {
 
             {/* Step label */}
             <div className="mb-8">
-              <div className="inline-block px-3 py-1 bg-[#0061FF]/10 text-[#0061FF] text-[10px] font-extrabold uppercase tracking-widest rounded-md mb-3">
+              <div className="inline-block px-3 py-1 bg-[#1239B8]/10 text-[#1239B8] text-[10px] font-extrabold uppercase tracking-widest rounded-md mb-3">
                 Step {step} of 2 —{" "}
                 {step === 1 ? "Create Account" : "Choose Courses"}
               </div>
@@ -405,7 +405,7 @@ export function Enroll() {
                     Already have an account?{" "}
                     <Link
                       to="/login"
-                      className="text-[#0061FF] font-bold hover:underline underline-offset-4"
+                      className="text-[#1239B8] font-bold hover:underline underline-offset-4"
                     >
                       Sign in
                     </Link>
@@ -441,7 +441,7 @@ export function Enroll() {
                               firstName: e.target.value,
                             })
                           }
-                          className="w-full bg-white px-5 py-4 border-2 border-slate-300 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                          className="w-full bg-white px-5 py-4 border-2 border-slate-300 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#1239B8]/5 focus:border-[#1239B8] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
                           placeholder="Your first name"
                           required
                         />
@@ -459,7 +459,7 @@ export function Enroll() {
                               lastName: e.target.value,
                             })
                           }
-                          className="w-full bg-white px-5 py-4 border-2 border-slate-300 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                          className="w-full bg-white px-5 py-4 border-2 border-slate-300 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#1239B8]/5 focus:border-[#1239B8] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
                           placeholder="Your last name"
                           required
                         />
@@ -476,7 +476,7 @@ export function Enroll() {
                         onChange={(e) =>
                           setFormData({ ...formData, email: e.target.value })
                         }
-                        className="w-full bg-white px-5 py-4 border-2 border-slate-300 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                        className="w-full bg-white px-5 py-4 border-2 border-slate-300 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#1239B8]/5 focus:border-[#1239B8] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
                         placeholder="you@example.com"
                         required
                       />
@@ -510,7 +510,7 @@ export function Enroll() {
                               password: e.target.value,
                             })
                           }
-                          className="w-full bg-white px-5 py-4 border-2 border-slate-300 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                          className="w-full bg-white px-5 py-4 border-2 border-slate-300 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#1239B8]/5 focus:border-[#1239B8] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
                           placeholder="Min. 6 characters"
                           minLength={6}
                           required
@@ -555,8 +555,8 @@ export function Enroll() {
                     className="space-y-6"
                   >
                     {/* International internship callout */}
-                    <div className="flex items-start gap-3 p-4 bg-gradient-to-r from-[#0061FF]/8 to-indigo-50 border border-[#0061FF]/20 rounded-2xl">
-                      <div className="p-2 bg-[#0061FF] rounded-lg shrink-0">
+                    <div className="flex items-start gap-3 p-4 bg-gradient-to-r from-[#1239B8]/8 to-indigo-50 border border-[#1239B8]/20 rounded-2xl">
+                      <div className="p-2 bg-[#1239B8] rounded-lg shrink-0">
                         <Award className="w-4 h-4 text-white" />
                       </div>
                       <div>
@@ -565,7 +565,7 @@ export function Enroll() {
                         </p>
                         <p className="text-xs text-slate-500 leading-relaxed">
                           For international internships,{" "}
-                          <span className="font-bold text-[#0061FF]">
+                          <span className="font-bold text-[#1239B8]">
                             4 courses are required — ₦538,000
                           </span>{" "}
                           (bundled discount, saves ₦62,000).
@@ -580,7 +580,7 @@ export function Enroll() {
                           Available Programmes
                         </label>
                         {count > 0 && (
-                          <span className="text-[10px] font-bold text-[#0061FF] bg-[#0061FF]/10 px-2.5 py-1 rounded-full">
+                          <span className="text-[10px] font-bold text-[#1239B8] bg-[#1239B8]/10 px-2.5 py-1 rounded-full">
                             {count}/4 selected
                           </span>
                         )}
@@ -600,7 +600,7 @@ export function Enroll() {
                               }
                               className={`group flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-200 ${
                                 isSelected
-                                  ? "border-[#0061FF] bg-[#0061FF]/5"
+                                  ? "border-[#1239B8] bg-[#1239B8]/5"
                                   : "border-slate-200 bg-white hover:border-slate-400"
                               }`}
                             >
@@ -608,7 +608,7 @@ export function Enroll() {
                                 <div
                                   className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-all ${
                                     isSelected
-                                      ? "bg-[#0061FF] text-white"
+                                      ? "bg-[#1239B8] text-white"
                                       : "bg-slate-100 text-slate-300 group-hover:bg-slate-200"
                                   }`}
                                 >
@@ -634,7 +634,7 @@ export function Enroll() {
                                 </div>
                               </div>
                               {isSelected && (
-                                <Check className="w-4 h-4 text-[#0061FF] shrink-0" />
+                                <Check className="w-4 h-4 text-[#1239B8] shrink-0" />
                               )}
                             </button>
                           );

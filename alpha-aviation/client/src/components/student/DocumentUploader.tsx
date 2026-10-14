@@ -110,7 +110,7 @@ export function DocumentUploader() {
               onDrop={handleDrop}
               className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
                 dragActive
-                  ? "border-[#0061FF] bg-[#0061FF]/5"
+                  ? "border-[#1239B8] bg-[#1239B8]/5"
                   : "border-slate-200 hover:border-slate-300"
               }`}
             >

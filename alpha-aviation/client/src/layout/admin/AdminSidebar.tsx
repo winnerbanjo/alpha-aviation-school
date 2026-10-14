@@ -212,7 +212,7 @@ export function AdminSidebar({
 
       {mobileMenuOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-slate-950/20 backdrop-blur-xs z-30 transition-opacity"
+          className="lg:hidden fixed inset-0 bg-slate-950/20 backdrop-blur-sm z-30 transition-opacity"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}

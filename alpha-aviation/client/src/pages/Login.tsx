@@ -174,7 +174,7 @@ export function Login() {
             >
               <h1 className="text-4xl xl:text-5xl font-semibold tracking-tighter text-white mb-6 leading-[1.05]">
                 Welcome Back to the <br />
-                <span className="italic text-[#0061FF]">Elite</span> Flight
+                <span className="italic text-[#1239B8]">Elite</span> Flight
                 Deck.
               </h1>
               <p className="text-white/60 text-lg leading-relaxed max-w-sm font-medium">
@@ -216,8 +216,8 @@ export function Login() {
 
             <div className="mb-12">
               <div className="inline-flex justify-center mb-6">
-                <div className="p-3 bg-[#0061FF]/10 rounded-full border border-[#0061FF]/20 shadow-sm shadow-[#0061FF]/10">
-                  <GraduationCap className="w-8 h-8 text-[#0061FF]" />
+                <div className="p-3 bg-[#1239B8]/10 rounded-full border border-[#1239B8]/20 shadow-sm shadow-[#1239B8]/10">
+                  <GraduationCap className="w-8 h-8 text-[#1239B8]" />
                 </div>
               </div>
               <h2 className="text-4xl font-semibold tracking-tighter text-slate-900 mb-2">
@@ -237,7 +237,7 @@ export function Login() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-white px-5 py-4 border-2 border-slate-500 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                  className="w-full bg-white px-5 py-4 border-2 border-slate-500 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#1239B8]/5 focus:border-[#1239B8] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
                   placeholder="name@academy.com"
                   required
                   autoComplete="email"
@@ -253,7 +253,7 @@ export function Login() {
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-white px-5 py-4 border-2 border-slate-500 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                    className="w-full bg-white px-5 py-4 border-2 border-slate-500 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#1239B8]/5 focus:border-[#1239B8] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
                     placeholder="••••••••"
                     required
                     autoComplete="current-password"
@@ -287,7 +287,7 @@ export function Login() {
                 {isAgentLogin ? "New partner?" : "New to the academy?"}{" "}
                 <Link
                   to={isAgentLogin ? "/agent/register" : "/enroll"}
-                  className="text-[#0061FF] font-bold hover:underline underline-offset-4"
+                  className="text-[#1239B8] font-bold hover:underline underline-offset-4"
                 >
                   {isAgentLogin ? "Apply as Agent" : "Start Enrollment"}
                 </Link>

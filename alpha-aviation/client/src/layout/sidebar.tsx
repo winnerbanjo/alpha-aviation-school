@@ -108,7 +108,7 @@ export function Sidebar({ role }: SidebarProps) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-full w-64 bg-slate-900 border-r border-slate-800 z-40 transition-transform duration-300 ${
+        className={`fixed left-0 top-0 h-full w-64 bg-brand-navy border-r border-slate-800 z-40 transition-transform duration-300 ${
           mobileMenuOpen
             ? "translate-x-0"
             : "-translate-x-full lg:translate-x-0"
@@ -117,7 +117,7 @@ export function Sidebar({ role }: SidebarProps) {
         <div className="flex flex-col h-full">
           {/* Logo/Brand */}
           <div className="p-6 border-b border-slate-800">
-            <Logo showText={false} size="md" className="text-white" />
+            <Logo showText={false} size="md" variant="white" className="text-white" />
             <h1 className="text-xl font-semibold tracking-tight text-white mt-2">
               Alpha Step Links Aviation School
             </h1>
@@ -138,7 +138,7 @@ export function Sidebar({ role }: SidebarProps) {
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
                       isActive
-                        ? "bg-[#0061FF]/20 text-white border-l-2 border-[#0061FF] font-semibold"
+                        ? "bg-[#1239B8]/20 text-white border-l-2 border-[#1239B8] font-semibold"
                         : "text-slate-300 hover:bg-slate-800 hover:text-white hover:scale-[1.02]"
                     }`
                   }

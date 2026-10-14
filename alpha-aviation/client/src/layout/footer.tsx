@@ -62,7 +62,7 @@ export default function Footer() {
   ];
 
   return (
-    <div className="bg-black p-0 m-0 border-t border-white/5 relative overflow-hidden group/footer">
+    <div className="bg-brand-navy p-0 m-0 border-t border-white/5 relative overflow-hidden group/footer">
       {/* 
           CONTINUOUS 3D FLIGHT BACKGROUND 
           Spans the entire footer background
@@ -120,7 +120,7 @@ export default function Footer() {
 
         {/* Dynamic Glows */}
         <div className="absolute top-0 right-0 w-2/3 h-full bg-blue-600/[0.03] blur-[150px] rounded-full animate-pulse" />
-        <div className="absolute bottom-0 left-0 w-1/2 h-full bg-[#FF6B35]/[0.03] blur-[150px] rounded-full" />
+        <div className="absolute bottom-0 left-0 w-1/2 h-full bg-[#F4C520]/[0.03] blur-[150px] rounded-full" />
       </div>
 
       <div className="max-w-7xl mx-auto text-white pt-16 sm:pt-24 pb-12 px-6 sm:px-8 relative z-10 flex flex-col">
@@ -135,7 +135,7 @@ export default function Footer() {
           <div className="md:absolute md:right-0 md:pr-12">
             <Link
               to="/enroll"
-              className="relative w-fit py-4  flex items-center  justify-start text-lg shrink-0 px-1 bg-[#FF6B35] text-white rounded-full font-bold overflow-hidden shadow-[0_20px_50px_-10px_rgba(255,107,53,0.4)] transition-all duration-500 hover:scale-105 active:scale-95 group"
+              className="relative w-fit py-4 flex items-center justify-start text-lg shrink-0 px-1 bg-[#F4C520] text-brand-navy rounded-full font-bold overflow-hidden shadow-[0_20px_50px_-10px_rgba(244,197,32,0.4)] transition-all duration-500 hover:scale-105 active:scale-95 group"
             >
               <span className="absolute left-0 aspect-square h-full p-2 bg-transparent flex items-center justify-center transition-transform duration-500 group-hover:translate-x-12">
                 <span className="bg-white h-12 lg:h-10 lg:w-10 shrink-0 w-12 flex items-center justify-center rounded-full shadow-inner">
@@ -143,14 +143,14 @@ export default function Footer() {
                     icon="ion:paper-plane"
                     width="1.3em"
                     height="1.3em"
-                    style={{ color: "black" }}
+                    style={{ color: "#071A4A" }}
                   />
                 </span>
               </span>
               <span className="ml-16 lg:ml-14 transition-all duration-500 group-hover:text-transparent pr-8">
                 ENROLL
               </span>
-              <span className="absolute inset-0 bg-white flex items-center justify-center transform translate-x-full group-hover:translate-x-0 transition-transform duration-500 text-black font-black uppercase tracking-widest">
+              <span className="absolute inset-0 bg-white flex items-center justify-center transform translate-x-full group-hover:translate-x-0 transition-transform duration-500 text-brand-navy font-black uppercase tracking-widest">
                 JOIN US
               </span>
             </Link>
@@ -287,7 +287,7 @@ export default function Footer() {
       </div>
 
       {/* BOTTOM ACCENT BAR */}
-      <div className="h-1 bg-gradient-to-r from-transparent via-[#FF6B35] to-transparent opacity-20 w-full" />
+      <div className="h-1 bg-gradient-to-r from-transparent via-[#F4C520] to-transparent opacity-20 w-full" />
     </div>
   );
 }

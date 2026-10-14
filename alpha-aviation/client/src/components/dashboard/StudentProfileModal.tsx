@@ -165,8 +165,8 @@ export function StudentProfileModal({
         {/* Student Info */}
         <div className="space-y-4">
           <div className="flex items-center gap-4 pb-4 border-b border-slate-200">
-            <div className="p-3 bg-[#0061FF]/10 rounded-full">
-              <User className="w-6 h-6 text-[#0061FF]" />
+            <div className="p-3 bg-[#1239B8]/10 rounded-full">
+              <User className="w-6 h-6 text-[#1239B8]" />
             </div>
             <div>
               <h3 className="text-xl font-bold tracking-tight text-slate-900">
@@ -370,7 +370,7 @@ export function StudentProfileModal({
                   <span className="text-sm font-medium text-slate-900">Certificate</span>
                 </div>
                 {localCertUrl && !showReplace && (
-                  <button onClick={() => setShowReplace(true)} className="flex items-center gap-1 text-xs text-slate-500 hover:text-[#0061FF] transition-colors">
+                  <button onClick={() => setShowReplace(true)} className="flex items-center gap-1 text-xs text-slate-500 hover:text-[#1239B8] transition-colors">
                     <RefreshCw className="w-3 h-3" /> Replace
                   </button>
                 )}
@@ -407,7 +407,7 @@ export function StudentProfileModal({
                   {!localCertUrl && <p className="text-xs text-slate-500">No certificate uploaded yet</p>}
                   <div className="flex flex-col gap-2">
                     <input type="file" id="certificateFile" accept="image/*,.pdf" className="hidden" disabled={isUploading} onChange={handleFileChange} />
-                    <label htmlFor="certificateFile" className={`flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white rounded-md transition-colors cursor-pointer select-none ${isUploading ? "bg-[#0061FF]/60 cursor-not-allowed" : "bg-[#0061FF] hover:bg-[#0052E6]"}`}>
+                    <label htmlFor="certificateFile" className={`flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white rounded-md transition-colors cursor-pointer select-none ${isUploading ? "bg-[#1239B8]/60 cursor-not-allowed" : "bg-[#1239B8] hover:bg-[#071A4A]"}`}>
                       {isUploading ? <><Loader2 className="w-4 h-4 animate-spin" />Uploading…</> : <><Upload className="w-4 h-4" />{showReplace ? "Upload New Certificate" : "Upload Certificate"}</>}
                     </label>
                     {showReplace && <button onClick={() => setShowReplace(false)} className="text-xs text-slate-400 hover:text-slate-600 transition-colors text-center">Cancel</button>}
@@ -422,7 +422,7 @@ export function StudentProfileModal({
         {/* Actions */}
         <div className="flex flex-col gap-2 pt-4 border-t border-slate-200">
           {student.paymentStatus === "Pending" && onMarkAsPaid && (
-            <Button onClick={() => { onMarkAsPaid(student._id); onClose(); }} className="w-full rounded-lg bg-[#0061FF] hover:bg-[#0052E6] text-white transition-all hover:scale-[1.02]">
+            <Button onClick={() => { onMarkAsPaid(student._id); onClose(); }} className="w-full rounded-lg bg-[#1239B8] hover:bg-[#071A4A] text-white transition-all hover:scale-[1.02]">
               Mark as Paid
             </Button>
           )}

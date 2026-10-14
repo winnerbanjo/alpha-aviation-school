@@ -80,7 +80,7 @@ export function PhoneNumberPrompt() {
     >
       <div className="space-y-5">
         <div className="flex gap-3 rounded-2xl border border-blue-100 bg-blue-50 p-4">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#0061FF] text-white">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1239B8] text-white">
             <ShieldCheck className="h-5 w-5" />
           </div>
           <div>
@@ -108,7 +108,7 @@ export function PhoneNumberPrompt() {
 
         <div className="flex flex-col gap-2 sm:flex-row">
           <Button
-            className="flex-1 bg-[#0061FF] text-white hover:bg-[#0052E6]"
+            className="flex-1 bg-[#1239B8] text-white hover:bg-[#071A4A]"
             onClick={handleSave}
             disabled={saving}
           >

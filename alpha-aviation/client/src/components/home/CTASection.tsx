@@ -23,7 +23,7 @@ export function CTASection() {
             transition={{ delay: 0.1 }}
             className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-slate-900 leading-[1.1] mb-6 sm:mb-8 uppercase"
           >
-            Join Us & <span className="text-[#0061FF]">Fly!</span>
+            Join Us & <span className="text-[#1239B8]">Fly!</span>
           </motion.h2>
 
           <motion.p

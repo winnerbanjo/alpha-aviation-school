@@ -96,7 +96,7 @@ export function ResetPassword() {
             >
               <h1 className="text-4xl xl:text-5xl font-semibold tracking-tighter text-white mb-6 leading-[1.05]">
                 Set a New <br />
-                <span className="italic text-[#0061FF]">Secure</span> Password.
+                <span className="italic text-[#1239B8]">Secure</span> Password.
               </h1>
               <p className="text-white/60 text-lg leading-relaxed max-w-sm font-medium">
                 Choose a strong password. This link is valid for 1 hour only.
@@ -136,8 +136,8 @@ export function ResetPassword() {
 
             <div className="mb-12">
               <div className="inline-flex justify-center mb-6">
-                <div className="p-3 bg-[#0061FF]/10 rounded-full border border-[#0061FF]/20">
-                  <ShieldCheck className="w-8 h-8 text-[#0061FF]" />
+                <div className="p-3 bg-[#1239B8]/10 rounded-full border border-[#1239B8]/20">
+                  <ShieldCheck className="w-8 h-8 text-[#1239B8]" />
                 </div>
               </div>
               <h2 className="text-4xl font-semibold tracking-tighter text-slate-900 mb-2">
@@ -158,7 +158,7 @@ export function ResetPassword() {
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-white px-5 py-4 border-2 border-slate-300 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                    className="w-full bg-white px-5 py-4 border-2 border-slate-300 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#1239B8]/5 focus:border-[#1239B8] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
                     placeholder="Min. 6 characters"
                     minLength={6}
                     required
@@ -185,7 +185,7 @@ export function ResetPassword() {
                   type={showPassword ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full bg-white px-5 py-4 border-2 border-slate-300 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#0061FF]/5 focus:border-[#0061FF] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                  className="w-full bg-white px-5 py-4 border-2 border-slate-300 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#1239B8]/5 focus:border-[#1239B8] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
                   placeholder="Re-enter your password"
                   required
                 />
