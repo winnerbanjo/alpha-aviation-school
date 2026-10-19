@@ -58,7 +58,7 @@ export function AdminResources() {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [courseTitle, setCourseTitle] = useState(COURSE_CATALOG[0]?.title || "");
+  const [courseTitle, setCourseTitle] = useState<string>(COURSE_CATALOG[0]?.title || "");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

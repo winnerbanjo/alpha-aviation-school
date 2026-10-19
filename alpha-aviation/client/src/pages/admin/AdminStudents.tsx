@@ -26,10 +26,10 @@ export function AdminStudents() {
     handleBulkDelete, handleBulkSuspend, handleEditUser, handleSaveUser, handleCsvFileChange,
     handleCsvUpload, handleAdminClearanceChange, handleCertificateUploaded,
     handleWhatsAppReminder, handleInvite, toggleStudentSelection, toggleSelectAll,
-    deleteModalOpen, setDeleteModalOpen, studentToDelete, deletingInProgress,
+    deleteModalOpen, setDeleteModalOpen, studentToDelete, setStudentToDelete, deletingInProgress,
     bulkDeleteModalOpen, setBulkDeleteModalOpen, bulkSuspendModalOpen, setBulkSuspendModalOpen,
     userModalOpen, setUserModalOpen, editingUser, setEditingUser,
-    userFormData, setUserFormData, csvModalOpen, setCsvModalOpen, csvPreview, csvFile,
+    userFormData, setUserFormData, csvModalOpen, setCsvModalOpen, csvPreview, setCsvPreview, csvFile, setCsvFile,
     isProfileModalOpen, setIsProfileModalOpen, selectedStudent, statusUpdating,
     handleUpdateWeekProgress,
   } = useAdminData();
