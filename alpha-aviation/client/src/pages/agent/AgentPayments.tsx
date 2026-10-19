@@ -42,13 +42,13 @@ export function AgentPayments() {
 
   const statusBadge = (status: string) => {
     const map: Record<string, { icon: React.ReactNode; text: string; cls: string }> = {
-      pending_review: { icon: <Clock className="w-3 h-3" />, text: "Under Review", cls: "text-amber-700 bg-amber-50 border-amber-200" },
-      approved: { icon: <CheckCircle2 className="w-3 h-3" />, text: "Approved", cls: "text-emerald-700 bg-emerald-50 border-emerald-200" },
-      rejected: { icon: <AlertCircle className="w-3 h-3" />, text: "Rejected", cls: "text-red-700 bg-red-50 border-red-200" },
+      pending_review: { icon: <Clock className="h-3 w-3" />, text: "Under Review", cls: "bg-amber-50 text-amber-700 ring-amber-600/15" },
+      approved: { icon: <CheckCircle2 className="h-3 w-3" />, text: "Approved", cls: "bg-emerald-50 text-emerald-700 ring-emerald-600/15" },
+      rejected: { icon: <AlertCircle className="h-3 w-3" />, text: "Rejected", cls: "bg-red-50 text-red-700 ring-red-600/15" },
     };
-    const s = map[status] || { icon: <AlertCircle className="w-3 h-3" />, text: status, cls: "text-slate-700 bg-slate-50 border-slate-200" };
+    const s = map[status] || { icon: <AlertCircle className="h-3 w-3" />, text: status, cls: "bg-[#F5F7FB] text-[#53647C] ring-[#DCE2EB]" };
     return (
-      <span className={`inline-flex items-center gap-1 text-xs font-medium border rounded-md px-2 py-0.5 ${s.cls}`}>
+      <span className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 ${s.cls}`}>
         {s.icon}{s.text}
       </span>
     );
@@ -60,11 +60,12 @@ export function AgentPayments() {
   return (
     <div className="space-y-6 pb-12">
       <div>
-        <h1 className="text-xl font-semibold text-slate-900">Payment History</h1>
-        <p className="text-sm text-slate-500 mt-0.5">All payments made on behalf of your students</p>
+        <span className="eyebrow text-[#1246C8]">Agent portal</span>
+        <h1 className="mt-3 text-3xl font-bold tracking-tightest text-[#10264B] sm:text-4xl">Payment history</h1>
+        <p className="mt-2 text-[#53647C]">All payments made on behalf of your students</p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
         {[
           { label: "Total Submitted", value: payments.length, icon: FileText, isCurrency: false },
           { label: "Total Approved", value: totalPaid, icon: CheckCircle2, isCurrency: true },
@@ -72,12 +73,12 @@ export function AgentPayments() {
         ].map((card) => {
           const Icon = card.icon;
           return (
-            <div key={card.label} className="bg-white border border-slate-200 rounded-lg p-5">
-              <div className="w-10 h-10 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center mb-3">
-                <Icon className="w-5 h-5 text-slate-600" />
+            <div key={card.label} className="rounded-panel border border-[#DCE2EB] bg-white p-5 shadow-subtle sm:p-6">
+              <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+                <Icon className="h-5 w-5" />
               </div>
-              <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{card.label}</p>
-              <p className="text-xl font-semibold text-slate-900 mt-1">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#53647C]">{card.label}</p>
+              <p className="mt-2 break-words text-2xl font-bold tracking-tightest text-[#10264B] tabular-nums sm:text-3xl">
                 {card.isCurrency ? formatNaira(card.value as number) : card.value}
               </p>
             </div>
@@ -86,69 +87,71 @@ export function AgentPayments() {
       </div>
 
       <div className="relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8C9AB0]" />
         <input
           type="text"
           placeholder="Search by student or reference..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/20"
+          className="w-full rounded-full border border-[#DCE2EB] bg-white py-2.5 pl-11 pr-4 text-sm text-[#172B49] shadow-subtle outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
         />
       </div>
 
-      <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
+      <div className="overflow-hidden rounded-panel border border-[#DCE2EB] bg-white shadow-subtle">
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="w-8 h-8 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#1246C8] border-t-transparent" />
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-16">
-            <CreditCard className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-            <p className="text-slate-500 font-medium">{search ? "No payments match your search" : "No payments yet"}</p>
-            <p className="text-sm text-slate-400 mt-1">Payments you submit for your students will appear here</p>
+          <div className="px-6 py-16 text-center">
+            <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+              <CreditCard className="h-6 w-6" />
+            </span>
+            <p className="font-semibold text-[#10264B]">{search ? "No payments match your search" : "No payments yet"}</p>
+            <p className="mt-1 text-sm text-[#53647C]">Payments you submit for your students will appear here</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50">
+                <tr className="border-b border-[#DCE2EB] bg-[#F5F7FB]/70">
                   {["Student", "Reference", "Amount", "Status", "Date", "Receipt"].map((h) => (
-                    <th key={h} className="text-left text-xs font-medium text-slate-500 px-4 py-3">{h}</th>
+                    <th key={h} className="whitespace-nowrap px-5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.14em] text-[#53647C]">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody>
                 {filtered.map((p) => (
-                  <tr key={p._id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3.5">
+                  <tr key={p._id} className="border-b border-[#DCE2EB]/70 transition-colors last:border-b-0 hover:bg-[#F5F7FB]">
+                    <td className="px-5 py-4">
                       {p.student ? (
                         <>
-                          <p className="text-sm font-medium text-slate-900">{p.student.firstName} {p.student.lastName}</p>
-                          <p className="text-xs text-slate-500 font-mono">{p.student.studentIdNumber}</p>
+                          <p className="text-sm font-semibold text-[#10264B]">{p.student.firstName} {p.student.lastName}</p>
+                          <p className="mt-0.5 font-mono text-xs text-[#53647C]">{p.student.studentIdNumber}</p>
                         </>
                       ) : (
-                        <span className="text-sm text-slate-400">—</span>
+                        <span className="text-sm text-[#8C9AB0]">—</span>
                       )}
                     </td>
-                    <td className="px-4 py-3.5">
-                      <span className="font-mono text-xs text-slate-600 bg-slate-100 rounded px-2 py-0.5 block max-w-[180px] truncate">{p.reference}</span>
+                    <td className="px-5 py-4">
+                      <span className="block max-w-[180px] truncate rounded-md bg-[#F5F7FB] px-2 py-1 font-mono text-xs text-[#2D3E59] ring-1 ring-[#DCE2EB]">{p.reference}</span>
                     </td>
-                    <td className="px-4 py-3.5">
-                      <span className="text-sm font-medium text-slate-900">{formatNaira(p.amount)}</span>
+                    <td className="px-5 py-4">
+                      <span className="whitespace-nowrap text-sm font-semibold text-[#10264B] tabular-nums">{formatNaira(p.amount)}</span>
                     </td>
-                    <td className="px-4 py-3.5">{statusBadge(p.status)}</td>
-                    <td className="px-4 py-3.5">
-                      <span className="text-xs text-slate-500">
+                    <td className="px-5 py-4">{statusBadge(p.status)}</td>
+                    <td className="px-5 py-4">
+                      <span className="whitespace-nowrap text-xs text-[#53647C] tabular-nums">
                         {new Date(p.createdAt).toLocaleDateString("en-NG", { day: "numeric", month: "short", year: "numeric" })}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5">
+                    <td className="px-5 py-4">
                       {p.receiptUrl ? (
-                        <a href={p.receiptUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-slate-700 hover:text-slate-900 underline">
+                        <a href={p.receiptUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center rounded-full border border-[#10264B]/15 bg-white px-3 py-1 text-xs font-semibold text-[#10264B] transition-colors hover:border-[#1246C8] hover:text-[#1246C8]">
                           View
                         </a>
                       ) : (
-                        <span className="text-xs text-slate-400">—</span>
+                        <span className="text-xs text-[#8C9AB0]">—</span>
                       )}
                     </td>
                   </tr>

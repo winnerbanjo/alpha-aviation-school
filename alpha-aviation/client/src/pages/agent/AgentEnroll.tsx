@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Building2 } from "lucide-react";
 import { agentRegister } from "@/api";
+import { AuthShell } from "@/components/auth/AuthShell";
 import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast";
@@ -67,27 +67,35 @@ export function AgentEnroll() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="bg-white rounded-xl shadow-xl p-8">
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <div className="p-2.5 bg-slate-900 rounded-lg">
-                <Building2 className="w-6 h-6 text-white" />
-              </div>
-            </div>
-            <h1 className="text-xl font-semibold text-slate-900">
-              Agent Application
+    <AuthShell
+      eyebrow="Partner programme"
+      title="Grow with"
+      accent="Alpha Step Links."
+      description="Refer students to our aviation, travel and hospitality programmes, then manage their enrollments and tuition uploads from one dashboard."
+      video="instructor-briefing"
+      wide
+      facts={[
+        { label: "Programs to refer", value: "7" },
+        { label: "Learning modes", value: "Lagos & live online" },
+        { label: "Offices", value: "UK & Nigeria" },
+      ]}
+    >
+      <div className="w-full">
+        <div>
+          <div className="mb-10">
+            <span className="eyebrow text-[#1246C8]">Become a partner</span>
+            <h1 className="mt-4 text-3xl font-bold tracking-tightest text-[#10264B] sm:text-4xl">
+              Agent application
             </h1>
-            <p className="text-sm text-slate-500 mt-1">
+            <p className="mt-3 text-[15px] leading-relaxed text-[#53647C]">
               Partner with Alpha Step Links Aviation School
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-5 sm:col-span-2 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                   First name
                 </label>
                 <input
@@ -97,11 +105,11 @@ export function AgentEnroll() {
                   onChange={handleChange}
                   required
                   placeholder="John"
-                  className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 text-slate-900 bg-white text-sm"
+                  className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                   Last name
                 </label>
                 <input
@@ -111,14 +119,14 @@ export function AgentEnroll() {
                   onChange={handleChange}
                   required
                   placeholder="Doe"
-                  className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 text-slate-900 bg-white text-sm"
+                  className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Agency name <span className="text-slate-400 font-normal">(optional)</span>
+            <div className="sm:col-span-2">
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+                Agency name <span className="font-normal normal-case tracking-normal text-[#8C9AB0]">(optional)</span>
               </label>
               <input
                 name="agencyName"
@@ -126,12 +134,12 @@ export function AgentEnroll() {
                 value={form.agencyName}
                 onChange={handleChange}
                 placeholder="Doe Aviation Partners"
-                className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 text-slate-900 bg-white text-sm"
+                className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                 Email
               </label>
               <input
@@ -141,12 +149,12 @@ export function AgentEnroll() {
                 onChange={handleChange}
                 required
                 placeholder="john@doeaviation.com"
-                className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 text-slate-900 bg-white text-sm"
+                className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                 Phone
               </label>
               <input
@@ -155,13 +163,13 @@ export function AgentEnroll() {
                 value={form.phone}
                 onChange={handleChange}
                 placeholder="+234 801 234 5678"
-                className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 text-slate-900 bg-white text-sm"
+                className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-5 sm:col-span-2 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                   Password
                 </label>
                 <input
@@ -171,11 +179,11 @@ export function AgentEnroll() {
                   onChange={handleChange}
                   required
                   placeholder="Min. 6 characters"
-                  className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 text-slate-900 bg-white text-sm"
+                  className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                   Confirm
                 </label>
                 <input
@@ -185,7 +193,7 @@ export function AgentEnroll() {
                   onChange={handleChange}
                   required
                   placeholder="Repeat password"
-                  className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 text-slate-900 bg-white text-sm"
+                  className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                 />
               </div>
             </div>
@@ -193,20 +201,20 @@ export function AgentEnroll() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-slate-900 hover:bg-slate-800 text-white py-2.5 text-sm font-medium"
+              className="mt-2 h-12 w-full sm:col-span-2"
             >
               {loading ? "Submitting..." : "Submit Application"}
             </Button>
           </form>
 
-          <p className="text-center text-sm text-slate-500 mt-6">
+          <p className="mt-10 border-t border-[#DCE2EB] pt-6 text-center text-sm text-[#53647C]">
             Already have an account?{" "}
-            <Link to="/agent/login" className="text-slate-900 font-medium hover:underline">
+            <Link to="/agent/login" className="font-semibold text-[#1246C8] underline-offset-4 transition-colors hover:text-[#10264B] hover:underline">
               Sign in
             </Link>
           </p>
         </div>
       </div>
-    </div>
+    </AuthShell>
   );
 }

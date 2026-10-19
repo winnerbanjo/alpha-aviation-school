@@ -79,15 +79,15 @@ export function PhoneNumberPrompt() {
       title="Add Your Phone Number"
     >
       <div className="space-y-5">
-        <div className="flex gap-3 rounded-2xl border border-blue-100 bg-blue-50 p-4">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1239B8] text-white">
+        <div className="flex gap-3.5 rounded-2xl border border-[#DCE8FF] bg-[#F2F6FF] p-4">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1246C8] text-white shadow-glow">
             <ShieldCheck className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-slate-900">
+            <p className="text-sm font-semibold text-[#10264B]">
               Keep your enrollment reachable
             </p>
-            <p className="mt-1 text-sm leading-6 text-slate-600">
+            <p className="mt-1 text-sm leading-6 text-[#53647C]">
               Admins use this for payment reminders, schedule updates, and
               WhatsApp support. You can update it later from your profile.
             </p>
@@ -95,7 +95,7 @@ export function PhoneNumberPrompt() {
         </div>
 
         <div>
-          <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-500">
+          <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
             Phone Number
           </label>
           <PhoneNumberInput
@@ -108,7 +108,7 @@ export function PhoneNumberPrompt() {
 
         <div className="flex flex-col gap-2 sm:flex-row">
           <Button
-            className="flex-1 bg-[#1239B8] text-white hover:bg-[#071A4A]"
+            className="flex-1"
             onClick={handleSave}
             disabled={saving}
           >

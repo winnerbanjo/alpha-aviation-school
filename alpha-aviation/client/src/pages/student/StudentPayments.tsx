@@ -13,6 +13,8 @@ import {
   ChevronRight,
   X,
   ShieldCheck,
+  Wallet,
+  Receipt,
 } from "lucide-react";
 import { uploadPaymentReceipt, verifyPaystackPayment, getProfile } from "@/api";
 import { formatNaira } from "@/data/courseCatalog";
@@ -152,10 +154,11 @@ export function StudentPayments() {
     <div className="space-y-8 pb-12">
       {/* Header section */}
       <div>
-        <h1 className="text-3xl font-black tracking-tight text-slate-900">
+        <span className="eyebrow text-[#1246C8]">Billing</span>
+        <h1 className="mt-3 text-3xl font-bold tracking-tightest text-[#10264B] sm:text-4xl">
           Payments & Bills
         </h1>
-        <p className="text-sm font-normal text-slate-500 mt-1">
+        <p className="mt-2 text-[#53647C]">
           View your billing status, make payments, and upload payment receipts.
         </p>
       </div>
@@ -167,24 +170,24 @@ export function StudentPayments() {
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`p-5 rounded-3xl border backdrop-blur-md shadow-sm ${
+            className={`rounded-panel border p-5 shadow-subtle sm:p-6 ${
               user.agentPaymentStatus === "Paid"
-                ? "bg-emerald-50/80 border-emerald-200"
-                : "bg-amber-50/80 border-amber-200"
+                ? "bg-emerald-50 border-emerald-200"
+                : "bg-amber-50 border-amber-200"
             }`}
           >
-            <div className="flex items-center gap-3 mb-4">
-              <div className={`p-2.5 rounded-2xl ${user.agentPaymentStatus === "Paid" ? "bg-emerald-100" : "bg-amber-100"}`}>
+            <div className="flex items-center gap-3.5 mb-5">
+              <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${user.agentPaymentStatus === "Paid" ? "bg-emerald-100" : "bg-amber-100"}`}>
                 {user.agentPaymentStatus === "Paid"
                   ? <CheckCircle2 className="w-5 h-5 text-emerald-700" />
                   : <Clock className="w-5 h-5 text-amber-700" />
                 }
               </div>
               <div>
-                <p className={`font-bold text-sm ${user.agentPaymentStatus === "Paid" ? "text-emerald-900" : "text-amber-900"}`}>
+                <p className={`font-semibold text-sm ${user.agentPaymentStatus === "Paid" ? "text-emerald-900" : "text-amber-900"}`}>
                   {user.agentPaymentStatus === "Paid" ? "Tuition Fully Paid" : "Tuition Payment Pending"}
                 </p>
-                <p className={`text-xs mt-0.5 ${user.agentPaymentStatus === "Paid" ? "text-emerald-700" : "text-amber-700"}`}>
+                <p className={`text-[13px] mt-0.5 ${user.agentPaymentStatus === "Paid" ? "text-emerald-700" : "text-amber-700"}`}>
                   {user.agentPaymentStatus === "Paid"
                     ? "Your enrollment agent has completed your tuition payment."
                     : "Your enrollment agent is processing your tuition payment."}
@@ -194,13 +197,13 @@ export function StudentPayments() {
 
             {/* Amount summary */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-white/70 rounded-2xl px-4 py-3 border border-white/50">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Fees</p>
-                <p className="text-base font-black text-slate-900 mt-0.5">{formatNaira(user.totalCoursePrice || 0)}</p>
+              <div className="rounded-2xl border border-white bg-white/80 px-4 py-3">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#53647C]">Total Fees</p>
+                <p className="mt-1 text-lg font-bold tracking-tight tabular-nums text-[#10264B]">{formatNaira(user.totalCoursePrice || 0)}</p>
               </div>
-              <div className="bg-white/70 rounded-2xl px-4 py-3 border border-white/50">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Amount Paid</p>
-                <p className={`text-base font-black mt-0.5 ${user.agentPaymentStatus === "Paid" ? "text-emerald-700" : "text-slate-900"}`}>
+              <div className="rounded-2xl border border-white bg-white/80 px-4 py-3">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#53647C]">Amount Paid</p>
+                <p className={`mt-1 text-lg font-bold tracking-tight tabular-nums ${user.agentPaymentStatus === "Paid" ? "text-emerald-700" : "text-[#10264B]"}`}>
                   {formatNaira(user.amountPaid || 0)}
                 </p>
               </div>
@@ -212,49 +215,51 @@ export function StudentPayments() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white border border-slate-200/60 rounded-3xl p-5 shadow-[0px_4px_20px_0px_rgba(0,0,0,0.05)]"
+            className="rounded-panel border border-[#DCE2EB] bg-white p-6 shadow-subtle"
           >
-            <div className="flex items-center gap-2 mb-4">
-              <ShieldCheck className="w-4 h-4 text-indigo-600" />
-              <h2 className="text-sm font-bold text-slate-900">Your Enrollment Agent</h2>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+                <ShieldCheck className="w-4 h-4" />
+              </div>
+              <h2 className="text-base font-bold tracking-tight text-[#10264B]">Your Enrollment Agent</h2>
             </div>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between py-2.5 border-b border-slate-100">
-                <span className="text-xs text-slate-500 font-medium">Agent Name</span>
-                <span className="text-sm font-bold text-slate-900">{user.enrolledByAgent.agentName}</span>
+            <div className="space-y-1">
+              <div className="flex items-center justify-between gap-4 py-3 border-b border-[#DCE2EB]/70">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Agent Name</span>
+                <span className="text-sm font-semibold text-[#10264B]">{user.enrolledByAgent.agentName}</span>
               </div>
               {user.enrolledByAgent.agencyName && (
-                <div className="flex items-center justify-between py-2.5 border-b border-slate-100">
-                  <span className="text-xs text-slate-500 font-medium">Agency</span>
-                  <span className="text-sm font-bold text-slate-900">{user.enrolledByAgent.agencyName}</span>
+                <div className="flex items-center justify-between gap-4 py-3 border-b border-[#DCE2EB]/70">
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Agency</span>
+                  <span className="text-sm font-semibold text-[#10264B]">{user.enrolledByAgent.agencyName}</span>
                 </div>
               )}
               {user.enrolledByAgent.agentCode && (
-                <div className="flex items-center justify-between py-2.5 border-b border-slate-100">
-                  <span className="text-xs text-slate-500 font-medium">Agent Code</span>
-                  <span className="font-mono text-sm font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 rounded-lg px-2 py-0.5">
+                <div className="flex items-center justify-between gap-4 py-3 border-b border-[#DCE2EB]/70">
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Agent Code</span>
+                  <span className="font-mono text-xs font-semibold text-[#1246C8] bg-[#DCE8FF] rounded-full px-2.5 py-1">
                     {user.enrolledByAgent.agentCode}
                   </span>
                 </div>
               )}
               {user.enrolledByAgent.agentEmail && (
-                <div className="flex items-center justify-between py-2.5 border-b border-slate-100">
-                  <span className="text-xs text-slate-500 font-medium">Email</span>
-                  <a href={`mailto:${user.enrolledByAgent.agentEmail}`} className="text-sm font-bold text-indigo-600 hover:text-indigo-800">
+                <div className="flex items-center justify-between gap-4 py-3 border-b border-[#DCE2EB]/70">
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Email</span>
+                  <a href={`mailto:${user.enrolledByAgent.agentEmail}`} className="truncate text-sm font-semibold text-[#1246C8] hover:text-[#0F3BAA]">
                     {user.enrolledByAgent.agentEmail}
                   </a>
                 </div>
               )}
               {user.enrolledByAgent.agentPhone && (
-                <div className="flex items-center justify-between py-2.5">
-                  <span className="text-xs text-slate-500 font-medium">Phone</span>
-                  <a href={`tel:${user.enrolledByAgent.agentPhone}`} className="text-sm font-bold text-slate-900">
+                <div className="flex items-center justify-between gap-4 py-3">
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Phone</span>
+                  <a href={`tel:${user.enrolledByAgent.agentPhone}`} className="text-sm font-semibold text-[#10264B] hover:text-[#1246C8]">
                     {user.enrolledByAgent.agentPhone}
                   </a>
                 </div>
               )}
             </div>
-            <p className="text-xs text-slate-400 mt-4 bg-slate-50 rounded-2xl px-4 py-3">
+            <p className="mt-4 rounded-2xl bg-[#F5F7FB] px-4 py-3 text-[13px] leading-relaxed text-[#53647C]">
               Your tuition is managed by your enrollment agent. For any billing queries, please contact your agent directly using the details above.
             </p>
           </motion.div>
@@ -266,12 +271,12 @@ export function StudentPayments() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-4 rounded-3xl border border-rose-200 bg-rose-50/80 text-rose-900 flex items-start gap-3 shadow-sm backdrop-blur-md"
+          className="flex items-start gap-3.5 rounded-panel border border-red-200 bg-red-50 p-4 text-red-900 shadow-subtle sm:p-5"
         >
-          <XCircle className="w-5 h-5 text-rose-600 mt-0.5 shrink-0" />
+          <XCircle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
           <div>
-            <p className="text-sm font-bold">Receipt Rejected</p>
-            <p className="text-xs text-rose-700/90 mt-0.5">{rejectionReason}</p>
+            <p className="text-sm font-semibold">Receipt Rejected</p>
+            <p className="text-[13px] text-red-700 mt-0.5">{rejectionReason}</p>
           </div>
         </motion.div>
       )}
@@ -280,12 +285,12 @@ export function StudentPayments() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-4 rounded-3xl border border-indigo-200 bg-indigo-50/80 text-indigo-900 flex items-start gap-3 shadow-sm backdrop-blur-md"
+          className="flex items-start gap-3.5 rounded-panel border border-amber-200 bg-amber-50 p-4 text-amber-900 shadow-subtle sm:p-5"
         >
-          <Clock className="w-5 h-5 text-indigo-600 mt-0.5 shrink-0" />
+          <Clock className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
           <div>
-            <p className="text-sm font-bold">Receipt Under Review</p>
-            <p className="text-xs text-indigo-700/90 mt-0.5">
+            <p className="text-sm font-semibold">Receipt Under Review</p>
+            <p className="text-[13px] text-amber-700 mt-0.5">
               Your payment receipt has been submitted. Our team will verify it shortly. You will be notified once approved.
             </p>
           </div>
@@ -295,75 +300,46 @@ export function StudentPayments() {
       {/* Core Real Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Card 1: Total Paid */}
-        <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 relative overflow-hidden shadow-[0px_6px_24px_0px_rgba(0,0,0,0.05),0px_0px_0px_1px_rgba(0,0,0,0.08)]">
+        <div className="relative overflow-hidden rounded-panel border border-[#DCE2EB] bg-white p-6 shadow-subtle">
           <div className="flex items-center justify-between">
-            <div className="relative p-3 bg-gradient-to-br from-emerald-50 to-emerald-100/60 text-emerald-600 rounded-2xl border border-emerald-100/80 shadow-sm overflow-hidden flex items-center justify-center w-12 h-12">
-              <div className="absolute inset-0 bg-emerald-200/20 blur-sm rounded-full scale-75" />
-              <svg
-                className="w-6 h-6 relative z-10 text-emerald-600"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="2" y="5" width="20" height="14" rx="2" ry="2" />
-                <line x1="2" y1="10" x2="22" y2="10" />
-                <path d="M6 14h.01M10 14h.01" />
-                <circle cx="18" cy="14" r="1" fill="currentColor" />
-              </svg>
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+              <Wallet className="h-5 w-5" />
             </div>
-            <span className="text-xs font-bold px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-full border border-emerald-100/30">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 ring-1 ring-emerald-600/15">
               Verified
             </span>
           </div>
-          <div className="mt-4">
-            <p className="text-sm font-bold text-slate-500 uppercase tracking-wider">
+          <div className="mt-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#53647C]">
               Total Paid
             </p>
-            <h3 className="text-2xl font-black text-slate-900 mt-1">
+            <h3 className="mt-2 text-3xl font-bold tracking-tightest text-[#10264B] tabular-nums">
               {formatNaira(amountPaid)}
             </h3>
           </div>
         </div>
 
         {/* Card 2: Amount Due */}
-        <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 relative overflow-hidden shadow-[0px_6px_24px_0px_rgba(0,0,0,0.05),0px_0px_0px_1px_rgba(0,0,0,0.08)]">
+        <div className="relative overflow-hidden rounded-panel border border-[#DCE2EB] bg-white p-6 shadow-subtle">
           <div className="flex items-center justify-between">
-            <div className="relative p-3 bg-gradient-to-br from-rose-50 to-rose-100/60 text-rose-600 rounded-2xl border border-rose-100/80 shadow-sm overflow-hidden flex items-center justify-center w-12 h-12">
-              <div className="absolute inset-0 bg-rose-200/20 blur-sm rounded-full scale-75" />
-              <svg
-                className="w-6 h-6 relative z-10 text-rose-600"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <line x1="16" y1="13" x2="8" y2="13" />
-                <line x1="16" y1="17" x2="8" y2="17" />
-                <polyline points="10 9 9 9 8 9" />
-              </svg>
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+              <Receipt className="h-5 w-5" />
             </div>
             {amountDue > 0 ? (
-              <span className="text-xs font-bold px-2.5 py-1 bg-rose-50 text-rose-600 rounded-full border border-rose-100/30">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-semibold text-red-700 ring-1 ring-red-600/15">
                 Outstanding
               </span>
             ) : (
-              <span className="text-xs font-bold px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-full border border-emerald-100/30">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 ring-1 ring-emerald-600/15">
                 Settled
               </span>
             )}
           </div>
-          <div className="mt-4">
-            <p className="text-sm font-bold text-slate-500 uppercase tracking-wider">
+          <div className="mt-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#53647C]">
               Amount Due
             </p>
-            <h3 className="text-2xl font-black text-slate-900 mt-1">
+            <h3 className="mt-2 text-3xl font-bold tracking-tightest text-[#10264B] tabular-nums">
               {formatNaira(amountDue)}
             </h3>
           </div>
@@ -371,15 +347,15 @@ export function StudentPayments() {
       </div>
 
       {/* Main double column grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Column: Instructions and Processing */}
-        <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl overflow-hidden shadow-sm flex flex-col justify-between">
-          <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+        <div className="flex flex-col justify-between overflow-hidden rounded-panel border border-[#DCE2EB] bg-white shadow-subtle">
+          <div className="flex items-center justify-between gap-4 border-b border-[#DCE2EB] p-6">
             <div>
-              <h3 className="text-lg font-bold text-slate-900">
+              <h3 className="text-lg font-bold tracking-tighter text-[#10264B]">
                 {isPending ? "Payment Gateway Instructions" : "Tuition Status Summary"}
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="mt-1 text-[13px] text-[#53647C]">
                 {isPending
                   ? "Complete outstanding fees below."
                   : isUnderReview
@@ -395,7 +371,7 @@ export function StudentPayments() {
                   setPaymentMethod("selection");
                   setSelectedFile(null);
                 }}
-                className="text-indigo-600 hover:text-indigo-700 font-bold text-xs"
+                className="shrink-0 text-[#1246C8]"
               >
                 Change Method
               </Button>
@@ -406,10 +382,10 @@ export function StudentPayments() {
             {!isPending ? (
               <div className="p-8 flex flex-col items-center text-center space-y-4">
                 <div
-                  className={`w-16 h-16 rounded-2xl border flex items-center justify-center ${
+                  className={`flex h-16 w-16 items-center justify-center rounded-full ring-1 ${
                     isPaid
-                      ? "bg-emerald-50 text-emerald-600 border-emerald-100"
-                      : "bg-indigo-50 text-indigo-600 border-indigo-100"
+                      ? "bg-emerald-50 text-emerald-600 ring-emerald-600/15"
+                      : "bg-amber-50 text-amber-600 ring-amber-600/15"
                   }`}
                 >
                   {isPaid ? (
@@ -419,10 +395,10 @@ export function StudentPayments() {
                   )}
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">
+                  <h3 className="text-lg font-bold tracking-tighter text-[#10264B]">
                     {isPaid ? "Tuition Fully Cleared" : "Tuition Receipt Verifying"}
                   </h3>
-                  <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
+                  <p className="mt-1 max-w-xs mx-auto text-[13px] leading-relaxed text-[#53647C]">
                     {isPaid
                       ? "Congratulations! Your tuition is settled and ground courses access is permanently active."
                       : "Verification is underway. Our team will verify your receipt and notify you shortly."}
@@ -431,8 +407,9 @@ export function StudentPayments() {
                 {paymentReceiptUrl && isUnderReview && (
                   <Button
                     variant="outline"
+                    size="sm"
                     onClick={() => window.open(paymentReceiptUrl, "_blank")}
-                    className="rounded-2xl border-slate-200 font-semibold text-xs py-2 px-4 mt-2"
+                    className="mt-2"
                   >
                     <FileText className="w-4 h-4 mr-2" />
                     View Submitted Receipt
@@ -449,14 +426,14 @@ export function StudentPayments() {
                     exit={{ opacity: 0, y: -10 }}
                     className="p-8 flex flex-col items-center text-center space-y-4"
                   >
-                    <div className="w-16 h-16 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center justify-center">
-                      <CheckCircle2 className="w-8 h-8 text-emerald-500" />
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 ring-1 ring-emerald-600/15">
+                      <CheckCircle2 className="w-8 h-8 text-emerald-600" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-slate-900">
+                      <h3 className="text-lg font-bold tracking-tighter text-[#10264B]">
                         Payment Successful!
                       </h3>
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="mt-1 text-[13px] text-[#53647C]">
                         {paymentMethod === "paystack"
                           ? "Online payment verified. Your ground school courses have been unlocked."
                           : "Receipt submitted successfully. Ground clearance is pending verification."}
@@ -471,8 +448,8 @@ export function StudentPayments() {
                     exit={{ opacity: 0 }}
                     className="p-12 flex flex-col items-center text-center space-y-4"
                   >
-                    <div className="w-12 h-12 border-4 border-slate-100 border-t-indigo-600 rounded-full animate-spin" />
-                    <p className="text-xs font-bold text-slate-600">
+                    <div className="h-12 w-12 animate-spin rounded-full border-[3px] border-[#DCE2EB] border-t-[#1246C8]" />
+                    <p className="text-[13px] font-semibold text-[#53647C]">
                       Processing payment verification...
                     </p>
                   </motion.div>
@@ -484,50 +461,50 @@ export function StudentPayments() {
                     exit={{ opacity: 0, x: 10 }}
                     className="p-6 space-y-4"
                   >
-                    <div className="text-center mb-6">
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    <div className="mb-6 rounded-2xl bg-[#F5F7FB] px-4 py-5 text-center">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#53647C]">
                         Total Balance Due
                       </p>
-                      <p className="text-3xl font-black text-slate-900 mt-1">
+                      <p className="mt-2 text-4xl font-bold tracking-tightest text-[#10264B] tabular-nums">
                         {formatNaira(amountDue)}
                       </p>
                     </div>
 
-                    <div className="grid gap-4">
+                    <div className="grid gap-3">
                       <button
                         onClick={() => initializePayment({ onSuccess: handlePaystackSuccess })}
-                        className="flex items-center gap-4 p-4 rounded-2xl border border-slate-100 hover:border-indigo-600 hover:bg-indigo-50/30 transition-all text-left group"
+                        className="group flex items-center gap-4 rounded-2xl border border-[#DCE2EB] bg-white p-4 text-left transition-all hover:border-[#1246C8] hover:shadow-elevated"
                       >
-                        <div className="w-12 h-12 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
-                          <CreditCard className="w-6 h-6 text-slate-500 group-hover:text-indigo-600" />
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#F5F7FB] transition-colors group-hover:bg-[#DCE8FF]">
+                          <CreditCard className="w-5 h-5 text-[#53647C] group-hover:text-[#1246C8]" />
                         </div>
                         <div className="flex-1">
-                          <p className="font-bold text-slate-900 text-sm">
+                          <p className="text-sm font-semibold text-[#10264B]">
                             Pay Online (Instant)
                           </p>
-                          <p className="text-[11px] text-slate-500">
+                          <p className="text-xs text-[#53647C]">
                             Instant verification and active courses via Paystack
                           </p>
                         </div>
-                        <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-indigo-600" />
+                        <ChevronRight className="w-5 h-5 text-[#8C9AB0] transition-transform group-hover:translate-x-0.5 group-hover:text-[#1246C8]" />
                       </button>
 
                       <button
                         onClick={() => setPaymentMethod("manual")}
-                        className="flex items-center gap-4 p-4 rounded-2xl border border-slate-100 hover:border-indigo-600 hover:bg-indigo-50/30 transition-all text-left group"
+                        className="group flex items-center gap-4 rounded-2xl border border-[#DCE2EB] bg-white p-4 text-left transition-all hover:border-[#1246C8] hover:shadow-elevated"
                       >
-                        <div className="w-12 h-12 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
-                          <Landmark className="w-6 h-6 text-slate-500 group-hover:text-indigo-600" />
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#F5F7FB] transition-colors group-hover:bg-[#DCE8FF]">
+                          <Landmark className="w-5 h-5 text-[#53647C] group-hover:text-[#1246C8]" />
                         </div>
                         <div className="flex-1">
-                          <p className="font-bold text-slate-900 text-sm">
+                          <p className="text-sm font-semibold text-[#10264B]">
                             Manual Bank Transfer
                           </p>
-                          <p className="text-[11px] text-slate-500">
+                          <p className="text-xs text-[#53647C]">
                             Make transfer and upload receipt for confirmation
                           </p>
                         </div>
-                        <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-indigo-600" />
+                        <ChevronRight className="w-5 h-5 text-[#8C9AB0] transition-transform group-hover:translate-x-0.5 group-hover:text-[#1246C8]" />
                       </button>
                     </div>
                   </motion.div>
@@ -540,7 +517,7 @@ export function StudentPayments() {
                     className="p-6 space-y-6"
                   >
                     <div className="space-y-3">
-                      <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                         Transfer Details
                       </p>
                       <div className="grid grid-cols-1 gap-2">
@@ -552,22 +529,22 @@ export function StudentPayments() {
                         ].map((item) => (
                           <div
                             key={item.label}
-                            className="flex items-center justify-between p-3 bg-slate-50/60 border border-slate-100/40 rounded-2xl group"
+                            className="group flex items-center justify-between gap-3 rounded-2xl border border-[#DCE2EB]/70 bg-[#F5F7FB] p-3.5"
                           >
                             <div className="min-w-0">
-                              <p className="text-[10px] text-slate-400 uppercase font-bold">{item.label}</p>
-                              <p className="text-sm font-bold text-slate-800 truncate">{item.value}</p>
+                              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">{item.label}</p>
+                              <p className="mt-0.5 truncate text-sm font-semibold text-[#10264B]">{item.value}</p>
                             </div>
                             <Button
                               size="sm"
                               variant="ghost"
                               onClick={() => copyToClipboard(item.label, item.value)}
-                              className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 shrink-0"
+                              className="h-8 w-8 shrink-0 p-0 hover:bg-white"
                             >
                               {copiedField === item.label ? (
                                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                               ) : (
-                                <Copy className="w-4 h-4 text-slate-400" />
+                                <Copy className="w-4 h-4 text-[#53647C]" />
                               )}
                             </Button>
                           </div>
@@ -576,32 +553,34 @@ export function StudentPayments() {
                     </div>
 
                     <div className="space-y-4">
-                      <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                         Upload Proof of Payment
                       </p>
-                      
+
                       {!selectedFile ? (
-                        <label className="block border-2 border-dashed border-slate-200/80 rounded-2xl p-8 hover:bg-slate-50/50 hover:border-indigo-400 transition-all cursor-pointer text-center group">
+                        <label className="group block cursor-pointer rounded-2xl border-2 border-dashed border-[#DCE2EB] p-8 text-center transition-all hover:border-[#1246C8] hover:bg-[#F5F7FB]">
                           <input
                             type="file"
                             accept="image/*,.pdf"
                             onChange={handleFileSelect}
                             className="hidden"
                           />
-                          <Upload className="w-8 h-8 text-slate-300 mx-auto mb-3 group-hover:text-indigo-500 group-hover:scale-110 transition-all" />
-                          <p className="text-sm font-bold text-slate-900">
+                          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8] transition-transform group-hover:scale-105">
+                            <Upload className="w-5 h-5" />
+                          </div>
+                          <p className="text-sm font-semibold text-[#10264B]">
                             Click to upload receipt
                           </p>
-                          <p className="text-xs text-slate-400 mt-1">
+                          <p className="mt-1 text-xs text-[#8C9AB0]">
                             PNG, JPG or PDF up to 5MB
                           </p>
                         </label>
                       ) : (
-                        <div className="relative rounded-2xl overflow-hidden border border-slate-200/80 aspect-video bg-slate-50 flex items-center justify-center">
+                        <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-2xl border border-[#DCE2EB] bg-[#F5F7FB]">
                           {selectedFile.startsWith("data:application/pdf") ? (
                             <div className="w-full h-full flex flex-col items-center justify-center gap-2">
-                              <FileText className="w-12 h-12 text-slate-300 animate-pulse" />
-                              <span className="text-xs font-bold text-slate-500">PDF Document Selected</span>
+                              <FileText className="w-12 h-12 text-[#8C9AB0] animate-pulse" />
+                              <span className="text-xs font-semibold text-[#53647C]">PDF Document Selected</span>
                             </div>
                           ) : (
                             <img src={selectedFile} alt="Preview" className="w-full h-full object-cover" />
@@ -609,7 +588,7 @@ export function StudentPayments() {
                           <button
                             type="button"
                             onClick={() => setSelectedFile(null)}
-                            className="absolute top-3 right-3 p-1.5 bg-white/90 backdrop-blur shadow-sm rounded-full text-slate-600 hover:text-rose-600 transition-all"
+                            className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-[#53647C] shadow-subtle backdrop-blur transition-all hover:text-red-600"
                           >
                             <X className="w-4 h-4" />
                           </button>
@@ -618,7 +597,7 @@ export function StudentPayments() {
 
                       {selectedFile && (
                         <Button
-                          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-12 rounded-2xl font-bold transition-all shadow-sm flex items-center justify-center gap-2"
+                          className="h-12 w-full gap-2"
                           onClick={handleReceiptUpload}
                           disabled={uploadingReceipt}
                         >
@@ -636,24 +615,32 @@ export function StudentPayments() {
 
         {/* Right Column: Billing Breakdown */}
         {user?.courseSelections && user.courseSelections.length > 0 && (
-          <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
-            <div>
-              <h3 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-4">
-                Billing Breakdown
-              </h3>
-              <div className="space-y-3 mt-6">
+          <div className="flex flex-col justify-between overflow-hidden rounded-panel border border-[#DCE2EB] bg-white shadow-subtle">
+            <div className="p-6">
+              <div className="flex items-center justify-between gap-3 border-b border-[#DCE2EB] pb-5">
+                <div>
+                  <span className="eyebrow text-[#1246C8]">Fare summary</span>
+                  <h3 className="mt-2 text-lg font-bold tracking-tighter text-[#10264B]">
+                    Billing Breakdown
+                  </h3>
+                </div>
+                <span className="rounded-full bg-[#DCE8FF] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#1246C8]">
+                  Boarding pass
+                </span>
+              </div>
+              <div className="space-y-2.5 mt-5">
                 {user.courseSelections.map((course) => (
                   <div
                     key={course.title}
-                    className="flex items-center justify-between p-3.5 bg-slate-50/60 border border-slate-100/40 rounded-2xl"
+                    className="flex items-center justify-between gap-4 rounded-2xl border border-[#DCE2EB]/70 bg-[#F5F7FB] p-3.5"
                   >
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-2.5 h-2.5 bg-indigo-500 rounded-full" />
-                      <p className="text-sm font-bold text-slate-800">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="h-2 w-2 shrink-0 rounded-full bg-[#1246C8]" />
+                      <p className="text-sm font-semibold text-[#172B49]">
                         {course.title}
                       </p>
                     </div>
-                    <p className="text-sm font-bold text-slate-900">
+                    <p className="shrink-0 text-sm font-semibold tabular-nums text-[#10264B]">
                       {formatNaira(course.price)}
                     </p>
                   </div>
@@ -661,13 +648,14 @@ export function StudentPayments() {
               </div>
             </div>
 
-            <div className="mt-8">
-              <div className="flex items-center justify-between p-4 bg-slate-100 rounded-2xl">
-                <p className="text-sm font-bold text-slate-500">Total Program Cost</p>
-                <p className="text-lg font-black text-slate-900">
+            <div className="border-t-2 border-dashed border-[#DCE2EB] bg-[#F5F7FB] p-6">
+              <div className="flex items-end justify-between gap-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#53647C]">Total Program Cost</p>
+                <p className="text-2xl font-bold tracking-tightest tabular-nums text-[#10264B]">
                   {formatNaira(user?.totalCoursePrice || amountDue)}
                 </p>
               </div>
+              <div aria-hidden className="barcode mt-5 h-10 w-full rounded-sm opacity-80" />
             </div>
           </div>
         )}

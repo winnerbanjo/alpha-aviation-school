@@ -30,12 +30,12 @@ const getGradient = (str: string) => {
     .split("")
     .reduce((acc, char) => char.charCodeAt(0) + ((acc << 5) - acc), 0);
   const gradients = [
-    "from-indigo-500 to-blue-500",
-    "from-emerald-500 to-teal-500",
-    "from-violet-500 to-purple-500",
-    "from-pink-500 to-rose-500",
-    "from-amber-500 to-orange-500",
-    "from-sky-500 to-cyan-500",
+    "from-[#1246C8] to-[#5B86FF]",
+    "from-[#10264B] to-[#1246C8]",
+    "from-[#0F3BAA] to-[#8EAEFF]",
+    "from-[#07152E] to-[#2D3E59]",
+    "from-[#1246C8] to-[#10264B]",
+    "from-[#2D3E59] to-[#5B86FF]",
   ];
   return gradients[Math.abs(hash) % gradients.length];
 };
@@ -43,13 +43,13 @@ const getGradient = (str: string) => {
 const getStatusSelectStyles = (status?: string) => {
   switch (status) {
     case "graduated":
-      return "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100/70";
+      return "bg-emerald-50 text-emerald-700 border-emerald-600/15 hover:bg-emerald-100/70";
     case "suspended":
-      return "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100/70";
+      return "bg-amber-50 text-amber-700 border-amber-600/15 hover:bg-amber-100/70";
     case "banned":
-      return "bg-red-50 text-red-700 border-red-200 hover:bg-red-100/70";
+      return "bg-red-50 text-red-700 border-red-600/15 hover:bg-red-100/70";
     default:
-      return "bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100/70";
+      return "bg-[#DCE8FF]/70 text-[#1246C8] border-[#1246C8]/15 hover:bg-[#DCE8FF]";
   }
 };
 
@@ -89,33 +89,33 @@ export function AdminStudentTable({
   const colSpan = selectable ? 6 : 5;
 
   return (
-    <div className="p-0 overflow-x-auto">
+    <div className="overflow-x-auto">
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-slate-100/80 bg-slate-50/50 hover:bg-slate-50/50">
+          <TableRow className="border-b border-[#DCE2EB] bg-[#F5F7FB]/70 hover:bg-[#F5F7FB]/70">
             {selectable && (
-              <TableHead className="w-12 py-4 px-6">
+              <TableHead className="h-12 w-12 px-6">
                 <input
                   type="checkbox"
                   checked={allSelected}
                   onChange={onToggleSelectAll}
-                  className="rounded border-slate-300 accent-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                  className="h-4 w-4 cursor-pointer rounded border-[#C3CCDA] accent-[#1246C8] focus:ring-[#1246C8]/30"
                 />
               </TableHead>
             )}
-            <TableHead className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest py-4 px-6">
+            <TableHead className="h-12 whitespace-nowrap px-6 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#53647C]">
               Student
             </TableHead>
-            <TableHead className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest py-4 px-6">
+            <TableHead className="h-12 whitespace-nowrap px-6 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#53647C]">
               Phone
             </TableHead>
-            <TableHead className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest py-4 px-6">
+            <TableHead className="h-12 whitespace-nowrap px-6 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#53647C]">
               Payment Status
             </TableHead>
-            <TableHead className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest py-4 px-6">
+            <TableHead className="h-12 whitespace-nowrap px-6 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#53647C]">
               Student Status
             </TableHead>
-            <TableHead className="text-right text-[11px] font-extrabold text-slate-400 uppercase tracking-widest py-4 px-6">
+            <TableHead className="h-12 whitespace-nowrap px-6 text-right text-[11px] font-semibold uppercase tracking-[0.14em] text-[#53647C]">
               Actions
             </TableHead>
           </TableRow>
@@ -126,29 +126,29 @@ export function AdminStudentTable({
               <TableRow key={i} className="animate-pulse">
                 {selectable && (
                   <TableCell className="py-4 px-6">
-                    <div className="h-4 w-4 bg-slate-100 rounded" />
+                    <div className="h-4 w-4 rounded bg-[#EEF2F8]" />
                   </TableCell>
                 )}
                 <TableCell className="py-4 px-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-slate-100 flex-shrink-0" />
+                    <div className="h-10 w-10 flex-shrink-0 rounded-full bg-[#EEF2F8]" />
                     <div className="space-y-2">
-                      <div className="h-3.5 bg-slate-100 rounded w-28" />
-                      <div className="h-3 bg-slate-100 rounded w-40" />
+                      <div className="h-3.5 w-28 rounded-full bg-[#EEF2F8]" />
+                      <div className="h-3 w-40 rounded-full bg-[#EEF2F8]" />
                     </div>
                   </div>
                 </TableCell>
                 <TableCell className="py-4 px-6">
-                  <div className="h-3.5 bg-slate-100 rounded w-24" />
+                  <div className="h-3.5 w-24 rounded-full bg-[#EEF2F8]" />
                 </TableCell>
                 <TableCell className="py-4 px-6">
-                  <div className="h-6 bg-slate-100 rounded-full w-20" />
+                  <div className="h-6 w-20 rounded-full bg-[#EEF2F8]" />
                 </TableCell>
                 <TableCell className="py-4 px-6">
-                  <div className="h-7 bg-slate-100 rounded-full w-28" />
+                  <div className="h-7 w-28 rounded-full bg-[#EEF2F8]" />
                 </TableCell>
                 <TableCell className="text-right py-4 px-6">
-                  <div className="h-8 bg-slate-100 rounded-lg w-20 ml-auto" />
+                  <div className="ml-auto h-8 w-24 rounded-full bg-[#EEF2F8]" />
                 </TableCell>
               </TableRow>
             ))
@@ -169,7 +169,7 @@ export function AdminStudentTable({
               return (
                 <TableRow
                   key={student._id}
-                  className="hover:bg-slate-50/50 transition-colors group"
+                  className="group border-b border-[#DCE2EB]/70 transition-colors hover:bg-[#F5F7FB]"
                 >
                   {selectable && (
                     <TableCell
@@ -180,28 +180,28 @@ export function AdminStudentTable({
                         type="checkbox"
                         checked={selectedStudents.has(student._id)}
                         onChange={() => onToggleStudentSelection?.(student._id)}
-                        className="rounded border-slate-300 accent-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                        className="h-4 w-4 cursor-pointer rounded border-[#C3CCDA] accent-[#1246C8] focus:ring-[#1246C8]/30"
                       />
                     </TableCell>
                   )}
                   <TableCell className="py-4 px-6">
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-10 h-10 rounded-full bg-gradient-to-br ${getGradient(initials)} flex items-center justify-center text-white text-sm font-semibold shadow-sm flex-shrink-0`}
+                        className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${getGradient(initials)} text-[13px] font-semibold text-white shadow-subtle ring-2 ring-white`}
                       >
                         {initials}
                       </div>
                       <div className="flex flex-col min-w-0">
-                        <span className="font-semibold text-slate-900 text-sm leading-tight truncate">
+                        <span className="truncate text-sm font-semibold leading-tight tracking-tight text-[#10264B]">
                           {student.firstName || student.lastName
                             ? `${student.firstName || ""} ${student.lastName || ""}`
                             : "Unregistered Student"}
                         </span>
-                        <span className="text-xs text-slate-500 font-normal mt-0.5 truncate">
+                        <span className="mt-0.5 truncate text-xs text-[#53647C]">
                           {student.email}
                         </span>
                         {student.enrolledByAgent && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-cyan-700 bg-cyan-50 border border-cyan-200 rounded-md px-1.5 py-0.5 mt-1 w-fit">
+                          <span className="mt-1.5 inline-flex w-fit items-center gap-1 rounded-full bg-[#DCE8FF] px-2 py-0.5 text-[10px] font-semibold text-[#1246C8] ring-1 ring-[#1246C8]/15">
                             <Building2 className="w-3 h-3" />
                             {student.enrolledByAgent.agencyName || `${student.enrolledByAgent.firstName || ""} ${student.enrolledByAgent.lastName || ""}`.trim() || "Agent"}
                           </span>
@@ -211,31 +211,31 @@ export function AdminStudentTable({
                   </TableCell>
                   <TableCell className="py-4 px-6">
                     {student.phone ? (
-                      <span className="text-sm font-medium text-slate-700">
+                      <span className="whitespace-nowrap text-sm font-medium tabular-nums text-[#172B49]">
                         {student.phone}
                       </span>
                     ) : (
-                      <span className="text-xs font-semibold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-100/50">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-700 ring-1 ring-amber-600/15">
                         Missing
                       </span>
                     )}
                   </TableCell>
                   <TableCell className="py-4 px-6">
                     <span
-                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${
+                      className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold ${
                         student.paymentStatus === "Paid"
-                          ? "bg-emerald-50 text-emerald-700 border-emerald-100/50"
+                          ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/15"
                           : student.paymentStatus === "Under Review"
-                            ? "bg-blue-50 text-blue-700 border-blue-100/50"
-                            : "bg-amber-50 text-amber-700 border-amber-100/50"
+                            ? "bg-[#DCE8FF] text-[#1246C8] ring-1 ring-[#1246C8]/15"
+                            : "bg-amber-50 text-amber-700 ring-1 ring-amber-600/15"
                       }`}
                     >
                       <span
-                        className={`w-1.5 h-1.5 rounded-full animate-pulse ${
+                        className={`h-1.5 w-1.5 rounded-full ${
                           student.paymentStatus === "Paid"
                             ? "bg-emerald-500"
                             : student.paymentStatus === "Under Review"
-                              ? "bg-blue-500"
+                              ? "bg-[#1246C8]"
                               : "bg-amber-500"
                         }`}
                       />
@@ -256,7 +256,7 @@ export function AdminStudentTable({
                             e.target.value as StudentStatus,
                           )
                         }
-                        className={`w-full appearance-none pl-3 pr-8 py-1.5 text-xs font-semibold rounded-full border focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${getStatusSelectStyles(student.status)}`}
+                        className={`w-full cursor-pointer appearance-none rounded-full border py-1.5 pl-3 pr-8 text-xs font-semibold transition-all focus:outline-none focus:ring-4 focus:ring-[#1246C8]/10 disabled:cursor-not-allowed disabled:opacity-50 ${getStatusSelectStyles(student.status)}`}
                       >
                         <option value="active">Active</option>
                         <option value="graduated">Graduated</option>
@@ -264,7 +264,7 @@ export function AdminStudentTable({
                         <option value="banned">Banned</option>
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5">
-                        <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+                        <ChevronDown className="h-3.5 w-3.5 opacity-70" />
                       </div>
                     </div>
                   </TableCell>
@@ -273,19 +273,19 @@ export function AdminStudentTable({
                     onClick={(e) => e.stopPropagation()}
                   >
                     <div className="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
-                      <Button size="sm" variant="ghost" onClick={() => onView(student)} className="rounded-full hover:bg-indigo-50 p-2" title="View profile">
-                        <UserRoundSearch className="w-4 h-4 text-indigo-600" />
+                      <Button size="sm" variant="ghost" onClick={() => onView(student)} className="h-9 w-9 rounded-full p-0 text-[#1246C8] hover:bg-[#DCE8FF] hover:text-[#1246C8]" title="View profile">
+                        <UserRoundSearch className="w-4 h-4" />
                       </Button>
                       {onEdit && (
-                        <Button size="sm" variant="ghost" onClick={() => onEdit(student)} className="rounded-full hover:bg-sky-50 p-2" title="Edit student">
-                          <SquarePen className="w-4 h-4 text-sky-600" />
+                        <Button size="sm" variant="ghost" onClick={() => onEdit(student)} className="h-9 w-9 rounded-full p-0 text-[#10264B] hover:bg-[#F5F7FB] hover:text-[#1246C8]" title="Edit student">
+                          <SquarePen className="w-4 h-4" />
                         </Button>
                       )}
-                      <Button size="sm" variant="ghost" onClick={() => onWhatsApp(student)} className="rounded-full hover:bg-green-50 p-2" title="Send reminder">
-                        <MessageCircleMore className="w-4 h-4 text-green-600" />
+                      <Button size="sm" variant="ghost" onClick={() => onWhatsApp(student)} className="h-9 w-9 rounded-full p-0 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700" title="Send reminder">
+                        <MessageCircleMore className="w-4 h-4" />
                       </Button>
-                      <Button size="sm" variant="ghost" onClick={() => onDelete(student)} className="rounded-full hover:bg-red-50 p-2" title="Delete">
-                        <Trash2 className="w-4 h-4 text-red-600" />
+                      <Button size="sm" variant="ghost" onClick={() => onDelete(student)} className="h-9 w-9 rounded-full p-0 text-red-600 hover:bg-red-50 hover:text-red-700" title="Delete">
+                        <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
                   </TableCell>

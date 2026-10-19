@@ -169,20 +169,20 @@ export function PaymentSteps({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-md flex items-center justify-center p-4"
+          className="fixed inset-0 z-[9999] bg-[#07152E]/60 backdrop-blur-sm flex items-center justify-center p-4"
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="w-full max-w-[500px] bg-white rounded-3xl overflow-hidden shadow-2xl relative"
+            className="w-full max-w-[500px] bg-white rounded-panel border border-[#DCE2EB] overflow-hidden shadow-float relative"
           >
             <button
               onClick={closeModal}
-              className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors z-20"
+              className="absolute top-5 right-5 z-20 flex h-9 w-9 items-center justify-center rounded-full text-[#53647C] transition-colors hover:bg-[#F5F7FB] hover:text-[#10264B]"
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5" />
             </button>
 
             {paymentStep !== "prompt" && (
@@ -192,35 +192,60 @@ export function PaymentSteps({
                     paymentStep === "manual" ? "selection" : "prompt",
                   )
                 }
-                className="absolute top-6 left-6 text-slate-400 hover:text-slate-600 transition-colors z-20"
+                className="absolute top-5 left-5 z-20 flex h-9 w-9 items-center justify-center rounded-full text-[#53647C] transition-colors hover:bg-[#F5F7FB] hover:text-[#10264B]"
               >
-                <ChevronRight className="w-6 h-6 rotate-180" />
+                <ChevronRight className="w-5 h-5 rotate-180" />
               </button>
             )}
 
-            <div className="p-8 pt-20 flex flex-col items-center text-center">
+            {/* Numbered waypoints for the payment flow */}
+            <div aria-hidden className="absolute left-1/2 top-6 z-10 flex -translate-x-1/2 items-center gap-1.5">
+              <span
+                className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-bold tabular-nums ${paymentStep === "prompt" ? "bg-[#1246C8] text-white shadow-glow" : "bg-[#10264B] text-white"}`}
+              >
+                01
+              </span>
+              <span
+                className={`w-6 border-t-2 ${paymentStep !== "prompt" ? "border-solid border-[#1246C8]" : "border-dashed border-[#DCE2EB]"}`}
+              />
+              <span
+                className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-bold tabular-nums ${paymentStep === "selection" ? "bg-[#1246C8] text-white shadow-glow" : paymentStep === "manual" ? "bg-[#10264B] text-white" : "bg-[#F5F7FB] text-[#53647C] ring-1 ring-[#DCE2EB]"}`}
+              >
+                02
+              </span>
+              <span
+                className={`w-6 border-t-2 ${paymentStep === "manual" ? "border-solid border-[#1246C8]" : "border-dashed border-[#DCE2EB]"}`}
+              />
+              <span
+                className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-bold tabular-nums ${paymentStep === "manual" ? "bg-[#1246C8] text-white shadow-glow" : "bg-[#F5F7FB] text-[#53647C] ring-1 ring-[#DCE2EB]"}`}
+              >
+                03
+              </span>
+            </div>
+
+            <div className="px-6 pb-8 pt-20 sm:px-8 flex flex-col items-center text-center">
               {uploaded && tutionPaid == "Under Review" ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   className="space-y-6 w-full py-8"
                 >
-                  <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <CheckCircle2 className="w-10 h-10 text-green-500" />
+                  <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-50 ring-1 ring-emerald-600/15">
+                    <CheckCircle2 className="w-10 h-10 text-emerald-600" />
                   </div>
                   <div className="space-y-2">
-                    <h2 className="text-2xl font-bold text-slate-900">
+                    <h2 className="text-2xl font-bold tracking-tighter text-[#10264B]">
                       {method === "paystack"
                         ? "Payment Successful!"
                         : "Receipt Uploaded Successfully!"}
                     </h2>
-                    <p className="text-slate-500">
+                    <p className="text-[#53647C]">
                       {method === "paystack"
                         ? "Thank you for your payment. Your enrollment status has been updated."
                         : "Your receipt has been submitted for review. You'll be notified once it has been verified."}
                     </p>
                   </div>
-                  <div className="bg-green-50 text-green-700 p-4 rounded-2xl text-sm font-medium">
+                  <div className="rounded-2xl bg-emerald-50 p-4 text-sm font-medium text-emerald-700 ring-1 ring-emerald-600/15">
                     {method === "paystack"
                       ? "Redirecting you to the dashboard..."
                       : "Closing in a few seconds..."}
@@ -232,11 +257,11 @@ export function PaymentSteps({
                   animate={{ opacity: 1 }}
                   className="space-y-6 w-full py-12 flex flex-col items-center"
                 >
-                  <div className="animate-spin rounded-full h-16 w-16 border-4 border-slate-100 border-t-[#1239B8] mb-4" />
-                  <h2 className="text-2xl font-bold text-slate-900">
+                  <div className="mb-4 h-16 w-16 animate-spin rounded-full border-4 border-[#DCE2EB] border-t-[#1246C8]" />
+                  <h2 className="text-2xl font-bold tracking-tighter text-[#10264B]">
                     Processing...
                   </h2>
-                  <p className="text-slate-500">
+                  <p className="text-[#53647C]">
                     Please hold on while we process your request. This will only
                     take a moment.
                   </p>
@@ -250,17 +275,18 @@ export function PaymentSteps({
                       className="space-y-6 w-full"
                     >
                       <div className="relative">
-                        <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mx-auto relative z-10">
-                          <CreditCard className="w-12 h-12 text-[#1239B8]" />
+                        <div className="relative z-10 mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[#DCE8FF]">
+                          <CreditCard className="w-11 h-11 text-[#1246C8]" />
                         </div>
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-24 bg-blue-100 rounded-full animate-ping opacity-20" />
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-24 bg-[#DCE8FF] rounded-full animate-ping opacity-30" />
                       </div>
 
                       <div className="space-y-2">
-                        <h2 className="text-2xl font-bold text-slate-900">
+                        <span className="eyebrow justify-center text-[#1246C8]">Tuition</span>
+                        <h2 className="text-2xl font-bold tracking-tighter text-[#10264B]">
                           Pay your tuition fee now
                         </h2>
-                        <p className="text-slate-500 leading-relaxed">
+                        <p className="leading-relaxed text-[#53647C]">
                           To continue accessing your courses and learning
                           materials, please complete your tuition fee payment.
                         </p>
@@ -268,7 +294,7 @@ export function PaymentSteps({
 
                       <button
                         onClick={() => setPaymentStep("selection")}
-                        className="w-full py-4 bg-[#1239B8] text-white rounded-2xl font-semibold shadow-lg shadow-blue-200 hover:bg-[#071A4A] transition-all hover:scale-[1.02] active:scale-[0.98]"
+                        className="w-full rounded-full bg-[#1246C8] py-4 font-semibold text-white shadow-glow transition-all hover:bg-[#0F3BAA] hover:shadow-glow-lg active:scale-[0.98]"
                       >
                         Pay Now
                       </button>
@@ -282,31 +308,31 @@ export function PaymentSteps({
                       className="space-y-6 w-full"
                     >
                       <div className="text-left mb-6">
-                        <h2 className="text-xl font-bold text-slate-900">
+                        <h2 className="text-xl font-bold tracking-tighter text-[#10264B]">
                           Select Payment Method
                         </h2>
-                        <p className="text-sm text-slate-500">
+                        <p className="mt-1 text-sm text-[#53647C]">
                           Choose how you'd like to pay your tuition
                         </p>
                       </div>
 
-                      <div className="grid gap-4">
+                      <div className="grid gap-3">
                         <button
                           onClick={() => setPaymentStep("manual")}
-                          className="flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-[#1239B8] hover:bg-blue-50/50 transition-all text-left group"
+                          className="group flex items-center gap-4 rounded-2xl border border-[#DCE2EB] bg-white p-4 text-left transition-all hover:border-[#1246C8] hover:shadow-elevated"
                         >
-                          <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                            <Landmark className="w-6 h-6 text-slate-600 group-hover:text-[#1239B8]" />
+                          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#F5F7FB] transition-colors group-hover:bg-[#DCE8FF]">
+                            <Landmark className="w-5 h-5 text-[#53647C] group-hover:text-[#1246C8]" />
                           </div>
                           <div>
-                            <p className="font-bold text-slate-900">
+                            <p className="font-semibold text-[#10264B]">
                               Bank Transfer
                             </p>
-                            <p className="text-xs text-slate-500">
+                            <p className="text-xs text-[#53647C]">
                               Upload your receipt after transfer
                             </p>
                           </div>
-                          <ChevronRight className="w-5 h-5 text-slate-300 ml-auto" />
+                          <ChevronRight className="w-5 h-5 text-[#8C9AB0] ml-auto transition-transform group-hover:translate-x-0.5 group-hover:text-[#1246C8]" />
                         </button>
 
                         <button
@@ -314,22 +340,22 @@ export function PaymentSteps({
                             initializePayment({ onSuccess });
                           }}
                           disabled={uploading}
-                          className="flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-[#1239B8] hover:bg-blue-50/50 transition-all text-left group disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="group flex items-center gap-4 rounded-2xl border border-[#DCE2EB] bg-white p-4 text-left transition-all hover:border-[#1246C8] hover:shadow-elevated disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                            <CreditCard className="w-6 h-6 text-slate-600 group-hover:text-[#1239B8]" />
+                          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#F5F7FB] transition-colors group-hover:bg-[#DCE8FF]">
+                            <CreditCard className="w-5 h-5 text-[#53647C] group-hover:text-[#1246C8]" />
                           </div>
                           <div>
-                            <p className="font-bold text-slate-900">
+                            <p className="font-semibold text-[#10264B]">
                               Pay with Paystack
                             </p>
-                            <p className="text-xs text-slate-500">
+                            <p className="text-xs text-[#53647C]">
                               {uploading
                                 ? "Verifying..."
                                 : "Fast and secure online payment"}
                             </p>
                           </div>
-                          <ChevronRight className="w-5 h-5 text-slate-300 ml-auto" />
+                          <ChevronRight className="w-5 h-5 text-[#8C9AB0] ml-auto transition-transform group-hover:translate-x-0.5 group-hover:text-[#1246C8]" />
                         </button>
                       </div>
                     </motion.div>
@@ -342,10 +368,10 @@ export function PaymentSteps({
                       className="space-y-6 w-full text-left"
                     >
                       <div>
-                        <h2 className="text-xl font-bold text-slate-900">
+                        <h2 className="text-xl font-bold tracking-tighter text-[#10264B]">
                           Bank Details
                         </h2>
-                        <p className="text-sm text-slate-500">
+                        <p className="mt-1 text-sm text-[#53647C]">
                           Transfer the tuition fee to the account below
                         </p>
                       </div>
@@ -358,7 +384,7 @@ export function PaymentSteps({
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
                             transition={{ duration: 0.2 }}
-                            className="bg-slate-50 rounded-2xl p-5 space-y-4 border border-slate-100"
+                            className="space-y-4 rounded-2xl border border-[#DCE2EB] bg-[#F5F7FB] p-5"
                           >
                             {[
                               { label: "Bank Name", value: bankDetails.bank },
@@ -377,24 +403,24 @@ export function PaymentSteps({
                             ].map((item) => (
                               <div
                                 key={item.label}
-                                className="flex justify-between items-center group"
+                                className="flex justify-between items-center gap-3 group"
                               >
-                                <div>
-                                  <p className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+                                <div className="min-w-0">
+                                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                                     {item.label}
                                   </p>
-                                  <p className="text-sm font-semibold text-slate-800">
+                                  <p className="mt-0.5 truncate text-sm font-semibold text-[#10264B]">
                                     {item.value}
                                   </p>
                                 </div>
                                 <button
                                   onClick={() => copyToClipboard(item.value)}
-                                  className="p-2 hover:bg-white rounded-lg transition-colors"
+                                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-white"
                                 >
                                   {copied ? (
-                                    <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                                   ) : (
-                                    <Copy className="w-4 h-4 text-slate-400" />
+                                    <Copy className="w-4 h-4 text-[#53647C]" />
                                   )}
                                 </button>
                               </div>
@@ -407,14 +433,14 @@ export function PaymentSteps({
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
                             transition={{ duration: 0.2 }}
-                            className="relative group rounded-3xl overflow-hidden border-2 border-slate-100 aspect-video bg-slate-50"
+                            className="relative group overflow-hidden rounded-2xl border border-[#DCE2EB] aspect-video bg-[#F5F7FB]"
                           >
                             {selectedFile.startsWith("data:application/pdf") ? (
                               <div className="w-full h-full flex flex-col items-center justify-center gap-3">
-                                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm">
-                                  <FileText className="w-8 h-8 text-slate-400" />
+                                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-subtle ring-1 ring-[#DCE2EB]">
+                                  <FileText className="w-7 h-7 text-[#1246C8]" />
                                 </div>
-                                <span className="text-sm font-medium text-slate-600">
+                                <span className="text-sm font-medium text-[#53647C]">
                                   PDF Document Selected
                                 </span>
                               </div>
@@ -427,7 +453,7 @@ export function PaymentSteps({
                             )}
                             <button
                               onClick={() => setSelectedFile(null)}
-                              className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur shadow-md rounded-full text-slate-600 hover:text-rose-600 transition-all hover:scale-110"
+                              className="absolute top-4 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-[#53647C] shadow-subtle backdrop-blur transition-all hover:text-red-600"
                             >
                               <X className="w-5 h-5" />
                             </button>
@@ -438,7 +464,7 @@ export function PaymentSteps({
                       <div className="space-y-4">
                         {!selectedFile ? (
                           <>
-                            <p className="text-xs text-orange-600 text-center">
+                            <p className="text-center text-xs text-[#53647C]">
                               After payment, upload your receipt for
                               verification
                             </p>
@@ -450,7 +476,7 @@ export function PaymentSteps({
                                 onChange={handleFileSelect}
                                 disabled={uploading}
                               />
-                              <div className="w-full py-4 bg-slate-900 text-white rounded-2xl font-semibold flex items-center justify-center gap-2 cursor-pointer hover:bg-slate-800 transition-colors">
+                              <div className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#10264B] py-4 font-semibold text-white transition-colors hover:bg-[#07152E]">
                                 <Upload className="w-5 h-5" />
                                 {uploading ? "Uploading..." : "Upload Receipt"}
                               </div>
@@ -460,7 +486,7 @@ export function PaymentSteps({
                           <button
                             onClick={confirmAndUpload}
                             disabled={uploading}
-                            className="w-full py-4 bg-[#1239B8] text-white rounded-2xl font-semibold flex items-center justify-center gap-2 hover:bg-[#071A4A] transition-all shadow-lg shadow-blue-200 disabled:opacity-50"
+                            className="flex w-full items-center justify-center gap-2 rounded-full bg-[#1246C8] py-4 font-semibold text-white shadow-glow transition-all hover:bg-[#0F3BAA] hover:shadow-glow-lg disabled:opacity-50"
                           >
                             {uploading ? (
                               <>

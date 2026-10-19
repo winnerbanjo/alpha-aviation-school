@@ -148,18 +148,18 @@ export function AdminResources() {
       />
 
       <AdminPanel>
-        <CardHeader className="border-b border-slate-100/80 bg-slate-50/50">
-          <CardTitle className="text-lg text-slate-900">Upload Resource</CardTitle>
+        <CardHeader className="border-b border-[#DCE2EB] px-6 py-5">
+          <CardTitle className="text-lg">Upload Resource</CardTitle>
         </CardHeader>
-        <CardContent className="pt-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+        <CardContent className="grid grid-cols-1 gap-5 p-6 lg:grid-cols-2">
+          <div>
+            <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
               Programme
             </label>
             <select
               value={courseTitle}
               onChange={(event) => setCourseTitle(event.target.value)}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+              className="w-full cursor-pointer rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
             >
               {COURSE_CATALOG.map((course) => (
                 <option key={course.title} value={course.title}>
@@ -169,20 +169,20 @@ export function AdminResources() {
             </select>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+          <div>
+            <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
               Resource Title
             </label>
             <input
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               placeholder="e.g. Module 1 Course Notes"
-              className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
             />
           </div>
 
-          <div className="space-y-2 lg:col-span-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+          <div className="lg:col-span-2">
+            <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
               Description
             </label>
             <textarea
@@ -190,24 +190,24 @@ export function AdminResources() {
               onChange={(event) => setDescription(event.target.value)}
               rows={3}
               placeholder="Optional note for students"
-              className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full resize-none rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
             />
           </div>
 
-          <div className="space-y-2 lg:col-span-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+          <div className="lg:col-span-2">
+            <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
               File
             </label>
-            <label className="flex items-center justify-between gap-3 border-2 border-dashed border-slate-200 rounded-2xl p-4 cursor-pointer hover:bg-slate-50 transition-colors">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="p-2 bg-slate-100 rounded-lg">
-                  <Upload className="w-5 h-5 text-slate-500" />
+            <label className="flex cursor-pointer items-center justify-between gap-3 rounded-2xl border-2 border-dashed border-[#DCE2EB] bg-[#F5F7FB]/60 p-5 transition-colors hover:border-[#1246C8]/50 hover:bg-[#DCE8FF]/30">
+              <div className="flex items-center gap-4 min-w-0">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+                  <Upload className="w-5 h-5" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-slate-900 truncate">
+                  <p className="truncate text-sm font-semibold text-[#10264B]">
                     {selectedFile ? selectedFile.name : "Choose resource file"}
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="mt-0.5 text-xs text-[#53647C]">
                     PDF, video, or image file (Word docs not supported for security).
                   </p>
                 </div>
@@ -223,11 +223,10 @@ export function AdminResources() {
             </label>
           </div>
 
-          <div className="lg:col-span-2 flex justify-end">
+          <div className="flex justify-end border-t border-[#DCE2EB] pt-5 lg:col-span-2">
             <Button
               onClick={handleUpload}
               disabled={uploading}
-              className="rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white"
             >
               {uploading ? (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -242,52 +241,53 @@ export function AdminResources() {
 
       <div className="space-y-4">
         {loading ? (
-          <Card className="border-slate-200">
-            <CardContent className="p-8 text-center text-sm text-slate-500">
+          <Card className="bg-white">
+            <CardContent className="flex items-center justify-center gap-3 p-8 text-center text-sm text-[#53647C]">
+              <Loader2 className="h-4 w-4 animate-spin text-[#1246C8]" />
               Loading resources...
             </CardContent>
           </Card>
         ) : (
           resourcesByCourse.map(({ courseTitle, resources }) => (
             <AdminPanel key={courseTitle}>
-              <div className="px-5 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between gap-4">
-                <div>
-                  <h2 className="text-sm font-bold text-slate-900">
+              <div className="flex items-center justify-between gap-4 border-b border-[#DCE2EB] bg-[#F5F7FB]/60 px-6 py-4">
+                <div className="min-w-0">
+                  <h2 className="text-[15px] font-bold tracking-tight text-[#10264B]">
                     {courseTitle}
                   </h2>
-                  <p className="text-xs text-slate-500">
+                  <p className="mt-0.5 text-xs tabular-nums text-[#53647C]">
                     {resources.length} uploaded resource
                     {resources.length === 1 ? "" : "s"}
                   </p>
                 </div>
-                <Badge variant="secondary" className="bg-slate-100 text-slate-700 border-none">
+                <Badge variant="secondary" className="shrink-0 border-transparent bg-[#DCE8FF] text-[#1246C8] hover:bg-[#DCE8FF]">
                   Programme
                 </Badge>
               </div>
               <div className="p-0">
                 {resources.length === 0 ? (
-                  <div className="p-5 text-sm text-slate-500">
+                  <div className="px-6 py-5 text-sm text-[#8C9AB0]">
                     No resources uploaded for this programme.
                   </div>
                 ) : (
                   resources.map((resource, index) => (
                     <div
                       key={resource._id}
-                      className={`p-4 flex items-center justify-between gap-4 ${
+                      className={`flex items-center justify-between gap-4 px-6 py-4 transition-colors hover:bg-[#F5F7FB] ${
                         index !== resources.length - 1
-                          ? "border-b border-slate-100"
+                          ? "border-b border-[#DCE2EB]/70"
                           : ""
                       }`}
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="p-2 bg-slate-100 rounded-lg">
-                          <FileText className="w-5 h-5 text-slate-500" />
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#DCE8FF] text-[#1246C8]">
+                          <FileText className="w-[18px] h-[18px]" />
                         </div>
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold text-slate-900 truncate">
+                          <p className="truncate text-sm font-semibold text-[#10264B]">
                             {resource.title}
                           </p>
-                          <p className="text-xs text-slate-500">
+                          <p className="mt-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-[#53647C]">
                             {resource.type.toUpperCase()}
                             {resource.size ? ` · ${resource.size}` : ""}
                           </p>
@@ -307,7 +307,7 @@ export function AdminResources() {
                           size="sm"
                           onClick={() => handleDelete(resource._id)}
                           disabled={deletingId === resource._id}
-                          className="text-red-700 border-red-200 hover:bg-red-50"
+                          className="border-red-200 text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700"
                         >
                           {deletingId === resource._id ? (
                             <Loader2 className="w-4 h-4 mr-1 animate-spin" />

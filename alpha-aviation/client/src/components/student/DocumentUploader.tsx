@@ -70,28 +70,29 @@ export function DocumentUploader() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="border-slate-200/50">
+      <Card>
         <CardHeader>
-          <CardTitle className="text-slate-900">ID/Passport Upload</CardTitle>
-          <CardDescription className="text-slate-500">
+          <span className="eyebrow text-[#1246C8]">Identity</span>
+          <CardTitle>ID/Passport Upload</CardTitle>
+          <CardDescription>
             Upload a photo of your ID or Passport for school records
           </CardDescription>
         </CardHeader>
         <CardContent>
           {user?.documentUrl ? (
             <div className="space-y-4">
-              <div className="flex items-center gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
-                <FileCheck className="w-5 h-5 text-green-600" />
+              <div className="flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
+                <FileCheck className="w-5 h-5 shrink-0 text-emerald-600" />
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <p className="text-sm font-medium text-green-900">
+                    <p className="text-sm font-semibold text-emerald-900">
                       Document Uploaded
                     </p>
-                    <span className="px-2 py-0.5 text-xs font-medium bg-green-600 text-white rounded-full">
+                    <span className="inline-flex items-center rounded-full bg-white px-2.5 py-0.5 text-[11px] font-semibold text-emerald-700 ring-1 ring-emerald-600/15">
                       Verified
                     </span>
                   </div>
-                  <p className="text-xs text-green-700">
+                  <p className="text-xs text-emerald-700">
                     Your ID/Passport has been submitted and verified
                   </p>
                 </div>
@@ -99,7 +100,7 @@ export function DocumentUploader() {
               <img
                 src={user.documentUrl}
                 alt="Uploaded document"
-                className="w-full max-w-md mx-auto rounded-lg border border-slate-200"
+                className="mx-auto w-full max-w-md rounded-2xl border border-[#DCE2EB]"
               />
             </div>
           ) : (
@@ -108,17 +109,19 @@ export function DocumentUploader() {
               onDragLeave={handleDrag}
               onDragOver={handleDrag}
               onDrop={handleDrop}
-              className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+              className={`rounded-2xl border-2 border-dashed p-8 text-center transition-colors ${
                 dragActive
-                  ? "border-[#1239B8] bg-[#1239B8]/5"
-                  : "border-slate-200 hover:border-slate-300"
+                  ? "border-[#1246C8] bg-[#1246C8]/5"
+                  : "border-[#DCE2EB] bg-[#F5F7FB] hover:border-[#1246C8]/50"
               }`}
             >
-              <ImageIcon className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-              <p className="text-sm font-medium text-slate-900 mb-2">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+                <ImageIcon className="w-6 h-6" />
+              </div>
+              <p className="mb-2 text-sm font-semibold text-[#10264B]">
                 Drop your ID/Passport photo here
               </p>
-              <p className="text-xs text-slate-500 mb-4">or click to browse</p>
+              <p className="mb-4 text-xs text-[#53647C]">or click to browse</p>
               <input
                 type="file"
                 id="document-upload"
@@ -134,7 +137,6 @@ export function DocumentUploader() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="rounded-full border-slate-200/50"
                   disabled={uploading}
                 >
                   <Upload className="w-4 h-4 mr-2" />

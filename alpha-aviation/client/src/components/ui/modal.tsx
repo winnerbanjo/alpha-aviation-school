@@ -16,21 +16,22 @@ export function Modal({ isOpen, onClose, title, children, wide }: ModalProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+        className="fixed inset-0 bg-[#07152E]/60 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Modal Content */}
       <div
-        className={`relative bg-white rounded-lg shadow-xl  w-full mx-4 border border-slate-100 z-50 ${wide ? "max-w-2xl" : "max-w-md"}`}
+        className={`relative z-50 mx-4 w-full overflow-hidden rounded-panel border border-[#DCE2EB] bg-white shadow-float ${wide ? "max-w-2xl" : "max-w-md"}`}
       >
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between p-6 border-b border-slate-100">
-            <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
+          <div className="flex items-center justify-between border-b border-[#DCE2EB] px-6 py-5">
+            <h3 className="text-lg font-bold tracking-tighter text-[#10264B]">{title}</h3>
             <button
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-900 transition-colors"
+              aria-label="Close"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-[#53647C] transition-colors hover:bg-[#F5F7FB] hover:text-[#10264B]"
             >
               <X className="w-5 h-5" />
             </button>

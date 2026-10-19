@@ -19,48 +19,50 @@ export function AgentBanner({ agent, paymentStatus }: AgentBannerProps) {
     <motion.div
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-r from-indigo-50/80 to-purple-50/80 border border-indigo-200/60 rounded-3xl p-5 shadow-[0px_4px_20px_0px_rgba(99,102,241,0.08)] backdrop-blur-md"
+      className="relative overflow-hidden rounded-stage bg-[#07152E] p-6 text-white shadow-float sm:p-7"
     >
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          <div className="p-3 bg-indigo-100 border border-indigo-200/60 rounded-2xl shrink-0">
-            <ShieldCheck className="w-5 h-5 text-indigo-600" />
+      <div aria-hidden="true" className="absolute inset-0 bg-chart-grid mask-fade-b opacity-70" />
+      <div aria-hidden="true" className="absolute -right-32 -top-32 h-[380px] w-[380px] rounded-full bg-[#1246C8]/40 blur-[110px]" />
+      <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center">
+        <div className="flex min-w-0 flex-1 items-start gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#1246C8] text-white shadow-glow">
+            <ShieldCheck className="h-5 w-5" />
           </div>
           <div className="min-w-0">
-            <p className="text-xs font-black uppercase tracking-wider text-indigo-600 mb-0.5">Enrolled via Agent</p>
-            <p className="text-sm font-bold text-slate-900">
-              {agent.agentName}
+            <p className="eyebrow mb-2 text-[#8EAEFF]">Enrolled via Agent</p>
+            <p className="text-lg font-bold tracking-tight">
+              <span className="text-gradient-sky">{agent.agentName}</span>
               {agent.agencyName && (
-                <span className="text-slate-500 font-normal"> · {agent.agencyName}</span>
+                <span className="font-normal text-white/55"> · {agent.agencyName}</span>
               )}
             </p>
-            <div className="flex flex-wrap gap-3 mt-1">
+            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
               {agent.agentCode && (
-                <span className="font-mono text-[10px] font-bold text-indigo-700 bg-indigo-100 border border-indigo-200 rounded-md px-1.5 py-0.5">
+                <span className="flap px-2 py-1 text-[11px] tracking-[0.14em]">
                   {agent.agentCode}
                 </span>
               )}
               {agent.agentEmail && (
-                <span className="text-xs text-slate-500 flex items-center gap-1">
-                  <Mail className="w-3 h-3" />
+                <span className="flex items-center gap-1.5 text-xs text-white/65">
+                  <Mail className="h-3.5 w-3.5 text-[#8EAEFF]" />
                   {agent.agentEmail}
                 </span>
               )}
               {agent.agentPhone && (
-                <span className="text-xs text-slate-500 flex items-center gap-1">
-                  <Phone className="w-3 h-3" />
+                <span className="flex items-center gap-1.5 text-xs text-white/65">
+                  <Phone className="h-3.5 w-3.5 text-[#8EAEFF]" />
                   {agent.agentPhone}
                 </span>
               )}
             </div>
           </div>
         </div>
-        <div className="shrink-0">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Tuition Status</p>
-          <span className={`text-sm font-black px-3 py-1.5 rounded-xl ${
+        <div className="shrink-0 border-t border-white/10 pt-4 sm:border-l sm:border-t-0 sm:pl-6 sm:pt-0">
+          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/50">Tuition Status</p>
+          <span className={`inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold ${
             paymentStatus === "Paid"
-              ? "text-emerald-700 bg-emerald-50 border border-emerald-200"
-              : "text-amber-700 bg-amber-50 border border-amber-200"
+              ? "bg-emerald-400/15 text-emerald-300 ring-1 ring-emerald-400/30"
+              : "bg-amber-400/15 text-amber-200 ring-1 ring-amber-400/30"
           }`}>
             {paymentStatus === "Paid" ? "✓ Paid by Agent" : "Pending Payment"}
           </span>

@@ -53,23 +53,23 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
-              className={`flex items-start gap-3 px-4 py-3.5 rounded-xl shadow-xl border pointer-events-auto min-w-[300px] max-w-sm ${
+              className={`flex items-start gap-3 px-4 py-3.5 rounded-card shadow-elevated border pointer-events-auto min-w-[300px] max-w-sm ${
                 t.type === "success"
-                  ? "bg-white border-green-200 text-slate-900"
+                  ? "bg-white border-emerald-200 text-[#10264B]"
                   : t.type === "error"
-                    ? "bg-white border-red-200 text-slate-900"
-                    : "bg-white border-slate-200 text-slate-900"
+                    ? "bg-white border-red-200 text-[#10264B]"
+                    : "bg-white border-[#DCE2EB] text-[#10264B]"
               }`}
             >
               <span className="mt-0.5 shrink-0">
                 {t.type === "success" && (
-                  <CheckCircle2 className="w-5 h-5 text-green-500" />
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500" />
                 )}
                 {t.type === "error" && (
                   <XCircle className="w-5 h-5 text-red-500" />
                 )}
                 {t.type === "info" && (
-                  <AlertCircle className="w-5 h-5 text-[#1239B8]" />
+                  <AlertCircle className="w-5 h-5 text-[#1246C8]" />
                 )}
               </span>
               <p className="text-sm font-medium leading-snug flex-1">

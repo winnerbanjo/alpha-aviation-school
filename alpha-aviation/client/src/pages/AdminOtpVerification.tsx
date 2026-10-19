@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { verifyAdminOTP, resendAdminOTP, login as apiLogin } from "@/api";
 import { useAuthStore } from "@/store/authStore";
 import { useToast } from "@/components/ui/toast";
-import { Shield, RefreshCw, CheckCircle, Mail } from "lucide-react";
+import { RefreshCw, CheckCircle, Mail } from "lucide-react";
 import { NoIndexSEO } from "@/components/seo/NoIndexSEO";
+import { AuthShell } from "@/components/auth/AuthShell";
 
 export function AdminOtpVerification() {
   const [searchParams] = useSearchParams();
@@ -141,36 +142,38 @@ export function AdminOtpVerification() {
         description="Verify the one-time code sent to the admin email address."
         url="/admin/verify-otp"
       />
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
+      <AuthShell
+        eyebrow="Administrator access"
+        title="Confirm it's"
+        accent="really you."
+        description="Enter the verification code sent to your admin email to sign in."
+        video="airport-operations-model"
+      >
         <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <div className="bg-white rounded-2xl shadow-2xl border border-slate-200/50 p-8 sm:p-10">
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <div className="p-3 bg-slate-900 rounded-xl">
-                <Shield className="w-8 h-8 text-white" />
-              </div>
-            </div>
-            <h1 className="text-2xl font-semibold tracking-tight text-slate-900 mb-2">
-              Verify Your Identity
+        <div>
+          <div className="mb-10">
+            <span className="eyebrow text-[#1246C8]">Two-step verification</span>
+            <h1 className="mt-4 text-3xl font-bold tracking-tightest text-[#10264B] sm:text-4xl">
+              Verify your identity
             </h1>
-            <p className="text-slate-500 text-sm">
+            <p className="mt-3 text-[15px] leading-relaxed text-[#53647C]">
               We sent a 6-digit code to{" "}
-              <span className="font-medium text-slate-700">{email}</span>
+              <span className="font-semibold text-[#10264B]">{email}</span>
             </p>
           </div>
 
           <form onSubmit={handleVerify} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-slate-900 mb-3 flex items-center gap-2 justify-center">
-                <Mail className="w-4 h-4" />
+              <label className="mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+                <Mail className="h-3.5 w-3.5" />
                 Verification Code
               </label>
-              <div className="flex gap-3 justify-center" onPaste={handlePaste}>
+              <div className="flex gap-2 sm:gap-3" onPaste={handlePaste}>
                 {otp.map((digit, index) => (
                   <input
                     key={index}
@@ -183,23 +186,23 @@ export function AdminOtpVerification() {
                     value={digit}
                     onChange={(e) => handleOtpChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
-                    className="w-12 h-14 text-center text-2xl font-bold border-2 border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900/20 focus:border-slate-900 text-slate-900 transition-all bg-white"
+                    className="h-14 w-12 rounded-xl border border-[#DCE2EB] bg-white text-center text-xl font-bold text-[#10264B] outline-none transition focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10 sm:w-14"
                     autoFocus={index === 0}
                   />
                 ))}
               </div>
             </div>
 
-            <div className="text-center">
+            <div>
               {!isExpired ? (
-                <p className="text-sm text-slate-500">
+                <p className="inline-flex items-center gap-1.5 rounded-full bg-[#F5F7FB] px-3.5 py-1.5 text-[13px] text-[#53647C]">
                   Code expires in{" "}
-                  <span className="font-semibold text-slate-700">
+                  <span className="font-semibold tabular-nums text-[#10264B]">
                     {formatTime(timeLeft)}
                   </span>
                 </p>
               ) : (
-                <p className="text-sm text-red-500">
+                <p className="inline-flex items-center rounded-full bg-red-50 px-3.5 py-1.5 text-[13px] font-medium text-red-700 ring-1 ring-red-600/15">
                   Code expired. Please request a new one.
                 </p>
               )}
@@ -208,29 +211,29 @@ export function AdminOtpVerification() {
             <Button
               type="submit"
               disabled={loading || isExpired}
-              className="w-full rounded-lg bg-slate-900 hover:bg-slate-800 text-white py-3 font-medium"
+              className="h-12 w-full"
             >
               {loading ? (
                 "Verifying..."
               ) : (
                 <>
                   Verify & Sign In
-                  <CheckCircle className="w-4 h-4 ml-2" />
+                  <CheckCircle className="ml-2 h-4 w-4" />
                 </>
               )}
             </Button>
           </form>
 
-          <div className="mt-6 text-center space-y-4">
+          <div className="mt-10 space-y-4 border-t border-[#DCE2EB] pt-6 text-center">
             <div>
-              <p className="text-sm text-slate-500 mb-2">
+              <p className="mb-3 text-sm text-[#53647C]">
                 Didn't receive the code?
               </p>
               <button
                 type="button"
                 onClick={handleResend}
                 disabled={resending}
-                className="inline-flex items-center gap-2 text-slate-900 font-medium hover:underline underline-offset-4 transition-colors disabled:opacity-50"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-[#1246C8] transition-colors hover:text-[#10264B] disabled:opacity-50"
               >
                 <RefreshCw className={`w-4 h-4 ${resending ? "animate-spin" : ""}`} />
                 {resending ? "Sending..." : "Resend Code"}
@@ -241,7 +244,7 @@ export function AdminOtpVerification() {
               <button
                 type="button"
                 onClick={() => navigate("/admin", { replace: true })}
-                className="text-sm text-slate-500 hover:text-slate-700 transition-colors"
+                className="text-sm font-medium text-[#53647C] underline-offset-4 transition-colors hover:text-[#10264B] hover:underline"
               >
                 ← Back to Admin Login
               </button>
@@ -249,7 +252,7 @@ export function AdminOtpVerification() {
           </div>
         </div>
         </motion.div>
-      </div>
+      </AuthShell>
     </>
   );
 }

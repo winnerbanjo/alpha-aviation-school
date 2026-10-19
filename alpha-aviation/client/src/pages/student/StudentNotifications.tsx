@@ -24,12 +24,12 @@ const getNotificationIcon = (type: NotificationItem["type"]) => {
 
 const getNotificationStyles = (type: NotificationItem["type"]) => {
   if (type === "payment_approved" || type === "payment_confirmed") {
-    return "bg-emerald-50 text-emerald-600 border-emerald-100/80";
+    return "bg-emerald-50 text-emerald-600 ring-emerald-600/15";
   }
   if (type === "payment_rejected") {
-    return "bg-rose-50 text-rose-600 border-rose-100/80";
+    return "bg-red-50 text-red-600 ring-red-600/15";
   }
-  return "bg-indigo-50 text-indigo-600 border-indigo-100/80";
+  return "bg-[#DCE8FF] text-[#1246C8] ring-[#1246C8]/10";
 };
 
 const formatDate = (value: string) =>
@@ -88,12 +88,13 @@ export function StudentNotifications({
   return (
     <div className="space-y-8 pb-12">
       {/* Header section */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-black tracking-tight text-slate-900">
+          <span className="eyebrow text-[#1246C8]">Updates</span>
+          <h1 className="mt-3 text-3xl font-bold tracking-tightest text-[#10264B] sm:text-4xl">
             Notifications
           </h1>
-          <p className="text-sm font-normal text-slate-500 mt-1">
+          <p className="mt-2 text-[#53647C]">
             {variant === "admin"
               ? "Review payment activity and admin alerts."
               : "Review payment receipt decisions and account updates."}
@@ -101,9 +102,10 @@ export function StudentNotifications({
         </div>
         <Button
           variant="outline"
+          size="sm"
           onClick={handleMarkAllRead}
           disabled={unreadCount === 0}
-          className="self-start sm:self-auto rounded-2xl border-slate-200 hover:bg-slate-50 font-bold text-xs py-2 px-4 shadow-sm shrink-0 flex items-center gap-1.5 transition-all"
+          className="self-start sm:self-auto shrink-0 gap-1.5"
         >
           <MailOpen className="w-4 h-4" />
           <span>Mark all as read</span>
@@ -111,10 +113,10 @@ export function StudentNotifications({
       </div>
 
       {/* Inbox Card Container */}
-      <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
-        <div className="px-5 py-4 border-b border-slate-100/80 bg-slate-50/50 flex items-center justify-between gap-4">
-          <h3 className="text-base font-bold text-slate-900">Inbox</h3>
-          <span className="text-xs font-bold px-2.5 py-1 bg-indigo-50 text-indigo-600 rounded-full border border-indigo-100/30">
+      <div className="overflow-hidden rounded-panel border border-[#DCE2EB] bg-white shadow-subtle">
+        <div className="flex items-center justify-between gap-4 border-b border-[#DCE2EB] px-6 py-5">
+          <h3 className="text-base font-bold tracking-tight text-[#10264B]">Inbox</h3>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#DCE8FF] px-2.5 py-1 text-[11px] font-semibold text-[#1246C8] tabular-nums">
             {unreadCount} unread
           </span>
         </div>
@@ -122,26 +124,25 @@ export function StudentNotifications({
         <div>
           {loading ? (
             <div className="p-12 text-center">
-              <div className="w-10 h-10 border-4 border-slate-100 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-sm font-medium text-slate-500">Loading notifications...</p>
+              <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-[3px] border-[#DCE2EB] border-t-[#1246C8]" />
+              <p className="text-sm font-medium text-[#53647C]">Loading notifications...</p>
             </div>
           ) : notifications.length === 0 ? (
             <div className="p-12 text-center max-w-sm mx-auto">
-              <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-50 to-indigo-100/60 text-indigo-600 border border-indigo-100/80 shadow-sm overflow-hidden flex items-center justify-center mx-auto mb-4">
-                <div className="absolute inset-0 bg-indigo-200/20 blur-sm rounded-full scale-75" />
-                <Bell className="w-8 h-8 relative z-10 text-indigo-600" />
+              <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+                <Bell className="w-6 h-6" />
               </div>
-              <h3 className="text-base font-bold text-slate-900 mb-1">
+              <h3 className="mb-1 text-base font-bold tracking-tight text-[#10264B]">
                 No Notifications Yet
               </h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <p className="text-[13px] leading-relaxed text-[#53647C]">
                 {variant === "admin"
                   ? "Payment activity alerts and verification request logs will appear here."
                   : "Tuition approvals, program unlocks, and clearance updates will appear here."}
               </p>
             </div>
           ) : (
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-[#DCE2EB]/70">
               <AnimatePresence initial={false}>
                 {notifications.map((notification, idx) => {
                   const Icon = getNotificationIcon(notification.type);
@@ -153,15 +154,15 @@ export function StudentNotifications({
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3, delay: idx * 0.05 }}
-                      className={`p-5 flex gap-4 transition-all duration-300 ${
-                        isUnread ? "bg-indigo-50/20" : "bg-white"
+                      className={`relative flex gap-4 px-6 py-5 transition-colors duration-300 ${
+                        isUnread ? "bg-[#F2F6FF]" : "bg-white hover:bg-[#F5F7FB]"
                       }`}
                     >
                       {/* Left Icon circle */}
                       <div
-                        className={`w-11 h-11 rounded-xl border flex items-center justify-center shrink-0 shadow-sm relative overflow-hidden ${getNotificationStyles(notification.type)}`}
+                        className={`relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full ring-1 ${getNotificationStyles(notification.type)}`}
                       >
-                        <Icon className="w-5 h-5 relative z-10" />
+                        <Icon className="w-[18px] h-[18px] relative z-10" />
                       </div>
 
                       {/* Content panel */}
@@ -169,20 +170,20 @@ export function StudentNotifications({
                         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                           <div>
                             <div className="flex items-center gap-2 flex-wrap">
-                              <p className="text-sm font-bold text-slate-800">
+                              <p className="text-sm font-semibold text-[#10264B]">
                                 {notification.title}
                               </p>
                               {isUnread && (
-                                <span className="w-2 h-2 rounded-full bg-indigo-600 animate-pulse" />
+                                <span className="w-2 h-2 rounded-full bg-[#1246C8]" />
                               )}
                             </div>
-                            <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+                            <p className="mt-1.5 text-[13px] leading-relaxed text-[#53647C]">
                               {notification.message}
                             </p>
                           </div>
-                          
+
                           {/* Time label */}
-                          <div className="text-xs font-semibold text-slate-400 flex items-center gap-1.5 shrink-0 self-start mt-0.5">
+                          <div className="mt-0.5 flex shrink-0 items-center gap-1.5 self-start text-xs font-medium text-[#8C9AB0] tabular-nums">
                             <Clock className="w-3.5 h-3.5" />
                             <span>{formatDate(notification.createdAt)}</span>
                           </div>
@@ -192,7 +193,7 @@ export function StudentNotifications({
                         {isUnread && (
                           <button
                             type="button"
-                            className="mt-3 text-indigo-600 hover:text-indigo-700 font-bold text-xs flex items-center gap-1 hover:underline transition-all"
+                            className="mt-3 inline-flex items-center gap-1 rounded-full border border-[#10264B]/15 bg-white px-3 py-1 text-xs font-semibold text-[#10264B] transition-colors hover:border-[#1246C8] hover:text-[#1246C8]"
                             onClick={() => handleMarkRead(notification._id)}
                           >
                             <span>Mark as read</span>

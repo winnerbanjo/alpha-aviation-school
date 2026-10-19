@@ -36,7 +36,7 @@ export function AdminStudents() {
   return (
     <AdminPageShell>
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-3xl text-red-700 text-sm font-medium">
+        <div className="rounded-panel border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-700">
           Server Error: {error}
         </div>
       )}
@@ -48,40 +48,40 @@ export function AdminStudents() {
         onRefresh={() => { fetchStudents(); fetchFinancialStats(); }}
       />
 
-      <AdminPanel className="p-5">
-        <div className="flex flex-col gap-4">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+      <AdminPanel className="p-4 sm:p-6">
+        <div className="flex flex-col gap-5">
+        <div className="flex flex-col xl:flex-row items-start xl:items-center gap-4">
           <div className="relative flex-1 max-w-md w-full">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8C9AB0]" />
             <input
               type="text"
               placeholder="Search by name or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 border border-slate-200/70 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-slate-900 bg-white"
+              className="w-full rounded-full border border-transparent bg-[#F5F7FB] py-2.5 pl-11 pr-4 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:bg-white focus:ring-4 focus:ring-[#1246C8]/10"
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
             <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-500 font-medium">Payment:</span>
-              <div className="flex gap-1 border border-slate-200/70 rounded-2xl p-1 bg-white">
-                <button onClick={() => setPaymentFilter("all")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${paymentFilter === "all" ? "bg-indigo-600 text-white" : "text-slate-600 hover:text-slate-900"}`}>All</button>
-                <button onClick={() => setPaymentFilter("Pending")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${paymentFilter === "Pending" ? "bg-amber-100 text-amber-900" : "text-slate-600 hover:text-slate-900"}`}>Pending</button>
-                <button onClick={() => setPaymentFilter("Paid")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${paymentFilter === "Paid" ? "bg-emerald-100 text-emerald-900" : "text-slate-600 hover:text-slate-900"}`}>Paid</button>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Payment</span>
+              <div className="flex gap-1 rounded-full border border-[#DCE2EB] bg-[#F5F7FB] p-1">
+                <button onClick={() => setPaymentFilter("all")} className={`rounded-full px-3 py-1.5 text-[13px] font-semibold transition-colors ${paymentFilter === "all" ? "bg-[#10264B] text-white shadow-subtle" : "text-[#53647C] hover:text-[#10264B]"}`}>All</button>
+                <button onClick={() => setPaymentFilter("Pending")} className={`rounded-full px-3 py-1.5 text-[13px] font-semibold transition-colors ${paymentFilter === "Pending" ? "bg-amber-100 text-amber-800 shadow-subtle" : "text-[#53647C] hover:text-[#10264B]"}`}>Pending</button>
+                <button onClick={() => setPaymentFilter("Paid")} className={`rounded-full px-3 py-1.5 text-[13px] font-semibold transition-colors ${paymentFilter === "Paid" ? "bg-emerald-100 text-emerald-800 shadow-subtle" : "text-[#53647C] hover:text-[#10264B]"}`}>Paid</button>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-500 font-medium">Enrolled:</span>
-              <div className="flex gap-1 border border-slate-200/70 rounded-2xl p-1 bg-white">
-                <button onClick={() => setEnrollmentFilter("all")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${enrollmentFilter === "all" ? "bg-indigo-600 text-white" : "text-slate-600 hover:text-slate-900"}`}>All</button>
-                <button onClick={() => setEnrollmentFilter("self")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${enrollmentFilter === "self" ? "bg-purple-100 text-purple-900" : "text-slate-600 hover:text-slate-900"}`}>Self</button>
-                <button onClick={() => setEnrollmentFilter("agent")} className={`px-3 py-1.5 text-sm font-bold rounded-xl transition-colors ${enrollmentFilter === "agent" ? "bg-cyan-100 text-cyan-900" : "text-slate-600 hover:text-slate-900"}`}>Agent</button>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Enrolled</span>
+              <div className="flex gap-1 rounded-full border border-[#DCE2EB] bg-[#F5F7FB] p-1">
+                <button onClick={() => setEnrollmentFilter("all")} className={`rounded-full px-3 py-1.5 text-[13px] font-semibold transition-colors ${enrollmentFilter === "all" ? "bg-[#10264B] text-white shadow-subtle" : "text-[#53647C] hover:text-[#10264B]"}`}>All</button>
+                <button onClick={() => setEnrollmentFilter("self")} className={`rounded-full px-3 py-1.5 text-[13px] font-semibold transition-colors ${enrollmentFilter === "self" ? "bg-[#1246C8] text-white shadow-subtle" : "text-[#53647C] hover:text-[#10264B]"}`}>Self</button>
+                <button onClick={() => setEnrollmentFilter("agent")} className={`rounded-full px-3 py-1.5 text-[13px] font-semibold transition-colors ${enrollmentFilter === "agent" ? "bg-[#1246C8] text-white shadow-subtle" : "text-[#53647C] hover:text-[#10264B]"}`}>Agent</button>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-500 font-medium">Status:</span>
-              <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }} className="text-sm border border-slate-200/70 rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-white">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Status</span>
+              <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }} className="cursor-pointer rounded-full border border-[#DCE2EB] bg-white px-3.5 py-1.5 text-[13px] font-medium text-[#172B49] outline-none transition focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10">
                 <option value="all">All</option>
                 <option value="active">Active</option>
                 <option value="graduated">Graduated</option>
@@ -90,8 +90,8 @@ export function AdminStudents() {
               </select>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-500 font-medium">Show:</span>
-              <select value={itemsPerPage} onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }} className="text-sm border border-slate-200/70 rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-white">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Show</span>
+              <select value={itemsPerPage} onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }} className="cursor-pointer rounded-full border border-[#DCE2EB] bg-white px-3.5 py-1.5 text-[13px] font-medium text-[#172B49] outline-none transition focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10">
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
@@ -101,30 +101,30 @@ export function AdminStudents() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 border-t border-[#DCE2EB] pt-5">
           {selectedStudents.size > 0 && (
             <>
-              <Button onClick={handleBatchMarkAsPaid} className="rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white">
+              <Button onClick={handleBatchMarkAsPaid} className="h-10 bg-emerald-600 text-white !shadow-none hover:bg-emerald-700">
                 Mark {selectedStudents.size} as Paid
               </Button>
-              <Button onClick={() => setBulkSuspendModalOpen(true)} variant="outline" className="rounded-2xl border-amber-200 text-amber-700 hover:bg-amber-50">
+              <Button onClick={() => setBulkSuspendModalOpen(true)} variant="outline" className="h-10 border-amber-200 text-amber-700 hover:border-amber-300 hover:bg-amber-50 hover:text-amber-800">
                 Suspend
               </Button>
-              <Button onClick={() => setBulkDeleteModalOpen(true)} variant="outline" className="rounded-2xl border-red-200 text-red-600 hover:bg-red-50">
+              <Button onClick={() => setBulkDeleteModalOpen(true)} variant="outline" className="h-10 border-red-200 text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700">
                 <Trash2 className="w-4 h-4 mr-1" />
                 Delete ({selectedStudents.size})
               </Button>
             </>
           )}
-          <Button onClick={() => { setEditingUser(null); setUserFormData({ email: "", password: "", role: "student", firstName: "", lastName: "", phone: "", status: "active", paymentStatus: "Pending", amountDue: "", amountPaid: "", totalCoursePrice: "", enrolledCourse: "", studentIdNumber: "", adminClearance: false }); setUserModalOpen(true); }} className="rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white">
+          <Button onClick={() => { setEditingUser(null); setUserFormData({ email: "", password: "", role: "student", firstName: "", lastName: "", phone: "", status: "active", paymentStatus: "Pending", amountDue: "", amountPaid: "", totalCoursePrice: "", enrolledCourse: "", studentIdNumber: "", adminClearance: false }); setUserModalOpen(true); }} className="h-10">
             <UserPlus className="w-4 h-4 mr-2" />
             Add User
           </Button>
-          <Button onClick={() => setCsvModalOpen(true)} variant="outline" className="rounded-2xl border-slate-200/70 bg-white">
+          <Button onClick={() => setCsvModalOpen(true)} variant="outline" className="h-10">
             <Upload className="w-4 h-4 mr-2" />
             Import CSV
           </Button>
-          <Button onClick={handleInvite} variant="outline" className="rounded-2xl border-slate-200/70 bg-white">
+          <Button onClick={handleInvite} variant="outline" className="h-10">
             <MessageCircleMore className="w-4 h-4 mr-2" />
             Invite via WhatsApp
           </Button>
@@ -133,12 +133,12 @@ export function AdminStudents() {
       </AdminPanel>
 
       <AdminPanel>
-        <div className="px-5 py-4 border-b border-slate-100/80 bg-slate-50/50 flex items-center justify-between gap-4">
+        <div className="flex items-center justify-between gap-4 border-b border-[#DCE2EB] px-6 py-5">
           <div>
-            <h2 className="text-base font-bold text-slate-900">Student Directory</h2>
-            <p className="text-xs text-slate-500 mt-0.5">Manage student records, payment status, and account status.</p>
+            <h2 className="text-lg font-bold tracking-tighter text-[#10264B]">Student Directory</h2>
+            <p className="mt-0.5 text-sm text-[#53647C]">Manage student records, payment status, and account status.</p>
           </div>
-          <span className="text-xs font-bold px-2.5 py-1 bg-indigo-50 text-indigo-600 rounded-full border border-indigo-100/30">
+          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#DCE8FF] px-2.5 py-1 text-[11px] font-semibold tabular-nums text-[#1246C8]">
             {filteredStudents.length} records
           </span>
         </div>
@@ -159,17 +159,17 @@ export function AdminStudents() {
           onDelete={handleDeleteStudent}
         />
         {filteredStudents.length > 0 && (
-          <div className="flex items-center justify-between p-4 border-t border-slate-200 bg-slate-50/30">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+          <div className="flex flex-col gap-3 border-t border-[#DCE2EB] bg-[#F5F7FB]/60 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] tabular-nums text-[#53647C]">
               Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, filteredStudents.length)} of {filteredStudents.length} students
             </p>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)} className="rounded-xl border-slate-200 text-slate-600 hover:text-slate-900 bg-white font-bold text-xs shadow-sm">
+              <Button variant="outline" size="sm" disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)} className="bg-white text-xs">
                 <ChevronLeft className="w-4 h-4 mr-1" />
                 Previous
               </Button>
-              <span className="text-xs font-bold text-slate-600 px-3 py-1.5 bg-slate-100/80 rounded-xl">Page {currentPage} of {totalPages}</span>
-              <Button variant="outline" size="sm" disabled={currentPage >= totalPages} onClick={() => setCurrentPage((p) => p + 1)} className="rounded-xl border-slate-200 text-slate-600 hover:text-slate-900 bg-white font-bold text-xs shadow-sm">
+              <span className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold tabular-nums text-[#10264B] ring-1 ring-[#DCE2EB]">Page {currentPage} of {totalPages}</span>
+              <Button variant="outline" size="sm" disabled={currentPage >= totalPages} onClick={() => setCurrentPage((p) => p + 1)} className="bg-white text-xs">
                 Next
                 <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
@@ -193,10 +193,10 @@ export function AdminStudents() {
       {/* Delete Confirmation Modal */}
       <Modal isOpen={deleteModalOpen} onClose={() => { setDeleteModalOpen(false); setStudentToDelete(null); }} title="Delete Student">
         <div className="space-y-4">
-          <p className="text-slate-600">Are you sure you want to delete <span className="font-semibold text-slate-900">{studentToDelete?.firstName || studentToDelete?.email}</span>? This action cannot be undone.</p>
+          <p className="text-sm leading-relaxed text-[#53647C]">Are you sure you want to delete <span className="font-semibold text-[#10264B]">{studentToDelete?.firstName || studentToDelete?.email}</span>? This action cannot be undone.</p>
           <div className="flex gap-3 justify-end">
             <Button variant="outline" onClick={() => { setDeleteModalOpen(false); setStudentToDelete(null); }}>Cancel</Button>
-            <Button className="bg-red-600 hover:bg-red-700 text-white" onClick={confirmDeleteStudent} disabled={deletingInProgress}>
+            <Button className="bg-red-600 text-white !shadow-none hover:bg-red-700" onClick={confirmDeleteStudent} disabled={deletingInProgress}>
               {deletingInProgress ? "Deleting..." : "Delete"}
             </Button>
           </div>
@@ -206,10 +206,10 @@ export function AdminStudents() {
       {/* Bulk Delete Confirmation Modal */}
       <Modal isOpen={bulkDeleteModalOpen} onClose={() => setBulkDeleteModalOpen(false)} title="Delete Multiple Users">
         <div className="space-y-4">
-          <p className="text-slate-600">Are you sure you want to delete <span className="font-semibold text-slate-900">{selectedStudents.size} user(s)</span>? This action cannot be undone.</p>
+          <p className="text-sm leading-relaxed text-[#53647C]">Are you sure you want to delete <span className="font-semibold text-[#10264B]">{selectedStudents.size} user(s)</span>? This action cannot be undone.</p>
           <div className="flex gap-3 justify-end">
             <Button variant="outline" onClick={() => setBulkDeleteModalOpen(false)}>Cancel</Button>
-            <Button className="bg-red-600 hover:bg-red-700 text-white" onClick={handleBulkDelete} disabled={deletingInProgress}>
+            <Button className="bg-red-600 text-white !shadow-none hover:bg-red-700" onClick={handleBulkDelete} disabled={deletingInProgress}>
               {deletingInProgress ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Deleting...</> : "Delete All"}
             </Button>
           </div>
@@ -219,10 +219,10 @@ export function AdminStudents() {
       {/* Bulk Suspend Confirmation Modal */}
       <Modal isOpen={bulkSuspendModalOpen} onClose={() => setBulkSuspendModalOpen(false)} title="Suspend Multiple Users">
         <div className="space-y-4">
-          <p className="text-slate-600">Are you sure you want to suspend <span className="font-semibold text-slate-900">{selectedStudents.size} user(s)</span>? They will lose access to their accounts.</p>
+          <p className="text-sm leading-relaxed text-[#53647C]">Are you sure you want to suspend <span className="font-semibold text-[#10264B]">{selectedStudents.size} user(s)</span>? They will lose access to their accounts.</p>
           <div className="flex gap-3 justify-end">
             <Button variant="outline" onClick={() => setBulkSuspendModalOpen(false)}>Cancel</Button>
-            <Button className="bg-amber-600 hover:bg-amber-700 text-white" onClick={handleBulkSuspend}>Suspend All</Button>
+            <Button className="bg-amber-600 text-white !shadow-none hover:bg-amber-700" onClick={handleBulkSuspend}>Suspend All</Button>
           </div>
         </div>
       </Modal>
@@ -239,35 +239,37 @@ export function AdminStudents() {
       {/* CSV Import Modal */}
       <Modal isOpen={csvModalOpen} onClose={() => { setCsvModalOpen(false); setCsvFile(null); setCsvPreview([]); }} title="Import Users via CSV">
         <div className="space-y-4">
-          <p className="text-sm text-slate-500">Upload a CSV file with columns: email, password, firstName, lastName, phone, role, status</p>
-          <div className="p-6 bg-slate-50 border-2 border-dashed border-slate-200 rounded-lg">
+          <p className="text-sm leading-relaxed text-[#53647C]">Upload a CSV file with columns: email, password, firstName, lastName, phone, role, status</p>
+          <div className="rounded-2xl border-2 border-dashed border-[#DCE2EB] bg-[#F5F7FB] p-6 transition-colors hover:border-[#1246C8]/50 hover:bg-[#DCE8FF]/30">
             <label className="block cursor-pointer">
               <input type="file" accept=".csv" onChange={handleCsvFileChange} className="hidden" />
               <div className="flex flex-col items-center justify-center py-4">
-                <Upload className="w-10 h-10 text-slate-400 mb-3" />
-                <p className="text-sm font-medium text-slate-900 mb-1">{csvFile ? csvFile.name : "Click to select CSV file"}</p>
-                <p className="text-xs text-slate-500">CSV files only</p>
+                <span className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+                  <Upload className="w-5 h-5" />
+                </span>
+                <p className="mb-1 text-sm font-semibold text-[#10264B]">{csvFile ? csvFile.name : "Click to select CSV file"}</p>
+                <p className="text-xs text-[#53647C]">CSV files only</p>
               </div>
             </label>
           </div>
           {csvPreview.length > 0 && (
             <div>
-              <p className="text-sm font-medium text-slate-700 mb-2">Preview ({csvPreview.length} users)</p>
-              <div className="max-h-40 overflow-y-auto">
-                <table className="w-full text-xs">
+              <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Preview ({csvPreview.length} users)</p>
+              <div className="max-h-40 overflow-y-auto rounded-xl border border-[#DCE2EB]">
+                <table className="w-full text-xs text-[#172B49]">
                   <thead>
-                    <tr className="border-b border-slate-200">
-                      <th className="text-left py-1">Email</th>
-                      <th className="text-left py-1">Name</th>
-                      <th className="text-left py-1">Role</th>
+                    <tr className="border-b border-[#DCE2EB] bg-[#F5F7FB]">
+                      <th className="px-3 py-2 text-left text-[10px] font-semibold uppercase tracking-[0.14em] text-[#53647C]">Email</th>
+                      <th className="px-3 py-2 text-left text-[10px] font-semibold uppercase tracking-[0.14em] text-[#53647C]">Name</th>
+                      <th className="px-3 py-2 text-left text-[10px] font-semibold uppercase tracking-[0.14em] text-[#53647C]">Role</th>
                     </tr>
                   </thead>
                   <tbody>
                     {csvPreview.slice(0, 5).map((row, i) => (
-                      <tr key={i} className="border-b border-slate-100">
-                        <td className="py-1">{row.email}</td>
-                        <td className="py-1">{row.fullname || "N/A"}</td>
-                        <td className="py-1">{row.role || "student"}</td>
+                      <tr key={i} className="border-b border-[#DCE2EB]/70 last:border-0">
+                        <td className="px-3 py-2">{row.email}</td>
+                        <td className="px-3 py-2">{row.fullname || "N/A"}</td>
+                        <td className="px-3 py-2">{row.role || "student"}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -275,9 +277,9 @@ export function AdminStudents() {
               </div>
             </div>
           )}
-          <div className="flex gap-2 pt-2">
+          <div className="flex gap-3 pt-2">
             <Button variant="outline" className="flex-1" onClick={() => { setCsvModalOpen(false); setCsvFile(null); setCsvPreview([]); }}>Cancel</Button>
-            <Button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white" onClick={handleCsvUpload} disabled={!csvPreview.length}>
+            <Button className="flex-1" onClick={handleCsvUpload} disabled={!csvPreview.length}>
               Import {csvPreview.length} Users
             </Button>
           </div>

@@ -8,6 +8,7 @@ import { register } from "@/api";
 import { useAuthStore } from "@/store/authStore";
 import { COURSE_CATALOG, computeEnrollmentPrice } from "@/data/courseCatalog";
 import { useToast } from "@/components/ui/toast";
+import { AuthShell } from "@/components/auth/AuthShell";
 import {
   ArrowLeft,
   Check,
@@ -192,8 +193,8 @@ export function Enroll() {
     {
       heading: (
         <>
-          Your Career in <br /> Aviation Starts{" "}
-          <span className="italic text-[#1239B8]">Here.</span>
+          Your career in aviation{" "}
+          <span className="text-gradient-sky">starts here.</span>
         </>
       ),
       sub: "Create your account in seconds. No commitment yet — just your details.",
@@ -201,8 +202,8 @@ export function Enroll() {
     {
       heading: (
         <>
-          Choose Your <br /> <span className="italic text-[#1239B8]">Path</span>{" "}
-          to Success.
+          Choose your{" "}
+          <span className="text-gradient-sky">path to success.</span>
         </>
       ),
       sub: "Select up to 4 courses. Pick all 4 to unlock the international internship bundle.",
@@ -210,63 +211,20 @@ export function Enroll() {
   ];
 
   return (
-    <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden relative">
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-[#1239B8]/[0.02] pointer-events-none z-0" />
-
-      {/* ── Left Panel ── */}
-      <div className="hidden lg:flex lg:w-6/12 h-screen top-0 bg-slate-900 overflow-hidden relative z-10">
-        <motion.div
-          initial={{ scale: 1.1, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-          className="absolute inset-0 z-0"
-        >
-          <img
-            src="/wing.png"
-            alt="Aviation Background"
-            className="w-full h-full object-cover opacity-50"
-          />
-          <div className="absolute inset-0 bg-gradient-to-tr from-slate-900 via-slate-900/60 to-transparent" />
-        </motion.div>
-
-        <div className="absolute inset-4 overflow-hidden">
-          {/* Go Home */}
-          <div className="absolute top-8 left-8 z-20">
-            <Link
-              to="/"
-              className="group flex items-center gap-3 w-fit px-4 py-2 bg-black/40 backdrop-blur-md rounded-full border border-white/10 hover:border-white/30 transition-all"
-            >
-              <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
-                <ArrowLeft className="w-3 h-3" />
-              </div>
-              <span className="text-[10px] text-white/70 font-bold uppercase tracking-widest group-hover:text-white transition-colors">
-                Go Home
-              </span>
-            </Link>
-          </div>
-
-          {/* Step Progress Pills */}
-
-          {/* Headline — updates per step */}
-          <div className="absolute inset-0 flex flex-col justify-center px-12 z-10 pt-20">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={step}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.4 }}
-              >
-                <h1 className="text-4xl xl:text-5xl font-semibold tracking-tighter text-white mb-6 leading-[1.05]">
-                  {leftPanelText[step - 1].heading}
-                </h1>
-                <p className="text-white/60 text-lg leading-relaxed max-w-sm font-medium">
-                  {leftPanelText[step - 1].sub}
-                </p>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
+    <AuthShell
+      eyebrow="Student enrollment"
+      title={leftPanelText[step - 1].heading}
+      description={leftPanelText[step - 1].sub}
+      heroKey={step}
+      video="aviation-instruction"
+      wide
+      facts={[
+        { label: "Tuition", value: "₦150,000 per course" },
+        { label: "4-course bundle", value: "₦538,000" },
+        { label: "Duration", value: "4 weeks" },
+      ]}
+      panelFooter={
+        <div className="flex items-end justify-between gap-6">
           {/* Testimonial Carousel */}
           <AnimatePresence mode="wait">
             <motion.div
@@ -275,33 +233,32 @@ export function Enroll() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
-              className="absolute bottom-8 left-8 z-20"
             >
-              <div className="bg-black/30 backdrop-blur-2xl p-5 rounded-[1.5rem] border border-white/10 flex items-center gap-4 max-w-[300px]">
-                <div className="relative">
-                  <div className="w-14 h-14 rounded-2xl overflow-hidden border border-white/20">
+              <div className="glass flex max-w-[320px] items-center gap-4 rounded-2xl p-4">
+                <div className="relative shrink-0">
+                  <div className="h-14 w-14 overflow-hidden rounded-full border border-white/20">
                     <img
                       src={testimonials[testimonialIdx].image}
                       alt={testimonials[testimonialIdx].name}
-                      className="w-full h-full object-cover"
+                      className="h-full w-full object-cover"
                     />
                   </div>
-                  <div className="absolute -bottom-1 -right-1 bg-[#1239B8] rounded-lg p-1 border border-white/20">
-                    <Check className="w-3 h-3 text-white" />
+                  <div className="absolute -bottom-1 -right-1 rounded-full border-2 border-[#07152E] bg-[#1246C8] p-1">
+                    <Check className="h-3 w-3 text-white" />
                   </div>
                 </div>
                 <div>
-                  <h4 className="text-white font-bold text-sm tracking-tight">
+                  <p className="text-sm font-semibold tracking-tight text-white">
                     {testimonials[testimonialIdx].name}
-                  </h4>
-                  <p className="text-white/50 text-[11px] font-medium mt-0.5">
+                  </p>
+                  <p className="mt-0.5 text-[11px] font-medium text-white/60">
                     {testimonials[testimonialIdx].role}
                   </p>
-                  <div className="flex items-center gap-0.5 mt-2">
+                  <div className="mt-2 flex items-center gap-0.5">
                     {[1, 2, 3, 4, 5].map((i) => (
                       <Star
                         key={i}
-                        className="w-2.5 h-2.5 text-[#1239B8] fill-[#1239B8]"
+                        className="h-2.5 w-2.5 fill-[#8EAEFF] text-[#8EAEFF]"
                       />
                     ))}
                   </div>
@@ -310,80 +267,58 @@ export function Enroll() {
             </motion.div>
           </AnimatePresence>
 
-          <div className="absolute bottom-10 right-10 flex gap-3 z-20">
+          <div className="flex shrink-0 gap-2">
             <button
               onClick={prevTestimonial}
-              className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all"
+              aria-label="Previous testimonial"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white/60 transition-all hover:bg-white/10 hover:text-white"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="h-4 w-4" />
             </button>
             <button
               onClick={nextTestimonial}
-              className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all"
+              aria-label="Next testimonial"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur-md transition-all hover:bg-white/20"
             >
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="h-4 w-4" />
             </button>
           </div>
         </div>
-
-        {/* Curved cutout */}
-        <div
-          className="absolute top-0 right-0 h-full w-24 bg-white z-20 pointer-events-none"
-          style={{ clipPath: "polygon(100% 0, 0 0, 100% 100%, 100% 0)" }}
-        />
-      </div>
-
-      {/* ── Right Panel: Form ── */}
-      <div className="flex-1 lg:h-screen overflow-y-auto z-10 bg-white">
-        <div className="max-w-xl mx-auto px-6 py-12 lg:py-20">
+      }
+    >
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            {/* Mobile-only Back to Home */}
-            <div className="lg:hidden mb-8">
-              <Link
-                to="/"
-                className="inline-flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors group"
-              >
-                <div className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center bg-slate-50 group-hover:bg-slate-100 transition-colors">
-                  <ArrowLeft className="w-4 h-4 text-slate-600" />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600">
-                  Back to Home
-                </span>
-              </Link>
-            </div>
-
             {/* Top nav */}
-            <div className="flex items-center justify-between mb-10">
+            <div className="mb-8 flex items-center justify-between">
               <div className="min-w-[100px]">
                 {step > 1 && (
                   <button
                     onClick={() => setStep(step - 1)}
-                    className="group flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-colors"
+                    className="group flex items-center gap-2.5 text-[#53647C] transition-colors hover:text-[#10264B]"
                   >
-                    <div className="w-8 h-8 rounded-full border border-slate-400 flex items-center justify-center group-hover:bg-slate-900 group-hover:border-slate-900 group-hover:text-white transition-all">
-                      <ArrowLeft className="w-4 h-4" />
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#DCE2EB] transition-all group-hover:border-[#10264B] group-hover:bg-[#10264B] group-hover:text-white">
+                      <ArrowLeft className="h-4 w-4" />
                     </div>
-                    <span className="text-xs font-bold tracking-widest uppercase">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.16em]">
                       Step {step - 1}
                     </span>
                   </button>
                 )}
               </div>
               {/* Step dots */}
-              <div className="flex items-center gap-1.5 bg-white p-2 rounded-full border border-slate-300 shadow-sm">
+              <div className="flex items-center gap-1.5 rounded-full border border-[#DCE2EB] bg-white p-2 shadow-subtle">
                 {[1, 2].map((s) => (
                   <div
                     key={s}
                     className={`h-1.5 rounded-full transition-all duration-500 ease-out ${
                       step === s
-                        ? "w-10 bg-[#1239B8]"
+                        ? "w-10 bg-[#1246C8]"
                         : step > s
-                          ? "w-4 bg-[#1239B8]/30"
-                          : "w-4 bg-slate-100"
+                          ? "w-4 bg-[#1246C8]/30"
+                          : "w-4 bg-[#DCE2EB]"
                     }`}
                   />
                 ))}
@@ -391,21 +326,21 @@ export function Enroll() {
             </div>
 
             {/* Step label */}
-            <div className="mb-8">
-              <div className="inline-block px-3 py-1 bg-[#1239B8]/10 text-[#1239B8] text-[10px] font-extrabold uppercase tracking-widest rounded-md mb-3">
+            <div className="mb-10">
+              <span className="eyebrow text-[#1246C8]">
                 Step {step} of 2 —{" "}
                 {step === 1 ? "Create Account" : "Choose Courses"}
-              </div>
-              <h2 className="text-3xl font-semibold tracking-tighter text-slate-900 mb-1">
-                {step === 1 ? "Begin Your Journey" : "Select Your Programme"}
-              </h2>
-              <p className="text-sm text-slate-400 font-medium">
+              </span>
+              <h1 className="mt-4 text-3xl font-bold tracking-tightest text-[#10264B] sm:text-4xl">
+                {step === 1 ? "Begin your journey" : "Select your programme"}
+              </h1>
+              <p className="mt-3 text-[15px] leading-relaxed text-[#53647C]">
                 {step === 1 ? (
                   <>
                     Already have an account?{" "}
                     <Link
                       to="/login"
-                      className="text-[#1239B8] font-bold hover:underline underline-offset-4"
+                      className="font-semibold text-[#1246C8] underline-offset-4 transition-colors hover:text-[#10264B] hover:underline"
                     >
                       Sign in
                     </Link>
@@ -428,8 +363,8 @@ export function Enroll() {
                     className="space-y-5"
                   >
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
+                      <div>
+                        <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                           First Name
                         </label>
                         <input
@@ -441,13 +376,13 @@ export function Enroll() {
                               firstName: e.target.value,
                             })
                           }
-                          className="w-full bg-white px-5 py-4 border-2 border-slate-300 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#1239B8]/5 focus:border-[#1239B8] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                          className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                           placeholder="Your first name"
                           required
                         />
                       </div>
-                      <div className="space-y-2">
-                        <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
+                      <div>
+                        <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                           Last Name
                         </label>
                         <input
@@ -459,15 +394,15 @@ export function Enroll() {
                               lastName: e.target.value,
                             })
                           }
-                          className="w-full bg-white px-5 py-4 border-2 border-slate-300 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#1239B8]/5 focus:border-[#1239B8] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                          className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                           placeholder="Your last name"
                           required
                         />
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
+                    <div>
+                      <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                         Email Address
                       </label>
                       <input
@@ -476,14 +411,14 @@ export function Enroll() {
                         onChange={(e) =>
                           setFormData({ ...formData, email: e.target.value })
                         }
-                        className="w-full bg-white px-5 py-4 border-2 border-slate-300 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#1239B8]/5 focus:border-[#1239B8] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                        className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                         placeholder="you@example.com"
                         required
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
+                    <div>
+                      <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                         Phone Number
                       </label>
                       <PhoneNumberInput
@@ -492,12 +427,12 @@ export function Enroll() {
                           setFormData({ ...formData, phone })
                         }
                         required
-                        inputClassName="border-2 border-slate-300 rounded-[1.25rem] py-4 font-medium"
+                        inputClassName="border-[#DCE2EB] bg-white text-[#172B49] placeholder:text-[#8C9AB0]"
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
+                    <div>
+                      <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                         Password
                       </label>
                       <div className="relative">
@@ -510,7 +445,7 @@ export function Enroll() {
                               password: e.target.value,
                             })
                           }
-                          className="w-full bg-white px-5 py-4 border-2 border-slate-300 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#1239B8]/5 focus:border-[#1239B8] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                          className="w-full rounded-xl border border-[#DCE2EB] bg-white py-3 pl-4 pr-12 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                           placeholder="Min. 6 characters"
                           minLength={6}
                           required
@@ -523,12 +458,13 @@ export function Enroll() {
                               showPassword: !formData.showPassword,
                             })
                           }
-                          className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                          aria-label={formData.showPassword ? "Hide password" : "Show password"}
+                          className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-[#53647C] transition-colors hover:bg-[#F5F7FB] hover:text-[#1246C8]"
                         >
                           {formData.showPassword ? (
-                            <EyeOff className="w-5 h-5" />
+                            <EyeOff className="h-4 w-4" />
                           ) : (
-                            <Eye className="w-5 h-5" />
+                            <Eye className="h-4 w-4" />
                           )}
                         </button>
                       </div>
@@ -537,10 +473,10 @@ export function Enroll() {
                     <Button
                       type="button"
                       onClick={handleStep1Next}
-                      className="w-full rounded-[1.25rem] bg-slate-900 hover:bg-black text-white h-14 font-bold text-sm tracking-tight transition-all hover:scale-[1.01] active:scale-[0.99] group shadow-xl shadow-slate-200"
+                      className="group mt-2 h-12 w-full"
                     >
                       Continue to Course Selection
-                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Button>
                   </motion.div>
                 )}
@@ -555,17 +491,17 @@ export function Enroll() {
                     className="space-y-6"
                   >
                     {/* International internship callout */}
-                    <div className="flex items-start gap-3 p-4 bg-gradient-to-r from-[#1239B8]/8 to-indigo-50 border border-[#1239B8]/20 rounded-2xl">
-                      <div className="p-2 bg-[#1239B8] rounded-lg shrink-0">
-                        <Award className="w-4 h-4 text-white" />
+                    <div className="flex items-start gap-4 rounded-2xl border border-[#1246C8]/15 bg-[#DCE8FF]/50 p-4 sm:p-5">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1246C8]">
+                        <Award className="h-4 w-4 text-white" />
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-slate-900 mb-0.5">
+                        <p className="mb-1 text-sm font-semibold text-[#10264B]">
                           International Internship Programme
                         </p>
-                        <p className="text-xs text-slate-500 leading-relaxed">
+                        <p className="text-[13px] leading-relaxed text-[#53647C]">
                           For international internships,{" "}
-                          <span className="font-bold text-[#1239B8]">
+                          <span className="font-semibold text-[#1246C8]">
                             4 courses are required — ₦538,000
                           </span>{" "}
                           (bundled discount, saves ₦62,000).
@@ -576,17 +512,17 @@ export function Enroll() {
                     {/* Course list */}
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest">
+                        <label className="block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                           Available Programmes
                         </label>
                         {count > 0 && (
-                          <span className="text-[10px] font-bold text-[#1239B8] bg-[#1239B8]/10 px-2.5 py-1 rounded-full">
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#DCE8FF] px-2.5 py-1 text-[11px] font-semibold tabular-nums text-[#1246C8]">
                             {count}/4 selected
                           </span>
                         )}
                       </div>
 
-                      <div className="grid grid-cols-1 gap-2.5">
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
                         {COURSE_CATALOG.map((course) => {
                           const isSelected = formData.selectedCourses.includes(
                             course.title,
@@ -598,43 +534,44 @@ export function Enroll() {
                               onClick={() =>
                                 toggleCourseSelection(course.title)
                               }
-                              className={`group flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-200 ${
+                              aria-pressed={isSelected}
+                              className={`group flex items-center justify-between gap-3 rounded-2xl border p-4 transition-all duration-200 ${
                                 isSelected
-                                  ? "border-[#1239B8] bg-[#1239B8]/5"
-                                  : "border-slate-200 bg-white hover:border-slate-400"
+                                  ? "border-[#1246C8] bg-[#DCE8FF]/40 shadow-subtle ring-4 ring-[#1246C8]/10"
+                                  : "border-[#DCE2EB] bg-white hover:border-[#1246C8]/40 hover:shadow-subtle"
                               }`}
                             >
                               <div className="flex items-center gap-3 text-left">
                                 <div
-                                  className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-all ${
+                                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-all ${
                                     isSelected
-                                      ? "bg-[#1239B8] text-white"
-                                      : "bg-slate-100 text-slate-300 group-hover:bg-slate-200"
+                                      ? "bg-[#1246C8] text-white"
+                                      : "bg-[#F5F7FB] text-[#53647C] group-hover:bg-[#DCE8FF] group-hover:text-[#1246C8]"
                                   }`}
                                 >
                                   {isSelected ? (
-                                    <Check className="w-4 h-4" />
+                                    <Check className="h-4 w-4" />
                                   ) : (
-                                    <GraduationCap className="w-4 h-4" />
+                                    <GraduationCap className="h-4 w-4" />
                                   )}
                                 </div>
                                 <div>
                                   <span
-                                    className={`text-sm font-bold block ${
+                                    className={`block text-sm font-semibold leading-snug ${
                                       isSelected
-                                        ? "text-slate-900"
-                                        : "text-slate-600"
+                                        ? "text-[#10264B]"
+                                        : "text-[#172B49]"
                                     }`}
                                   >
                                     {course.title}
                                   </span>
-                                  <span className="text-[11px] text-slate-400">
+                                  <span className="mt-0.5 block text-[12px] tabular-nums text-[#53647C]">
                                     ₦150,000
                                   </span>
                                 </div>
                               </div>
                               {isSelected && (
-                                <Check className="w-4 h-4 text-[#1239B8] shrink-0" />
+                                <Check className="h-4 w-4 shrink-0 text-[#1246C8]" />
                               )}
                             </button>
                           );
@@ -647,32 +584,38 @@ export function Enroll() {
                       <motion.div
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className={`p-4 rounded-2xl border-2 ${
+                        className={`overflow-hidden rounded-2xl border ${
                           isBundle
-                            ? "border-green-400 bg-green-50"
-                            : "border-slate-200 bg-slate-50"
+                            ? "border-emerald-200 bg-emerald-50/70"
+                            : "border-[#DCE2EB] bg-[#F5F7FB]"
                         }`}
                       >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+                        <div className="flex items-stretch">
+                          <div className="min-w-0 flex-1 p-5">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#53647C]">
                               {isBundle
                                 ? "Bundle Price (4 courses)"
                                 : `${count} course${count > 1 ? "s" : ""} selected`}
                             </p>
                             {isBundle && (
-                              <p className="text-[11px] text-green-600 font-semibold mt-0.5">
+                              <p className="mt-1 text-[12px] font-semibold text-emerald-700">
                                 You save ₦62,000 🎉
                               </p>
                             )}
+                            <div aria-hidden="true" className="barcode mt-4 h-8 w-32 rounded-sm opacity-80" />
                           </div>
-                          <p
-                            className={`text-2xl font-bold tracking-tight ${
-                              isBundle ? "text-green-700" : "text-slate-900"
-                            }`}
-                          >
-                            ₦{enrollmentPrice.toLocaleString("en-NG")}
-                          </p>
+                          <div className="flex flex-col justify-center border-l-2 border-dashed border-[#DCE2EB] bg-white/60 px-5 py-5 text-right sm:px-7">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#53647C]">
+                              Total
+                            </p>
+                            <p
+                              className={`mt-1 text-2xl font-bold tracking-tightest tabular-nums sm:text-3xl ${
+                                isBundle ? "text-emerald-700" : "text-[#10264B]"
+                              }`}
+                            >
+                              ₦{enrollmentPrice.toLocaleString("en-NG")}
+                            </p>
+                          </div>
                         </div>
                       </motion.div>
                     )}
@@ -680,7 +623,7 @@ export function Enroll() {
                     <Button
                       type="submit"
                       disabled={count === 0 || loading}
-                      className="w-full rounded-[1.25rem] bg-slate-900 hover:bg-black disabled:bg-[#0f172a]/50 text-white h-14 font-bold text-sm tracking-tight transition-all hover:scale-[1.01] active:scale-[0.99] shadow-2xl shadow-[#0f172a]/20"
+                      className="h-12 w-full"
                     >
                       {loading
                         ? "Processing Enrollment…"
@@ -691,8 +634,6 @@ export function Enroll() {
               </AnimatePresence>
             </form>
           </motion.div>
-        </div>
-      </div>
-    </div>
+    </AuthShell>
   );
 }

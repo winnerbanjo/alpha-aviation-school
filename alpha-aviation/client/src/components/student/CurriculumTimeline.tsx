@@ -66,13 +66,16 @@ export function CurriculumTimeline({ course }: CurriculumTimelineProps) {
 
   return (
     <>
-      <div className="space-y-4">
-        <h3 className="text-xl font-bold tracking-tight text-slate-900">
-          Course Journey
-        </h3>
+      <div className="space-y-5">
+        <div>
+          <span className="eyebrow text-[#1246C8]">Flight path</span>
+          <h3 className="mt-2 text-xl font-bold tracking-tighter text-[#10264B]">
+            Course Journey
+          </h3>
+        </div>
         <div className="relative">
           {/* Vertical Line */}
-          <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-slate-200" />
+          <div aria-hidden className="absolute left-[19px] top-2 bottom-2 border-l-2 border-dashed border-[#DCE2EB]" />
 
           {/* Modules */}
           <div className="space-y-6">
@@ -82,37 +85,45 @@ export function CurriculumTimeline({ course }: CurriculumTimelineProps) {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="relative flex items-start gap-4 cursor-pointer group"
+                className="relative flex items-start gap-4 cursor-pointer group group/row"
                 onClick={() => handleModuleClick(module)}
               >
+                {/* Flown segment of the flight path */}
+                <div
+                  aria-hidden
+                  className={`absolute left-[19px] top-10 -bottom-6 border-l-2 group-last/row:hidden ${
+                    module.completed ? "border-[#1246C8]" : "border-transparent"
+                  }`}
+                />
+
                 {/* Icon */}
                 <div
-                  className={`relative z-10 p-1.5 rounded-full transition-all group-hover:scale-110 ${
+                  className={`relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-4 border-white transition-transform group-hover:scale-110 ${
                     module.completed
-                      ? "bg-green-100 group-hover:bg-green-200"
-                      : "bg-slate-100 group-hover:bg-slate-200"
+                      ? "bg-[#1246C8] shadow-glow"
+                      : "bg-[#F5F7FB] ring-1 ring-[#DCE2EB] group-hover:ring-[#1246C8]/40"
                   }`}
                 >
                   {module.completed ? (
-                    <CheckCircle2 className="w-5 h-5 text-green-600" />
+                    <CheckCircle2 className="w-4 h-4 text-white" />
                   ) : (
-                    <Circle className="w-5 h-5 text-slate-400" />
+                    <Circle className="w-3.5 h-3.5 text-[#8C9AB0]" />
                   )}
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 pt-1">
+                <div className="flex-1 pt-2">
                   <p
-                    className={`text-sm font-medium transition-colors group-hover:text-[#1239B8] ${
-                      module.completed ? "text-slate-900" : "text-slate-500"
+                    className={`text-sm font-semibold transition-colors group-hover:text-[#1246C8] ${
+                      module.completed ? "text-[#10264B]" : "text-[#53647C]"
                     }`}
                   >
                     {module.name}
                   </p>
                   {module.completed && (
-                    <p className="text-xs text-slate-400 mt-1">Completed</p>
+                    <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-700">Completed</p>
                   )}
-                  <p className="text-xs text-slate-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <p className="mt-1 text-xs font-medium text-[#1246C8] opacity-0 transition-opacity group-hover:opacity-100">
                     Click for details →
                   </p>
                 </div>

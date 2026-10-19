@@ -113,26 +113,25 @@ export function StudentSidebar({
     <>
       {/* Sidebar aside */}
       <aside
-        className={`fixed left-0 top-0 h-full w-64 bg-[#f8fafc]   backdrop-blur-xl border-r border-slate-200/60 z-40 transition-transform duration-300 ease-out flex flex-col justify-between ${
+        className={`fixed left-0 top-0 h-full w-64 overflow-hidden bg-[#07152E] text-white border-r border-white/5 z-40 transition-transform duration-300 ease-out flex flex-col justify-between ${
           mobileMenuOpen
             ? "translate-x-0"
             : "-translate-x-full lg:translate-x-0"
         }`}
       >
-        <div className="absolute top-[-100px] w-64 h-64 rounded-full bg-gradient-to-br from-indigo-200/25 to-purple-200/25 blur-3xl pointer-events-none z-0" />
-        <div className="absolute bottom-[-100px] w-64 h-64 rounded-full bg-gradient-to-tr from-purple-200/20 to-sky-200/20 blur-3xl pointer-events-none z-0" />
+        <div aria-hidden className="pointer-events-none absolute inset-0 z-0 bg-chart-grid mask-fade-b opacity-70" />
+        <div aria-hidden className="pointer-events-none absolute -left-24 -top-28 z-0 h-72 w-72 rounded-full bg-[#1246C8]/35 blur-[90px]" />
+        <div aria-hidden className="pointer-events-none absolute -bottom-32 -right-24 z-0 h-64 w-64 rounded-full bg-[#5B86FF]/15 blur-[90px]" />
 
-        <div className="flex flex-col flex-1 overflow-y-auto px-5 pt-6 pb-4">
+        <div className="relative z-10 flex flex-col flex-1 overflow-y-auto px-3 pt-6 pb-4">
           {/* Brand header */}
-          <div className="flex items-center gap-3 px-2 mb-6">
-            <div className="p-2">
-              <Logo showText={false} size="sm" className="text-white" />
-            </div>
+          <div className="flex items-center justify-between gap-2 px-1 mb-8">
+            <Logo variant="white" size="sm" />
             {user?.enrolledByAgent && (() => {
               const nameParts = (user.enrolledByAgent?.agentName || "").split(" ").filter(Boolean);
               const initials = nameParts.map((p: string) => p[0]).join("").toUpperCase().slice(0, 2) || "AG";
               return (
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold border-2 border-white shadow-md shrink-0" title={user.enrolledByAgent?.agentName || "Agent"}>
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1246C8] text-[11px] font-bold text-white ring-2 ring-white/15 shadow-glow" title={user.enrolledByAgent?.agentName || "Agent"}>
                   {initials}
                 </div>
               );
@@ -152,13 +151,13 @@ export function StudentSidebar({
           </div> */}
 
           {/* Navigation links */}
-          <nav className="flex-1 space-y-6">
+          <nav className="flex-1 space-y-7">
             {filteredGroups.map((group) => (
-              <div key={group.title} className="space-y-1.5">
-                <span className="px-3 text-[10px] font-bold text-slate-400/90 tracking-wider uppercase">
+              <div key={group.title} className="space-y-2">
+                <span className="block px-4 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8EAEFF]/80">
                   {group.title}
                 </span>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {group.items.map((item) => {
                     const Icon = item.icon;
                     return (
@@ -167,14 +166,14 @@ export function StudentSidebar({
                         to={item.path}
                         onClick={() => setMobileMenuOpen(false)}
                         className={({ isActive }) =>
-                          `flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold rounded-2xl transition-all duration-200 ${
+                          `group flex items-center gap-3 rounded-full px-4 py-2.5 text-[13px] font-medium transition-colors ${
                             isActive
-                              ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 scale-[1.01]"
-                              : "text-slate-600 hover:bg-slate-100/80 hover:text-slate-950"
+                              ? "bg-white text-[#10264B] shadow-subtle"
+                              : "text-white/70 hover:bg-white/[0.06] hover:text-white"
                           }`
                         }
                       >
-                        <Icon className="w-4.5 h-4.5" />
+                        <Icon className="h-[18px] w-[18px] shrink-0 group-aria-[current=page]:text-[#1246C8]" />
                         {item.label}
                       </NavLink>
                     );
@@ -184,7 +183,7 @@ export function StudentSidebar({
             ))}
             {filteredGroups.length === 0 && (
               <div className="text-center py-6">
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-white/50">
                   No navigation items found
                 </p>
               </div>
@@ -193,17 +192,17 @@ export function StudentSidebar({
         </div>
 
         {/* Profile Card & Logout */}
-        <div className="p-4 border-t border-slate-200/50 bg-slate-50/50 backdrop-blur-md rounded-b-2xl">
-          <div className="flex items-center justify-between gap-2 p-2 bg-white border border-slate-100 rounded-2xl shadow-sm">
+        <div className="relative z-10 border-t border-white/10 p-3">
+          <div className="flex items-center justify-between gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-3">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-purple-100 to-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm shrink-0 border border-indigo-200/30">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1246C8] text-xs font-bold text-white">
                 {initials}
               </div>
               <div className="min-w-0">
-                <p className="text-xs font-bold text-slate-900 truncate">
+                <p className="truncate text-[13px] font-semibold text-white">
                   {displayName}
                 </p>
-                <p className="text-[10px] font-medium text-slate-400 truncate">
+                <p className="truncate text-[11px] font-medium text-white/50 tabular-nums">
                   {user?.studentIdNumber || "Student Pilot"}
                 </p>
               </div>
@@ -215,14 +214,14 @@ export function StudentSidebar({
                   setMobileMenuOpen(false);
                   navigate("/dashboard/profile");
                 }}
-                className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-slate-100 rounded-lg transition-colors"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white"
                 title="Profile Settings"
               >
                 <Settings className="w-4 h-4" />
               </button>
               <button
                 onClick={handleLogout}
-                className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white"
                 title="Logout"
               >
                 <LogOut className="w-4 h-4" />
@@ -235,7 +234,7 @@ export function StudentSidebar({
       {/* Mobile overlay */}
       {mobileMenuOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-slate-950/20 backdrop-blur-sm z-30 transition-opacity"
+          className="lg:hidden fixed inset-0 bg-[#07152E]/60 backdrop-blur-sm z-30 transition-opacity"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}

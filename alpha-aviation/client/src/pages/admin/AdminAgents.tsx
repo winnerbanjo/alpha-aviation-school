@@ -130,13 +130,13 @@ export function AdminAgents() {
 
   const statusBadge = (status: Agent["agentStatus"]) => {
     const map = {
-      pending: { text: "Pending", cls: "text-amber-700 bg-amber-50 border-amber-200", icon: <Clock className="w-3 h-3" /> },
-      approved: { text: "Approved", cls: "text-emerald-700 bg-emerald-50 border-emerald-200", icon: <CheckCircle2 className="w-3 h-3" /> },
-      rejected: { text: "Rejected", cls: "text-rose-700 bg-rose-50 border-rose-200", icon: <XCircle className="w-3 h-3" /> },
-      suspended: { text: "Suspended", cls: "text-orange-700 bg-orange-50 border-orange-200", icon: <AlertCircle className="w-3 h-3" /> },
+      pending: { text: "Pending", cls: "text-amber-700 bg-amber-50 ring-amber-600/15", icon: <Clock className="w-3 h-3" /> },
+      approved: { text: "Approved", cls: "text-emerald-700 bg-emerald-50 ring-emerald-600/15", icon: <CheckCircle2 className="w-3 h-3" /> },
+      rejected: { text: "Rejected", cls: "text-red-700 bg-red-50 ring-red-600/15", icon: <XCircle className="w-3 h-3" /> },
+      suspended: { text: "Suspended", cls: "text-orange-700 bg-orange-50 ring-orange-600/15", icon: <AlertCircle className="w-3 h-3" /> },
     };
     const s = map[status];
-    return <span className={`inline-flex items-center gap-1 text-xs font-bold border rounded-full px-2.5 py-0.5 ${s.cls}`}>{s.icon}{s.text}</span>;
+    return <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 ${s.cls}`}>{s.icon}{s.text}</span>;
   };
 
   const tabs: { key: FilterTab; label: string }[] = [
@@ -148,49 +148,50 @@ export function AdminAgents() {
   ];
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="space-y-8 pb-12">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-black text-slate-900">Agent Requests</h1>
-        <p className="text-sm text-slate-500 mt-0.5">Review and manage agent applications and active agents</p>
+        <span className="eyebrow text-[#1246C8]">Administration</span>
+        <h1 className="mt-3 text-3xl font-bold tracking-tightest text-[#10264B] sm:text-4xl">Agent Requests</h1>
+        <p className="mt-2 max-w-2xl text-[#53647C]">Review and manage agent applications and active agents</p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-px overflow-hidden rounded-panel border border-[#DCE2EB] bg-[#DCE2EB] shadow-subtle md:grid-cols-4">
         {[
           { label: "Total Agents", value: agents.length, color: "indigo" },
           { label: "Pending", value: agents.filter(a => a.agentStatus === "pending").length, color: "amber" },
           { label: "Approved", value: agents.filter(a => a.agentStatus === "approved").length, color: "emerald" },
           { label: "Total Students", value: agents.reduce((sum, a) => sum + a.studentCount, 0), color: "purple" },
         ].map((s) => (
-          <div key={s.label} className="bg-white border border-slate-200/60 rounded-2xl p-4 shadow-sm">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{s.label}</p>
-            <p className="text-2xl font-black text-slate-900 mt-1">{s.value}</p>
+          <div key={s.label} className="bg-white p-5 sm:p-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#53647C]">{s.label}</p>
+            <p className="mt-2 text-3xl font-bold tracking-tightest tabular-nums text-[#10264B]">{s.value}</p>
           </div>
         ))}
       </div>
 
       {/* Tabs + Search */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-        <div className="flex gap-1 bg-slate-100 rounded-2xl p-1 overflow-x-auto flex-shrink-0">
+        <div className="flex flex-shrink-0 gap-1 overflow-x-auto rounded-full border border-[#DCE2EB] bg-white p-1 shadow-subtle">
           {tabs.map((t) => (
             <button
               key={t.key}
               onClick={() => setFilter(t.key)}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${filter === t.key ? "bg-white text-indigo-700 shadow-sm" : "text-slate-500 hover:text-slate-900"}`}
+              className={`whitespace-nowrap rounded-full px-4 py-2 text-[13px] font-semibold transition-colors ${filter === t.key ? "bg-[#10264B] text-white shadow-subtle" : "text-[#53647C] hover:bg-[#F5F7FB] hover:text-[#10264B]"}`}
             >
               {t.label}
             </button>
           ))}
         </div>
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8C9AB0]" />
           <input
             type="text"
             placeholder="Search agents..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"
+            className="w-full rounded-full border border-[#DCE2EB] bg-white py-2.5 pl-11 pr-4 text-sm text-[#172B49] shadow-subtle outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
           />
         </div>
       </div>
@@ -198,12 +199,14 @@ export function AdminAgents() {
       {/* Agent list */}
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <div className="w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+          <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-[#DCE8FF] border-t-[#1246C8]" />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="bg-white border border-slate-200 rounded-3xl text-center py-16">
-          <Users className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-          <p className="text-slate-500 font-medium">{filter === "pending" ? "No pending agent requests" : "No agents found"}</p>
+        <div className="rounded-panel border border-[#DCE2EB] bg-white py-16 text-center shadow-subtle">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#F5F7FB] text-[#8C9AB0]">
+            <Users className="h-6 w-6" />
+          </div>
+          <p className="font-medium text-[#53647C]">{filter === "pending" ? "No pending agent requests" : "No agents found"}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -212,35 +215,35 @@ export function AdminAgents() {
               key={agent._id}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white border border-slate-200/60 rounded-3xl overflow-hidden shadow-[0px_2px_12px_0px_rgba(0,0,0,0.04)]"
+              className="overflow-hidden rounded-panel border border-[#DCE2EB] bg-white shadow-subtle transition-shadow hover:shadow-card"
             >
               {/* Agent row */}
               <div className="px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4">
                 {/* Avatar + info */}
                 <div className="flex items-center gap-4 flex-1 min-w-0">
-                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-100 to-purple-100 text-indigo-700 flex items-center justify-center font-bold text-sm border border-indigo-200/30 shrink-0">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#DCE8FF] text-sm font-semibold text-[#1246C8]">
                     {(agent.firstName[0] || "") + (agent.lastName[0] || "")}
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <p className="text-sm font-bold text-slate-900">{agent.firstName} {agent.lastName}</p>
+                      <p className="text-[15px] font-semibold tracking-tight text-[#10264B]">{agent.firstName} {agent.lastName}</p>
                       {statusBadge(agent.agentStatus)}
                     </div>
-                    <div className="flex items-center gap-3 mt-0.5 flex-wrap">
+                    <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
                       {agent.agencyName && (
-                        <span className="text-xs text-slate-500 flex items-center gap-1"><Building2 className="w-3 h-3" />{agent.agencyName}</span>
+                        <span className="flex items-center gap-1.5 text-xs font-medium text-[#172B49]"><Building2 className="h-3.5 w-3.5 text-[#8C9AB0]" />{agent.agencyName}</span>
                       )}
-                      <span className="text-xs text-slate-400 flex items-center gap-1"><Mail className="w-3 h-3" />{agent.email}</span>
+                      <span className="flex items-center gap-1.5 text-xs text-[#53647C]"><Mail className="h-3.5 w-3.5 text-[#8C9AB0]" />{agent.email}</span>
                       {agent.phone && (
-                        <span className="text-xs text-slate-400 flex items-center gap-1"><Phone className="w-3 h-3" />{agent.phone}</span>
+                        <span className="flex items-center gap-1.5 text-xs text-[#53647C]"><Phone className="h-3.5 w-3.5 text-[#8C9AB0]" />{agent.phone}</span>
                       )}
                     </div>
-                    <div className="flex items-center gap-3 mt-1">
+                    <div className="mt-2 flex flex-wrap items-center gap-3">
                       {agent.agentCode && (
-                        <span className="font-mono text-[10px] font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 rounded-md px-1.5 py-0.5">{agent.agentCode}</span>
+                        <span className="rounded-full bg-[#DCE8FF] px-2 py-0.5 font-mono text-[10px] font-semibold text-[#1246C8]">{agent.agentCode}</span>
                       )}
-                      <span className="text-[10px] text-slate-400">{agent.studentCount} student{agent.studentCount !== 1 ? "s" : ""}</span>
-                      <span className="text-[10px] text-slate-400">Applied {new Date(agent.createdAt).toLocaleDateString("en-NG", { day: "numeric", month: "short", year: "numeric" })}</span>
+                      <span className="text-[11px] tabular-nums text-[#8C9AB0]">{agent.studentCount} student{agent.studentCount !== 1 ? "s" : ""}</span>
+                      <span className="text-[11px] text-[#8C9AB0]">Applied {new Date(agent.createdAt).toLocaleDateString("en-NG", { day: "numeric", month: "short", year: "numeric" })}</span>
                     </div>
                   </div>
                 </div>
@@ -252,14 +255,14 @@ export function AdminAgents() {
                       <button
                         onClick={() => handleApprove(agent)}
                         disabled={actionLoading === agent._id + "-approve"}
-                        className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all disabled:opacity-50"
+                        className="flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-emerald-700 disabled:opacity-50"
                       >
                         {actionLoading === agent._id + "-approve" ? <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
                         Approve
                       </button>
                       <button
                         onClick={() => { setRejectModal(agent); setRejectReason(""); }}
-                        className="flex items-center gap-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold px-4 py-2 rounded-xl transition-all"
+                        className="flex items-center gap-1.5 rounded-full border border-red-200 bg-white px-4 py-2 text-[13px] font-semibold text-red-600 transition-colors hover:border-red-300 hover:bg-red-50 hover:text-red-700"
                       >
                         <XCircle className="w-3.5 h-3.5" />
                         Reject
@@ -270,7 +273,7 @@ export function AdminAgents() {
                     <button
                       onClick={() => handleSuspend(agent)}
                       disabled={actionLoading === agent._id + "-suspend"}
-                      className="flex items-center gap-1.5 bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 text-xs font-bold px-4 py-2 rounded-xl transition-all disabled:opacity-50"
+                      className="flex items-center gap-1.5 rounded-full border border-orange-200 bg-white px-4 py-2 text-[13px] font-semibold text-orange-700 transition-colors hover:border-orange-300 hover:bg-orange-50 disabled:opacity-50"
                     >
                       {actionLoading === agent._id + "-suspend" ? <div className="w-3.5 h-3.5 border-2 border-orange-300 border-t-orange-700 rounded-full animate-spin" /> : <AlertCircle className="w-3.5 h-3.5" />}
                       Suspend
@@ -280,15 +283,15 @@ export function AdminAgents() {
                     <button
                       onClick={() => handleReactivate(agent)}
                       disabled={actionLoading === agent._id + "-reactivate"}
-                      className="flex items-center gap-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-bold px-4 py-2 rounded-xl transition-all disabled:opacity-50"
+                      className="flex items-center gap-1.5 rounded-full border border-[#10264B]/15 bg-white px-4 py-2 text-[13px] font-semibold text-[#10264B] transition-colors hover:border-[#1246C8] hover:text-[#1246C8] disabled:opacity-50"
                     >
-                      {actionLoading === agent._id + "-reactivate" ? <div className="w-3.5 h-3.5 border-2 border-indigo-300 border-t-indigo-700 rounded-full animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                      {actionLoading === agent._id + "-reactivate" ? <div className="w-3.5 h-3.5 border-2 border-[#DCE8FF] border-t-[#1246C8] rounded-full animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
                       Reactivate
                     </button>
                   )}
                   <button
                     onClick={() => toggleExpand(agent._id)}
-                    className="p-2 hover:bg-slate-100 rounded-xl transition-colors text-slate-500"
+                    className="flex h-9 w-9 items-center justify-center rounded-full text-[#53647C] transition-colors hover:bg-[#F5F7FB] hover:text-[#10264B]"
                   >
                     {expandedAgent === agent._id ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
                   </button>
@@ -304,26 +307,26 @@ export function AdminAgents() {
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="border-t border-slate-100 bg-slate-50/50 px-6 py-4">
-                      <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
-                        <Shield className="w-3 h-3" />
+                    <div className="border-t border-[#DCE2EB] bg-[#F5F7FB]/70 px-6 py-5">
+                      <p className="mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+                        <Shield className="h-3.5 w-3.5 text-[#1246C8]" />
                         Students Enrolled by This Agent
                       </p>
                       {studentsLoading === agent._id ? (
                         <div className="flex items-center justify-center py-6">
-                          <div className="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+                          <div className="h-6 w-6 animate-spin rounded-full border-[3px] border-[#DCE8FF] border-t-[#1246C8]" />
                         </div>
                       ) : !agentStudents[agent._id]?.length ? (
-                        <p className="text-sm text-slate-400 text-center py-4">No students enrolled yet</p>
+                        <p className="py-4 text-center text-sm text-[#8C9AB0]">No students enrolled yet</p>
                       ) : (
                         <div className="space-y-2">
                           {agentStudents[agent._id].map((s) => (
-                            <div key={s._id} className="flex items-center justify-between bg-white border border-slate-100 rounded-2xl px-4 py-2.5">
-                              <div>
-                                <p className="text-sm font-bold text-slate-900">{s.firstName} {s.lastName}</p>
-                                <p className="text-xs text-slate-500 font-mono">{s.studentIdNumber} · {s.email}</p>
+                            <div key={s._id} className="flex items-center justify-between gap-3 rounded-2xl border border-[#DCE2EB] bg-white px-4 py-3">
+                              <div className="min-w-0">
+                                <p className="text-sm font-semibold text-[#10264B]">{s.firstName} {s.lastName}</p>
+                                <p className="truncate font-mono text-xs text-[#53647C]">{s.studentIdNumber} · {s.email}</p>
                               </div>
-                              <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${s.paymentStatus === "Paid" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-amber-50 text-amber-700 border border-amber-200"}`}>
+                              <span className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${s.paymentStatus === "Paid" ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/15" : "bg-amber-50 text-amber-700 ring-1 ring-amber-600/15"}`}>
                                 {s.paymentStatus}
                               </span>
                             </div>
@@ -346,45 +349,45 @@ export function AdminAgents() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-[#07152E]/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.97 }}
-              className="bg-white rounded-3xl w-full max-w-md shadow-2xl"
+              className="w-full max-w-md overflow-hidden rounded-panel border border-[#DCE2EB] bg-white shadow-float"
             >
-              <div className="border-b border-slate-100 px-6 py-4 flex items-center justify-between">
-                <h2 className="text-lg font-black text-slate-900">Reject Agent Application</h2>
-                <button onClick={() => setRejectModal(null)} className="p-2 hover:bg-slate-100 rounded-xl transition-colors">
-                  <X className="w-5 h-5 text-slate-500" />
+              <div className="flex items-center justify-between border-b border-[#DCE2EB] px-6 py-5">
+                <h2 className="text-lg font-bold tracking-tighter text-[#10264B]">Reject Agent Application</h2>
+                <button onClick={() => setRejectModal(null)} className="flex h-9 w-9 items-center justify-center rounded-full text-[#53647C] transition-colors hover:bg-[#F5F7FB] hover:text-[#10264B]">
+                  <X className="w-5 h-5" />
                 </button>
               </div>
-              <div className="p-6 space-y-4">
-                <p className="text-sm text-slate-600">
-                  You are rejecting <strong>{rejectModal.firstName} {rejectModal.lastName}</strong>'s agent application. Please provide a reason — this will be emailed to the applicant.
+              <div className="p-6 space-y-5">
+                <p className="text-sm leading-relaxed text-[#53647C]">
+                  You are rejecting <strong className="font-semibold text-[#10264B]">{rejectModal.firstName} {rejectModal.lastName}</strong>'s agent application. Please provide a reason — this will be emailed to the applicant.
                 </p>
                 <div>
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1.5">Rejection Reason <span className="text-rose-400">*</span></label>
+                  <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Rejection Reason <span className="text-red-500">*</span></label>
                   <textarea
                     value={rejectReason}
                     onChange={(e) => setRejectReason(e.target.value)}
                     rows={3}
                     placeholder="e.g. Incomplete information provided, unable to verify agency details..."
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-rose-500/30 resize-none placeholder-slate-400"
+                    className="w-full resize-none rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                   />
                 </div>
                 <div className="flex gap-3">
                   <button
                     onClick={() => setRejectModal(null)}
-                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-2xl text-sm transition-all"
+                    className="flex-1 rounded-full border border-[#10264B]/15 bg-white py-3 text-sm font-semibold text-[#10264B] transition-colors hover:border-[#1246C8] hover:text-[#1246C8]"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleReject}
                     disabled={!rejectReason.trim() || actionLoading?.includes("-reject")}
-                    className="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-2xl text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-full bg-red-600 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:opacity-50"
                   >
                     {actionLoading?.includes("-reject") ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : "Reject Application"}
                   </button>

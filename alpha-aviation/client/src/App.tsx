@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { RoutesConfig } from "./routes";
 import { ScrollToTop } from "./components/ScrollToTop";
+import { RevealObserver } from "./components/motion/RevealObserver";
 import api from "./api";
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <RevealObserver />
       <RoutesConfig />
     </BrowserRouter>
   );

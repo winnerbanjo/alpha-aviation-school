@@ -5,9 +5,8 @@ import { Button } from "@/components/ui/button";
 import { login as apiLogin } from "@/api";
 import { motion } from "framer-motion";
 import { NoIndexSEO } from "@/components/seo/NoIndexSEO";
+import { AuthShell } from "@/components/auth/AuthShell";
 import {
-  GraduationCap,
-  ArrowLeft,
   ArrowRight,
   Eye,
   EyeOff,
@@ -132,120 +131,51 @@ export function Login() {
         description={loginDescription}
         url={isAgentLogin ? "/agent/login" : "/login"}
       />
-      <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden relative">
-      {/* Left Panel: Cinematic Hero */}
-      <div className="hidden lg:flex lg:w-6/12 h-screen sticky top-0 bg-slate-900 overflow-hidden relative z-10">
-        <motion.div
-          initial={{ scale: 1.1, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-          className="absolute inset-0 z-0"
-        >
-          <img
-            src="/wing.png"
-            alt="Aviation Background"
-            className="w-full h-full object-cover opacity-50"
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900/60 to-transparent" />
-        </motion.div>
-
-        <div className="absolute inset-4 overflow-hidden">
-          {/* Go Home */}
-          <div className="absolute top-8 left-8 z-20">
-            <Link
-              to="/"
-              className="group flex items-center gap-3 w-fit px-4 py-2 bg-black/40 backdrop-blur-md rounded-full border border-white/10 hover:border-white/30 transition-all"
-            >
-              <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
-                <ArrowLeft className="w-3 h-3" />
-              </div>
-              <span className="text-[10px] text-white/70 font-bold uppercase tracking-widest group-hover:text-white transition-colors">
-                Go Home
-              </span>
-            </Link>
-          </div>
-
-          {/* Main Narrative Overlay */}
-          <div className="absolute inset-0 flex flex-col justify-center px-12 z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-            >
-              <h1 className="text-4xl xl:text-5xl font-semibold tracking-tighter text-white mb-6 leading-[1.05]">
-                Welcome Back to the <br />
-                <span className="italic text-[#1239B8]">Elite</span> Flight
-                Deck.
-              </h1>
-              <p className="text-white/60 text-lg leading-relaxed max-w-sm font-medium">
-                {loginDescription}
-              </p>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* The Curved Cutout Effect */}
-        <div
-          className="absolute top-0 right-0 h-full w-24 bg-white z-20 pointer-events-none"
-          style={{ clipPath: "polygon(100% 0, 0 0, 100% 100%, 100% 0)" }}
-        />
-      </div>
-
-      {/* Right Panel: Login Form */}
-      <div className="flex-1 lg:h-screen overflow-y-auto z-10 bg-white">
-        <div className="max-w-md mx-auto px-6 py-12 lg:py-24 h-full flex flex-col justify-center">
+      <AuthShell
+        eyebrow={isAgentLogin ? "Partner portal" : "Student portal"}
+        title="Welcome back to"
+        accent="the flight deck."
+        description={loginDescription}
+        video="flight-deck-mentoring"
+        facts={[
+          { label: "Career tracks", value: "7" },
+          { label: "Weeks per course", value: "4" },
+          { label: "Learning modes", value: "Lagos & live online" },
+        ]}
+      >
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            {/* Mobile-only Back to Home */}
-            <div className="lg:hidden mb-8">
-              <Link
-                to="/"
-                className="inline-flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors"
-              >
-                <div className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center bg-slate-50 group-hover:bg-slate-100 transition-colors">
-                  <ArrowLeft className="w-4 h-4 text-slate-600" />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600">
-                  Back to Home
-                </span>
-              </Link>
-            </div>
-
-            <div className="mb-12">
-              <div className="inline-flex justify-center mb-6">
-                <div className="p-3 bg-[#1239B8]/10 rounded-full border border-[#1239B8]/20 shadow-sm shadow-[#1239B8]/10">
-                  <GraduationCap className="w-8 h-8 text-[#1239B8]" />
-                </div>
-              </div>
-              <h2 className="text-4xl font-semibold tracking-tighter text-slate-900 mb-2">
+            <div className="mb-10">
+              <span className="eyebrow text-[#1246C8]">Sign in</span>
+              <h1 className="mt-4 text-3xl font-bold tracking-tightest text-[#10264B] sm:text-4xl">
                 {loginTitle}
-              </h2>
-              <p className="text-slate-400 text-sm font-medium">
+              </h1>
+              <p className="mt-3 text-[15px] leading-relaxed text-[#53647C]">
                 Enter your credentials to access your portal.
               </p>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
+            <form onSubmit={handleLogin} className="space-y-5">
+              <div>
+                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                   Email Address
                 </label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-white px-5 py-4 border-2 border-slate-500 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#1239B8]/5 focus:border-[#1239B8] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                  className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                   placeholder="name@academy.com"
                   required
                   autoComplete="email"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
+              <div>
+                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                   Portal Password
                 </label>
                 <div className="relative">
@@ -253,7 +183,7 @@ export function Login() {
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-white px-5 py-4 border-2 border-slate-500 rounded-[1.25rem] focus:outline-none focus:ring-4 focus:ring-[#1239B8]/5 focus:border-[#1239B8] text-slate-900 transition-all placeholder:text-slate-300 font-medium"
+                    className="w-full rounded-xl border border-[#DCE2EB] bg-white py-3 pl-4 pr-12 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                     placeholder="••••••••"
                     required
                     autoComplete="current-password"
@@ -261,12 +191,13 @@ export function Login() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-[#53647C] transition-colors hover:bg-[#F5F7FB] hover:text-[#1246C8]"
                   >
                     {showPassword ? (
-                      <EyeOff className="w-5 h-5" />
+                      <EyeOff className="h-4 w-4" />
                     ) : (
-                      <Eye className="w-5 h-5" />
+                      <Eye className="h-4 w-4" />
                     )}
                   </button>
                 </div>
@@ -275,36 +206,34 @@ export function Login() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-[1.25rem] bg-slate-900 hover:bg-black text-white h-16 font-bold text-sm tracking-tight transition-all hover:scale-[1.01] active:scale-[0.99] group shadow-2xl shadow-slate-200"
+                className="group mt-2 h-12 w-full"
               >
                 {loading ? "Authenticating..." : "Sign In to Portal"}
-                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </form>
 
-            <div className="mt-12 text-center space-y-4">
-              <p className="text-sm text-slate-400 font-medium">
+            <div className="mt-10 space-y-3 border-t border-[#DCE2EB] pt-6 text-center">
+              <p className="text-sm text-[#53647C]">
                 {isAgentLogin ? "New partner?" : "New to the academy?"}{" "}
                 <Link
                   to={isAgentLogin ? "/agent/register" : "/enroll"}
-                  className="text-[#1239B8] font-bold hover:underline underline-offset-4"
+                  className="font-semibold text-[#1246C8] underline-offset-4 transition-colors hover:text-[#10264B] hover:underline"
                 >
                   {isAgentLogin ? "Apply as Agent" : "Start Enrollment"}
                 </Link>
               </p>
-              <p className="text-sm text-slate-400 font-medium">
+              <p className="text-sm text-[#53647C]">
                 <Link
                   to="/forgot-password"
-                  className="text-slate-500 hover:text-slate-800 font-medium hover:underline underline-offset-4 transition-colors"
+                  className="font-medium text-[#53647C] underline-offset-4 transition-colors hover:text-[#10264B] hover:underline"
                 >
                   Forgot your password?
                 </Link>
               </p>
             </div>
           </motion.div>
-        </div>
-      </div>
-      </div>
+      </AuthShell>
     </>
   );
 }

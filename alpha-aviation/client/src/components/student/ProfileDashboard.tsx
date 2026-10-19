@@ -107,24 +107,25 @@ export function ProfileDashboard() {
       className="p-6 lg:p-8 space-y-8"
     >
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
+        <span className="eyebrow text-[#1246C8]">Account</span>
+        <h1 className="mt-3 text-3xl font-bold tracking-tightest text-[#10264B] sm:text-4xl">
           Profile Settings
         </h1>
-        <p className="text-slate-500">
+        <p className="mt-2 text-[#53647C]">
           Manage your personal information and contact details.
         </p>
       </div>
-      <Card className="border-slate-200/50">
+      <Card>
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#1239B8]/10 rounded-lg">
-              <User className="w-5 h-5 text-[#1239B8]" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+              <User className="w-5 h-5" />
             </div>
             <div>
-              <CardTitle className="text-slate-900 tracking-tighter">
+              <CardTitle className="text-lg">
                 Personal Information
               </CardTitle>
-              <CardDescription className="text-slate-500">
+              <CardDescription>
                 Update your personal details below
               </CardDescription>
             </div>
@@ -134,58 +135,58 @@ export function ProfileDashboard() {
           {/* Name (read-only) */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-900 mb-2">
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                 First Name
               </label>
               <input
                 type="text"
                 value={user?.firstName || ""}
                 disabled
-                className="w-full px-4 py-2.5 border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed"
+                className="w-full cursor-not-allowed rounded-xl border border-[#DCE2EB] bg-[#F5F7FB] px-4 py-3 text-sm text-[#53647C] outline-none"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-900 mb-2">
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                 Last Name
               </label>
               <input
                 type="text"
                 value={user?.lastName || ""}
                 disabled
-                className="w-full px-4 py-2.5 border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed"
+                className="w-full cursor-not-allowed rounded-xl border border-[#DCE2EB] bg-[#F5F7FB] px-4 py-3 text-sm text-[#53647C] outline-none"
               />
             </div>
           </div>
 
           {/* Email (Read-only) */}
           <div>
-            <label className="block text-sm font-medium text-slate-900 mb-2">
+            <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
               Email
             </label>
             <input
               type="email"
               value={user?.email || ""}
               disabled
-              className="w-full px-4 py-2.5 border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed"
+              className="w-full cursor-not-allowed rounded-xl border border-[#DCE2EB] bg-[#F5F7FB] px-4 py-3 text-sm text-[#53647C] outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-900 mb-2">
+            <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
               Student ID Number
             </label>
             <input
               type="text"
               value={user?.studentIdNumber || "Not assigned yet"}
               disabled
-              className="w-full px-4 py-2.5 border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed"
+              className="w-full cursor-not-allowed rounded-xl border border-[#DCE2EB] bg-[#F5F7FB] px-4 py-3 text-sm text-[#53647C] outline-none"
             />
           </div>
 
           {/* Phone */}
           <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-slate-900 mb-2">
-              <Phone className="w-4 h-4" />
+            <label className="mb-2 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+              <Phone className="w-4 h-4 text-[#1246C8]" />
               Phone Number
             </label>
             <input
@@ -193,14 +194,14 @@ export function ProfileDashboard() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+234 XXX XXX XXXX"
-              className="w-full px-4 py-2.5 border border-slate-200/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1239B8]/20 focus:border-[#1239B8] text-slate-900"
+              className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
             />
           </div>
 
           {/* Emergency Contact */}
           <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-slate-900 mb-2">
-              <AlertCircle className="w-4 h-4" />
+            <label className="mb-2 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+              <AlertCircle className="w-4 h-4 text-[#1246C8]" />
               Emergency Contact
             </label>
             <input
@@ -208,17 +209,17 @@ export function ProfileDashboard() {
               value={emergencyContact}
               onChange={(e) => setEmergencyContact(e.target.value)}
               placeholder="+234 XXX XXX XXXX"
-              className="w-full px-4 py-2.5 border border-slate-200/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1239B8]/20 focus:border-[#1239B8] text-slate-900"
+              className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
             />
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="mt-1.5 text-xs text-[#8C9AB0]">
               Contact person in case of emergency
             </p>
           </div>
 
           {/* Bio */}
           <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-slate-900 mb-2">
-              <FileText className="w-4 h-4" />
+            <label className="mb-2 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+              <FileText className="w-4 h-4 text-[#1246C8]" />
               Bio
             </label>
             <textarea
@@ -227,9 +228,9 @@ export function ProfileDashboard() {
               placeholder="Tell us about yourself..."
               rows={4}
               maxLength={500}
-              className="w-full px-4 py-2.5 border border-slate-200/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1239B8]/20 focus:border-[#1239B8] text-slate-900 resize-none"
+              className="w-full resize-none rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
             />
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="mt-1.5 text-xs text-[#8C9AB0] tabular-nums">
               {bio.length}/500 characters
             </p>
           </div>
@@ -238,7 +239,7 @@ export function ProfileDashboard() {
           <Button
             onClick={handleSave}
             disabled={loading}
-            className="w-full rounded-full bg-[#1239B8] hover:bg-[#071A4A] text-white shadow-sm transition-all duration-300 hover:scale-105"
+            className="w-full"
           >
             <Save className="w-4 h-4 mr-2" />
             {saved ? "Saved!" : loading ? "Saving..." : "Save Changes"}
@@ -247,12 +248,12 @@ export function ProfileDashboard() {
       </Card>
 
       {/* Download Section */}
-      <Card className="border-slate-200/50 mt-6">
+      <Card className="mt-6">
         <CardHeader>
-          <CardTitle className="text-slate-900 tracking-tighter">
+          <CardTitle className="text-lg">
             Downloads
           </CardTitle>
-          <CardDescription className="text-slate-500">
+          <CardDescription>
             Download your student documents
           </CardDescription>
         </CardHeader>
@@ -260,7 +261,8 @@ export function ProfileDashboard() {
           {/* Download Student ID Card */}
           <Button
             onClick={handleDownloadIdCard}
-            className="action-button w-full"
+            variant="secondary"
+            className="w-full"
           >
             <Contact className="w-4 h-4 mr-2" />
             Download Student ID Card

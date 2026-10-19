@@ -164,33 +164,33 @@ export function StudentProfileModal({
 
         {/* Student Info */}
         <div className="space-y-4">
-          <div className="flex items-center gap-4 pb-4 border-b border-slate-200">
-            <div className="p-3 bg-[#1239B8]/10 rounded-full">
-              <User className="w-6 h-6 text-[#1239B8]" />
+          <div className="flex items-center gap-4 pb-5 border-b border-[#DCE2EB]">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+              <User className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-xl font-bold tracking-tight text-slate-900">
+              <h3 className="text-xl font-bold tracking-tighter text-[#10264B]">
                 {student.firstName || ""} {student.lastName || ""}
                 {!student.firstName && !student.lastName && "N/A"}
               </h3>
-              <p className="text-sm text-slate-500">{student.email}</p>
+              <p className="text-sm text-[#53647C]">{student.email}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-4">
             <div className="flex items-center gap-3">
-              <Mail className="w-5 h-5 text-slate-400" />
+              <Mail className="w-5 h-5 text-[#8C9AB0]" />
               <div>
-                <p className="text-xs text-slate-500">Email</p>
-                <p className="text-sm font-medium text-slate-900">{student.email}</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#53647C]">Email</p>
+                <p className="text-sm font-medium text-[#10264B]">{student.email}</p>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <Phone className="w-5 h-5 text-slate-400" />
+              <Phone className="w-5 h-5 text-[#8C9AB0]" />
               <div>
-                <p className="text-xs text-slate-500">Phone</p>
-                <p className={`text-sm font-medium ${student.phone ? "text-slate-900" : "text-amber-600"}`}>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#53647C]">Phone</p>
+                <p className={`text-sm font-medium ${student.phone ? "text-[#10264B]" : "text-amber-700"}`}>
                   {student.phone || "Not added yet"}
                 </p>
               </div>
@@ -198,20 +198,20 @@ export function StudentProfileModal({
 
             {student.enrolledCourse && (
               <div className="flex items-center gap-3">
-                <BookOpen className="w-5 h-5 text-slate-400" />
+                <BookOpen className="w-5 h-5 text-[#8C9AB0]" />
                 <div>
-                  <p className="text-xs text-slate-500">Enrolled Course</p>
-                  <p className="text-sm font-medium text-slate-900">{student.enrolledCourse}</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#53647C]">Enrolled Course</p>
+                  <p className="text-sm font-medium text-[#10264B]">{student.enrolledCourse}</p>
                 </div>
               </div>
             )}
 
             {student.enrollmentDate && (
               <div className="flex items-center gap-3">
-                <Calendar className="w-5 h-5 text-slate-400" />
+                <Calendar className="w-5 h-5 text-[#8C9AB0]" />
                 <div>
-                  <p className="text-xs text-slate-500">Enrollment Date</p>
-                  <p className="text-sm font-medium text-slate-900">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#53647C]">Enrollment Date</p>
+                  <p className="text-sm font-medium text-[#10264B]">
                     {new Date(student.enrollmentDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
                   </p>
                 </div>
@@ -219,18 +219,21 @@ export function StudentProfileModal({
             )}
 
             <div className="flex items-center gap-3">
-              <DollarSign className="w-5 h-5 text-slate-400" />
+              <DollarSign className="w-5 h-5 text-[#8C9AB0]" />
               <div className="flex-1">
-                <p className="text-xs text-slate-500">Payment Status</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#53647C]">Payment Status</p>
                 <div className="flex items-center gap-2 mt-1">
-                  <Badge variant={effectivePaymentStatus === "Paid" ? "success" : "warning"}>
+                  <Badge
+                    variant={effectivePaymentStatus === "Paid" ? "success" : "warning"}
+                    className={effectivePaymentStatus === "Paid" ? "ring-1 ring-emerald-600/15" : "bg-amber-50 text-amber-700 ring-1 ring-amber-600/15 hover:bg-amber-50"}
+                  >
                     {effectivePaymentStatus}
                   </Badge>
                   {effectivePaymentStatus === "Pending" && (
-                    <span className="text-sm font-medium text-slate-900">{formatNaira(student.amountDue)} due</span>
+                    <span className="text-sm font-medium tabular-nums text-[#10264B]">{formatNaira(student.amountDue)} due</span>
                   )}
                   {effectivePaymentStatus === "Paid" && student.amountPaid && (
-                    <span className="text-sm font-medium text-green-600">{formatNaira(student.amountPaid)} paid</span>
+                    <span className="text-sm font-medium tabular-nums text-emerald-700">{formatNaira(student.amountPaid)} paid</span>
                   )}
                 </div>
               </div>
@@ -240,23 +243,23 @@ export function StudentProfileModal({
 
         {/* ── Course Tracking Section ─────────────────────────────────────── */}
         {student.paymentStatus === "Paid" && (
-          <div className="border-t border-slate-200 pt-4">
+          <div className="border-t border-[#DCE2EB] pt-4">
             <button
               onClick={() => setTrackExpanded((v) => !v)}
               className="flex items-center justify-between w-full text-left group"
             >
               <div className="flex items-center gap-2">
-                <BookOpen className="w-4 h-4 text-indigo-600" />
-                <span className="text-sm font-bold text-slate-900">
+                <BookOpen className="w-4 h-4 text-[#1246C8]" />
+                <span className="text-sm font-bold tracking-tight text-[#10264B]">
                   Course Tracking
                 </span>
                 {tracks.length > 0 && (
-                  <span className="text-[11px] font-bold bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full border border-indigo-100/60">
+                  <span className="text-[11px] font-semibold bg-[#DCE8FF] text-[#1246C8] px-2.5 py-0.5 rounded-full">
                     {tracks.length} track{tracks.length !== 1 ? "s" : ""}
                   </span>
                 )}
               </div>
-              {trackExpanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+              {trackExpanded ? <ChevronUp className="w-4 h-4 text-[#8C9AB0] group-hover:text-[#1246C8]" /> : <ChevronDown className="w-4 h-4 text-[#8C9AB0] group-hover:text-[#1246C8]" />}
             </button>
 
             <AnimatePresence>
@@ -270,25 +273,25 @@ export function StudentProfileModal({
                 >
                   <div className="pt-4 space-y-5">
                     {loadingTracks ? (
-                      <div className="flex items-center gap-2 text-sm text-slate-400">
+                      <div className="flex items-center gap-2 text-sm text-[#53647C]">
                         <Loader2 className="w-4 h-4 animate-spin" /> Loading tracks...
                       </div>
                     ) : tracks.length === 0 ? (
-                      <p className="text-xs text-slate-400 italic">No course tracks found for this student.</p>
+                      <p className="text-xs text-[#53647C]">No course tracks found for this student.</p>
                     ) : (
                       tracks.map((track) => {
                         const edit = progressEdits[track._id] ?? { w1: track.week1Progress, w2: track.week2Progress, w3: track.week3Progress, w4: track.week4Progress };
                         const isSaving = savingTrack === track._id;
 
                         return (
-                          <div key={track._id} className="rounded-2xl border border-slate-200/70 p-4 space-y-3 bg-slate-50/50">
+                          <div key={track._id} className="rounded-2xl border border-[#DCE2EB] p-4 space-y-3 bg-[#F5F7FB]">
                             {/* Track header */}
                             <div className="flex items-start justify-between gap-2">
-                              <p className="text-sm font-bold text-slate-900 leading-tight">{track.courseTitle}</p>
-                              <span className={`shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                                track.status === "completed" ? "bg-emerald-50 text-emerald-700 border-emerald-200/60"
-                                : track.status === "expired" ? "bg-rose-50 text-rose-600 border-rose-200/60"
-                                : "bg-indigo-50 text-indigo-700 border-indigo-100/60"
+                              <p className="text-sm font-semibold text-[#10264B] leading-tight">{track.courseTitle}</p>
+                              <span className={`shrink-0 text-[11px] font-semibold px-2.5 py-0.5 rounded-full ring-1 ${
+                                track.status === "completed" ? "bg-emerald-50 text-emerald-700 ring-emerald-600/15"
+                                : track.status === "expired" ? "bg-red-50 text-red-700 ring-red-600/15"
+                                : "bg-[#DCE8FF] text-[#1246C8] ring-[#1246C8]/10"
                               }`}>
                                 {track.status === "active" ? `Wk ${track.currentWeek}/4` : track.status}
                               </span>
@@ -296,17 +299,17 @@ export function StudentProfileModal({
 
                             {/* Overall bar */}
                             <div>
-                              <div className="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                              <div className="flex justify-between text-[11px] font-semibold uppercase tracking-[0.14em] text-[#53647C] mb-1.5">
                                 <span>Overall Progress</span>
-                                <span className="text-indigo-600">{track.overallProgress}%</span>
+                                <span className="text-[#1246C8] tabular-nums">{track.overallProgress}%</span>
                               </div>
-                              <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                              <div className="w-full h-2 bg-[#DCE2EB] rounded-full overflow-hidden">
                                 <div
-                                  className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-700"
+                                  className="h-full bg-gradient-to-r from-[#1246C8] to-[#5B86FF] rounded-full transition-all duration-700"
                                   style={{ width: `${track.overallProgress}%` }}
                                 />
                               </div>
-                              <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+                              <div className="flex justify-between text-[10px] text-[#8C9AB0] mt-1.5 tabular-nums">
                                 <span>{new Date(track.startDate).toLocaleDateString("en-NG", { month: "short", day: "numeric" })}</span>
                                 <span>{track.daysRemaining > 0 ? `${track.daysRemaining}d left` : "Ended"}</span>
                                 <span>{new Date(track.endDate).toLocaleDateString("en-NG", { month: "short", day: "numeric" })}</span>
@@ -315,11 +318,11 @@ export function StudentProfileModal({
 
                             {/* Per-week admin sliders */}
                             {onUpdateWeekProgress && (
-                              <div className="space-y-2 pt-2 border-t border-slate-200/60">
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Admin: Set Weekly Progress</p>
+                              <div className="space-y-2 pt-3 border-t border-[#DCE2EB]">
+                                <p className="text-[10px] font-semibold text-[#53647C] uppercase tracking-[0.16em]">Admin: Set Weekly Progress</p>
                                 {(["w1", "w2", "w3", "w4"] as const).map((key, wi) => (
                                   <div key={key} className="flex items-center gap-3">
-                                    <span className={`text-[11px] font-bold w-12 shrink-0 ${wi + 1 === track.currentWeek ? "text-indigo-600" : "text-slate-400"}`}>
+                                    <span className={`text-[11px] font-semibold w-12 shrink-0 ${wi + 1 === track.currentWeek ? "text-[#1246C8]" : "text-[#8C9AB0]"}`}>
                                       Wk {wi + 1}
                                     </span>
                                     <input
@@ -334,16 +337,16 @@ export function StudentProfileModal({
                                           [track._id]: { ...edit, [key]: Number(e.target.value) },
                                         }))
                                       }
-                                      className="flex-1 h-1.5 accent-indigo-600 cursor-pointer"
+                                      className="flex-1 h-1.5 accent-[#1246C8] cursor-pointer"
                                     />
-                                    <span className="text-[11px] font-bold text-slate-700 w-8 text-right">{edit[key]}%</span>
+                                    <span className="text-[11px] font-semibold text-[#10264B] w-8 text-right tabular-nums">{edit[key]}%</span>
                                   </div>
                                 ))}
                                 <Button
                                   size="sm"
                                   disabled={isSaving}
                                   onClick={() => handleSaveProgress(track._id)}
-                                  className="mt-1 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs py-2 shadow-sm"
+                                  className="mt-2 w-full"
                                 >
                                   {isSaving ? <><Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />Saving…</> : "Save Progress"}
                                 </Button>
@@ -362,40 +365,40 @@ export function StudentProfileModal({
 
         {/* Certificate Section */}
         {student.status === "graduated" && (
-          <div className="pt-4 border-t border-slate-200">
+          <div className="pt-4 border-t border-[#DCE2EB]">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Award className="w-4 h-4 text-green-600" />
-                  <span className="text-sm font-medium text-slate-900">Certificate</span>
+                  <Award className="w-4 h-4 text-emerald-600" />
+                  <span className="text-sm font-bold tracking-tight text-[#10264B]">Certificate</span>
                 </div>
                 {localCertUrl && !showReplace && (
-                  <button onClick={() => setShowReplace(true)} className="flex items-center gap-1 text-xs text-slate-500 hover:text-[#1239B8] transition-colors">
+                  <button onClick={() => setShowReplace(true)} className="flex items-center gap-1 text-xs font-semibold text-[#53647C] hover:text-[#1246C8] transition-colors">
                     <RefreshCw className="w-3 h-3" /> Replace
                   </button>
                 )}
               </div>
               {localCertUrl && !showReplace ? (
-                <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="rounded-lg border border-green-200 bg-green-50 overflow-hidden">
+                <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="rounded-2xl border border-emerald-200 bg-emerald-50 overflow-hidden">
                   {isPdf ? (
                     <div className="flex items-center gap-3 p-3">
-                      <div className="p-2 bg-green-100 rounded-lg"><Award className="w-5 h-5 text-green-700" /></div>
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100"><Award className="w-5 h-5 text-emerald-700" /></div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-green-800 truncate">Certificate (PDF)</p>
-                        <p className="text-xs text-green-600 truncate">{localCertUrl}</p>
+                        <p className="text-sm font-semibold text-emerald-900 truncate">Certificate (PDF)</p>
+                        <p className="text-xs text-emerald-700 truncate">{localCertUrl}</p>
                       </div>
-                      <a href={localCertUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-white bg-green-600 hover:bg-green-700 rounded-md transition-colors shrink-0">
+                      <a href={localCertUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-white bg-[#1246C8] hover:bg-[#0F3BAA] rounded-full transition-colors shrink-0">
                         <ExternalLink className="w-3 h-3" /> View
                       </a>
                     </div>
                   ) : (
                     <div>
-                      <div className="relative w-full h-40 bg-slate-100">
+                      <div className="relative w-full h-40 bg-[#F5F7FB]">
                         <img src={localCertUrl} alt="Certificate preview" className="w-full h-full object-contain" />
                       </div>
                       <div className="flex items-center justify-between p-3">
-                        <p className="text-xs text-green-700 font-medium">✓ Certificate uploaded</p>
-                        <a href={localCertUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-white bg-green-600 hover:bg-green-700 rounded-md transition-colors">
+                        <p className="text-xs text-emerald-700 font-semibold">✓ Certificate uploaded</p>
+                        <a href={localCertUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-white bg-[#1246C8] hover:bg-[#0F3BAA] rounded-full transition-colors">
                           <ExternalLink className="w-3 h-3" /> View Full
                         </a>
                       </div>
@@ -404,14 +407,14 @@ export function StudentProfileModal({
                 </motion.div>
               ) : (
                 <>
-                  {!localCertUrl && <p className="text-xs text-slate-500">No certificate uploaded yet</p>}
+                  {!localCertUrl && <p className="text-xs text-[#53647C]">No certificate uploaded yet</p>}
                   <div className="flex flex-col gap-2">
                     <input type="file" id="certificateFile" accept="image/*,.pdf" className="hidden" disabled={isUploading} onChange={handleFileChange} />
-                    <label htmlFor="certificateFile" className={`flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white rounded-md transition-colors cursor-pointer select-none ${isUploading ? "bg-[#1239B8]/60 cursor-not-allowed" : "bg-[#1239B8] hover:bg-[#071A4A]"}`}>
+                    <label htmlFor="certificateFile" className={`flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold text-white rounded-full transition-all cursor-pointer select-none ${isUploading ? "bg-[#1246C8]/60 cursor-not-allowed" : "bg-[#1246C8] shadow-glow hover:bg-[#0F3BAA] hover:shadow-glow-lg"}`}>
                       {isUploading ? <><Loader2 className="w-4 h-4 animate-spin" />Uploading…</> : <><Upload className="w-4 h-4" />{showReplace ? "Upload New Certificate" : "Upload Certificate"}</>}
                     </label>
-                    {showReplace && <button onClick={() => setShowReplace(false)} className="text-xs text-slate-400 hover:text-slate-600 transition-colors text-center">Cancel</button>}
-                    <p className="text-xs text-slate-500">Accepts PNG, JPG, or PDF — saved automatically to Cloudinary</p>
+                    {showReplace && <button onClick={() => setShowReplace(false)} className="text-xs font-semibold text-[#53647C] hover:text-[#10264B] transition-colors text-center">Cancel</button>}
+                    <p className="text-xs text-[#8C9AB0]">Accepts PNG, JPG, or PDF — saved automatically to Cloudinary</p>
                   </div>
                 </>
               )}
@@ -420,14 +423,14 @@ export function StudentProfileModal({
         )}
 
         {/* Actions */}
-        <div className="flex flex-col gap-2 pt-4 border-t border-slate-200">
+        <div className="flex flex-col gap-2 pt-4 border-t border-[#DCE2EB]">
           {student.paymentStatus === "Pending" && onMarkAsPaid && (
-            <Button onClick={() => { onMarkAsPaid(student._id); onClose(); }} className="w-full rounded-lg bg-[#1239B8] hover:bg-[#071A4A] text-white transition-all hover:scale-[1.02]">
+            <Button onClick={() => { onMarkAsPaid(student._id); onClose(); }} className="w-full">
               Mark as Paid
             </Button>
           )}
           {onWhatsAppReminder && effectivePaymentStatus === "Pending" && (
-            <Button variant="outline" onClick={() => { onWhatsAppReminder(student); }} className="w-full rounded-lg border-slate-200 hover:bg-slate-50 transition-all hover:scale-[1.02]">
+            <Button variant="outline" onClick={() => { onWhatsAppReminder(student); }} className="w-full">
               <MessageCircle className="w-4 h-4 mr-2" /> Send WhatsApp Reminder
             </Button>
           )}

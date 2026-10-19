@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { useRoutes, Navigate } from "react-router-dom";
+import { useRoutes, Navigate, useParams } from "react-router-dom";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 
 import GeneralLayout from "../layout/general";
@@ -13,6 +13,20 @@ const Landing = lazy(() => import("../pages/Landing").then((m) => ({ default: m.
 const Courses = lazy(() => import("../pages/Courses").then((m) => ({ default: m.Courses })));
 const About = lazy(() => import("../pages/About").then((m) => ({ default: m.About })));
 const Contact = lazy(() => import("../pages/Contact").then((m) => ({ default: m.Contact })));
+const CourseDetail = lazy(() => import("../pages/CourseDetail").then((m) => ({ default: m.CourseDetail })));
+const StudentExperience = lazy(() => import("../pages/StudentExperience").then((m) => ({ default: m.StudentExperience })));
+const InternationalOpportunities = lazy(() =>
+  import("../pages/InternationalOpportunities").then((m) => ({ default: m.InternationalOpportunities })),
+);
+const Faqs = lazy(() => import("../pages/Faqs").then((m) => ({ default: m.Faqs })));
+const PrivacyPolicy = lazy(() => import("../pages/PrivacyPolicy").then((m) => ({ default: m.PrivacyPolicy })));
+const Terms = lazy(() => import("../pages/Terms").then((m) => ({ default: m.Terms })));
+
+// Keeps links using the design site's /programs/:slug URLs working.
+const ProgramRedirect = () => {
+  const { slug } = useParams();
+  return <Navigate to={`/courses/${slug ?? ""}`} replace />;
+};
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 const Login = lazy(() => import("../pages/Login").then((m) => ({ default: m.Login })));
@@ -53,8 +67,8 @@ const AgentProfile = lazy(() => import("../pages/agent/AgentProfile").then((m) =
 
 // Global loading fallback
 const PageLoader = () => (
-  <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center">
-    <p className="text-slate-500">Loading...</p>
+  <div className="flex min-h-screen items-center justify-center bg-[#F5F7FB]">
+    <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#1246C8] border-t-transparent" />
   </div>
 );
 
@@ -69,8 +83,18 @@ export const RoutesConfig = () => {
         { path: "/courses", element: <Courses /> },
         { path: "/about", element: <About /> },
         { path: "/contact", element: <Contact /> },
+        { path: "/courses/:slug", element: <CourseDetail /> },
+        { path: "/student-experience", element: <StudentExperience /> },
+        { path: "/international-opportunities", element: <InternationalOpportunities /> },
+        { path: "/faqs", element: <Faqs /> },
+        { path: "/privacy-policy", element: <PrivacyPolicy /> },
+        { path: "/terms", element: <Terms /> },
+        { path: "*", element: <NotFound /> },
       ],
     },
+    { path: "/programs", element: <Navigate to="/courses" replace /> },
+    { path: "/programs/:slug", element: <ProgramRedirect /> },
+    { path: "/enquire", element: <Navigate to="/enroll" replace /> },
     { path: "/login", element: <Login /> },
     { path: "/enroll", element: <Enroll /> },
     { path: "/forgot-password", element: <ForgotPassword /> },
@@ -146,7 +170,6 @@ export const RoutesConfig = () => {
       ],
     },
     { path: "/agent", element: <Navigate to="/agent/dashboard/overview" replace /> },
-    { path: "*", element: <NotFound /> },
   ]);
 
   return <Suspense fallback={<PageLoader />}>{routes}</Suspense>;

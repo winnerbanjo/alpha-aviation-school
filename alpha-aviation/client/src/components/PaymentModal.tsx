@@ -74,18 +74,20 @@ export function PaymentModal({ isOpen, onClose, amountDue = 0, userEmail = '' }:
         className="space-y-6"
       >
         {/* Payment Method Badge */}
-        <div className="flex items-center gap-2 p-3 bg-[#1239B8]/10 rounded-lg">
-          <DollarSign className="w-5 h-5 text-[#1239B8]" />
-          <p className="text-sm font-bold text-slate-900">
+        <div className="flex items-center gap-3 rounded-2xl bg-[#F2F6FF] p-3 ring-1 ring-[#DCE8FF]">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+            <DollarSign className="w-4 h-4" />
+          </div>
+          <p className="text-sm font-semibold text-[#10264B]">
             Payment Method: Bank Transfer
           </p>
         </div>
 
         {/* Amount Due */}
         {amountDue > 0 && (
-          <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg">
-            <p className="text-sm text-slate-500 mb-1">Amount Due</p>
-            <p className="text-3xl font-bold tracking-tight text-slate-900">
+          <div className="rounded-2xl border border-[#DCE2EB] bg-[#F5F7FB] p-4">
+            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#53647C]">Amount Due</p>
+            <p className="text-3xl font-bold tracking-tightest text-[#10264B] tabular-nums">
               {formatNaira(amountDue)}
             </p>
           </div>
@@ -93,66 +95,66 @@ export function PaymentModal({ isOpen, onClose, amountDue = 0, userEmail = '' }:
 
         {/* Bank Details */}
         <div className="space-y-3">
-          <h4 className="text-sm font-bold text-slate-900">Bank Transfer Details</h4>
+          <h4 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Bank Transfer Details</h4>
           
           <div className="space-y-2">
-            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+            <div className="flex items-center justify-between gap-3 rounded-2xl border border-[#DCE2EB]/70 bg-[#F5F7FB] p-3.5">
               <div>
-                <p className="text-xs text-slate-500">Account Name</p>
-                <p className="text-sm font-medium text-slate-900">{bankDetails.accountName}</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Account Name</p>
+                <p className="mt-0.5 text-sm font-semibold text-[#10264B]">{bankDetails.accountName}</p>
               </div>
               <Button
                 size="sm"
                 variant="outline"
                 onClick={() => copyToClipboard(bankDetails.accountName)}
-                className="h-8 w-8 p-0"
+                className="h-8 w-8 shrink-0 p-0"
               >
-                {copied ? <CheckCircle2 className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                {copied ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
               </Button>
             </div>
 
-            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+            <div className="flex items-center justify-between gap-3 rounded-2xl border border-[#DCE2EB]/70 bg-[#F5F7FB] p-3.5">
               <div>
-                <p className="text-xs text-slate-500">Account Number</p>
-                <p className="text-sm font-medium text-slate-900">{bankDetails.accountNumber}</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Account Number</p>
+                <p className="mt-0.5 text-sm font-semibold text-[#10264B] tabular-nums">{bankDetails.accountNumber}</p>
               </div>
               <Button
                 size="sm"
                 variant="outline"
                 onClick={() => copyToClipboard(bankDetails.accountNumber)}
-                className="h-8 w-8 p-0"
+                className="h-8 w-8 shrink-0 p-0"
               >
-                {copied ? <CheckCircle2 className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                {copied ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
               </Button>
             </div>
 
-            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+            <div className="flex items-center justify-between gap-3 rounded-2xl border border-[#DCE2EB]/70 bg-[#F5F7FB] p-3.5">
               <div>
-                <p className="text-xs text-slate-500">Bank Name</p>
-                <p className="text-sm font-medium text-slate-900">{bankDetails.bank}</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Bank Name</p>
+                <p className="mt-0.5 text-sm font-semibold text-[#10264B]">{bankDetails.bank}</p>
               </div>
               <Button
                 size="sm"
                 variant="outline"
                 onClick={() => copyToClipboard(bankDetails.bank)}
-                className="h-8 w-8 p-0"
+                className="h-8 w-8 shrink-0 p-0"
               >
-                {copied ? <CheckCircle2 className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                {copied ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
               </Button>
             </div>
 
-            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+            <div className="flex items-center justify-between gap-3 rounded-2xl border border-[#DCE2EB]/70 bg-[#F5F7FB] p-3.5">
               <div>
-                <p className="text-xs text-slate-500">Reference</p>
-                <p className="text-sm font-medium text-slate-900">{bankDetails.reference}</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Reference</p>
+                <p className="mt-0.5 text-sm font-semibold text-[#10264B]">{bankDetails.reference}</p>
               </div>
               <Button
                 size="sm"
                 variant="outline"
                 onClick={() => copyToClipboard(bankDetails.reference)}
-                className="h-8 w-8 p-0"
+                className="h-8 w-8 shrink-0 p-0"
               >
-                {copied ? <CheckCircle2 className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                {copied ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
               </Button>
             </div>
           </div>
@@ -173,7 +175,7 @@ export function PaymentModal({ isOpen, onClose, amountDue = 0, userEmail = '' }:
                 }
               }}
             />
-            <div className="w-full rounded-lg bg-[#1239B8] hover:bg-[#071A4A] text-white transition-all hover:scale-[1.02] cursor-pointer px-4 py-2.5 flex items-center justify-center">
+            <div className="flex w-full cursor-pointer items-center justify-center rounded-full bg-[#1246C8] px-5 py-3 text-sm font-semibold text-white shadow-glow transition-all hover:bg-[#0F3BAA] hover:shadow-glow-lg">
               <Upload className="w-4 h-4 mr-2" />
               {uploadingReceipt ? 'Uploading Receipt...' : 'Upload Receipt'}
             </div>
@@ -182,19 +184,19 @@ export function PaymentModal({ isOpen, onClose, amountDue = 0, userEmail = '' }:
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="p-4 bg-green-50 border border-green-200 rounded-lg text-center"
+            className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-center"
           >
-            <CheckCircle2 className="w-8 h-8 text-green-600 mx-auto mb-2" />
-            <p className="text-sm font-medium text-green-900 mb-1">
+            <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
+            <p className="text-sm font-semibold text-emerald-900 mb-1">
               Success!
             </p>
-            <p className="text-xs text-green-700">
+            <p className="text-xs text-emerald-700">
               Our team will verify your transfer shortly. You'll receive a confirmation email once processed.
             </p>
           </motion.div>
         )}
 
-        <p className="text-xs text-slate-500 text-center">
+        <p className="text-xs text-[#53647C] text-center">
           After completing the transfer, upload your receipt above or email it to admin@alpha.com
         </p>
       </motion.div>

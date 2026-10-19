@@ -190,9 +190,9 @@ export function AgentStudents() {
   };
 
   const statusBadge = (status: string) => {
-    if (status === "Paid") return <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md px-2 py-0.5"><CheckCircle2 className="w-3 h-3" />Paid</span>;
-    if (status === "Under Review") return <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-2 py-0.5"><Clock className="w-3 h-3" />Under Review</span>;
-    return <span className="inline-flex items-center gap-1 text-xs font-medium text-red-700 bg-red-50 border border-red-200 rounded-md px-2 py-0.5"><AlertCircle className="w-3 h-3" />Pending</span>;
+    if (status === "Paid") return <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 ring-1 ring-emerald-600/15"><CheckCircle2 className="h-3 w-3" />Paid</span>;
+    if (status === "Under Review") return <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-700 ring-1 ring-amber-600/15"><Clock className="h-3 w-3" />Under Review</span>;
+    return <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-semibold text-red-700 ring-1 ring-red-600/15"><AlertCircle className="h-3 w-3" />Pending</span>;
   };
 
   const copyCredentials = () => {
@@ -204,83 +204,86 @@ export function AgentStudents() {
 
   return (
     <div className="space-y-6 pb-12">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-slate-900">My Students</h1>
-          <p className="text-sm text-slate-500 mt-0.5">{students.length} enrolled student{students.length !== 1 ? "s" : ""}</p>
+          <span className="eyebrow text-[#1246C8]">Agent portal</span>
+          <h1 className="mt-3 text-3xl font-bold tracking-tightest text-[#10264B] sm:text-4xl">My students</h1>
+          <p className="mt-2 text-[#53647C]">{students.length} enrolled student{students.length !== 1 ? "s" : ""}</p>
         </div>
         <button
           onClick={() => { setShowRegister(true); setNewCredentials(null); }}
-          className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors"
+          className="inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-[#1246C8] px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition-all hover:bg-[#0F3BAA] hover:shadow-glow-lg sm:self-auto"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="h-4 w-4" />
           Register New Student
         </button>
       </div>
 
       <div className="relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8C9AB0]" />
         <input
           type="text"
           placeholder="Search by name, email or ID..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/20"
+          className="w-full rounded-full border border-[#DCE2EB] bg-white py-2.5 pl-11 pr-4 text-sm text-[#172B49] shadow-subtle outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
         />
       </div>
 
-      <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
+      <div className="overflow-hidden rounded-panel border border-[#DCE2EB] bg-white shadow-subtle">
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="w-8 h-8 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#1246C8] border-t-transparent" />
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-16">
-            <Users className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-            <p className="text-slate-500 font-medium">{search ? "No students match your search" : "No students yet"}</p>
-            {!search && <p className="text-sm text-slate-400 mt-1">Register your first student to get started</p>}
+          <div className="px-6 py-16 text-center">
+            <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+              <Users className="h-6 w-6" />
+            </span>
+            <p className="font-semibold text-[#10264B]">{search ? "No students match your search" : "No students yet"}</p>
+            {!search && <p className="mt-1 text-sm text-[#53647C]">Register your first student to get started</p>}
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50">
+                <tr className="border-b border-[#DCE2EB] bg-[#F5F7FB]/70">
                   {["Student", "Student ID", "Courses", "Total Fee", "Payment", "Action"].map((h) => (
-                    <th key={h} className="text-left text-xs font-medium text-slate-500 px-4 py-3">{h}</th>
+                    <th key={h} className="whitespace-nowrap px-5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.14em] text-[#53647C]">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody>
                 {filtered.map((s) => (
-                  <tr key={s._id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-4 py-3.5">
-                      <p className="text-sm font-medium text-slate-900">{s.firstName} {s.lastName}</p>
-                      <p className="text-xs text-slate-500">{s.email}</p>
+                  <tr key={s._id} className="border-b border-[#DCE2EB]/70 transition-colors last:border-b-0 hover:bg-[#F5F7FB]">
+                    <td className="px-5 py-4">
+                      <p className="text-sm font-semibold text-[#10264B]">{s.firstName} {s.lastName}</p>
+                      <p className="mt-0.5 text-xs text-[#53647C]">{s.email}</p>
                     </td>
-                    <td className="px-4 py-3.5">
-                      <span className="font-mono text-xs font-medium text-slate-700 bg-slate-100 border border-slate-200 rounded px-2 py-0.5">{s.studentIdNumber}</span>
+                    <td className="px-5 py-4">
+                      <span className="whitespace-nowrap rounded-md bg-[#F5F7FB] px-2 py-1 font-mono text-xs font-medium text-[#10264B] ring-1 ring-[#DCE2EB]">{s.studentIdNumber}</span>
                     </td>
-                    <td className="px-4 py-3.5">
+                    <td className="px-5 py-4">
                       <div className="flex flex-col gap-1">
                         {(s.selectedCourses || []).slice(0, 2).map((c) => (
-                          <span key={c} className="text-xs text-slate-600 bg-slate-100 rounded px-2 py-0.5 w-fit max-w-[180px] truncate">{c}</span>
+                          <span key={c} className="w-fit max-w-[200px] truncate rounded-full bg-[#DCE8FF]/60 px-2.5 py-0.5 text-xs font-medium text-[#10264B]">{c}</span>
                         ))}
                         {(s.selectedCourses || []).length > 2 && (
-                          <span className="text-xs text-slate-400">+{s.selectedCourses.length - 2} more</span>
+                          <span className="pl-1 text-xs font-medium text-[#1246C8]">+{s.selectedCourses.length - 2} more</span>
                         )}
                       </div>
                     </td>
-                    <td className="px-4 py-3.5">
-                      <span className="text-sm font-medium text-slate-900">{formatNaira(s.totalCoursePrice)}</span>
+                    <td className="px-5 py-4">
+                      <span className="whitespace-nowrap text-sm font-semibold text-[#10264B] tabular-nums">{formatNaira(s.totalCoursePrice)}</span>
                     </td>
-                    <td className="px-4 py-3.5">{statusBadge(s.paymentStatus)}</td>
-                    <td className="px-4 py-3.5">
+                    <td className="px-5 py-4">{statusBadge(s.paymentStatus)}</td>
+                    <td className="px-5 py-4">
                       {s.paymentStatus !== "Paid" && (
                         <button
                           onClick={() => { setShowPayModal(s); setPayForm({ receiptUrl: "", amount: "" }); }}
-                          className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg px-3 py-1.5 transition-colors"
+                          className="inline-flex items-center gap-1.5 rounded-full bg-[#1246C8] px-3.5 py-1.5 text-xs font-semibold text-white transition-all hover:bg-[#0F3BAA] hover:shadow-glow"
                         >
-                          <CreditCard className="w-3.5 h-3.5" />
+                          <CreditCard className="h-3.5 w-3.5" />
                           Pay
                         </button>
                       )}
@@ -295,84 +298,87 @@ export function AgentStudents() {
 
       {/* Register Modal */}
       {showRegister && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-xl">
-            <div className="sticky top-0 bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between rounded-t-xl">
-              <h2 className="text-base font-semibold text-slate-900">Register New Student</h2>
-              <button onClick={() => { setShowRegister(false); setNewCredentials(null); }} className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors">
-                <X className="w-5 h-5 text-slate-500" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#07152E]/60 p-4 backdrop-blur-sm">
+          <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-panel bg-white shadow-float">
+            <div className="sticky top-0 z-10 flex items-center justify-between gap-4 rounded-t-panel border-b border-[#DCE2EB] bg-white/95 px-6 py-5 backdrop-blur">
+              <div>
+                <span className="eyebrow text-[#1246C8]">New enrolment</span>
+                <h2 className="mt-1.5 text-xl font-bold tracking-tighter text-[#10264B]">Register new student</h2>
+              </div>
+              <button onClick={() => { setShowRegister(false); setNewCredentials(null); }} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#53647C] transition-colors hover:bg-[#F5F7FB] hover:text-[#10264B]">
+                <X className="h-5 w-5" />
               </button>
             </div>
 
             <div className="p-6">
               {newCredentials ? (
-                <div className="text-center space-y-4">
-                  <div className="w-14 h-14 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-center mx-auto">
-                    <CheckCircle2 className="w-7 h-7 text-emerald-600" />
+                <div className="space-y-4 text-center">
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 ring-1 ring-emerald-600/15">
+                    <CheckCircle2 className="h-7 w-7 text-emerald-600" />
                   </div>
-                  <h3 className="text-base font-semibold text-slate-900">Student Registered!</h3>
-                  <p className="text-sm text-slate-500">Share these login credentials with the student.</p>
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-left space-y-2">
+                  <h3 className="text-xl font-bold tracking-tighter text-[#10264B]">Student registered!</h3>
+                  <p className="text-sm text-[#53647C]">Share these login credentials with the student.</p>
+                  <div className="space-y-3 rounded-2xl border border-[#DCE2EB] bg-[#F5F7FB] p-4 text-left">
                     <div>
-                      <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Email</p>
-                      <p className="text-sm font-medium text-slate-900">{newCredentials.email}</p>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Email</p>
+                      <p className="mt-0.5 break-all text-sm font-semibold text-[#10264B]">{newCredentials.email}</p>
                     </div>
-                    <div>
-                      <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Password</p>
-                      <p className="text-sm font-medium text-slate-900 font-mono">{newCredentials.password}</p>
+                    <div className="border-t border-[#DCE2EB] pt-3">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Password</p>
+                      <p className="mt-0.5 font-mono text-sm font-semibold text-[#10264B]">{newCredentials.password}</p>
                     </div>
                   </div>
                   <button
                     onClick={copyCredentials}
-                    className="inline-flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg px-4 py-2 transition-colors"
+                    className="inline-flex items-center gap-2 rounded-full border border-[#10264B]/15 bg-white px-4 py-2 text-sm font-semibold text-[#10264B] transition-colors hover:border-[#1246C8] hover:text-[#1246C8]"
                   >
-                    {copied ? <><Check className="w-4 h-4 text-emerald-600" />Copied!</> : <><Copy className="w-4 h-4" />Copy Credentials</>}
+                    {copied ? <><Check className="h-4 w-4 text-emerald-600" />Copied!</> : <><Copy className="h-4 w-4" />Copy Credentials</>}
                   </button>
                   <button
                     onClick={() => { setShowRegister(false); setNewCredentials(null); }}
-                    className="w-full bg-slate-900 text-white font-medium py-2.5 rounded-lg text-sm hover:bg-slate-800 transition-colors"
+                    className="w-full rounded-full bg-[#1246C8] py-3 text-sm font-semibold text-white shadow-glow transition-all hover:bg-[#0F3BAA] hover:shadow-glow-lg"
                   >
                     Done
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleRegister} className="space-y-4">
+                <form onSubmit={handleRegister} className="space-y-5">
                   <div className="grid grid-cols-2 gap-3">
                     {([["firstName", "First name"], ["lastName", "Last name"]] as const).map(([field, label]) => (
                       <div key={field}>
-                        <label className="block text-sm font-medium text-slate-700 mb-1.5">{label}</label>
+                        <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">{label}</label>
                         <input
                           type="text"
                           required
                           value={regForm[field]}
                           onChange={(e) => setRegForm(p => ({ ...p, [field]: e.target.value }))}
-                          className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20"
+                          className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                         />
                       </div>
                     ))}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1.5">Email</label>
+                    <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Email</label>
                     <input
                       type="email"
                       required
                       value={regForm.email}
                       onChange={(e) => setRegForm(p => ({ ...p, email: e.target.value }))}
-                      className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20"
+                      className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1.5">Phone</label>
+                    <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Phone</label>
                     <input
                       type="tel"
                       value={regForm.phone}
                       onChange={(e) => setRegForm(p => ({ ...p, phone: e.target.value }))}
-                      className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20"
+                      className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                      Password <span className="text-slate-400 font-normal">(student will use this to log in)</span>
+                    <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+                      Password <span className="font-normal normal-case tracking-normal text-[#8C9AB0]">(student will use this to log in)</span>
                     </label>
                     <div className="relative">
                       <input
@@ -380,19 +386,19 @@ export function AgentStudents() {
                         required
                         value={regForm.password}
                         onChange={(e) => setRegForm(p => ({ ...p, password: e.target.value }))}
-                        className="w-full px-3 pr-10 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20"
+                        className="w-full rounded-xl border border-[#DCE2EB] bg-white py-3 pl-4 pr-11 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                       />
-                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8C9AB0] transition-colors hover:text-[#1246C8]">
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Select Courses <span className="text-slate-400 font-normal">({regForm.selectedCourses.length}/4 max)</span>
+                    <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+                      Select Courses <span className="font-normal normal-case tracking-normal text-[#8C9AB0]">({regForm.selectedCourses.length}/4 max)</span>
                     </label>
-                    <div className="space-y-1.5">
+                    <div className="space-y-2">
                       {COURSE_CATALOG.map((c) => {
                         const selected = regForm.selectedCourses.includes(c.title);
                         return (
@@ -400,18 +406,18 @@ export function AgentStudents() {
                             key={c.title}
                             type="button"
                             onClick={() => toggleCourse(c.title)}
-                            className={`w-full flex items-center justify-between px-4 py-3 rounded-lg border text-sm text-left transition-colors ${selected ? "bg-slate-50 border-slate-900 text-slate-900" : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"}`}
+                            className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition-all ${selected ? "border-[#1246C8] bg-[#DCE8FF]/50 text-[#10264B] ring-4 ring-[#1246C8]/10" : "border-[#DCE2EB] bg-white text-[#172B49] hover:border-[#1246C8]/40 hover:bg-[#F5F7FB]"}`}
                           >
                             <span className="font-medium">{c.title}</span>
-                            <span className="text-xs font-medium shrink-0 ml-2">{formatNaira(c.price)}</span>
+                            <span className="ml-2 shrink-0 text-xs font-semibold tabular-nums text-[#1246C8]">{formatNaira(c.price)}</span>
                           </button>
                         );
                       })}
                     </div>
                     {regForm.selectedCourses.length > 0 && (
-                      <div className="mt-3 flex items-center justify-between px-1">
-                        <span className="text-xs text-slate-500">{regForm.selectedCourses.length} course(s) selected</span>
-                        <span className="text-sm font-semibold text-slate-900">
+                      <div className="mt-3 flex items-center justify-between rounded-xl bg-[#F5F7FB] px-4 py-3">
+                        <span className="text-xs text-[#53647C]">{regForm.selectedCourses.length} course(s) selected</span>
+                        <span className="text-sm font-bold text-[#10264B] tabular-nums">
                           {formatNaira(regForm.selectedCourses.length === 4 ? 538000 : regForm.selectedCourses.length * 150000)}
                         </span>
                       </div>
@@ -421,9 +427,9 @@ export function AgentStudents() {
                   <button
                     type="submit"
                     disabled={regLoading}
-                    className="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-2.5 rounded-lg text-sm transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="flex w-full items-center justify-center gap-2 rounded-full bg-[#1246C8] py-3 text-sm font-semibold text-white shadow-glow transition-all hover:bg-[#0F3BAA] hover:shadow-glow-lg disabled:opacity-50 disabled:shadow-none"
                   >
-                    {regLoading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Plus className="w-4 h-4" /> Register Student</>}
+                    {regLoading ? <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" /> : <><Plus className="h-4 w-4" /> Register Student</>}
                   </button>
                 </form>
               )}
@@ -434,115 +440,116 @@ export function AgentStudents() {
 
       {/* Pay Modal */}
       {showPayModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl w-full max-w-md shadow-xl max-h-[90vh] overflow-y-auto">
-            <div className="border-b border-slate-100 px-6 py-4 flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#07152E]/60 p-4 backdrop-blur-sm">
+          <div className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-panel bg-white shadow-float">
+            <div className="flex items-center justify-between gap-4 border-b border-[#DCE2EB] px-6 py-5">
               <div>
-                <h2 className="text-base font-semibold text-slate-900">Pay for Student</h2>
-                <p className="text-xs text-slate-500">{showPayModal.firstName} {showPayModal.lastName}</p>
+                <span className="eyebrow text-[#1246C8]">Tuition payment</span>
+                <h2 className="mt-1.5 text-xl font-bold tracking-tighter text-[#10264B]">Pay for student</h2>
+                <p className="mt-0.5 text-xs text-[#53647C]">{showPayModal.firstName} {showPayModal.lastName}</p>
               </div>
-              <button onClick={() => { setShowPayModal(null); setPayMethod("select"); setSelectedFile(null); setPaySuccess(false); }} className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors">
-                <X className="w-5 h-5 text-slate-500" />
+              <button onClick={() => { setShowPayModal(null); setPayMethod("select"); setSelectedFile(null); setPaySuccess(false); }} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#53647C] transition-colors hover:bg-[#F5F7FB] hover:text-[#10264B]">
+                <X className="h-5 w-5" />
               </button>
             </div>
 
             {paySuccess ? (
-              <div className="p-8 text-center space-y-4">
-                <div className="w-16 h-16 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center justify-center mx-auto">
-                  <CheckCircle2 className="w-8 h-8 text-emerald-500" />
+              <div className="space-y-4 p-8 text-center">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 ring-1 ring-emerald-600/15">
+                  <CheckCircle2 className="h-8 w-8 text-emerald-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900">Payment Successful!</h3>
-                <p className="text-sm text-slate-500">The payment has been processed and is awaiting admin confirmation.</p>
+                <h3 className="text-xl font-bold tracking-tighter text-[#10264B]">Payment successful!</h3>
+                <p className="text-sm text-[#53647C]">The payment has been processed and is awaiting admin confirmation.</p>
               </div>
             ) : payMethod === "select" ? (
-              <div className="p-6 space-y-4">
-                <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-center">
-                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Amount Due</p>
-                  <p className="text-2xl font-bold text-slate-900 mt-1">{formatNaira(showPayModal.totalCoursePrice)}</p>
+              <div className="space-y-3 p-6">
+                <div className="mb-1 rounded-2xl bg-[#07152E] bg-chart-grid p-5 text-center text-white">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8EAEFF]">Amount Due</p>
+                  <p className="mt-1.5 text-3xl font-bold tracking-tightest tabular-nums">{formatNaira(showPayModal.totalCoursePrice)}</p>
                 </div>
 
                 <button
                   onClick={() => initializePayment({ onSuccess: handlePaystackSuccess })}
                   disabled={payLoading}
-                  className="w-full flex items-center gap-4 p-4 rounded-2xl border border-slate-200 hover:border-indigo-600 hover:bg-indigo-50/30 transition-all text-left group"
+                  className="group flex w-full items-center gap-4 rounded-2xl border border-[#DCE2EB] bg-white p-4 text-left transition-all hover:border-[#1246C8] hover:bg-[#F5F7FB] hover:shadow-subtle disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <div className="w-12 h-12 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center group-hover:bg-indigo-100 transition-colors shrink-0">
-                    <CreditCard className="w-6 h-6 text-slate-500 group-hover:text-indigo-600" />
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8] transition-colors group-hover:bg-[#1246C8] group-hover:text-white">
+                    <CreditCard className="h-5 w-5" />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-slate-900 text-sm">Pay Online (Instant)</p>
-                    <p className="text-xs text-slate-500 mt-0.5">Instant verification via Paystack</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-[#10264B]">Pay Online (Instant)</p>
+                    <p className="mt-0.5 text-xs text-[#53647C]">Instant verification via Paystack</p>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-slate-300 shrink-0" />
+                  <ChevronRight className="h-5 w-5 shrink-0 text-[#8C9AB0] transition-all group-hover:translate-x-0.5 group-hover:text-[#1246C8]" />
                 </button>
 
                 <button
                   onClick={() => setPayMethod("manual")}
-                  className="w-full flex items-center gap-4 p-4 rounded-2xl border border-slate-200 hover:border-indigo-600 hover:bg-indigo-50/30 transition-all text-left group"
+                  className="group flex w-full items-center gap-4 rounded-2xl border border-[#DCE2EB] bg-white p-4 text-left transition-all hover:border-[#1246C8] hover:bg-[#F5F7FB] hover:shadow-subtle"
                 >
-                  <div className="w-12 h-12 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center group-hover:bg-indigo-100 transition-colors shrink-0">
-                    <Landmark className="w-6 h-6 text-slate-500 group-hover:text-indigo-600" />
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8] transition-colors group-hover:bg-[#1246C8] group-hover:text-white">
+                    <Landmark className="h-5 w-5" />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-slate-900 text-sm">Manual Bank Transfer</p>
-                    <p className="text-xs text-slate-500 mt-0.5">Upload receipt for manual review</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-[#10264B]">Manual Bank Transfer</p>
+                    <p className="mt-0.5 text-xs text-[#53647C]">Upload receipt for manual review</p>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-slate-300 shrink-0" />
+                  <ChevronRight className="h-5 w-5 shrink-0 text-[#8C9AB0] transition-all group-hover:translate-x-0.5 group-hover:text-[#1246C8]" />
                 </button>
               </div>
             ) : (
-              <form onSubmit={handlePay} className="p-6 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5">
-                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Amount Due</p>
-                    <p className="text-lg font-semibold text-slate-900">{formatNaira(showPayModal.totalCoursePrice)}</p>
+              <form onSubmit={handlePay} className="space-y-5 p-6">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="rounded-2xl bg-[#07152E] bg-chart-grid px-4 py-3 text-white">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8EAEFF]">Amount Due</p>
+                    <p className="mt-0.5 text-lg font-bold tracking-tighter tabular-nums">{formatNaira(showPayModal.totalCoursePrice)}</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => { setPayMethod("select"); setSelectedFile(null); setPayForm({ receiptUrl: "", amount: "" }); }}
-                    className="text-xs font-medium text-indigo-600 hover:text-indigo-800"
+                    className="rounded-full px-3 py-1.5 text-xs font-semibold text-[#1246C8] transition-colors hover:bg-[#DCE8FF]/60 hover:text-[#0F3BAA]"
                   >
                     Change Method
                   </button>
                 </div>
 
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
-                  <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Bank Transfer Details</p>
-                  <div className="flex items-center justify-between py-1.5 border-b border-slate-200/60 last:border-b-0">
-                    <span className="text-xs text-slate-500">Account Name</span>
-                    <span className="text-sm font-bold text-slate-900">Alpha step links aviation school ltd</span>
+                <div className="space-y-1 rounded-2xl border border-[#DCE2EB] bg-[#F5F7FB] p-4">
+                  <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Bank Transfer Details</p>
+                  <div className="flex items-center justify-between gap-3 border-b border-[#DCE2EB] py-2 last:border-b-0">
+                    <span className="text-xs text-[#53647C]">Account Name</span>
+                    <span className="text-right text-sm font-semibold text-[#10264B]">Alpha step links aviation school ltd</span>
                   </div>
-                  <div className="flex items-center justify-between py-1.5 border-b border-slate-200/60 last:border-b-0">
-                    <span className="text-xs text-slate-500">Account Number</span>
-                    <span className="text-sm font-bold text-slate-900">1000485345</span>
+                  <div className="flex items-center justify-between gap-3 border-b border-[#DCE2EB] py-2 last:border-b-0">
+                    <span className="text-xs text-[#53647C]">Account Number</span>
+                    <span className="font-mono text-sm font-semibold tracking-wider text-[#10264B]">1000485345</span>
                   </div>
-                  <div className="flex items-center justify-between py-1.5">
-                    <span className="text-xs text-slate-500">Bank</span>
-                    <span className="text-sm font-bold text-slate-900">Globus bank</span>
+                  <div className="flex items-center justify-between gap-3 py-2">
+                    <span className="text-xs text-[#53647C]">Bank</span>
+                    <span className="text-sm font-semibold text-[#10264B]">Globus bank</span>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Upload Payment Receipt</label>
+                  <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Upload Payment Receipt</label>
                   {!selectedFile ? (
-                    <label className="block border-2 border-dashed border-slate-200 rounded-2xl p-8 hover:bg-slate-50/50 hover:border-indigo-400 transition-all cursor-pointer text-center group">
+                    <label className="group block cursor-pointer rounded-2xl border-2 border-dashed border-[#C3CCDA] bg-[#F5F7FB]/60 p-8 text-center transition-all hover:border-[#1246C8] hover:bg-[#DCE8FF]/30">
                       <input type="file" accept="image/*,.pdf" onChange={handleFileSelect} className="hidden" />
-                      <Upload className="w-8 h-8 text-slate-300 mx-auto mb-3 group-hover:text-indigo-500 group-hover:scale-110 transition-all" />
-                      <p className="text-sm font-bold text-slate-900">Click to upload receipt</p>
-                      <p className="text-xs text-slate-400 mt-1">PNG, JPG or PDF up to 5MB</p>
+                      <Upload className="mx-auto mb-3 h-8 w-8 text-[#8C9AB0] transition-all group-hover:scale-110 group-hover:text-[#1246C8]" />
+                      <p className="text-sm font-semibold text-[#10264B]">Click to upload receipt</p>
+                      <p className="mt-1 text-xs text-[#8C9AB0]">PNG, JPG or PDF up to 5MB</p>
                     </label>
                   ) : (
-                    <div className="relative rounded-2xl overflow-hidden border border-slate-200 aspect-video bg-slate-50 flex items-center justify-center">
+                    <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-2xl border border-[#DCE2EB] bg-[#F5F7FB]">
                       {selectedFile.startsWith("data:application/pdf") ? (
                         <div className="flex flex-col items-center gap-2">
-                          <FileText className="w-12 h-12 text-slate-300" />
-                          <span className="text-xs font-bold text-slate-500">PDF Document Selected</span>
+                          <FileText className="h-12 w-12 text-[#1246C8]/50" />
+                          <span className="text-xs font-semibold text-[#53647C]">PDF Document Selected</span>
                         </div>
                       ) : (
-                        <img src={selectedFile} alt="Receipt preview" className="w-full h-full object-cover" />
+                        <img src={selectedFile} alt="Receipt preview" className="h-full w-full object-cover" />
                       )}
-                      <button type="button" onClick={() => setSelectedFile(null)} className="absolute top-3 right-3 p-1.5 bg-white/90 backdrop-blur shadow-sm rounded-full text-slate-600 hover:text-rose-600 transition-all">
-                        <X className="w-4 h-4" />
+                      <button type="button" onClick={() => setSelectedFile(null)} className="absolute right-3 top-3 rounded-full bg-white/90 p-1.5 text-[#53647C] shadow-subtle backdrop-blur transition-all hover:text-red-600">
+                        <X className="h-4 w-4" />
                       </button>
                     </div>
                   )}
@@ -551,9 +558,9 @@ export function AgentStudents() {
                 <button
                   type="submit"
                   disabled={payLoading || !selectedFile}
-                  className="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-2.5 rounded-lg text-sm transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex w-full items-center justify-center gap-2 rounded-full bg-[#1246C8] py-3 text-sm font-semibold text-white shadow-glow transition-all hover:bg-[#0F3BAA] hover:shadow-glow-lg disabled:opacity-50 disabled:shadow-none"
                 >
-                  {payLoading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Upload className="w-4 h-4" /> Submit for Admin Review</>}
+                  {payLoading ? <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" /> : <><Upload className="h-4 w-4" /> Submit for Admin Review</>}
                 </button>
               </form>
             )}

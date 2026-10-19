@@ -112,33 +112,39 @@ export function StudentProfile() {
     <div className="space-y-8 pb-12">
       {/* Header section */}
       <div>
-        <h1 className="text-3xl font-black tracking-tight text-slate-900">
+        <span className="eyebrow text-[#1246C8]">Account</span>
+        <h1 className="mt-3 text-3xl font-bold tracking-tightest text-[#10264B] sm:text-4xl">
           Profile Settings
         </h1>
-        <p className="text-sm font-normal text-slate-500 mt-1">
+        <p className="mt-2 text-[#53647C]">
           Manage your personal information, security credentials, and
           verification identity documents.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Card 1: Personal Info */}
-        <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
-          <div className="px-5 py-4 border-b border-slate-100/80 bg-slate-50/50 flex items-center justify-between gap-4">
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                Personal Information
-              </h3>
-              <p className="text-[11px] text-slate-400 font-medium mt-0.5">
-                Update your name, contact phone, and profile bio.
-              </p>
+        <div className="overflow-hidden rounded-panel border border-[#DCE2EB] bg-white shadow-subtle">
+          <div className="flex items-center justify-between gap-4 border-b border-[#DCE2EB] px-6 py-5">
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+                <User className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold tracking-tight text-[#10264B]">
+                  Personal Information
+                </h3>
+                <p className="mt-0.5 text-[13px] text-[#53647C]">
+                  Update your name, contact phone, and profile bio.
+                </p>
+              </div>
             </div>
             {!editing && (
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setEditing(true)}
-                className="rounded-2xl border-slate-200 hover:bg-slate-50 font-bold text-xs py-1.5 px-3.5 transition-all shadow-sm"
+                className="shrink-0"
               >
                 Edit
               </Button>
@@ -147,7 +153,7 @@ export function StudentProfile() {
           <div className="p-6 space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-bold text-slate-400 mb-1.5 block uppercase tracking-wider">
+                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                   First Name
                 </label>
                 <input
@@ -155,11 +161,11 @@ export function StudentProfile() {
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   disabled={!editing}
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 disabled:bg-slate-50/50 disabled:text-slate-500 transition-all font-bold text-slate-800"
+                  className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm font-medium text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10 disabled:bg-[#F5F7FB] disabled:text-[#53647C]"
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-400 mb-1.5 block uppercase tracking-wider">
+                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                   Last Name
                 </label>
                 <input
@@ -167,41 +173,41 @@ export function StudentProfile() {
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   disabled={!editing}
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 disabled:bg-slate-50/50 disabled:text-slate-500 transition-all font-bold text-slate-800"
+                  className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm font-medium text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10 disabled:bg-[#F5F7FB] disabled:text-[#53647C]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-xs font-bold text-slate-400 mb-1.5 block uppercase tracking-wider">
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                 Email Address
               </label>
               <input
                 type="email"
                 value={user?.email || ""}
                 disabled
-                className="w-full px-4 py-2.5 border border-slate-200 rounded-2xl text-sm bg-slate-50/50 text-slate-500 cursor-not-allowed transition-all font-bold"
+                className="w-full cursor-not-allowed rounded-xl border border-[#DCE2EB] bg-[#F5F7FB] px-4 py-3 text-sm font-medium text-[#53647C] outline-none transition"
               />
-              <p className="text-[10px] font-bold text-slate-400 mt-1">
+              <p className="mt-1.5 text-[11px] text-[#8C9AB0]">
                 Email address cannot be changed. Contact registry desk for
                 assistance.
               </p>
             </div>
 
             <div>
-              <label className="text-xs font-bold text-slate-400 mb-1.5 block uppercase tracking-wider">
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                 Phone Number
               </label>
               <PhoneNumberInput
                 value={phone}
                 onChange={setPhone}
                 disabled={!editing}
-                inputClassName="py-2.5 rounded-2xl focus:ring-indigo-500/20 focus:border-indigo-500 font-bold text-slate-800"
+                inputClassName="font-medium"
               />
             </div>
 
             <div>
-              <label className="text-xs font-bold text-slate-400 mb-1.5 block uppercase tracking-wider">
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                 Profile Bio
               </label>
               <textarea
@@ -209,7 +215,7 @@ export function StudentProfile() {
                 onChange={(e) => setBio(e.target.value)}
                 disabled={!editing}
                 rows={3}
-                className="w-full px-4 py-2.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 disabled:bg-slate-50/50 disabled:text-slate-500 resize-none font-bold text-slate-800 leading-relaxed"
+                className="w-full resize-none rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm font-medium leading-relaxed text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10 disabled:bg-[#F5F7FB] disabled:text-[#53647C]"
                 placeholder="Tell us about yourself..."
               />
             </div>
@@ -217,7 +223,7 @@ export function StudentProfile() {
             {editing && (
               <div className="flex gap-3 pt-2">
                 <Button
-                  className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold py-2.5 text-xs transition-all shadow-sm flex items-center justify-center gap-1.5"
+                  className="flex-1 gap-1.5"
                   onClick={handleSaveProfile}
                   disabled={saving}
                 >
@@ -226,7 +232,6 @@ export function StudentProfile() {
                 </Button>
                 <Button
                   variant="outline"
-                  className="rounded-2xl border-slate-200 hover:bg-slate-50 font-bold text-xs py-2.5 px-4 transition-all"
                   onClick={() => {
                     setEditing(false);
                     setFirstName(user?.firstName || "");
@@ -243,25 +248,30 @@ export function StudentProfile() {
         </div>
 
         {/* Card 2: Identity Document */}
-        <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
-          <div className="px-5 py-4 border-b border-slate-100/80 bg-slate-50/50">
-            <h3 className="text-base font-bold text-slate-900">
-              Identity Document
-            </h3>
-            <p className="text-[11px] text-slate-400 font-medium mt-0.5">
-              Upload your ID card or passport photo for clearance verification.
-            </p>
+        <div className="overflow-hidden rounded-panel border border-[#DCE2EB] bg-white shadow-subtle">
+          <div className="flex items-center gap-3 border-b border-[#DCE2EB] px-6 py-5">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+              <FileText className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold tracking-tight text-[#10264B]">
+                Identity Document
+              </h3>
+              <p className="mt-0.5 text-[13px] text-[#53647C]">
+                Upload your ID card or passport photo for clearance verification.
+              </p>
+            </div>
           </div>
           <div className="p-6 space-y-4">
             {user?.documentUrl ? (
               <div className="space-y-4">
-                <div className="p-3 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-2 text-emerald-900">
+                <div className="flex items-center gap-2.5 rounded-2xl border border-emerald-200 bg-emerald-50 p-3.5 text-emerald-900">
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-                  <span className="text-xs font-bold">
+                  <span className="text-[13px] font-semibold">
                     Verification Document Uploaded Successfully
                   </span>
                 </div>
-                <div className="relative rounded-2xl overflow-hidden border border-slate-200/60 aspect-video bg-slate-50 flex items-center justify-center">
+                <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-2xl border border-[#DCE2EB] bg-[#F5F7FB]">
                   <img
                     src={user.documentUrl}
                     alt="Identity document"
@@ -280,7 +290,7 @@ export function StudentProfile() {
                       className="hidden"
                       disabled={uploadingDocument}
                     />
-                    <div className="w-full rounded-2xl border border-slate-200 hover:border-slate-300 cursor-pointer px-4 py-2.5 flex items-center justify-center text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors">
+                    <div className="flex w-full cursor-pointer items-center justify-center rounded-full border border-[#10264B]/15 bg-white px-4 py-2.5 text-sm font-semibold text-[#10264B] transition-colors hover:border-[#1246C8] hover:text-[#1246C8]">
                       <Upload className="w-4 h-4 mr-2" />
                       <span>
                         {uploadingDocument
@@ -292,7 +302,7 @@ export function StudentProfile() {
                 </div>
               </div>
             ) : (
-              <div className="p-4 bg-slate-50/60 border border-slate-200/80 border-dashed rounded-3xl">
+              <div className="rounded-2xl border-2 border-dashed border-[#DCE2EB] bg-[#F5F7FB] p-4 transition-colors hover:border-[#1246C8]">
                 <label className="block">
                   <input
                     type="file"
@@ -304,16 +314,16 @@ export function StudentProfile() {
                     className="hidden"
                     disabled={uploadingDocument}
                   />
-                  <div className="flex flex-col items-center justify-center py-8 cursor-pointer hover:opacity-85 transition-opacity group">
-                    <div className="w-12 h-12 bg-white rounded-xl border border-slate-100 shadow-sm flex items-center justify-center text-slate-400 mb-3 group-hover:scale-105 transition-transform duration-300">
-                      <FileText className="w-6 h-6 text-slate-500" />
+                  <div className="group flex cursor-pointer flex-col items-center justify-center py-8">
+                    <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#1246C8] shadow-subtle ring-1 ring-[#DCE2EB] transition-transform duration-300 group-hover:scale-105">
+                      <Upload className="w-5 h-5" />
                     </div>
-                    <p className="text-sm font-bold text-slate-900 mb-1">
+                    <p className="mb-1 text-sm font-semibold text-[#10264B]">
                       {uploadingDocument
                         ? "Uploading..."
                         : "Upload Identity ID / Passport"}
                     </p>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-[#8C9AB0]">
                       JPG, PNG, or PDF formats up to 5MB
                     </p>
                   </div>
@@ -325,19 +335,24 @@ export function StudentProfile() {
       </div>
 
       {/* Card 3: Security & Credentials */}
-      <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
-        <div className="px-5 py-4 border-b border-slate-100/80 bg-slate-50/50">
-          <h3 className="text-base font-bold text-slate-900">
-            Change Password
-          </h3>
-          <p className="text-[11px] text-slate-400 font-medium mt-0.5">
-            Update your portal security password key credentials.
-          </p>
+      <div className="overflow-hidden rounded-panel border border-[#DCE2EB] bg-white shadow-subtle">
+        <div className="flex items-center gap-3 border-b border-[#DCE2EB] px-6 py-5">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+            <ShieldAlert className="w-4 h-4" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold tracking-tight text-[#10264B]">
+              Change Password
+            </h3>
+            <p className="mt-0.5 text-[13px] text-[#53647C]">
+              Update your portal security password key credentials.
+            </p>
+          </div>
         </div>
         <div className="p-6">
           <div className="max-w-md space-y-4">
             <div>
-              <label className="text-xs font-bold text-slate-400 mb-1.5 block uppercase tracking-wider">
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                 Current Password
               </label>
               <div className="relative">
@@ -345,13 +360,13 @@ export function StudentProfile() {
                   type={showCurrent ? "text" : "password"}
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-bold text-slate-800"
+                  className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 pr-11 text-sm font-medium text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                   placeholder="Enter current password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowCurrent(!showCurrent)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8C9AB0] transition-colors hover:text-[#1246C8]"
                 >
                   {showCurrent ? (
                     <EyeOff className="w-4 h-4" />
@@ -363,7 +378,7 @@ export function StudentProfile() {
             </div>
 
             <div>
-              <label className="text-xs font-bold text-slate-400 mb-1.5 block uppercase tracking-wider">
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                 New Password
               </label>
               <div className="relative">
@@ -371,14 +386,14 @@ export function StudentProfile() {
                   type={showNew ? "text" : "password"}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-bold text-slate-800"
+                  className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 pr-11 text-sm font-medium text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                   placeholder="Min. 6 characters"
                   minLength={6}
                 />
                 <button
                   type="button"
                   onClick={() => setShowNew(!showNew)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8C9AB0] transition-colors hover:text-[#1246C8]"
                 >
                   {showNew ? (
                     <EyeOff className="w-4 h-4" />
@@ -390,7 +405,7 @@ export function StudentProfile() {
             </div>
 
             <Button
-              className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold py-2.5 text-xs transition-all shadow-sm flex items-center justify-center gap-1.5"
+              className="gap-1.5"
               disabled={changingPassword || !currentPassword || !newPassword}
               onClick={() => {
                 toast("Password change not yet implemented on server", "error");

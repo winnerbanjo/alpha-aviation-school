@@ -11,8 +11,9 @@ import {
 } from "@/api";
 import { useAuthStore } from "@/store/authStore";
 import { useToast } from "@/components/ui/toast";
-import { Mail, ArrowLeft, RefreshCw, CheckCircle } from "lucide-react";
+import { RefreshCw, CheckCircle } from "lucide-react";
 import { NoIndexSEO } from "@/components/seo/NoIndexSEO";
+import { AuthShell, AuthBackLink } from "@/components/auth/AuthShell";
 
 type OTPPurpose = "enrollment" | "admin_login";
 
@@ -248,92 +249,39 @@ export function VerifyOtp() {
         description="Verify your one-time code to continue your Alpha Step Links Aviation School enrollment or admin login."
         url="/verify-otp"
       />
-      <div className="min-h-screen bg-white flex flex-col lg:flex-row overflow-hidden relative">
-      {/* Left Panel */}
-      <div className="hidden lg:flex lg:w-6/12 h-screen sticky top-0 bg-slate-900 overflow-hidden relative z-10">
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/wing.png"
-            alt="Aviation Background"
-            className="w-full h-full object-cover opacity-50"
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900/60 to-transparent" />
-        </div>
-
-        <div className="absolute inset-4 overflow-hidden">
-          <div className="absolute top-8 left-8 z-20">
-            <button
-              onClick={() => navigate(-1)}
-              className="group flex items-center gap-3 w-fit px-4 py-2 bg-black/40 backdrop-blur-md rounded-full border border-white/10 hover:border-white/30 transition-all"
-            >
-              <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
-                <ArrowLeft className="w-3 h-3" />
-              </div>
-              <span className="text-[10px] text-white/70 font-bold uppercase tracking-widest group-hover:text-white transition-colors">
-                Go Back
-              </span>
-            </button>
-          </div>
-
-          <div className="absolute inset-0 flex flex-col justify-center px-12 z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-            >
-              <h1 className="text-4xl xl:text-5xl font-semibold tracking-tighter text-white mb-6 leading-[1.05]">
-                {purpose === "enrollment" ? (
-                  <>
-                    Verify Your
-                    <br />
-                    <span className="italic text-[#1239B8]">Email</span>
-                  </>
-                ) : (
-                  <>
-                    Admin
-                    <br />
-                    <span className="italic text-[#1239B8]">Verification</span>
-                  </>
-                )}
-              </h1>
-              <p className="text-white/60 text-lg leading-relaxed max-w-sm font-medium">
-                {purpose === "enrollment"
-                  ? "Enter the verification code sent to your email to complete enrollment."
-                  : "Enter the verification code sent to your admin email to sign in."}
-              </p>
-            </motion.div>
-          </div>
-        </div>
-      </div>
-
-      {/* Right Panel */}
-      <div className="flex-1 lg:h-screen overflow-y-auto z-10 bg-white">
-        <div className="max-w-md mx-auto px-6 py-12 lg:py-24 h-full flex flex-col justify-center">
+      <AuthShell
+        eyebrow={purpose === "enrollment" ? "Email verification" : "Administrator access"}
+        title={purpose === "enrollment" ? "Verify your" : "Admin"}
+        accent={purpose === "enrollment" ? "email." : "verification."}
+        description={
+          purpose === "enrollment"
+            ? "Enter the verification code sent to your email to complete enrollment."
+            : "Enter the verification code sent to your admin email to sign in."
+        }
+        video="airport-operations-model"
+        back={<AuthBackLink onClick={() => navigate(-1)}>Go back</AuthBackLink>}
+      >
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="mb-12">
-              <div className="inline-flex justify-center mb-6">
-                <div className="p-3 bg-[#1239B8]/10 rounded-full border border-[#1239B8]/20 shadow-sm shadow-[#1239B8]/10">
-                  <Mail className="w-8 h-8 text-[#1239B8]" />
-                </div>
-              </div>
-              <h2 className="text-4xl font-semibold tracking-tighter text-slate-900 mb-2">
-                Enter Verification Code
-              </h2>
-              <p className="text-slate-400 text-sm font-medium">
-                We sent a 6-digit code to <span className="text-slate-600">{email}</span>
+            <div className="mb-10">
+              <span className="eyebrow text-[#1246C8]">One-time code</span>
+              <h1 className="mt-4 text-3xl font-bold tracking-tightest text-[#10264B] sm:text-4xl">
+                Enter verification code
+              </h1>
+              <p className="mt-3 text-[15px] leading-relaxed text-[#53647C]">
+                We sent a 6-digit code to <span className="font-semibold text-[#10264B]">{email}</span>
               </p>
             </div>
 
             <form onSubmit={handleVerify} className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest pl-1">
+              <div>
+                <label className="mb-3 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                   Verification Code
                 </label>
-                <div className="flex gap-3 justify-center" onPaste={handlePaste}>
+                <div className="flex gap-2 sm:gap-3" onPaste={handlePaste}>
                   {otp.map((digit, index) => (
                     <input
                       key={index}
@@ -346,7 +294,7 @@ export function VerifyOtp() {
                       value={digit}
                       onChange={(e) => handleOtpChange(index, e.target.value)}
                       onKeyDown={(e) => handleKeyDown(index, e)}
-                      className="w-14 h-14 text-center text-2xl font-bold bg-white border-2 border-slate-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-[#1239B8]/20 focus:border-[#1239B8] text-slate-900 transition-all"
+                      className="h-14 w-12 rounded-xl border border-[#DCE2EB] bg-white text-center text-xl font-bold text-[#10264B] outline-none transition focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10 sm:w-14"
                       autoFocus={index === 0}
                     />
                   ))}
@@ -354,16 +302,16 @@ export function VerifyOtp() {
               </div>
 
               {/* Timer */}
-              <div className="text-center">
+              <div>
                 {!isExpired ? (
-                  <p className="text-sm text-slate-400">
+                  <p className="inline-flex items-center gap-1.5 rounded-full bg-[#F5F7FB] px-3.5 py-1.5 text-[13px] text-[#53647C]">
                     Code expires in{" "}
-                    <span className="text-slate-600 font-semibold">
+                    <span className="font-semibold tabular-nums text-[#10264B]">
                       {formatTime(timeLeft)}
                     </span>
                   </p>
                 ) : (
-                  <p className="text-sm text-red-500">
+                  <p className="inline-flex items-center rounded-full bg-red-50 px-3.5 py-1.5 text-[13px] font-medium text-red-700 ring-1 ring-red-600/15">
                     Code expired. Please request a new one.
                   </p>
                 )}
@@ -372,29 +320,29 @@ export function VerifyOtp() {
               <Button
                 type="submit"
                 disabled={loading || isExpired}
-                className="w-full rounded-[1.25rem] bg-slate-900 hover:bg-black text-white h-16 font-bold text-sm tracking-tight transition-all hover:scale-[1.01] active:scale-[0.99] group shadow-2xl shadow-slate-200"
+                className="group h-12 w-full"
               >
                 {loading ? (
                   "Verifying..."
                 ) : (
                   <>
                     Verify & Continue
-                    <CheckCircle className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    <CheckCircle className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </>
                 )}
               </Button>
             </form>
 
             {/* Resend */}
-            <div className="mt-8 text-center">
-              <p className="text-sm text-slate-400 font-medium mb-3">
+            <div className="mt-10 border-t border-[#DCE2EB] pt-6 text-center">
+              <p className="mb-3 text-sm text-[#53647C]">
                 Didn't receive the code?
               </p>
               <button
                 type="button"
                 onClick={handleResend}
                 disabled={resending}
-                className="inline-flex items-center gap-2 text-[#1239B8] font-bold hover:underline underline-offset-4 transition-colors disabled:opacity-50"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-[#1246C8] transition-colors hover:text-[#10264B] disabled:opacity-50"
               >
                 <RefreshCw className={`w-4 h-4 ${resending ? "animate-spin" : ""}`} />
                 {resending ? "Sending..." : "Resend Code"}
@@ -410,15 +358,13 @@ export function VerifyOtp() {
                     replace: true,
                   })
                 }
-                className="text-sm text-slate-500 hover:text-slate-800 font-medium hover:underline underline-offset-4 transition-colors"
+                className="text-sm font-medium text-[#53647C] underline-offset-4 transition-colors hover:text-[#10264B] hover:underline"
               >
                 ← Back to {purpose === "admin_login" ? "Login" : "Enrollment"}
               </button>
             </div>
           </motion.div>
-        </div>
-      </div>
-      </div>
+      </AuthShell>
     </>
   );
 }

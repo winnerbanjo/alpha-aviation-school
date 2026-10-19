@@ -2,7 +2,7 @@ import { Component } from 'react'
 import type { ErrorInfo, ReactNode } from 'react'
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { BrandLogo } from '@/components/layout/BrandLogo'
 
 interface Props {
   children: ReactNode
@@ -70,18 +70,21 @@ export class ErrorBoundary extends Component<Props, State> {
         this.state.error !== null && this.isChunkLoadError(this.state.error)
 
       return (
-        <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center px-4">
-          <Card className="border-slate-200/50 max-w-md w-full">
-            <CardContent className="p-8 text-center">
-              <div className="flex justify-center mb-4">
-                <div className="p-3 bg-red-100 rounded-full">
-                  <AlertTriangle className="w-8 h-8 text-red-600" />
+        <div className="flex min-h-screen items-center justify-center bg-[#F5F7FB] px-4 py-10">
+          <div className="relative w-full max-w-md overflow-hidden rounded-stage bg-[#07152E] text-white shadow-float">
+            <div aria-hidden="true" className="absolute inset-0 bg-chart-grid mask-fade-b opacity-70" />
+            <div aria-hidden="true" className="absolute -right-32 -top-32 h-[380px] w-[380px] rounded-full bg-[#1246C8]/40 blur-[110px]" />
+            <div className="relative p-8 text-center sm:p-10">
+              <BrandLogo tone="white" className="mx-auto -mt-2 mb-8 w-[188px]" />
+              <div className="mb-5 flex justify-center">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15 backdrop-blur-md">
+                  <AlertTriangle className="h-6 w-6 text-[#8EAEFF]" />
                 </div>
               </div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900 mb-2">
+              <h1 className="mb-3 text-2xl font-bold tracking-tighter text-white sm:text-3xl">
                 {isChunkLoadError ? 'Update Required' : 'System Under Maintenance'}
               </h1>
-              <p className="text-slate-500 mb-6">
+              <p className="mb-8 text-sm leading-relaxed text-white/65">
                 {isChunkLoadError
                   ? 'A newer version of the app is available, and one of the page assets could not be loaded. Reloading usually resolves this.'
                   : "We're experiencing a temporary issue. Our team has been notified and is working to resolve it."}
@@ -89,22 +92,22 @@ export class ErrorBoundary extends Component<Props, State> {
               <div className="space-y-3">
                 <Button
                   onClick={this.handleReset}
-                  className="w-full rounded-lg bg-[#1239B8] hover:bg-[#071A4A] text-white"
+                  className="w-full rounded-full bg-[#1246C8] text-white shadow-glow hover:bg-[#0F3BAA] hover:shadow-glow-lg"
                 >
-                  <RefreshCw className="w-4 h-4 mr-2" />
+                  <RefreshCw className="mr-2 h-4 w-4" />
                   {isChunkLoadError ? 'Reload Page' : 'Try Again'}
                 </Button>
                 <Button
                   onClick={() => { this.setState({ hasError: false, error: null }) }}
                   variant="outline"
-                  className="w-full rounded-lg border-slate-200/50"
+                  className="w-full rounded-full border-white/25 bg-white/10 text-white backdrop-blur-md hover:border-white/25 hover:bg-white/20 hover:text-white"
                 >
-                  <Home className="w-4 h-4 mr-2" />
+                  <Home className="mr-2 h-4 w-4" />
                   Dismiss
                 </Button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       )
     }

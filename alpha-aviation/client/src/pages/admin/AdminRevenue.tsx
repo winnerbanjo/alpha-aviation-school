@@ -1,7 +1,6 @@
 import { useAdminData, formatNaira } from "@/hooks/useAdminData";
 import { CheckCircle2, Clock, DollarSign, WalletCards } from "lucide-react";
 import {
-  AdminMetricCard,
   AdminPageHeader,
   AdminPageShell,
   AdminPanel,
@@ -25,30 +24,58 @@ export function AdminRevenue() {
         onRefresh={() => { fetchStudents(); fetchFinancialStats(); }}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <AdminMetricCard label="Total Revenue" value={formatNaira(displayTotalRevenue)} helper={`From ${paidStudents} paid students`} icon={DollarSign} accent="emerald" badge="Verified" />
-        <AdminMetricCard label="Pending Revenue" value={formatNaira(displayPendingRevenue)} helper={`From ${pendingStudents} pending payments`} icon={WalletCards} accent="amber" />
-      </div>
+      <section className="relative overflow-hidden rounded-stage bg-[#07152E] text-white shadow-elevated">
+        <div aria-hidden className="absolute inset-0 bg-chart-grid mask-fade-b opacity-70" />
+        <div aria-hidden className="absolute -right-32 -top-32 h-[380px] w-[380px] rounded-full bg-[#1246C8]/40 blur-[110px]" />
+        <div className="relative grid gap-8 p-6 sm:p-8 lg:grid-cols-[1.5fr_1fr] lg:items-end lg:p-10">
+          <div>
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-400/10 text-emerald-300">
+                <DollarSign className="h-[18px] w-[18px]" />
+              </span>
+              <span className="eyebrow text-[#8EAEFF]">Total Revenue</span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-300 ring-1 ring-emerald-400/20">Verified</span>
+            </div>
+            <p className="mt-6 break-words text-4xl font-bold tracking-tightest tabular-nums sm:text-5xl lg:text-6xl">
+              <span className="text-gradient-sky">{formatNaira(displayTotalRevenue)}</span>
+            </p>
+            <p className="mt-3 text-sm text-white/60">{`From ${paidStudents} paid students`}</p>
+          </div>
+
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-md">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8EAEFF]">Pending Revenue</span>
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-400/10 text-amber-300">
+                <WalletCards className="h-[18px] w-[18px]" />
+              </span>
+            </div>
+            <p className="mt-4 text-3xl font-bold tracking-tightest tabular-nums text-white">{formatNaira(displayPendingRevenue)}</p>
+            <p className="mt-2 text-sm text-white/60">{`From ${pendingStudents} pending payments`}</p>
+          </div>
+        </div>
+      </section>
 
       <AdminPanel>
-        <div className="px-5 py-4 border-b border-slate-100/80 bg-slate-50/50">
-          <h2 className="text-base font-bold text-slate-900">Payment Status Breakdown</h2>
-          <p className="text-xs text-slate-500 mt-0.5">A quick view of tuition clearance across the student body.</p>
+        <div className="border-b border-[#DCE2EB] px-6 py-5">
+          <h2 className="text-lg font-bold tracking-tighter text-[#10264B]">Payment Status Breakdown</h2>
+          <p className="mt-0.5 text-sm text-[#53647C]">A quick view of tuition clearance across the student body.</p>
         </div>
-        <div className="p-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-px bg-[#DCE2EB] sm:grid-cols-3">
           {[
-            { label: "Paid Students", value: paidStudents, icon: CheckCircle2, className: "bg-emerald-50 text-emerald-700 border-emerald-100" },
-            { label: "Pending Payments", value: pendingStudents, icon: Clock, className: "bg-amber-50 text-amber-700 border-amber-100" },
-            { label: "Under Review", value: underReviewStudents, icon: WalletCards, className: "bg-indigo-50 text-indigo-700 border-indigo-100" },
+            { label: "Paid Students", value: paidStudents, icon: CheckCircle2, className: "bg-emerald-50 text-emerald-600" },
+            { label: "Pending Payments", value: pendingStudents, icon: Clock, className: "bg-amber-50 text-amber-600" },
+            { label: "Under Review", value: underReviewStudents, icon: WalletCards, className: "bg-[#DCE8FF] text-[#1246C8]" },
           ].map((item) => {
             const Icon = item.icon;
             return (
-              <div key={item.label} className={`p-4 rounded-2xl border ${item.className}`}>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-bold">{item.label}</p>
-                  <Icon className="w-5 h-5" />
+              <div key={item.label} className="bg-white p-6">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#53647C]">{item.label}</p>
+                  <span className={`flex h-10 w-10 items-center justify-center rounded-full ${item.className}`}>
+                    <Icon className="h-[18px] w-[18px]" />
+                  </span>
                 </div>
-                <p className="text-3xl font-black mt-3">{item.value}</p>
+                <p className="mt-4 text-3xl font-bold tracking-tightest tabular-nums text-[#10264B]">{item.value}</p>
               </div>
             );
           })}

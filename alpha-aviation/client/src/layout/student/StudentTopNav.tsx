@@ -12,6 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { getNotifications } from "@/api";
+import { Logo } from "@/components/Logo";
 
 interface StudentTopNavProps {
   mobileMenuOpen: boolean;
@@ -54,14 +55,14 @@ export function StudentTopNav({ mobileMenuOpen, setMobileMenuOpen }: StudentTopN
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 bg-white/20 py-4 px-6 lg:px-8 backdrop-blur-md">
-      <div className="flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-30 h-[68px] border-b border-[#DCE2EB]/80 bg-white/85 px-4 backdrop-blur-xl sm:px-6 lg:px-10">
+      <div className="flex h-full items-center justify-between gap-4">
         {/* Left Side: Mobile Menu Button (mobile only) & Greeting (desktop only) */}
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-3">
           {/* Mobile Menu Toggle Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2.5 bg-white/95 text-slate-800 rounded-xl shadow-md border border-slate-200/80 hover:bg-slate-50 transition-all duration-200"
+            className="lg:hidden flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#DCE2EB] bg-white text-[#10264B] transition-colors hover:bg-[#F5F7FB]"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? (
@@ -71,29 +72,31 @@ export function StudentTopNav({ mobileMenuOpen, setMobileMenuOpen }: StudentTopN
             )}
           </button>
 
+          <Logo variant="color" size="sm" className="lg:hidden" />
+
           {/* Greetings and motivational message (desktop only) */}
-          <div className="hidden lg:block">
-            <h2 className="text-2xl lg:text-2xl font-medium text-slate-900 tracking-tight">
+          <div className="hidden min-w-0 lg:block">
+            <h2 className="truncate text-[15px] font-semibold tracking-tight text-[#10264B]">
               {getGreeting()}, {displayName}!
             </h2>
-            <p className="text-sm font-normal text-slate-700 mt-1">
+            <p className="mt-0.5 truncate text-xs text-[#53647C]">
               Ready to soar to new heights in your training today?
             </p>
           </div>
         </div>
 
         {/* Right Side: Notification Icon */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {/* Notifications Bell */}
           <button
             type="button"
             onClick={() => navigate("/dashboard/notifications")}
-            className="relative h-10 w-10 border-1 border-black/70 rounded-full bg-white text-slate-600 hover:text-slate-900 shadow-sm hover:bg-slate-50 transition-all flex items-center justify-center shrink-0"
+            className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#53647C] transition-colors hover:bg-[#F5F7FB] hover:text-[#10264B]"
             aria-label="Open notifications"
           >
             <Bell className="w-5 h-5" />
             {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white animate-pulse" />
+              <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-[#1246C8] ring-2 ring-white" />
             )}
           </button>
         </div>

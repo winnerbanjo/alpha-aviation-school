@@ -90,41 +90,41 @@ export function ModuleDetailsModal({
         {/* Status Badge */}
         <div className="flex items-center gap-3">
           {completed ? (
-            <>
-              <CheckCircle2 className="w-5 h-5 text-green-600" />
-              <span className="text-sm font-medium text-green-600">Completed</span>
-            </>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 ring-1 ring-emerald-600/15">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              <span>Completed</span>
+            </span>
           ) : (
-            <>
-              <Clock className="w-5 h-5 text-slate-400" />
-              <span className="text-sm font-medium text-slate-500">In Progress</span>
-            </>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#DCE8FF] px-2.5 py-1 text-[11px] font-semibold text-[#1246C8]">
+              <Clock className="w-3.5 h-3.5" />
+              <span>In Progress</span>
+            </span>
           )}
         </div>
 
         {/* Description */}
         <div>
-          <h4 className="text-sm font-semibold text-slate-900 mb-2 flex items-center gap-2">
-            <BookOpen className="w-4 h-4" />
+          <h4 className="mb-2 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+            <BookOpen className="w-4 h-4 text-[#1246C8]" />
             Description
           </h4>
-          <p className="text-sm text-slate-600 leading-relaxed">{details.description}</p>
+          <p className="text-sm leading-relaxed text-[#172B49]">{details.description}</p>
         </div>
 
         {/* Duration */}
         <div>
-          <h4 className="text-sm font-semibold text-slate-900 mb-2 flex items-center gap-2">
-            <Clock className="w-4 h-4" />
+          <h4 className="mb-2 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+            <Clock className="w-4 h-4 text-[#1246C8]" />
             Duration
           </h4>
-          <p className="text-sm text-slate-600">{details.duration}</p>
+          <p className="text-sm font-semibold text-[#10264B]">{details.duration}</p>
         </div>
 
         {/* Topics */}
         {details.topics.length > 0 && (
           <div>
-            <h4 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
-              <Award className="w-4 h-4" />
+            <h4 className="mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+              <Award className="w-4 h-4 text-[#1246C8]" />
               Key Topics
             </h4>
             <div className="grid grid-cols-1 gap-2">
@@ -134,10 +134,10 @@ export function ModuleDetailsModal({
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg"
+                  className="flex items-center gap-2.5 rounded-xl border border-[#DCE2EB]/70 bg-[#F5F7FB] px-3 py-2.5"
                 >
-                  <div className="w-1.5 h-1.5 bg-[#1239B8] rounded-full" />
-                  <span className="text-sm text-slate-700">{topic}</span>
+                  <div className="w-1.5 h-1.5 bg-[#1246C8] rounded-full" />
+                  <span className="text-sm text-[#172B49]">{topic}</span>
                 </motion.div>
               ))}
             </div>

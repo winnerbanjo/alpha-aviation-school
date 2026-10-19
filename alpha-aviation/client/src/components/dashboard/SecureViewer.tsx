@@ -78,16 +78,16 @@ export function SecureViewer({ isOpen, onClose, resource }: SecureViewerProps) {
   };
 
   return createPortal(
-    <div className="fixed inset-0 w-full z-[9999] h-screen top-0 flex items-center justify-center bg-slate-900/95 backdrop-blur-sm select-none">
+    <div className="fixed inset-0 w-full z-[9999] h-screen top-0 flex items-center justify-center bg-[#07152E]/95 backdrop-blur-sm select-none">
       {/* Header */}
-      <div className="absolute top-0 left-0 right-0 h-16 bg-slate-900/50 border-b border-white/10 flex items-center justify-between px-6 z-10">
-        <div className="flex flex-col">
-          <h2 className="text-white font-bold truncate max-w-xl">{resource.title}</h2>
-          <p className="text-xs text-white/50">Protected view-only mode</p>
+      <div className="absolute top-0 left-0 right-0 h-16 bg-[#07152E]/80 border-b border-white/10 backdrop-blur-xl flex items-center justify-between gap-4 px-4 sm:px-6 z-10">
+        <div className="flex min-w-0 flex-col">
+          <h2 className="text-white font-semibold tracking-tight truncate max-w-xl">{resource.title}</h2>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8EAEFF]">Protected view-only mode</p>
         </div>
         <button
           onClick={onClose}
-          className="p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur-md transition-colors hover:bg-white/20"
         >
           <X className="w-5 h-5" />
         </button>
@@ -98,7 +98,7 @@ export function SecureViewer({ isOpen, onClose, resource }: SecureViewerProps) {
         {/* Dynamic Watermark */}
         <div className="pointer-events-none fixed inset-0 z-20 overflow-hidden flex flex-wrap justify-center items-center opacity-[0.03] rotate-[-30deg]">
           {Array.from({ length: 150 }).map((_, i) => (
-            <div key={i} className="text-white font-black text-2xl p-8 whitespace-nowrap">
+            <div key={i} className="text-white font-bold text-2xl p-8 whitespace-nowrap">
               {user?.email} · {user?.studentIdNumber || "ALPHA-AVIATION"}
             </div>
           ))}
@@ -112,13 +112,13 @@ export function SecureViewer({ isOpen, onClose, resource }: SecureViewerProps) {
                 file={resource.url}
                 onLoadSuccess={onDocumentLoadSuccess}
                 loading={
-                  <div className="flex flex-col items-center text-white/50 gap-4 mt-20">
+                  <div className="flex flex-col items-center text-white/60 gap-4 mt-20">
                     <Loader2 className="w-8 h-8 animate-spin" />
                     <p>Loading secure document...</p>
                   </div>
                 }
                 error={
-                  <div className="flex flex-col items-center text-rose-400 gap-4 mt-20">
+                  <div className="flex flex-col items-center text-red-300 gap-4 mt-20">
                     <AlertTriangle className="w-8 h-8" />
                     <p>Failed to load document securely.</p>
                   </div>
@@ -153,21 +153,21 @@ export function SecureViewer({ isOpen, onClose, resource }: SecureViewerProps) {
 
         {/* PDF Paginator */}
         {resource.type === "pdf" && numPages && (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-800/90 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 flex items-center gap-6 z-30 shadow-xl">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-[#10264B]/90 backdrop-blur-md border border-white/15 rounded-full px-3 py-2 flex items-center gap-4 z-30 shadow-float">
             <button
               disabled={pageNumber <= 1}
               onClick={() => setPageNumber(p => p - 1)}
-              className="p-1.5 text-white hover:bg-white/10 rounded-full disabled:opacity-30 transition-colors"
+              className="flex h-8 w-8 items-center justify-center text-white hover:bg-white/10 rounded-full disabled:opacity-30 transition-colors"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <span className="text-white text-sm font-medium">
+            <span className="text-white text-sm font-medium tabular-nums">
               Page {pageNumber} of {numPages}
             </span>
             <button
               disabled={pageNumber >= numPages}
               onClick={() => setPageNumber(p => p + 1)}
-              className="p-1.5 text-white hover:bg-white/10 rounded-full disabled:opacity-30 transition-colors"
+              className="flex h-8 w-8 items-center justify-center text-white hover:bg-white/10 rounded-full disabled:opacity-30 transition-colors"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -183,11 +183,11 @@ export function SecureViewer({ isOpen, onClose, resource }: SecureViewerProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.1 }}
-            className="absolute inset-0 z-[100] bg-slate-900/95 backdrop-blur-xl flex flex-col items-center justify-center text-white"
+            className="absolute inset-0 z-[100] bg-[#07152E]/95 backdrop-blur-xl flex flex-col items-center justify-center px-6 text-white"
           >
-            <AlertTriangle className="w-16 h-16 text-amber-500 mb-6" />
-            <h2 className="text-2xl font-black mb-2">Content Protected</h2>
-            <p className="text-slate-400 text-center max-w-md">
+            <AlertTriangle className="w-16 h-16 text-amber-400 mb-6" />
+            <h2 className="text-2xl font-bold tracking-tighter mb-2">Content Protected</h2>
+            <p className="text-white/60 text-center max-w-md">
               Screenshots, recording, and leaving the window are restricted for protected course materials.
             </p>
           </motion.div>

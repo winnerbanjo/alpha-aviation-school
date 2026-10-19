@@ -3,6 +3,7 @@ import { Clock, Mail, LogOut, XCircle, AlertTriangle } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import { useNavigate } from "react-router-dom";
 import { getProfile } from "@/api";
+import { AuthShell } from "@/components/auth/AuthShell";
 
 export function AgentPending() {
   const { user, setUser, logout } = useAuthStore();
@@ -53,18 +54,24 @@ export function AgentPending() {
   const statusTitle = isRejected ? "Application Declined" : isSuspended ? "Account Suspended" : "Under Review";
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8 text-center">
-          <div className={`w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-5 ${
-            isDeclined ? "bg-red-50" : "bg-amber-50"
+    <AuthShell
+      eyebrow="Partner application"
+      title="Your partner"
+      accent="application status."
+      description="We review every agent application individually. This page checks for updates automatically and opens your dashboard as soon as you're approved."
+      video="instructor-briefing"
+    >
+      <div className="w-full">
+        <div className="rounded-panel border border-[#DCE2EB] bg-white p-8 text-center shadow-subtle">
+          <div className={`mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full ring-1 ${
+            isDeclined ? "bg-red-50 ring-red-600/15" : "bg-amber-50 ring-amber-600/15"
           }`}>
-            <StatusIcon className={`w-7 h-7 ${isDeclined ? "text-red-500" : "text-amber-500"}`} />
+            <StatusIcon className={`h-7 w-7 ${isDeclined ? "text-red-600" : "text-amber-600"}`} />
           </div>
 
-          <h1 className="text-lg font-semibold text-slate-900 mb-2">{statusTitle}</h1>
+          <h1 className="mb-3 text-2xl font-bold tracking-tightest text-[#10264B] sm:text-3xl">{statusTitle}</h1>
 
-          <p className="text-sm text-slate-500 leading-relaxed mb-6">
+          <p className="mb-6 text-sm leading-relaxed text-[#53647C]">
             {isRejected
               ? "Unfortunately, your agent application has been declined. Please contact our team if you believe this is an error."
               : isSuspended
@@ -74,19 +81,19 @@ export function AgentPending() {
           </p>
 
           {isRejected && user?.agentNotes && (
-            <div className="bg-red-50 border border-red-100 rounded-lg p-4 mb-6 text-left">
-              <p className="text-xs font-medium text-red-600 uppercase tracking-wider mb-1">Reason</p>
-              <p className="text-sm text-slate-700">{user.agentNotes}</p>
+            <div className="mb-6 rounded-2xl border border-red-100 bg-red-50 p-4 text-left">
+              <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-red-700">Reason</p>
+              <p className="text-sm text-[#172B49]">{user.agentNotes}</p>
             </div>
           )}
 
-          <div className="bg-slate-50 border border-slate-100 rounded-lg p-4 mb-6 text-left">
-            <div className="flex items-center gap-2 mb-2">
-              <Mail className="w-4 h-4 text-slate-400" />
-              <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">Notification Email</span>
+          <div className="mb-6 rounded-2xl border border-[#DCE2EB] bg-[#F5F7FB] p-4 text-left">
+            <div className="mb-2 flex items-center gap-2">
+              <Mail className="h-4 w-4 text-[#1246C8]" />
+              <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Notification Email</span>
             </div>
-            <p className="text-sm font-medium text-slate-900">{user?.email}</p>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-sm font-semibold text-[#10264B]">{user?.email}</p>
+            <p className="mt-1 text-xs text-[#53647C]">
               {isDeclined
                 ? "Contact our support team for assistance."
                 : "You will receive a confirmation email once your application is processed."}
@@ -95,13 +102,13 @@ export function AgentPending() {
 
           <button
             onClick={handleLogout}
-            className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-slate-600 transition-colors"
+            className="inline-flex items-center gap-2 rounded-full border border-[#10264B]/15 bg-white px-5 py-2.5 text-sm font-semibold text-[#10264B] transition-colors hover:border-[#1246C8] hover:text-[#1246C8]"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="h-4 w-4" />
             Sign Out
           </button>
         </div>
       </div>
-    </div>
+    </AuthShell>
   );
 }

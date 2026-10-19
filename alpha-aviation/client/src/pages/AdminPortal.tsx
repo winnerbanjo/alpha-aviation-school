@@ -3,9 +3,10 @@ import { useSearchParams, Navigate, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
-import { Shield, Mail, Lock, AlertCircle } from "lucide-react";
+import { Mail, Lock, AlertCircle } from "lucide-react";
 import { login as apiLogin } from "@/api";
 import { NoIndexSEO } from "@/components/seo/NoIndexSEO";
+import { AuthShell } from "@/components/auth/AuthShell";
 
 export function AdminPortal() {
   const [email, setEmail] = useState("");
@@ -127,24 +128,26 @@ export function AdminPortal() {
         description="Secure admin sign-in for Alpha Step Links Aviation School."
         url="/admin"
       />
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
+      <AuthShell
+        eyebrow="Administrator access"
+        title="Secure sign-in"
+        accent="for ASL staff."
+        description="This area is restricted to authorised Alpha Step Links Aviation School administrators."
+        video="airport-operations-model"
+      >
         <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <div className="bg-white rounded-2xl shadow-2xl border border-slate-200/50 p-8 sm:p-10">
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <div className="p-3 bg-slate-900 rounded-xl">
-                <Shield className="w-8 h-8 text-white" />
-              </div>
-            </div>
-            <h1 className="text-3xl font-semibold tracking-tight text-slate-900 mb-2">
-              Admin Portal
+        <div>
+          <div className="mb-10">
+            <span className="eyebrow text-[#1246C8]">Staff only</span>
+            <h1 className="mt-4 text-3xl font-bold tracking-tightest text-[#10264B] sm:text-4xl">
+              Admin portal
             </h1>
-            <p className="text-slate-500 text-sm">
+            <p className="mt-3 text-[15px] leading-relaxed text-[#53647C]">
               Sign in with your admin credentials
             </p>
           </div>
@@ -153,9 +156,9 @@ export function AdminPortal() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3"
+              className="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4"
             >
-              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-500" />
               <p className="text-sm text-red-700">{error}</p>
             </motion.div>
           )}
@@ -164,9 +167,9 @@ export function AdminPortal() {
             <div>
               <label
                 htmlFor="admin-email"
-                className="block text-sm font-medium text-slate-900 mb-2 flex items-center gap-2"
+                className="mb-2 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]"
               >
-                <Mail className="w-4 h-4" />
+                <Mail className="h-3.5 w-3.5" />
                 Email Address
               </label>
               <input
@@ -174,7 +177,7 @@ export function AdminPortal() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-slate-200/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900/20 focus:border-slate-900 text-slate-900 transition-all bg-white"
+                className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                 placeholder="admin@yourcompany.com"
                 required
                 autoFocus
@@ -185,9 +188,9 @@ export function AdminPortal() {
             <div>
               <label
                 htmlFor="admin-password"
-                className="block text-sm font-medium text-slate-900 mb-2 flex items-center gap-2"
+                className="mb-2 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]"
               >
-                <Lock className="w-4 h-4" />
+                <Lock className="h-3.5 w-3.5" />
                 Password
               </label>
               <input
@@ -195,7 +198,7 @@ export function AdminPortal() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-slate-200/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900/20 focus:border-slate-900 text-slate-900 transition-all bg-white"
+                className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
                 placeholder="Enter your password"
                 required
                 autoComplete="current-password"
@@ -205,23 +208,23 @@ export function AdminPortal() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-slate-900 hover:bg-slate-800 text-white py-3 shadow-sm transition-all duration-300 hover:scale-[1.02] font-medium"
+              className="mt-2 h-12 w-full"
             >
               {loading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
+          <div className="mt-10 border-t border-[#DCE2EB] pt-6 text-center">
             <a
               href="/login"
-              className="text-sm text-slate-500 hover:text-slate-700 transition-colors"
+              className="text-sm font-medium text-[#53647C] transition-colors hover:text-[#1246C8]"
             >
               Student login →
             </a>
           </div>
         </div>
         </motion.div>
-      </div>
+      </AuthShell>
     </>
   );
 }

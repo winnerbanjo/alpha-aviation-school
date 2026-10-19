@@ -59,39 +59,45 @@ export function AgentOverview() {
 
   return (
     <div className="space-y-8 pb-12">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-900">
-            {getGreeting()}, {user?.firstName || "Agent"}
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            {user?.agencyName ? (
-              <>{user.agencyName} &middot; {user.agentCode}</>
-            ) : (
-              <>{user?.agentCode}</>
-            )}
-          </p>
+      <section className="relative overflow-hidden rounded-stage bg-[#07152E] p-6 text-white shadow-float sm:p-8 lg:p-10">
+        <div aria-hidden="true" className="absolute inset-0 bg-chart-grid mask-fade-b opacity-70" />
+        <div aria-hidden="true" className="absolute -right-32 -top-32 h-[380px] w-[380px] rounded-full bg-[#1246C8]/40 blur-[110px]" />
+        <div className="relative flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div>
+            <span className="eyebrow text-[#8EAEFF]">Agent portal</span>
+            <h1 className="mt-4 text-3xl font-bold leading-[1.08] tracking-tightest sm:text-4xl lg:text-[44px]">
+              {getGreeting()}, <span className="text-gradient-sky">{user?.firstName || "Agent"}</span>
+            </h1>
+            <p className="mt-4 flex flex-wrap items-center gap-2.5 text-sm text-white/65">
+              {user?.agencyName ? (
+                <>{user.agencyName} &middot; <span className="flap px-2 py-1 text-xs tracking-[0.14em] empty:hidden">{user.agentCode}</span></>
+              ) : (
+                <><span className="flap px-2 py-1 text-xs tracking-[0.14em] empty:hidden">{user?.agentCode}</span></>
+              )}
+            </p>
+          </div>
+          <button
+            onClick={() => navigate("/agent/dashboard/students")}
+            className="inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-[#1246C8] px-5 py-3 text-sm font-semibold text-white shadow-glow transition-all hover:bg-[#0F3BAA] hover:shadow-glow-lg md:self-auto"
+          >
+            Register Student
+            <ArrowRight className="h-4 w-4" />
+          </button>
         </div>
-        <button
-          onClick={() => navigate("/agent/dashboard/students")}
-          className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors"
-        >
-          Register Student
-        </button>
-      </div>
+      </section>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {statCards.map((card) => {
           const Icon = card.icon;
           return (
-            <div key={card.label} className="bg-white border border-slate-200 rounded-lg p-5">
-              <div className="w-10 h-10 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center mb-4">
-                <Icon className="w-5 h-5 text-slate-600" />
+            <div key={card.label} className="rounded-panel border border-[#DCE2EB] bg-white p-5 shadow-subtle sm:p-6">
+              <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+                <Icon className="h-5 w-5" />
               </div>
-              <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{card.label}</p>
-              <p className="text-2xl font-semibold text-slate-900 mt-1">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#53647C]">{card.label}</p>
+              <p className="mt-2 break-words text-2xl font-bold tracking-tightest text-[#10264B] tabular-nums sm:text-3xl">
                 {loading ? (
-                  <span className="inline-block w-12 h-6 bg-slate-100 animate-pulse rounded" />
+                  <span className="inline-block h-8 w-16 animate-pulse rounded-lg bg-[#EEF2F8]" />
                 ) : card.isCurrency ? formatNaira(card.value as number) : card.value}
               </p>
             </div>
@@ -99,52 +105,56 @@ export function AgentOverview() {
         })}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div
           onClick={() => navigate("/agent/dashboard/students")}
-          className="bg-white border border-slate-200 rounded-lg p-5 cursor-pointer hover:border-slate-300 transition-colors"
+          className="group cursor-pointer rounded-panel border border-[#DCE2EB] bg-white p-6 shadow-subtle transition-all duration-300 hover:-translate-y-0.5 hover:border-[#1246C8]/30 hover:shadow-elevated"
         >
-          <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center">
-              <Users className="w-5 h-5 text-slate-600" />
+          <div className="mb-5 flex items-center justify-between">
+            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+              <Users className="h-5 w-5" />
             </div>
-            <ArrowRight className="w-4 h-4 text-slate-300" />
+            <span aria-hidden="true" className="flex h-9 w-9 items-center justify-center rounded-full border border-[#10264B]/10 text-[#10264B] transition-all duration-300 group-hover:border-[#1246C8] group-hover:bg-[#1246C8] group-hover:text-white">
+              <ArrowRight className="h-4 w-4 -rotate-45 transition-transform duration-300 group-hover:rotate-0" />
+            </span>
           </div>
-          <h3 className="text-sm font-semibold text-slate-900">Manage Students</h3>
-          <p className="text-sm text-slate-500 mt-1">View, manage and pay for your enrolled students</p>
+          <h3 className="text-lg font-bold tracking-tighter text-[#10264B]">Manage students</h3>
+          <p className="mt-1.5 text-sm text-[#53647C]">View, manage and pay for your enrolled students</p>
         </div>
 
         <div
           onClick={() => navigate("/agent/dashboard/payments")}
-          className="bg-white border border-slate-200 rounded-lg p-5 cursor-pointer hover:border-slate-300 transition-colors"
+          className="group cursor-pointer rounded-panel border border-[#DCE2EB] bg-white p-6 shadow-subtle transition-all duration-300 hover:-translate-y-0.5 hover:border-[#1246C8]/30 hover:shadow-elevated"
         >
-          <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center">
-              <CreditCard className="w-5 h-5 text-slate-600" />
+          <div className="mb-5 flex items-center justify-between">
+            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#DCE8FF] text-[#1246C8]">
+              <CreditCard className="h-5 w-5" />
             </div>
-            <ArrowRight className="w-4 h-4 text-slate-300" />
+            <span aria-hidden="true" className="flex h-9 w-9 items-center justify-center rounded-full border border-[#10264B]/10 text-[#10264B] transition-all duration-300 group-hover:border-[#1246C8] group-hover:bg-[#1246C8] group-hover:text-white">
+              <ArrowRight className="h-4 w-4 -rotate-45 transition-transform duration-300 group-hover:rotate-0" />
+            </span>
           </div>
-          <h3 className="text-sm font-semibold text-slate-900">Payment History</h3>
-          <p className="text-sm text-slate-500 mt-1">Track all payments made on behalf of your students</p>
+          <h3 className="text-lg font-bold tracking-tighter text-[#10264B]">Payment history</h3>
+          <p className="mt-1.5 text-sm text-[#53647C]">Track all payments made on behalf of your students</p>
         </div>
       </div>
 
       {stats && stats.totalPending > 0 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
-              <Clock className="w-5 h-5 text-amber-700" />
+        <div className="flex flex-col items-start justify-between gap-4 rounded-panel border border-amber-200 bg-amber-50/70 p-5 sm:p-6 md:flex-row md:items-center">
+          <div className="flex items-center gap-3.5">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700 ring-1 ring-amber-600/15">
+              <Clock className="h-5 w-5" />
             </div>
             <div>
-              <p className="font-medium text-amber-900 text-sm">Outstanding Balance</p>
-              <p className="text-xs text-amber-700 mt-0.5">{stats.pendingStudents} student(s) awaiting payment</p>
+              <p className="text-sm font-semibold text-amber-900">Outstanding Balance</p>
+              <p className="mt-0.5 text-xs text-amber-700">{stats.pendingStudents} student(s) awaiting payment</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <p className="text-xl font-semibold text-amber-900">{formatNaira(stats.totalPending)}</p>
+          <div className="flex items-center gap-4">
+            <p className="text-2xl font-bold tracking-tighter text-amber-900 tabular-nums">{formatNaira(stats.totalPending)}</p>
             <button
               onClick={() => navigate("/agent/dashboard/students")}
-              className="bg-amber-600 hover:bg-amber-700 text-white text-xs font-medium px-3.5 py-2 rounded-lg transition-colors"
+              className="rounded-full bg-[#1246C8] px-4 py-2 text-xs font-semibold text-white shadow-glow transition-all hover:bg-[#0F3BAA] hover:shadow-glow-lg"
             >
               Pay Now
             </button>

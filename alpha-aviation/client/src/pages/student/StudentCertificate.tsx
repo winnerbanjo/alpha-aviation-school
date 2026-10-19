@@ -36,26 +36,30 @@ export function StudentCertificate() {
       <div className="space-y-8 pb-12">
         {/* Header section */}
         <div>
-          <h1 className="text-3xl font-black tracking-tight text-slate-900">
+          <span className="eyebrow text-[#1246C8]">Credentials</span>
+          <h1 className="mt-3 text-3xl font-bold tracking-tightest text-[#10264B] sm:text-4xl">
             My Certificate
           </h1>
-          <p className="text-sm font-normal text-slate-500 mt-1">
+          <p className="mt-2 text-[#53647C]">
             View and download your official graduation certificate.
           </p>
         </div>
 
         {/* Not Available View */}
-        <div className="bg-white/90 backdrop-blur-md border border-slate-200/60 rounded-3xl p-12 text-center shadow-sm max-w-2xl mx-auto">
-          <div className="relative p-4 bg-gradient-to-br from-slate-50 to-slate-100 text-slate-500 rounded-full border border-slate-200/80 shadow-sm flex items-center justify-center w-16 h-16 mx-auto mb-6">
-            <Lock className="w-6 h-6 text-slate-400" />
+        <div className="relative mx-auto max-w-2xl overflow-hidden rounded-panel border border-[#DCE2EB] bg-white p-12 text-center shadow-subtle">
+          <div aria-hidden className="pointer-events-none absolute inset-0 bg-chart-grid-light mask-fade-b" />
+          <div className="relative">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F5F7FB] ring-1 ring-[#DCE2EB]">
+              <Lock className="w-6 h-6 text-[#53647C]" />
+            </div>
+            <h2 className="mb-2 text-xl font-bold tracking-tighter text-[#10264B]">
+              Certificate Not Available
+            </h2>
+            <p className="mx-auto max-w-sm text-sm leading-relaxed text-[#53647C]">
+              Your certificate of completion will be available here once you have graduated.
+              Complete all academic tracks, settle outstanding tuition, and pass final clearance checks.
+            </p>
           </div>
-          <h2 className="text-lg font-bold text-slate-900 mb-2">
-            Certificate Not Available
-          </h2>
-          <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
-            Your certificate of completion will be available here once you have graduated.
-            Complete all academic tracks, settle outstanding tuition, and pass final clearance checks.
-          </p>
         </div>
       </div>
     );
@@ -64,17 +68,18 @@ export function StudentCertificate() {
   return (
     <div className="space-y-8 pb-12">
       {/* Header section */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-black tracking-tight text-slate-900">
+          <span className="eyebrow text-[#1246C8]">Credentials</span>
+          <h1 className="mt-3 text-3xl font-bold tracking-tightest text-[#10264B] sm:text-4xl">
             My Certificate
           </h1>
-          <p className="text-sm font-normal text-slate-500 mt-1">
+          <p className="mt-2 text-[#53647C]">
             View and download your official graduation certificate.
           </p>
         </div>
         <div className="self-start sm:self-auto">
-          <span className="text-xs font-bold px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-full border border-emerald-100/30 flex items-center gap-1.5">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 ring-1 ring-emerald-600/15">
             <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
             Graduated & Cleared
           </span>
@@ -86,76 +91,85 @@ export function StudentCertificate() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-white/95 backdrop-blur-md border border-slate-200/60 rounded-3xl p-6 sm:p-12 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.05),0px_0px_0px_1px_rgba(0,0,0,0.08)] max-w-2xl mx-auto relative overflow-hidden text-center group hover:shadow-md transition-all duration-300"
+        className="group relative mx-auto max-w-3xl overflow-hidden rounded-stage bg-[#07152E] p-3 shadow-float sm:p-5"
       >
-        {/* Decorative Inner Board Frame */}
-        <div className="absolute inset-4 border border-dashed border-slate-200 rounded-2xl pointer-events-none" />
+        <div aria-hidden className="absolute inset-0 bg-chart-grid mask-fade-b opacity-70" />
+        <div aria-hidden className="absolute -right-32 -top-32 h-[380px] w-[380px] rounded-full bg-[#1246C8]/40 blur-[110px]" />
 
-        {/* Certificate Content wrapper */}
-        <div className="relative z-10 space-y-6">
-          {/* Graduation Cap Badge */}
-          <div className="mx-auto p-4 bg-gradient-to-br from-emerald-50 to-emerald-100/60 text-emerald-600 rounded-full w-20 h-20 flex items-center justify-center border border-emerald-100/80 shadow-sm relative group-hover:scale-105 transition-transform duration-300">
-            <GraduationCap className="w-10 h-10 text-emerald-600" />
-          </div>
+        <div className="relative overflow-hidden rounded-[22px] bg-white px-6 py-10 text-center sm:px-14 sm:py-14">
+          {/* Decorative Inner Board Frame */}
+          <div aria-hidden className="absolute inset-3 rounded-2xl border border-[#DCE2EB] pointer-events-none" />
+          <div aria-hidden className="absolute inset-5 rounded-xl border border-dashed border-[#1246C8]/25 pointer-events-none" />
+          <div aria-hidden className="pointer-events-none absolute -left-24 -bottom-24 h-56 w-56 rounded-full bg-[#DCE8FF]/70 blur-3xl" />
 
-          <div>
-            <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest">
-              Alpha Step Links Aviation School
-            </p>
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight mt-2">
-              Certificate of Completion
-            </h2>
-          </div>
+          {/* Certificate Content wrapper */}
+          <div className="relative z-10 space-y-6">
+            {/* Graduation Cap Badge */}
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#10264B] text-white shadow-elevated ring-8 ring-[#DCE8FF] transition-transform duration-300 group-hover:scale-105">
+              <GraduationCap className="w-9 h-9 text-white" />
+            </div>
 
-          <div className="w-16 h-px bg-slate-200 mx-auto" />
+            <div>
+              <p className="eyebrow justify-center text-[#1246C8]">
+                Alpha Step Links Aviation School
+              </p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tightest text-[#10264B] sm:text-4xl">
+                Certificate of Completion
+              </h2>
+            </div>
 
-          {/* Student details */}
-          <div className="space-y-1">
-            <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">This certifies that</p>
-            <p className="text-2xl font-extrabold text-slate-950 tracking-tight font-serif">
-              {user?.firstName} {user?.lastName}
-            </p>
-          </div>
+            <div aria-hidden className="mx-auto h-px w-24 bg-gradient-to-r from-transparent via-[#1246C8] to-transparent" />
 
-          <div className="space-y-1">
-            <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">has successfully completed the course of study in</p>
-            <p className="text-base font-bold text-slate-800 max-w-md mx-auto">
-              {user?.selectedCourses?.join(", ") || user?.enrolledCourse}
-            </p>
-          </div>
+            {/* Student details */}
+            <div className="space-y-2">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#53647C]">This certifies that</p>
+              <p className="text-gradient-blue text-3xl font-bold tracking-tightest sm:text-4xl">
+                {user?.firstName} {user?.lastName}
+              </p>
+            </div>
 
-          {user?.studentIdNumber && (
-            <p className="text-[11px] font-bold text-slate-400/90 uppercase tracking-wider">
-              Student ID: {user.studentIdNumber}
-            </p>
-          )}
+            <div className="space-y-2">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#53647C]">has successfully completed the course of study in</p>
+              <p className="mx-auto max-w-md text-base font-semibold text-[#172B49]">
+                {user?.selectedCourses?.join(", ") || user?.enrolledCourse}
+              </p>
+            </div>
 
-          {/* Download and Print button */}
-          <div className="pt-4">
-            {user?.certificateUrl ? (
-              <Button
-                onClick={() => handleCertDownload(user.certificateUrl!)}
-                disabled={isDownloading}
-                className="inline-flex items-center justify-center gap-2 px-6 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 rounded-2xl transition-all shadow-sm shrink-0"
-              >
-                {isDownloading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Downloading Credential...</span>
-                  </>
-                ) : (
-                  <>
-                    <Download className="w-4 h-4" />
-                    <span>Download Certificate (PDF)</span>
-                  </>
-                )}
-              </Button>
-            ) : (
-              <div className="p-3 bg-slate-50 border border-slate-100 rounded-2xl inline-flex items-center gap-2 text-xs font-bold text-slate-500">
-                <Award className="w-4 h-4 text-indigo-500" />
-                <span>Certificate loading... Awaiting final administrative registry release.</span>
-              </div>
+            {user?.studentIdNumber && (
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#53647C] tabular-nums">
+                Student ID: {user.studentIdNumber}
+              </p>
             )}
+
+            <div aria-hidden className="barcode mx-auto h-8 w-40 opacity-60" />
+
+            {/* Download and Print button */}
+            <div className="pt-2">
+              {user?.certificateUrl ? (
+                <Button
+                  onClick={() => handleCertDownload(user.certificateUrl!)}
+                  disabled={isDownloading}
+                  className="shrink-0 gap-2"
+                >
+                  {isDownloading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Downloading Credential...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Download className="w-4 h-4" />
+                      <span>Download Certificate (PDF)</span>
+                    </>
+                  )}
+                </Button>
+              ) : (
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#DCE2EB] bg-[#F5F7FB] px-4 py-2.5 text-xs font-semibold text-[#53647C]">
+                  <Award className="w-4 h-4 text-[#1246C8]" />
+                  <span>Certificate loading... Awaiting final administrative registry release.</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </motion.div>

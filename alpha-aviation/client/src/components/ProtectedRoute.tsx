@@ -15,8 +15,9 @@ export function ProtectedRoute({ adminOnly, agentOnly, children }: ProtectedRout
 
   if (!hasHydrated) {
     return (
-      <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center">
-        <p className="text-slate-500">Loading...</p>
+      <div className="flex min-h-screen items-center justify-center bg-[#F5F7FB]">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#1246C8] border-t-transparent" />
+        <span className="sr-only">Loading...</span>
       </div>
     )
   }
