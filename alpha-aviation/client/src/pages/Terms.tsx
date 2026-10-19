@@ -1,7 +1,6 @@
 import { SEO } from "@/components/seo/SEO";
 import { Container } from "@/components/ui/Container";
 import { PageHero } from "@/components/sections/PageHero";
-import { siteConfig } from "@/lib/site-config";
 
 
 export function Terms() {

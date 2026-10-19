@@ -11,7 +11,6 @@ import { ProgramCard } from "@/components/programs/ProgramCard";
 import { PageHero } from "@/components/sections/PageHero";
 import { CTAConversionBanner } from "@/components/sections/CTAConversionBanner";
 import { formatNGN, revealDelay } from "@/lib/utils";
-import { siteConfig } from "@/lib/site-config";
 
 export function CourseDetail() {
   const { slug = "" } = useParams();

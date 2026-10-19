@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AutoVideo } from "@/components/ui/AutoVideo";
 import { cn } from "@/lib/utils";
 import { videoLibrary, type VideoName } from "@/lib/videos";
@@ -28,11 +28,8 @@ export function VideoCard({
 }: VideoCardProps) {
   const clip = videoLibrary[name];
   const [hovered, setHovered] = useState(false);
-  const [canHover, setCanHover] = useState(true);
-
-  useEffect(() => {
-    setCanHover(window.matchMedia("(hover: hover) and (pointer: fine)").matches);
-  }, []);
+  // Touch devices play on view instead of hover (client-only app, so window is always available).
+  const [canHover] = useState(() => window.matchMedia("(hover: hover) and (pointer: fine)").matches);
 
   const active = playMode === "view" || !canHover ? undefined : hovered;
 

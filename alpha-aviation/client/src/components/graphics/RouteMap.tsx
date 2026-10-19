@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 // Equirectangular crop: longitude -100°→30°, latitude 72°→-2° mapped onto 1000×560.
 const project = (lat: number, lon: number) => ({ x: (lon + 100) * (1000 / 130), y: (72 - lat) * (560 / 74) });
 
-export const hubs = [
+const hubs = [
   {
     id: "uk",
     code: "LHR",
