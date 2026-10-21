@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Bell, CheckCircle2, Clock, CreditCard, XCircle, MailOpen } from "lucide-react";
+import { Award, Bell, CheckCircle2, Clock, CreditCard, XCircle, MailOpen } from "lucide-react";
 import {
   getNotifications,
   markAllNotificationsRead,
@@ -19,11 +19,12 @@ const getNotificationIcon = (type: NotificationItem["type"]) => {
   }
   if (type === "payment_submitted") return CreditCard;
   if (type === "payment_rejected") return XCircle;
+  if (type === "certificate_issued") return Award;
   return CreditCard;
 };
 
 const getNotificationStyles = (type: NotificationItem["type"]) => {
-  if (type === "payment_approved" || type === "payment_confirmed") {
+  if (type === "payment_approved" || type === "payment_confirmed" || type === "certificate_issued") {
     return "bg-emerald-50 text-emerald-600 ring-emerald-600/15";
   }
   if (type === "payment_rejected") {

@@ -4,6 +4,7 @@ const adminController = require("../controllers/adminController");
 const userController = require("../controllers/userController");
 const resourceController = require("../controllers/resourceController");
 const courseTrackController = require("../controllers/courseTrackController");
+const certificateController = require("../controllers/certificateController");
 const { protect } = require("../middleware/protect");
 const { adminOnly } = require("../middleware/adminOnly");
 
@@ -45,6 +46,19 @@ router.post("/users/:id/certificate", userController.uploadCertificate);
 router.get("/course-tracks/stats", courseTrackController.getCourseTrackStats);
 router.get("/course-tracks/:studentId", courseTrackController.getStudentCourseTracks);
 router.patch("/course-tracks/:trackId/progress", courseTrackController.updateWeekProgress);
+
+// Certificate registry routes
+router.get("/certificates", certificateController.listCertificates);
+router.get("/certificates/stats", certificateController.getCertificateStats);
+router.get("/certificates/export", certificateController.exportCertificates);
+router.post("/certificates", certificateController.issueCertificate);
+router.post("/certificates/bulk", certificateController.bulkIssueCertificates);
+router.get("/certificates/:id", certificateController.getCertificate);
+router.post("/certificates/:id/revoke", certificateController.revokeCertificate);
+router.post("/certificates/:id/reinstate", certificateController.reinstateCertificate);
+router.post("/certificates/:id/reissue", certificateController.reissueCertificate);
+router.post("/certificates/:id/events", certificateController.recordCertificateEvent);
+router.post("/certificates/:id/send", certificateController.resendCertificateEmail);
 
 // Agent management routes
 router.get("/agents", adminController.getAllAgents);

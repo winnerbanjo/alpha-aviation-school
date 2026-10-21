@@ -192,6 +192,7 @@ export interface NotificationItem {
     | "payment_confirmed"
     | "payment_approved"
     | "payment_rejected"
+    | "certificate_issued"
     | "general";
   title: string;
   message: string;

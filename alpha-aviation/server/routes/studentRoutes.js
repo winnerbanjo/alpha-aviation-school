@@ -3,6 +3,7 @@ const router = express.Router();
 const studentController = require('../controllers/studentController');
 const resourceController = require('../controllers/resourceController');
 const courseTrackController = require('../controllers/courseTrackController');
+const certificateController = require('../controllers/certificateController');
 const { protect } = require('../middleware/protect');
 
 // All student routes require authentication
@@ -18,5 +19,6 @@ router.post('/upload-document', studentController.uploadDocument);
 router.post('/upload-payment-receipt', studentController.uploadPaymentReceipt);
 router.post('/verify-paystack', studentController.verifyPaystackPayment);
 router.get('/course-tracks', courseTrackController.getMyCourseTracks);
+router.get('/certificates', certificateController.getMyCertificates);
 
 module.exports = router;

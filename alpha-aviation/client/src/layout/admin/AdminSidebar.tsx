@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
+  Award,
   Banknote,
   Bell,
   CreditCard,
@@ -49,6 +50,12 @@ export function AdminSidebar({
           icon: Users,
           label: "Students",
           path: "/admin/dashboard/students",
+          badge: 0,
+        },
+        {
+          icon: Award,
+          label: "Certificates",
+          path: "/admin/dashboard/certificates",
           badge: 0,
         },
         {

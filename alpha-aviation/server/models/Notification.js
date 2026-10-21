@@ -15,6 +15,7 @@ const notificationSchema = new mongoose.Schema(
         "payment_confirmed",
         "payment_approved",
         "payment_rejected",
+        "certificate_issued",
         "general",
       ],
       default: "general",

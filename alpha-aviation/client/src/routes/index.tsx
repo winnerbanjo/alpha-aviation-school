@@ -21,6 +21,7 @@ const InternationalOpportunities = lazy(() =>
 const Faqs = lazy(() => import("../pages/Faqs").then((m) => ({ default: m.Faqs })));
 const PrivacyPolicy = lazy(() => import("../pages/PrivacyPolicy").then((m) => ({ default: m.PrivacyPolicy })));
 const Terms = lazy(() => import("../pages/Terms").then((m) => ({ default: m.Terms })));
+const VerifyCertificate = lazy(() => import("../pages/VerifyCertificate").then((m) => ({ default: m.VerifyCertificate })));
 
 // Keeps links using the design site's /programs/:slug URLs working.
 const ProgramRedirect = () => {
@@ -45,6 +46,8 @@ const AdminRevenue = lazy(() => import("../pages/admin/AdminRevenue").then((m) =
 const AdminResources = lazy(() => import("../pages/admin/AdminResources").then((m) => ({ default: m.AdminResources })));
 const AdminNotifications = lazy(() => import("../pages/admin/AdminNotifications").then((m) => ({ default: m.AdminNotifications })));
 const AdminAgents = lazy(() => import("../pages/admin/AdminAgents").then((m) => ({ default: m.AdminAgents })));
+const AdminCertificates = lazy(() => import("../pages/admin/AdminCertificates").then((m) => ({ default: m.AdminCertificates })));
+const AdminCertificateIssue = lazy(() => import("../pages/admin/AdminCertificateIssue").then((m) => ({ default: m.AdminCertificateIssue })));
 
 // ─── Student pages ────────────────────────────────────────────────────────────
 const StudentOverview = lazy(() => import("../pages/student/StudentOverview").then((m) => ({ default: m.StudentOverview })));
@@ -89,6 +92,8 @@ export const RoutesConfig = () => {
         { path: "/faqs", element: <Faqs /> },
         { path: "/privacy-policy", element: <PrivacyPolicy /> },
         { path: "/terms", element: <Terms /> },
+        { path: "/verify", element: <VerifyCertificate /> },
+        { path: "/verify/:code", element: <VerifyCertificate /> },
         { path: "*", element: <NotFound /> },
       ],
     },
@@ -121,8 +126,11 @@ export const RoutesConfig = () => {
         { path: "resources", element: <AdminResources /> },
         { path: "notifications", element: <AdminNotifications /> },
         { path: "agents", element: <AdminAgents /> },
+        { path: "certificates", element: <AdminCertificates /> },
+        { path: "certificates/new", element: <AdminCertificateIssue /> },
       ],
     },
+    { path: "/admin/certificates", element: <Navigate to="/admin/dashboard/certificates" replace /> },
     { path: "/admin/students", element: <Navigate to="/admin/dashboard/students" replace /> },
     { path: "/admin/payments", element: <Navigate to="/admin/dashboard/payments" replace /> },
     { path: "/admin/revenue", element: <Navigate to="/admin/dashboard/revenue" replace /> },

@@ -15,6 +15,7 @@ const paymentRoutes = require("./routes/paymentRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const studentRoutes = require("./routes/studentRoutes");
 const agentRoutes = require("./routes/agentRoutes");
+const certificateRoutes = require("./routes/certificateRoutes");
 
 // Error handler
 const errorHandler = require("./middleware/errorHandler");
@@ -62,6 +63,7 @@ const corsOptions = {
     "X-Requested-With",
     "Accept",
     "ngrok-skip-browser-warning",
+    "Idempotency-Key",
   ],
 };
 
@@ -132,6 +134,7 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/admin", adminApiLimiter, protect, admin, adminRoutes);
 app.use("/api/student", studentRoutes);
 app.use('/api/agent', agentRoutes);
+app.use("/api/certificates", certificateRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({

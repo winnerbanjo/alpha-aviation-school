@@ -17,7 +17,10 @@ import {
   RefreshCw,
   ChevronDown,
   ChevronUp,
+  BadgeCheck,
+  ChevronRight,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { uploadCertificate, getStudentCourseTracks, type CourseTrackItem } from "@/api";
 import { useToast } from "@/components/ui/toast";
@@ -362,6 +365,23 @@ export function StudentProfileModal({
             </AnimatePresence>
           </div>
         )}
+
+        {/* Verifiable certificate generator, prefilled with this student */}
+        <div className="pt-4 border-t border-[#DCE2EB]">
+          <Link
+            to={`/admin/dashboard/certificates/new?student=${student._id}`}
+            className="group flex items-center gap-3 rounded-2xl border border-[#1246C8]/20 bg-[#F2F6FF] p-3.5 transition-colors hover:border-[#1246C8]/50"
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1246C8] text-white">
+              <BadgeCheck className="w-5 h-5" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm font-semibold text-[#10264B]">Generate verifiable certificate</span>
+              <span className="block truncate text-xs text-[#53647C]">Prefilled with this student's name and programmes · QR verified</span>
+            </span>
+            <ChevronRight className="w-4 h-4 shrink-0 text-[#1246C8] transition-transform group-hover:translate-x-0.5" />
+          </Link>
+        </div>
 
         {/* Certificate Section */}
         {student.status === "graduated" && (
