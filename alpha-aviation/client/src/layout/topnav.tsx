@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect, useRef, useState } from "react";
-import { Bell, Building2, ChevronDown, LogOut, Settings, User } from "lucide-react";
+import { Bell, Building2, ChevronDown, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getNotifications } from "@/api";
 

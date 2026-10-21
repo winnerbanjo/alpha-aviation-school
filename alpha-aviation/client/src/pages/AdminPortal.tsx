@@ -7,6 +7,7 @@ import { Mail, Lock, AlertCircle } from "lucide-react";
 import { login as apiLogin } from "@/api";
 import { NoIndexSEO } from "@/components/seo/NoIndexSEO";
 import { AuthShell } from "@/components/auth/AuthShell";
+import { asApiError } from "@/lib/errors";
 
 export function AdminPortal() {
   const [email, setEmail] = useState("");
@@ -96,7 +97,8 @@ export function AdminPortal() {
       );
 
       navigate("/admin/dashboard/overview", { replace: true });
-    } catch (err: any) {
+    } catch (caught) {
+      const err = asApiError(caught);
       if (err.response?.status === 401) {
         setError("Invalid email or password");
       } else if (err.response?.status === 429) {

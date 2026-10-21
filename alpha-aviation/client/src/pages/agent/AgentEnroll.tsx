@@ -4,7 +4,7 @@ import { agentRegister } from "@/api";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 
 type ApiError = {
   response?: {

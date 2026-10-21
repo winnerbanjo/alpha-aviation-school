@@ -11,7 +11,7 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 
 type ApiError = {
   response?: {

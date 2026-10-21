@@ -51,7 +51,7 @@ import { CertificatePreviewWithLayout } from "@/components/certificates/Certific
 import { useCertificateLayout } from "@/lib/certificates/preview";
 import { useCertificateDownload } from "@/components/certificates/useCertificateDownload";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import type { Student } from "@/hooks/useAdminData";
 import {
   CERTIFICATE_LIMITS,

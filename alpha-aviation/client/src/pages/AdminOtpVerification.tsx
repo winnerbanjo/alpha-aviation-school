@@ -2,12 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { verifyAdminOTP, resendAdminOTP, login as apiLogin } from "@/api";
+import { verifyAdminOTP, resendAdminOTP } from "@/api";
 import { useAuthStore } from "@/store/authStore";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import { RefreshCw, CheckCircle, Mail } from "lucide-react";
 import { NoIndexSEO } from "@/components/seo/NoIndexSEO";
 import { AuthShell } from "@/components/auth/AuthShell";
+import { asApiError } from "@/lib/errors";
 
 export function AdminOtpVerification() {
   const [searchParams] = useSearchParams();
@@ -110,7 +111,8 @@ export function AdminOtpVerification() {
         toast("Welcome back, Admin!", "success");
         navigate("/admin/dashboard/overview", { replace: true });
       }
-    } catch (err: any) {
+    } catch (caught) {
+      const err = asApiError(caught);
       const message = err.response?.data?.message || "Invalid verification code. Please try again.";
       toast(message, "error");
     } finally {
@@ -125,7 +127,8 @@ export function AdminOtpVerification() {
       setTimeLeft(300);
       setOtp(["", "", "", "", "", ""]);
       toast("New verification code sent!", "success");
-    } catch (err: any) {
+    } catch (caught) {
+      const err = asApiError(caught);
       const message = err.response?.data?.message || "Failed to resend code.";
       toast(message, "error");
     } finally {

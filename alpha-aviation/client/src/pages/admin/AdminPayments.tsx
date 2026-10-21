@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
@@ -20,8 +20,12 @@ export function AdminPayments() {
     handleRejectPayment,
   } = useAdminData();
 
-  useEffect(() => {
+  // Load once on mount; the effect event calls the latest fetchPendingPayments
+  const loadPendingPayments = useEffectEvent(() => {
     fetchPendingPayments();
+  });
+  useEffect(() => {
+    loadPendingPayments();
   }, []);
 
   return (

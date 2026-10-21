@@ -17,8 +17,6 @@ import {
   Save,
   AlertCircle,
   Contact,
-  Award,
-  Lock,
 } from "lucide-react";
 
 export function ProfileDashboard() {

@@ -65,11 +65,14 @@ export function SecureViewer({ isOpen, onClose, resource }: SecureViewerProps) {
     };
   }, [isOpen]);
 
-  // Reset page when resource changes
-  useEffect(() => {
+  // Reset page when resource changes (adjusted during render, so the old page
+  // number is never shown against the new document)
+  const [shownResource, setShownResource] = useState(resource);
+  if (resource !== shownResource) {
+    setShownResource(resource);
     setPageNumber(1);
     setNumPages(undefined);
-  }, [resource]);
+  }
 
   if (!isOpen || !resource) return null;
 

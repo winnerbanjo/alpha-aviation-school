@@ -3,7 +3,7 @@ import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import { PhoneNumberInput } from "@/components/ui/phone-input";
 import { isValidPhoneNumber } from "@/lib/phone";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import { uploadDocument, updateStudentProfile } from "@/api";
 import {
   User,
@@ -15,7 +15,7 @@ import {
   EyeOff,
   ShieldAlert,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { asApiError } from "@/lib/errors";
 
 const fileToDataUrl = (file: File) =>
   new Promise<string>((resolve, reject) => {
@@ -40,7 +40,7 @@ export function StudentProfile() {
   const [newPassword, setNewPassword] = useState("");
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
-  const [changingPassword, setChangingPassword] = useState(false);
+  const [changingPassword] = useState(false);
 
   const handleSaveProfile = async () => {
     if (!firstName || !lastName) {
@@ -71,7 +71,8 @@ export function StudentProfile() {
       });
       toast("Profile updated successfully", "success");
       setEditing(false);
-    } catch (err: any) {
+    } catch (caught) {
+      const err = asApiError(caught);
       toast(err.response?.data?.message || "Failed to update profile", "error");
     } finally {
       setSaving(false);
@@ -98,7 +99,8 @@ export function StudentProfile() {
       }
 
       toast("Document uploaded successfully", "success");
-    } catch (error: any) {
+    } catch (caught) {
+      const error = asApiError(caught);
       toast(
         error.response?.data?.message || "Failed to upload document",
         "error",

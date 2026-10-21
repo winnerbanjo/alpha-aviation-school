@@ -7,7 +7,7 @@ import {
   sendCertificateEmail,
 } from "@/api/certificates";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import { CERTIFICATE_LIMITS } from "@/lib/certificates/template";
 import type { AdminCertificate } from "@/lib/certificates/types";
 import { validateEmail } from "@/lib/certificates/validation";

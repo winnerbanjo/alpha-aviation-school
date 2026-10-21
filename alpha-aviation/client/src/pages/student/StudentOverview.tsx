@@ -10,7 +10,6 @@ import {
   CreditCard,
   GraduationCap,
   Award,
-  Building2,
   Wallet,
   Receipt,
   CheckCircle2,
@@ -24,18 +23,20 @@ import { getMyCourseTracks, type CourseTrackItem } from "@/api";
 export function StudentOverview() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
-  const [showGradModal, setShowGradModal] = useState(false);
   const [courseTracks, setCourseTracks] = useState<CourseTrackItem[]>([]);
 
+  // The graduation modal shows once per browser session, the first time the
+  // student is seen as graduated (including after a profile refresh).
+  const [gradModalSeenBefore] = useState(() => sessionStorage.getItem("hasSeenGradModal") !== null);
+  const [gradModalDismissed, setGradModalDismissed] = useState(false);
+  const showGradModal = user?.status === "graduated" && !gradModalSeenBefore && !gradModalDismissed;
+  const setShowGradModal = (open: boolean) => {
+    if (!open) setGradModalDismissed(true);
+  };
+
   useEffect(() => {
-    if (user?.status === "graduated") {
-      const hasSeenModal = sessionStorage.getItem("hasSeenGradModal");
-      if (!hasSeenModal) {
-        setShowGradModal(true);
-        sessionStorage.setItem("hasSeenGradModal", "true");
-      }
-    }
-  }, [user]);
+    if (showGradModal) sessionStorage.setItem("hasSeenGradModal", "true");
+  }, [showGradModal]);
 
   // Fetch real course tracks when payment is confirmed
   useEffect(() => {
@@ -48,7 +49,6 @@ export function StudentOverview() {
 
   const amountDue = user?.amountDue || 0;
   const amountPaid = user?.paymentStatus === "Paid" ? user?.totalCoursePrice : user?.amountPaid || 0;
-  const totalCoursePrice = user?.totalCoursePrice || 0;
   const enrollmentDate = user?.enrollmentDate
     ? new Date(user.enrollmentDate).toLocaleDateString("en-US", {
       year: "numeric",
@@ -84,41 +84,6 @@ export function StudentOverview() {
     clearanceScore = Math.min(100, clearanceScore + 25);
   }
   clearanceScore = Math.min(100, clearanceScore);
-
-  // Dynamic AI Insight text based on real database attributes
-  const getAIInsight = () => {
-    if (clearanceScore === 100) {
-      return "All clearances verified! Your ground school access is fully approved. Feel free to download resources and begin your courses.";
-    }
-    if (isUnderReview && user?.documentUrl) {
-      return "Your tuition receipt is being reviewed by administration. Once verified, your course clearance will reach 100%.";
-    }
-    if (isPaid && !user?.documentUrl) {
-      return "Tuition is fully paid, but your ID verification is pending. Please upload your identity document under Profile Settings to gain full clearance.";
-    }
-    if (isPending && user?.documentUrl) {
-      return "ID verification uploaded. Please proceed to pay your outstanding tuition balance to activate ground school courses.";
-    }
-    return "Welcome to Alpha Aviation! To begin training, please complete your tuition payment and upload your identity verification document under Profile Settings.";
-  };
-
-  const Tabs = [
-    {
-      title: "enrolled courses",
-      subTitle: "enrolledCourses",
-      icon: BookOpen,
-    },
-    {
-      title: "tuition paid",
-      subTitle: "tuitionPaid",
-      icon: CreditCard,
-    },
-    {
-      title: "amount due",
-      subTitle: "amountDue",
-      icon: CreditCard,
-    },
-  ];
 
   return (
     <div className="space-y-8 pb-12">

@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { uploadPaymentReceipt, verifyPaystackPayment, getProfile } from "@/api";
 import { formatNaira } from "@/data/courseCatalog";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import { usePaystackPayment } from "react-paystack";
 import { motion, AnimatePresence } from "framer-motion";
 

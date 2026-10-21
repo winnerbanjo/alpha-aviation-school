@@ -19,7 +19,8 @@ import {
   updateWeekProgress,
   type CourseTrackStats,
 } from "@/api";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
+import { asApiError } from "@/lib/errors";
 
 export type StudentStatus = "active" | "banned" | "graduated" | "suspended";
 
@@ -74,6 +75,41 @@ const emptyUserFormData = {
   adminClearance: false,
 };
 
+export type UserFormData = typeof emptyUserFormData;
+
+/** A row parsed from the bulk user-import CSV. */
+export interface CsvImportRow {
+  email: string;
+  password: string;
+  role?: "admin" | "student";
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  status?: StudentStatus;
+  fullname: string;
+}
+
+export interface PendingPaymentStudent {
+  _id?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  studentIdNumber?: string;
+  amountDue?: number;
+  totalCoursePrice?: number;
+  paymentReceiptUrl?: string;
+}
+
+/** A receipt awaiting admin review (GET /admin/payments/pending). */
+export interface PendingPayment {
+  _id: string;
+  amount?: number;
+  receiptUrl?: string;
+  reference?: string;
+  createdAt?: string;
+  student?: PendingPaymentStudent;
+}
+
 export const formatNaira = (amount: number) =>
   new Intl.NumberFormat("en-NG", {
     style: "currency",
@@ -104,7 +140,7 @@ export function useAdminData() {
   const [userFormData, setUserFormData] = useState(emptyUserFormData);
   const [csvModalOpen, setCsvModalOpen] = useState(false);
   const [csvFile, setCsvFile] = useState<File | null>(null);
-  const [csvPreview, setCsvPreview] = useState<any[]>([]);
+  const [csvPreview, setCsvPreview] = useState<CsvImportRow[]>([]);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -112,9 +148,9 @@ export function useAdminData() {
   const [statusUpdating, setStatusUpdating] = useState<string | null>(null);
 
   // Payment verification state
-  const [pendingPayments, setPendingPayments] = useState<any[]>([]);
+  const [pendingPayments, setPendingPayments] = useState<PendingPayment[]>([]);
   const [loadingPayments, setLoadingPayments] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState<any | null>(null);
+  const [selectedPayment, setSelectedPayment] = useState<PendingPayment | null>(null);
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
   const [processingPayment, setProcessingPayment] = useState(false);
@@ -143,7 +179,8 @@ export function useAdminData() {
       const list = Array.isArray(raw) ? raw : [];
       setStudents(list);
       setLastUpdated(new Date());
-    } catch (err: any) {
+    } catch (error) {
+      const err = asApiError(error);
       if (err?.name === "CanceledError" || err?.code === "ERR_CANCELED" || err?.name === "AbortError") return;
       const status = err?.response?.status;
       const message: string = err?.response?.data?.message ?? err?.message ?? "Failed to load students from server.";
@@ -165,7 +202,8 @@ export function useAdminData() {
       const response = await getFinancialStats({ signal, headers });
       setTotalRevenue(response?.data?.totalRevenue ?? 0);
       setTotalRevenuePendingCalc(response?.data?.revenuePending ?? 0);
-    } catch (err: any) {
+    } catch (error) {
+      const err = asApiError(error);
       if (err?.name === "CanceledError" || err?.code === "ERR_CANCELED" || err?.name === "AbortError") return;
       const status = err?.response?.status;
       if (status === 401) {
@@ -175,11 +213,13 @@ export function useAdminData() {
     }
   }, []);
 
-  const fetchCourseTrackStats = useCallback(async (signal?: AbortSignal) => {
+  // The stats endpoint takes no request config, so there is no signal to pass through
+  const fetchCourseTrackStats = useCallback(async () => {
     try {
       const response = await getCourseTrackStats();
       if (response?.success) setCourseTrackStats(response.data);
-    } catch (err: any) {
+    } catch (error) {
+      const err = asApiError(error);
       if (err?.name === "CanceledError" || err?.code === "ERR_CANCELED" || err?.name === "AbortError") return;
       // Non-fatal — stats default to 0
     }
@@ -192,7 +232,7 @@ export function useAdminData() {
     const controller = new AbortController();
     fetchStudents(controller.signal);
     fetchFinancialStats(controller.signal);
-    fetchCourseTrackStats(controller.signal);
+    fetchCourseTrackStats();
     return () => controller.abort();
   }, [fetchStudents, fetchFinancialStats, fetchCourseTrackStats]);
 
@@ -210,7 +250,7 @@ export function useAdminData() {
   useEffect(() => {
     if (safeStudents.length > 0 && totalRevenue === 0) setTotalRevenue(calculatedTotalRevenue);
     if (safeStudents.length > 0 && totalRevenuePendingCalc === 0) setTotalRevenuePendingCalc(calculatedPendingRevenue);
-  }, [students, calculatedTotalRevenue, calculatedPendingRevenue, totalRevenue, totalRevenuePendingCalc]);
+  }, [students, safeStudents.length, calculatedTotalRevenue, calculatedPendingRevenue, totalRevenue, totalRevenuePendingCalc]);
 
   const handleMarkAsPaid = async (studentId: string) => {
     const student = students.find((s) => s._id === studentId);
@@ -226,7 +266,7 @@ export function useAdminData() {
     try {
       await updatePaymentStatus(studentId);
       fetchFinancialStats();
-    } catch (error) {
+    } catch {
       setStudents((prev) =>
         (Array.isArray(prev) ? prev : []).map((s) =>
           s._id === studentId ? { ...s, paymentStatus: student.paymentStatus, amountPaid: student.amountPaid || 0, amountDue: student.amountDue } : s
@@ -249,7 +289,7 @@ export function useAdminData() {
       await fetchStudents();
       await fetchFinancialStats();
       toast(`Marked ${selectedStudents.size} student(s) as paid`, "success");
-    } catch (error) {
+    } catch {
       toast("Failed to update payment status", "error");
     }
   };
@@ -258,7 +298,7 @@ export function useAdminData() {
     try {
       await updateStudentCourse(studentId, newCourse);
       await fetchStudents();
-    } catch (error) {
+    } catch {
       toast("Failed to update course", "error");
     }
   };
@@ -277,7 +317,7 @@ export function useAdminData() {
     try {
       await updateStudentStatus(studentId, status);
       toast(`Student status updated to "${status}"`, "success");
-    } catch (error) {
+    } catch {
       toast("Failed to update student status", "error");
       await fetchStudents();
     } finally {
@@ -319,7 +359,7 @@ export function useAdminData() {
       setDeleteModalOpen(false);
       setStudentToDelete(null);
       toast("Student deleted", "success");
-    } catch (error) {
+    } catch {
       toast("Failed to delete student", "error");
     }
   };
@@ -332,7 +372,7 @@ export function useAdminData() {
       setSelectedStudents(new Set());
       setBulkDeleteModalOpen(false);
       toast(`${selectedStudents.size} user(s) deleted`, "success");
-    } catch (error) {
+    } catch {
       toast("Failed to delete users", "error");
     } finally {
       setDeletingInProgress(false);
@@ -350,7 +390,7 @@ export function useAdminData() {
       setSelectedStudents(new Set());
       setBulkSuspendModalOpen(false);
       toast(`${selectedStudents.size} user(s) suspended`, "success");
-    } catch (error) {
+    } catch {
       toast("Failed to suspend users", "error");
     }
   };
@@ -385,7 +425,7 @@ export function useAdminData() {
       setUserModalOpen(false);
       setUserFormData(emptyUserFormData);
       setEditingUser(null);
-    } catch (error) {
+    } catch {
       toast("Failed to save user", "error");
     }
   };
@@ -400,20 +440,21 @@ export function useAdminData() {
       const headerKeys = lines[0].split(",").map((h) => h.trim().toLowerCase().replace(/\s/g, ""));
       const parsed = lines.slice(1).map((line) => {
         const values = line.split(",");
-        const row: any = {};
+        const row: Partial<CsvImportRow> = {};
         headerKeys.forEach((key, idx) => {
           const value = values[idx]?.trim() || "";
           if (key === "email") row.email = value;
           else if (key === "password") row.password = value;
-          else if (key === "role") row.role = value;
+          // Role and status are passed through unchecked; the server validates them
+          else if (key === "role") row.role = value as CsvImportRow["role"];
           else if (key === "firstname" || key === "first") row.firstName = value;
           else if (key === "lastname" || key === "last") row.lastName = value;
           else if (key === "phone" || key === "phonenumber") row.phone = value;
-          else if (key === "status") row.status = value;
+          else if (key === "status") row.status = value as CsvImportRow["status"];
         });
         row.fullname = [row.firstName, row.lastName].filter(Boolean).join(" ");
         return row;
-      }).filter((r) => r.email && r.password);
+      }).filter((r): r is CsvImportRow => Boolean(r.email && r.password));
       setCsvPreview(parsed);
     };
     reader.readAsText(file);
@@ -429,7 +470,7 @@ export function useAdminData() {
       setCsvFile(null);
       setCsvPreview([]);
       await fetchStudents();
-    } catch (error) {
+    } catch {
       toast("Failed to import users", "error");
     }
   };
@@ -441,7 +482,7 @@ export function useAdminData() {
           s._id === studentId ? { ...s, adminClearance: cleared } : s
         )
       );
-    } catch (error) {
+    } catch {
       toast("Failed to update admin clearance", "error");
       await fetchStudents();
     }
@@ -522,8 +563,8 @@ export function useAdminData() {
       setLoadingPayments(true);
       const response = await getPendingPayments();
       if (response?.success) setPendingPayments(response.data.payments || []);
-    } catch (error: any) {
-      toast(error.response?.data?.message || "Failed to load pending payments", "error");
+    } catch (error) {
+      toast(asApiError(error).response?.data?.message || "Failed to load pending payments", "error");
     } finally {
       setLoadingPayments(false);
     }
@@ -538,8 +579,8 @@ export function useAdminData() {
       setSelectedPayment(null);
       fetchStudents();
       fetchFinancialStats();
-    } catch (error: any) {
-      toast(error.response?.data?.message || "Failed to approve payment", "error");
+    } catch (error) {
+      toast(asApiError(error).response?.data?.message || "Failed to approve payment", "error");
     } finally {
       setProcessingPayment(false);
     }
@@ -559,8 +600,8 @@ export function useAdminData() {
       setRejectModalOpen(false);
       setRejectReason("");
       fetchStudents();
-    } catch (error: any) {
-      toast(error.response?.data?.message || "Failed to reject payment", "error");
+    } catch (error) {
+      toast(asApiError(error).response?.data?.message || "Failed to reject payment", "error");
     } finally {
       setProcessingPayment(false);
     }
@@ -580,8 +621,8 @@ export function useAdminData() {
       // Refresh stats so admin KPI cards stay current
       fetchCourseTrackStats();
       toast("Progress updated", "success");
-    } catch (error: any) {
-      toast(error.response?.data?.message || "Failed to update progress", "error");
+    } catch (error) {
+      toast(asApiError(error).response?.data?.message || "Failed to update progress", "error");
     }
   };
 

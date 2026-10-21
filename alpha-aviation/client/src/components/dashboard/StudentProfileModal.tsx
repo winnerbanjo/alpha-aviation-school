@@ -23,7 +23,7 @@ import {
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { uploadCertificate, getStudentCourseTracks, type CourseTrackItem } from "@/api";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import type { Student } from "@/hooks/useAdminData";
 
 interface StudentProfileModalProps {
@@ -51,7 +51,6 @@ export function StudentProfileModal({
   student,
   onMarkAsPaid,
   onWhatsAppReminder,
-  onAdminClearanceChange,
   onCertificateUploaded,
   onUpdateWeekProgress,
 }: StudentProfileModalProps) {

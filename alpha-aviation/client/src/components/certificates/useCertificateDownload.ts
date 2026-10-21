@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import type { CertificateArtworkData } from "@/lib/certificates/types";
 
 export type DownloadFormat = "pdf" | "png" | "print";

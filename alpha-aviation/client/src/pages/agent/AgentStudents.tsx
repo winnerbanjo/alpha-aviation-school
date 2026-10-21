@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import {
   Users, Plus, Search, CreditCard, CheckCircle2, Clock, X, Upload, Eye, EyeOff,
-  AlertCircle, Copy, Check, ChevronRight, Building2, FileText, Landmark
+  AlertCircle, Copy, Check, ChevronRight, FileText, Landmark
 } from "lucide-react";
 import { getAgentStudents, registerStudentAsAgent, uploadPaymentForStudent, paystackPayForStudent } from "@/api";
 import { COURSE_CATALOG, formatNaira } from "@/data/courseCatalog";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import { usePaystackPayment } from "react-paystack";
 import { useAuthStore } from "@/store/authStore";
 
@@ -89,7 +89,7 @@ export function AgentStudents() {
     if (!showPayModal) return;
     try {
       setPayLoading(true);
-      const res = await paystackPayForStudent(showPayModal._id, ref.reference);
+      await paystackPayForStudent(showPayModal._id, ref.reference);
       await loadStudents();
       setPaySuccess(true);
       toast("Payment successful via Paystack!", "success");

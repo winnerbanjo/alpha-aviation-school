@@ -4,9 +4,10 @@ import { motion } from "framer-motion";
 import { ShieldCheck, Eye, EyeOff } from "lucide-react";
 import { resetPassword } from "@/api";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import { NoIndexSEO } from "@/components/seo/NoIndexSEO";
 import { AuthShell, AuthBackLink } from "@/components/auth/AuthShell";
+import { asApiError } from "@/lib/errors";
 
 export function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -41,7 +42,8 @@ export function ResetPassword() {
       await resetPassword(token, password);
       toast("Password reset successfully! You can now sign in.", "success");
       navigate("/login", { replace: true });
-    } catch (err: any) {
+    } catch (caught) {
+      const err = asApiError(caught);
       const message =
         err.response?.data?.message || "Reset link is invalid or has expired.";
       toast(message, "error");

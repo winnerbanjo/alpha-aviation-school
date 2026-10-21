@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { bulkIssueCertificates, describeApiError, newIdempotencyKey } from "@/api/certificates";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import { CSV_TEMPLATE, parseCertificateSheet, toCsv, type ParsedRow } from "@/lib/certificates/csv";
 import {
   CERTIFICATE_LIMITS,

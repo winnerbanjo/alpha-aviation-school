@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { PhoneNumberInput } from "@/components/ui/phone-input";
 import { isValidPhoneNumber } from "@/lib/phone";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import { updateStudentPhone } from "@/api";
 import { useAuthStore } from "@/store/authStore";
 

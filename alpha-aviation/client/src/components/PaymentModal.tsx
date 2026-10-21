@@ -4,6 +4,7 @@ import { DollarSign, Copy, CheckCircle2, Upload } from 'lucide-react'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { uploadPaymentReceipt } from '@/api'
+import { asApiError } from "@/lib/errors";
 
 interface PaymentModalProps {
   isOpen: boolean
@@ -59,7 +60,8 @@ export function PaymentModal({ isOpen, onClose, amountDue = 0, userEmail = '' }:
         setReceiptUploaded(false)
         onClose()
       }, 3000)
-    } catch (error: any) {
+    } catch (caught) {
+      const error = asApiError(caught);
       alert(error?.response?.data?.message || 'Failed to upload receipt. Please try again.')
     } finally {
       setUploadingReceipt(false)

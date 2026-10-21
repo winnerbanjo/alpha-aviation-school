@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useEffectEvent, useRef, useState } from "react";
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, Users, CreditCard, User, LogOut, Menu, X
@@ -36,13 +36,19 @@ export default function AgentLayout() {
     } catch { /* silent */ }
   };
 
-  useEffect(() => { refreshUser(); }, []);
+  // Lets the effects below always call the latest refreshUser without
+  // re-subscribing on every render.
+  const onRefreshUser = useEffectEvent(() => {
+    refreshUser();
+  });
+
+  useEffect(() => { onRefreshUser(); }, []);
 
   useEffect(() => {
     pollRef.current = setInterval(() => {
-      if (document.visibilityState === "visible") refreshUser();
+      if (document.visibilityState === "visible") onRefreshUser();
     }, 60000);
-    const onVisibility = () => { if (document.visibilityState === "visible") refreshUser(); };
+    const onVisibility = () => { if (document.visibilityState === "visible") onRefreshUser(); };
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);

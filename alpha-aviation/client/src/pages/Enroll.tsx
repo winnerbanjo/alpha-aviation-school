@@ -7,7 +7,7 @@ import { isValidPhoneNumber } from "@/lib/phone";
 import { register } from "@/api";
 import { useAuthStore } from "@/store/authStore";
 import { COURSE_CATALOG, computeEnrollmentPrice } from "@/data/courseCatalog";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import { AuthShell } from "@/components/auth/AuthShell";
 import {
   ArrowLeft,
@@ -17,10 +17,9 @@ import {
   Eye,
   EyeOff,
   GraduationCap,
-  User,
-  BookOpen,
   Award,
 } from "lucide-react";
+import { asApiError } from "@/lib/errors";
 
 export function Enroll() {
   const navigate = useNavigate();
@@ -171,7 +170,8 @@ export function Enroll() {
       } else {
         toast("Registration failed. Please try again.", "error");
       }
-    } catch (err: any) {
+    } catch (caught) {
+      const err = asApiError(caught);
       const message =
         err.response?.data?.message || "Registration failed. Please try again.";
       toast(message, "error");
@@ -183,11 +183,6 @@ export function Enroll() {
   const count = formData.selectedCourses.length;
   const enrollmentPrice = computeEnrollmentPrice(count);
   const isBundle = count === 4;
-
-  const stepLabels = [
-    { icon: User, label: "Account" },
-    { icon: BookOpen, label: "Courses" },
-  ];
 
   const leftPanelText = [
     {

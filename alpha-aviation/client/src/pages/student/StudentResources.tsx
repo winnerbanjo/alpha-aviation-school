@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuthStore } from "@/store/authStore";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Download, BookOpen, Lock, FileText, Video, Link as LinkIcon, AlertTriangle } from "lucide-react";
+import { Download, BookOpen, Lock, FileText, Video, Link as LinkIcon } from "lucide-react";
 import { getStudentResources, type CourseResourceItem } from "@/api";
 import { SecureViewer } from "@/components/dashboard/SecureViewer";
 import { motion } from "framer-motion";

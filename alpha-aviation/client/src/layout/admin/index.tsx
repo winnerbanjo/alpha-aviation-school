@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useEffectEvent, useRef, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { getProfile } from "@/api";
 import { useAuthStore } from "@/store/authStore";
@@ -28,12 +28,18 @@ export default function AdminLayout() {
     }
   };
 
-  useEffect(() => {
+  // Lets the effects below always call the latest refreshUser without
+  // re-subscribing on every render.
+  const onRefreshUser = useEffectEvent(() => {
     refreshUser();
+  });
+
+  useEffect(() => {
+    onRefreshUser();
   }, []);
 
   useEffect(() => {
-    const onFocus = () => refreshUser();
+    const onFocus = () => onRefreshUser();
     window.addEventListener("focus", onFocus);
     return () => window.removeEventListener("focus", onFocus);
   }, [user]);
@@ -41,13 +47,13 @@ export default function AdminLayout() {
   useEffect(() => {
     pollRef.current = setInterval(() => {
       if (document.visibilityState === "visible") {
-        refreshUser();
+        onRefreshUser();
       }
     }, 60000);
 
     const onVisibilityChange = () => {
       if (document.visibilityState === "visible") {
-        refreshUser();
+        onRefreshUser();
       }
     };
     document.addEventListener("visibilitychange", onVisibilityChange);

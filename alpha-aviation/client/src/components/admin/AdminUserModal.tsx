@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
-import type { Student } from "@/hooks/useAdminData";
+import type { Student, StudentStatus, UserFormData } from "@/hooks/useAdminData";
 
 const courses = [
   "Aviation Fundamentals & Strategy",
@@ -14,8 +14,8 @@ const courses = [
 interface AdminUserModalProps {
   isOpen: boolean;
   editingUser: Student | null;
-  userFormData: any;
-  setUserFormData: React.Dispatch<React.SetStateAction<any>>;
+  userFormData: UserFormData;
+  setUserFormData: React.Dispatch<React.SetStateAction<UserFormData>>;
   onClose: () => void;
   onSave: () => void;
 }
@@ -39,21 +39,21 @@ export function AdminUserModal({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">First Name</label>
-            <input type="text" value={userFormData.firstName} onChange={(e) => setUserFormData((prev: any) => ({ ...prev, firstName: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10" placeholder="John" />
+            <input type="text" value={userFormData.firstName} onChange={(e) => setUserFormData((prev) => ({ ...prev, firstName: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10" placeholder="John" />
           </div>
           <div>
             <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Last Name</label>
-            <input type="text" value={userFormData.lastName} onChange={(e) => setUserFormData((prev: any) => ({ ...prev, lastName: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10" placeholder="Doe" />
+            <input type="text" value={userFormData.lastName} onChange={(e) => setUserFormData((prev) => ({ ...prev, lastName: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10" placeholder="Doe" />
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Email</label>
-            <input type="email" value={userFormData.email} onChange={(e) => setUserFormData((prev: any) => ({ ...prev, email: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10" placeholder="john@example.com" />
+            <input type="email" value={userFormData.email} onChange={(e) => setUserFormData((prev) => ({ ...prev, email: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10" placeholder="john@example.com" />
           </div>
           <div>
             <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Phone</label>
-            <input type="text" value={userFormData.phone} onChange={(e) => setUserFormData((prev: any) => ({ ...prev, phone: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10" placeholder="+234..." />
+            <input type="text" value={userFormData.phone} onChange={(e) => setUserFormData((prev) => ({ ...prev, phone: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10" placeholder="+234..." />
           </div>
         </div>
         <div>
@@ -63,7 +63,7 @@ export function AdminUserModal({
           <input
             type="text"
             value={userFormData.password}
-            onChange={(e) => setUserFormData((prev: any) => ({ ...prev, password: e.target.value }))}
+            onChange={(e) => setUserFormData((prev) => ({ ...prev, password: e.target.value }))}
             className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
             placeholder={editingUser ? "Leave blank to keep current password" : "Temporary password"}
           />
@@ -75,7 +75,7 @@ export function AdminUserModal({
         </div>
         <div>
           <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Role</label>
-          <select value={userFormData.role} onChange={(e) => setUserFormData((prev: any) => ({ ...prev, role: e.target.value as "admin" | "student" }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10">
+          <select value={userFormData.role} onChange={(e) => setUserFormData((prev) => ({ ...prev, role: e.target.value as "admin" | "student" }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10">
             <option value="student">Student</option>
             <option value="admin">Admin</option>
           </select>
@@ -85,7 +85,7 @@ export function AdminUserModal({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Account Status</label>
-                <select value={userFormData.status} onChange={(e) => setUserFormData((prev: any) => ({ ...prev, status: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10">
+                <select value={userFormData.status} onChange={(e) => setUserFormData((prev) => ({ ...prev, status: e.target.value as StudentStatus }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10">
                   <option value="active">Active</option>
                   <option value="graduated">Graduated</option>
                   <option value="suspended">Suspended</option>
@@ -94,7 +94,7 @@ export function AdminUserModal({
               </div>
               <div>
                 <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Payment Status</label>
-                <select value={userFormData.paymentStatus} onChange={(e) => setUserFormData((prev: any) => ({ ...prev, paymentStatus: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10">
+                <select value={userFormData.paymentStatus} onChange={(e) => setUserFormData((prev) => ({ ...prev, paymentStatus: e.target.value as UserFormData["paymentStatus"] }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10">
                   <option value="Pending">Pending</option>
                   <option value="Under Review">Under Review</option>
                   <option value="Paid">Paid</option>
@@ -104,11 +104,11 @@ export function AdminUserModal({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Student ID Number</label>
-                <input type="text" value={userFormData.studentIdNumber} onChange={(e) => setUserFormData((prev: any) => ({ ...prev, studentIdNumber: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10" placeholder="ASL-2026-0000" />
+                <input type="text" value={userFormData.studentIdNumber} onChange={(e) => setUserFormData((prev) => ({ ...prev, studentIdNumber: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10" placeholder="ASL-2026-0000" />
               </div>
               <div>
                 <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Enrolled Course</label>
-                <select value={userFormData.enrolledCourse} onChange={(e) => setUserFormData((prev: any) => ({ ...prev, enrolledCourse: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10">
+                <select value={userFormData.enrolledCourse} onChange={(e) => setUserFormData((prev) => ({ ...prev, enrolledCourse: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10">
                   <option value="">Not assigned</option>
                   {courses.map((course) => (
                     <option key={course} value={course}>{course}</option>
@@ -119,19 +119,19 @@ export function AdminUserModal({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Amount Due</label>
-                <input type="number" min="0" value={userFormData.amountDue} onChange={(e) => setUserFormData((prev: any) => ({ ...prev, amountDue: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10" />
+                <input type="number" min="0" value={userFormData.amountDue} onChange={(e) => setUserFormData((prev) => ({ ...prev, amountDue: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10" />
               </div>
               <div>
                 <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Amount Paid</label>
-                <input type="number" min="0" value={userFormData.amountPaid} onChange={(e) => setUserFormData((prev: any) => ({ ...prev, amountPaid: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10" />
+                <input type="number" min="0" value={userFormData.amountPaid} onChange={(e) => setUserFormData((prev) => ({ ...prev, amountPaid: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10" />
               </div>
               <div>
                 <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Total Price</label>
-                <input type="number" min="0" value={userFormData.totalCoursePrice} onChange={(e) => setUserFormData((prev: any) => ({ ...prev, totalCoursePrice: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10" />
+                <input type="number" min="0" value={userFormData.totalCoursePrice} onChange={(e) => setUserFormData((prev) => ({ ...prev, totalCoursePrice: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10" />
               </div>
             </div>
             <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-[#DCE2EB] bg-[#F5F7FB] px-4 py-3 text-sm font-medium text-[#172B49] transition-colors hover:border-[#1246C8]/40">
-              <input type="checkbox" checked={userFormData.adminClearance} onChange={(e) => setUserFormData((prev: any) => ({ ...prev, adminClearance: e.target.checked }))} className="h-4 w-4 rounded border-[#C3CCDA] accent-[#1246C8]" />
+              <input type="checkbox" checked={userFormData.adminClearance} onChange={(e) => setUserFormData((prev) => ({ ...prev, adminClearance: e.target.checked }))} className="h-4 w-4 rounded border-[#C3CCDA] accent-[#1246C8]" />
               Admin clearance completed
             </label>
           </>

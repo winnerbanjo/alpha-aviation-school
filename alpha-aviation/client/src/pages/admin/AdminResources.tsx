@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useEffectEvent, useMemo, useState } from "react";
 import { COURSE_CATALOG } from "@/data/courseCatalog";
 import {
   createCourseResource,
@@ -6,7 +6,7 @@ import {
   getAdminResources,
   type CourseResourceItem,
 } from "@/api";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -87,8 +87,12 @@ export function AdminResources() {
     }
   };
 
-  useEffect(() => {
+  // Load once on mount; the effect event calls the latest loadResources
+  const loadOnMount = useEffectEvent(() => {
     loadResources();
+  });
+  useEffect(() => {
+    loadOnMount();
   }, []);
 
   const handleUpload = async () => {

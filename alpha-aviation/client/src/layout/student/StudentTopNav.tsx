@@ -3,11 +3,6 @@ import { useAuthStore } from "@/store/authStore";
 import { useEffect, useState } from "react";
 import {
   Bell,
-  Share2,
-  LogOut,
-  GraduationCap,
-  Plane,
-  AlertTriangle,
   Menu,
   X,
 } from "lucide-react";
@@ -20,14 +15,9 @@ interface StudentTopNavProps {
 }
 
 export function StudentTopNav({ mobileMenuOpen, setMobileMenuOpen }: StudentTopNavProps) {
-  const { user, logout, tutionPaid } = useAuthStore();
+  const { user } = useAuthStore();
   const navigate = useNavigate();
   const [unreadCount, setUnreadCount] = useState(0);
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
 
   const displayName = user?.firstName || "Student";
 

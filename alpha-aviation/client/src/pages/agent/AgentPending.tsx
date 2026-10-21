@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 import { Clock, Mail, LogOut, XCircle, AlertTriangle } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,8 @@ export function AgentPending() {
   const { user, setUser, logout } = useAuthStore();
   const navigate = useNavigate();
 
-  useEffect(() => {
+  // Refresh the profile once on mount, merging into the latest stored user
+  const syncProfile = useEffectEvent(() => {
     getProfile()
       .then((res) => {
         if (res?.data?.user) {
@@ -17,6 +18,9 @@ export function AgentPending() {
         }
       })
       .catch(() => {});
+  });
+  useEffect(() => {
+    syncProfile();
   }, []);
 
   useEffect(() => {

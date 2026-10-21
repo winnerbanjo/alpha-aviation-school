@@ -27,7 +27,7 @@ import { describeApiError, getCertificate, recordCertificateDownload } from "@/a
 import { CertificatePreview } from "@/components/certificates/CertificatePreview";
 import { useCertificateDownload } from "@/components/certificates/useCertificateDownload";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import { DELIVERY_LABELS } from "@/lib/certificates/template";
 import { toArtworkData, type AdminCertificate, type CertificateEvent } from "@/lib/certificates/types";
 import { formatCertificateDate, formatVerificationCode } from "@/lib/certificates/validation";

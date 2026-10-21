@@ -14,20 +14,14 @@ export function StudentCourses() {
   const isPaid = user?.paymentStatus === "Paid";
 
   const [courseTracks, setCourseTracks] = useState<CourseTrackItem[]>([]);
-  const [loadingTracks, setLoadingTracks] = useState(false);
 
   useEffect(() => {
     if (isPaid) {
-      setLoadingTracks(true);
       getMyCourseTracks()
         .then((res) => { if (res?.success) setCourseTracks(res.data.tracks); })
-        .catch(() => { })
-        .finally(() => setLoadingTracks(false));
+        .catch(() => { });
     }
   }, [isPaid]);
-
-  const isCleared = user?.adminClearance;
-  const isUnderReview = user?.paymentStatus === "Under Review";
 
   const activeCount = courseTracks.filter((t) => t.status === "active").length;
   const completedCount = courseTracks.filter((t) => t.status === "completed").length;
@@ -174,12 +168,7 @@ export function StudentCourses() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {courseSelections.map((course, idx) => {
             const track = courseTracks.find((t) => t.courseTitle === course.title);
-            const cardGradient = idx % 2 === 0 ? "from-indigo-500 to-purple-600" : "from-blue-500 to-indigo-600";
 
-            // Fallback progress when no track exists yet
-            const fallbackProgress = isCleared ? 100 : isUnderReview ? 35 : 0;
-            const overallProgress = track ? track.overallProgress : fallbackProgress;
-            const currentWeek = track?.currentWeek ?? 1;
 
             return (
               <motion.div

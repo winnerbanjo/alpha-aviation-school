@@ -1,19 +1,19 @@
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
   verifyEnrollmentOTP,
   resendEnrollmentOTP,
   verifyAdminOTP,
   resendAdminOTP,
-  login as apiLogin,
 } from "@/api";
 import { useAuthStore } from "@/store/authStore";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import { RefreshCw, CheckCircle } from "lucide-react";
 import { NoIndexSEO } from "@/components/seo/NoIndexSEO";
 import { AuthShell, AuthBackLink } from "@/components/auth/AuthShell";
+import { asApiError } from "@/lib/errors";
 
 type OTPPurpose = "enrollment" | "admin_login";
 
@@ -64,7 +64,7 @@ export function VerifyOtp() {
     if (coursesParam) {
       try {
         setSelectedCourses(JSON.parse(decodeURIComponent(coursesParam)));
-      } catch (e) {
+      } catch {
         console.error("Failed to parse courses");
       }
     }
@@ -207,7 +207,8 @@ export function VerifyOtp() {
           navigate("/admin/dashboard/overview", { replace: true });
         }
       }
-    } catch (err: any) {
+    } catch (caught) {
+      const err = asApiError(caught);
       const message =
         err.response?.data?.message || "Invalid verification code. Please try again.";
       toast(message, "error");
@@ -231,7 +232,8 @@ export function VerifyOtp() {
         setOtp(["", "", "", "", "", ""]);
         toast("New verification code sent!", "success");
       }
-    } catch (err: any) {
+    } catch (caught) {
+      const err = asApiError(caught);
       const message =
         err.response?.data?.message || "Failed to resend code. Please try again.";
       toast(message, "error");

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Mail } from "lucide-react";
 import { forgotPassword } from "@/api";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import { NoIndexSEO } from "@/components/seo/NoIndexSEO";
 import { AuthShell, AuthBackLink } from "@/components/auth/AuthShell";
 

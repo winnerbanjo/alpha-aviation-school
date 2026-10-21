@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   CreditCard,
   Landmark,
-  AlertCircle,
   Copy,
   CheckCircle2,
   Upload,
@@ -15,8 +14,15 @@ import { uploadPaymentReceipt, verifyPaystackPayment } from "@/api";
 import { usePaystackPayment } from "react-paystack";
 import { useSearchParams } from "react-router-dom";
 
+/** The fields of the signed-in student this component reads. */
+interface PaymentStepsUser {
+  email?: string;
+  amountDue?: number;
+  paymentStatus?: string;
+}
+
 interface PaymentStepsProps {
-  user: any;
+  user: PaymentStepsUser | null;
   tutionPaid: "Pending" | "Paid" | "Under Review" | boolean;
   refreshUser: () => Promise<void>;
 }
@@ -111,7 +117,7 @@ export function PaymentSteps({
     }
   };
 
-  const onSuccess = (reference: any) => {
+  const onSuccess = (reference: { reference: string }) => {
     handlePaystackSuccess(reference.reference);
   };
 

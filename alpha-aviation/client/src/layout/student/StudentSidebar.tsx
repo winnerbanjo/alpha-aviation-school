@@ -10,11 +10,8 @@ import {
   FileText,
   Bell,
   User,
-  Search,
   Settings,
   LogOut,
-  Menu,
-  X,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 
@@ -29,7 +26,7 @@ export function StudentSidebar({
 }: StudentSidebarProps) {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery] = useState("");
 
   const groups = [
     {

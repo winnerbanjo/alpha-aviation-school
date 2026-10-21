@@ -36,7 +36,7 @@ import {
 import { copyText, formatShortDate, initialsOf, relativeTime } from "@/lib/certificates/format";
 import { useCertificateDownload } from "@/components/certificates/useCertificateDownload";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import { CERTIFICATE_TYPES, TYPE_COPY } from "@/lib/certificates/template";
 import {
   toArtworkData,

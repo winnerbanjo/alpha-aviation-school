@@ -1,4 +1,5 @@
 import axios, { type AxiosRequestConfig } from "axios";
+import { asApiError } from "@/lib/errors";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -57,10 +58,11 @@ export const login = async (
   try {
     const response = await api.post("/auth/login", { email, password }, config);
     return response;
-  } catch (error: any) {
-    if (error.response) {
+  } catch (error) {
+    const err = asApiError(error);
+    if (err.response) {
       throw error;
-    } else if (error.request) {
+    } else if (err.request) {
       throw new Error("Network Error: Server is unreachable");
     } else {
       throw error;
@@ -257,32 +259,23 @@ export const getAdminTest = async (config?: AxiosRequestConfig) => {
 
 // Uses baseURL https://asl-aviation-server.onrender.com/api → GET /admin/students (no bugawheels)
 export const getAllStudents = async (config?: AxiosRequestConfig) => {
-  try {
-    // Admin dashboard core data: extend timeout to 60s for Render cold starts
-    const response = await api.get("/admin/students", {
-      timeout: 60000,
-      ...config,
-    });
-    return response.data;
-  } catch (error: any) {
-    // Mock fallback disabled for launch – surface real error
-    // if (!error.response && error.request) { ... }
-    throw error;
-  }
+  // Admin dashboard core data: extend timeout to 60s for Render cold starts.
+  // Mock fallback disabled for launch – errors surface to the caller.
+  const response = await api.get("/admin/students", {
+    timeout: 60000,
+    ...config,
+  });
+  return response.data;
 };
 
 export const getFinancialStats = async (config?: AxiosRequestConfig) => {
-  try {
-    // Financial stats are part of the admin dashboard; allow up to 60s
-    const response = await api.get("/admin/financial-stats", {
-      timeout: 60000,
-      ...config,
-    });
-    return response.data;
-  } catch (error: any) {
-    // Mock fallback disabled for launch – surface real error
-    throw error;
-  }
+  // Financial stats are part of the admin dashboard; allow up to 60s.
+  // Mock fallback disabled for launch – errors surface to the caller.
+  const response = await api.get("/admin/financial-stats", {
+    timeout: 60000,
+    ...config,
+  });
+  return response.data;
 };
 
 export const updatePaymentStatus = async (

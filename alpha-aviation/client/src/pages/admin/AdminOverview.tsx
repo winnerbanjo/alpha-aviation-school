@@ -19,7 +19,7 @@ export function AdminOverview() {
     handleMarkAsPaid, handleStudentClick, handleWhatsAppReminder,
     handleDeleteStudent, handleStudentStatusChange, handleEditUser, handleSaveUser, statusUpdating,
     confirmDeleteStudent, deleteModalOpen, setDeleteModalOpen, studentToDelete, setStudentToDelete, deletingInProgress,
-    selectedStudent, setSelectedStudent, isProfileModalOpen, setIsProfileModalOpen,
+    selectedStudent, isProfileModalOpen, setIsProfileModalOpen,
     handleAdminClearanceChange, handleCertificateUploaded,
     userModalOpen, setUserModalOpen, editingUser, setEditingUser, userFormData, setUserFormData,
     courseTrackStats, fetchCourseTrackStats, handleUpdateWeekProgress,

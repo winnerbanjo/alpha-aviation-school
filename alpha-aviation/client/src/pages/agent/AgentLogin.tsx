@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { login as apiLogin } from "@/api";
 import { NoIndexSEO } from "@/components/seo/NoIndexSEO";
 import { AuthShell } from "@/components/auth/AuthShell";
-import { useToast } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 
 type ApiError = {
   response?: {
