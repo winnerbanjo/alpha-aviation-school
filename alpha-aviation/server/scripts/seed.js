@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 // Import User model
@@ -16,7 +15,7 @@ const seedDatabase = async () => {
     console.log('Cleared existing users');
 
     // Create Admin user
-    const adminPassword = await bcrypt.hash('password123', 10);
+    const adminPassword = 'password123';
     const admin = await User.create({
       email: 'admin@alpha.com',
       password: adminPassword,
@@ -31,7 +30,7 @@ const seedDatabase = async () => {
     console.log('✅ Admin user created:', admin.email);
 
     // Create Student 1 - Aviation Fundamentals
-    const student1Password = await bcrypt.hash('password123', 10);
+    const student1Password = 'password123';
     const student1 = await User.create({
       email: 'student1@alpha.com',
       password: student1Password,
@@ -46,7 +45,7 @@ const seedDatabase = async () => {
     console.log('✅ Student 1 created:', student1.email);
 
     // Create Student 2 - Cabin Crew
-    const student2Password = await bcrypt.hash('password123', 10);
+    const student2Password = 'password123';
     const student2 = await User.create({
       email: 'student2@alpha.com',
       password: student2Password,
@@ -61,7 +60,7 @@ const seedDatabase = async () => {
     console.log('✅ Student 2 created:', student2.email);
 
     // Create Student 3 - Travel & Tourism
-    const student3Password = await bcrypt.hash('password123', 10);
+    const student3Password = 'password123';
     const student3 = await User.create({
       email: 'student3@alpha.com',
       password: student3Password,
@@ -76,7 +75,7 @@ const seedDatabase = async () => {
     console.log('✅ Student 3 created:', student3.email);
 
     // Create Student 4 - Customer Service
-    const student4Password = await bcrypt.hash('password123', 10);
+    const student4Password = 'password123';
     const student4 = await User.create({
       email: 'student4@alpha.com',
       password: student4Password,
@@ -91,7 +90,7 @@ const seedDatabase = async () => {
     console.log('✅ Student 4 created:', student4.email);
 
     // Create Student 5 - Safety & Security
-    const student5Password = await bcrypt.hash('password123', 10);
+    const student5Password = 'password123';
     const student5 = await User.create({
       email: 'student5@alpha.com',
       password: student5Password,

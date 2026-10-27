@@ -36,9 +36,11 @@ const errorHandler = (err, req, res, next) => {
     error = { message, statusCode: 401 };
   }
 
-  res.status(error.statusCode || 500).json({
+  // Unexpected failures are logged above; visitors get a plain message rather than internal detail.
+  const statusCode = error.statusCode || 500;
+  res.status(statusCode).json({
     success: false,
-    message: error.message || 'Server Error',
+    message: statusCode >= 500 ? 'Something went wrong on our side. Please try again in a moment.' : error.message || 'Server Error',
     ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
   });
 };

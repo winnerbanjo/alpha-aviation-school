@@ -20,7 +20,11 @@ ZOHO_USER=support@aslaviationschool.co
 ZOHO_PASS=your-zoho-password
 CLIENT_URL=https://www.aslaviationschool.co
 CERTIFICATE_SIGNING_SECRET=a-long-random-secret-used-only-for-certificates
+ADMIN_EMAIL=admissions-inbox@example.com
+CONTACT_EMAIL=enquiries-inbox@example.com
 ```
+
+`ADMIN_EMAIL` receives new-enrolment alerts and `CONTACT_EMAIL` receives contact-form enquiries (it falls back to `ADMIN_EMAIL`). Both default to info@alphasteplinksaviationschool.com, which is not the info@aslaviationschool.co address the website publishes, so set them to the inbox the admissions team actually reads.
 
 `CLIENT_URL` is the public site address; certificate QR codes and emails link to `${CLIENT_URL}/verify/<code>`, so it must be the production domain in production.
 `CERTIFICATE_SIGNING_SECRET` signs every issued certificate so edits made outside the app are detected. Set it once and never rotate it without re-signing existing certificates; if it is missing the server falls back to `JWT_SECRET` (and logs a warning), which would tie certificate validity to that secret.

@@ -1069,9 +1069,17 @@ exports.getProfile = async (req, res, next) => {
 };
 
 // Contact message
+// Visitor input goes into an HTML email, so it is escaped before it is interpolated.
+const escapeHtml = (value) =>
+  String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+
 exports.sendContactMessage = async (req, res, next) => {
   try {
-    const { name, email, phone, message } = req.body;
+    const clean = (value, max) => (typeof value === "string" ? value.trim().slice(0, max) : "");
+    const name = clean(req.body.name, 120);
+    const email = clean(req.body.email, 200);
+    const phone = clean(req.body.phone, 40);
+    const message = clean(req.body.message, 5000);
 
     if (!name || !email || !phone || !message) {
       return res.status(400).json({
@@ -1079,15 +1087,27 @@ exports.sendContactMessage = async (req, res, next) => {
         message: "Please provide name, email, phone, and message",
       });
     }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ success: false, message: "Please provide a valid email address" });
+    }
 
-    await sendMail({
-      to: "info@alphasteplinksaviationschool.com",
-      replyTo: email,
-      subject: `New contact enquiry from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\n\nMessage:\n${message}`,
-      html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Phone:</strong> ${phone}</p><p><strong>Message:</strong></p><p>${message}</p>`,
-      required: true,
-    });
+    try {
+      await sendMail({
+        // CONTACT_EMAIL decides where website enquiries land; it falls back to the admissions inbox used for enrolment alerts.
+        to: process.env.CONTACT_EMAIL || process.env.ADMIN_EMAIL || "info@alphasteplinksaviationschool.com",
+        replyTo: email,
+        subject: `New contact enquiry from ${name.replace(/[\r\n]+/g, " ")}`,
+        text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\n\nMessage:\n${message}`,
+        html: `<p><strong>Name:</strong> ${escapeHtml(name)}</p><p><strong>Email:</strong> ${escapeHtml(email)}</p><p><strong>Phone:</strong> ${escapeHtml(phone)}</p><p><strong>Message:</strong></p><p style="white-space:pre-wrap">${escapeHtml(message)}</p>`,
+        required: true,
+      });
+    } catch (mailError) {
+      console.error("[contact] enquiry email failed:", mailError.message);
+      return res.status(502).json({
+        success: false,
+        message: "We couldn't send your message just now. Please try again or email us directly.",
+      });
+    }
 
     res.status(200).json({
       success: true,
