@@ -4,6 +4,7 @@ import { agentRegister } from "@/api";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
+import { SEO } from "@/components/seo/SEO";
 import { useToast } from "@/components/ui/use-toast";
 
 type ApiError = {
@@ -80,6 +81,7 @@ export function AgentEnroll() {
         { label: "Offices", value: "UK & Nigeria" },
       ]}
     >
+      <SEO title="Become a Partner Agent" description="Apply to refer students to Alpha Step Links Aviation School programmes and manage their enrolments and tuition from one agent dashboard." url="/agent/register" />
       <div className="w-full">
         <div>
           <div className="mb-10">
@@ -95,10 +97,11 @@ export function AgentEnroll() {
           <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div className="grid grid-cols-1 gap-5 sm:col-span-2 sm:grid-cols-2">
               <div>
-                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+                <label htmlFor="agent-firstName" className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                   First name
                 </label>
                 <input
+                  id="agent-firstName"
                   name="firstName"
                   type="text"
                   value={form.firstName}
@@ -109,10 +112,11 @@ export function AgentEnroll() {
                 />
               </div>
               <div>
-                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+                <label htmlFor="agent-lastName" className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                   Last name
                 </label>
                 <input
+                  id="agent-lastName"
                   name="lastName"
                   type="text"
                   value={form.lastName}
@@ -125,10 +129,11 @@ export function AgentEnroll() {
             </div>
 
             <div className="sm:col-span-2">
-              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+              <label htmlFor="agent-agencyName" className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                 Agency name <span className="font-normal normal-case tracking-normal text-[#8C9AB0]">(optional)</span>
               </label>
               <input
+                id="agent-agencyName"
                 name="agencyName"
                 type="text"
                 value={form.agencyName}
@@ -139,10 +144,11 @@ export function AgentEnroll() {
             </div>
 
             <div>
-              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+              <label htmlFor="agent-email" className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                 Email
               </label>
               <input
+                id="agent-email"
                 name="email"
                 type="email"
                 value={form.email}
@@ -154,10 +160,11 @@ export function AgentEnroll() {
             </div>
 
             <div>
-              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+              <label htmlFor="agent-phone" className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                 Phone
               </label>
               <input
+                id="agent-phone"
                 name="phone"
                 type="tel"
                 value={form.phone}
@@ -169,10 +176,11 @@ export function AgentEnroll() {
 
             <div className="grid grid-cols-1 gap-5 sm:col-span-2 sm:grid-cols-2">
               <div>
-                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+                <label htmlFor="agent-password" className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                   Password
                 </label>
                 <input
+                  id="agent-password"
                   name="password"
                   type="password"
                   value={form.password}
@@ -183,10 +191,11 @@ export function AgentEnroll() {
                 />
               </div>
               <div>
-                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+                <label htmlFor="agent-confirmPassword" className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                   Confirm
                 </label>
                 <input
+                  id="agent-confirmPassword"
                   name="confirmPassword"
                   type="password"
                   value={form.confirmPassword}

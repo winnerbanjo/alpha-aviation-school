@@ -106,12 +106,12 @@ export function SiteFooter() {
                   {office.badge}
                 </p>
                 <p className="mt-1.5 text-xs leading-relaxed text-white/55">{office.addressLines.join(", ")}</p>
-                <a href={`tel:${office.phoneRaw}`} className="mt-2 inline-block text-sm font-semibold text-white hover:text-[#8EAEFF]">
+                <a href={`tel:${office.phoneRaw}`} className="mt-1 inline-block py-1 text-sm font-semibold text-white hover:text-[#8EAEFF]">
                   {office.phone}
                 </a>
               </div>
             ))}
-            <a href={`mailto:${siteConfig.primaryEmail}`} className="inline-block break-all text-sm font-semibold text-white underline decoration-white/30 underline-offset-4 hover:decoration-white">
+            <a href={`mailto:${siteConfig.primaryEmail}`} className="inline-block break-all py-1 text-sm font-semibold text-white underline decoration-white/30 underline-offset-4 hover:decoration-white">
               {siteConfig.primaryEmail}
             </a>
           </div>

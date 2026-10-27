@@ -28,7 +28,7 @@ export function AnnouncementBar({ collapsed = false, onDismiss }: AnnouncementBa
             <span className="truncate text-white/85">
               4-week cohorts in Lagos (in-person) and live virtual classes.
             </span>
-            <Link to="/enroll" className="shrink-0 font-semibold underline decoration-white/40 underline-offset-4 hover:decoration-white">
+            <Link to="/enroll" className="shrink-0 py-1.5 font-semibold underline decoration-white/40 underline-offset-4 hover:decoration-white">
               Review intakes
             </Link>
           </p>
@@ -36,7 +36,7 @@ export function AnnouncementBar({ collapsed = false, onDismiss }: AnnouncementBa
             type="button"
             onClick={onDismiss}
             tabIndex={collapsed ? -1 : 0}
-            className="shrink-0 rounded-full p-1 text-white/70 transition-colors hover:bg-white/15 hover:text-white"
+            className="-mr-1.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/15 hover:text-white"
             aria-label="Dismiss announcement"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">

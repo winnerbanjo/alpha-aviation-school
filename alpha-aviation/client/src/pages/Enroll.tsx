@@ -20,6 +20,7 @@ import {
   Award,
 } from "lucide-react";
 import { asApiError } from "@/lib/errors";
+import { EnrollSEO } from "@/components/seo/SEO";
 
 export function Enroll() {
   const navigate = useNavigate();
@@ -162,9 +163,10 @@ export function Enroll() {
         toast("Account created successfully!", "success");
         navigate("/dashboard", { replace: true });
       } else if (response?.success && response?.data?.requiresVerification) {
+        // The password travels in router state, never in the URL (history, logs, referrers).
         navigate(
-          `/verify-otp?purpose=enrollment&email=${encodeURIComponent(formData.email)}&firstName=${encodeURIComponent(formData.firstName)}&lastName=${encodeURIComponent(formData.lastName)}&phone=${encodeURIComponent(formData.phone)}&password=${encodeURIComponent(formData.password)}&courses=${encodeURIComponent(JSON.stringify(formData.selectedCourses))}`,
-          { replace: true },
+          `/verify-otp?purpose=enrollment&email=${encodeURIComponent(formData.email)}&firstName=${encodeURIComponent(formData.firstName)}&lastName=${encodeURIComponent(formData.lastName)}&phone=${encodeURIComponent(formData.phone)}&courses=${encodeURIComponent(JSON.stringify(formData.selectedCourses))}`,
+          { replace: true, state: { password: formData.password } },
         );
         toast("Verification code sent to your email!", "success");
       } else {
@@ -281,6 +283,7 @@ export function Enroll() {
         </div>
       }
     >
+      <EnrollSEO />
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -359,11 +362,13 @@ export function Enroll() {
                   >
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+                        <label htmlFor="enroll-first-name" className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                           First Name
                         </label>
                         <input
+                          id="enroll-first-name"
                           type="text"
+                          autoComplete="given-name"
                           value={formData.firstName}
                           onChange={(e) =>
                             setFormData({
@@ -377,11 +382,13 @@ export function Enroll() {
                         />
                       </div>
                       <div>
-                        <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+                        <label htmlFor="enroll-last-name" className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                           Last Name
                         </label>
                         <input
+                          id="enroll-last-name"
                           type="text"
+                          autoComplete="family-name"
                           value={formData.lastName}
                           onChange={(e) =>
                             setFormData({
@@ -397,11 +404,13 @@ export function Enroll() {
                     </div>
 
                     <div>
-                      <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+                      <label htmlFor="enroll-email" className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                         Email Address
                       </label>
                       <input
+                        id="enroll-email"
                         type="email"
+                        autoComplete="email"
                         value={formData.email}
                         onChange={(e) =>
                           setFormData({ ...formData, email: e.target.value })
@@ -413,10 +422,11 @@ export function Enroll() {
                     </div>
 
                     <div>
-                      <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+                      <label htmlFor="enroll-phone" className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                         Phone Number
                       </label>
                       <PhoneNumberInput
+                        id="enroll-phone"
                         value={formData.phone}
                         onChange={(phone) =>
                           setFormData({ ...formData, phone })
@@ -427,12 +437,14 @@ export function Enroll() {
                     </div>
 
                     <div>
-                      <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+                      <label htmlFor="enroll-password" className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                         Password
                       </label>
                       <div className="relative">
                         <input
+                          id="enroll-password"
                           type={formData.showPassword ? "text" : "password"}
+                          autoComplete="new-password"
                           value={formData.password}
                           onChange={(e) =>
                             setFormData({

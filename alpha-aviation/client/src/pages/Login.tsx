@@ -52,10 +52,10 @@ export function Login() {
       const { data } = response.data;
 
       if (data?.requiresOTP && data?.tempToken) {
-        navigate(
-          `/verify-otp?purpose=admin_login&email=${encodeURIComponent(email)}&tempToken=${encodeURIComponent(data.tempToken)}`,
-          { replace: true },
-        );
+        navigate(`/verify-otp?purpose=admin_login&email=${encodeURIComponent(email)}`, {
+          replace: true,
+          state: { tempToken: data.tempToken },
+        });
         toast("Verification code sent to your email!", "success");
       } else if (data?.token && data.user) {
         const { user: userData, token } = data;
@@ -160,10 +160,11 @@ export function Login() {
 
             <form onSubmit={handleLogin} className="space-y-5">
               <div>
-                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+                <label htmlFor="login-email" className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                   Email Address
                 </label>
                 <input
+                  id="login-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -175,11 +176,12 @@ export function Login() {
               </div>
 
               <div>
-                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
+                <label htmlFor="login-password" className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">
                   Portal Password
                 </label>
                 <div className="relative">
                   <input
+                    id="login-password"
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}

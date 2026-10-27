@@ -24,6 +24,8 @@ export function ContactForm() {
     if (!phone.trim()) errs.phone = "Please provide a phone number we can reach you on";
     if (!message.trim()) errs.message = "Please include your message or inquiry";
     setErrors(errs);
+    const first = Object.keys(errs)[0];
+    if (first) requestAnimationFrame(() => document.getElementById(`contact-${first}`)?.focus());
     return Object.keys(errs).length === 0;
   };
 
@@ -87,12 +89,13 @@ export function ContactForm() {
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6" noValidate>
           <div>
-            <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#1246C8] block mb-1">
+            <span id="contact-desk-label" className="text-xs font-bold uppercase tracking-[0.14em] text-[#1246C8] block mb-1">
               DESTINATION DESK
             </span>
-            <div className="grid grid-cols-2 gap-3">
+            <div role="group" aria-labelledby="contact-desk-label" className="grid grid-cols-2 gap-3">
               <button
                 type="button"
+                aria-pressed={officeTarget === "uk"}
                 onClick={() => setOfficeTarget("uk")}
                 className={`p-3 rounded-xl border text-left text-xs transition-all ${
                   officeTarget === "uk"
@@ -106,6 +109,7 @@ export function ContactForm() {
 
               <button
                 type="button"
+                aria-pressed={officeTarget === "ng"}
                 onClick={() => setOfficeTarget("ng")}
                 className={`p-3 rounded-xl border text-left text-xs transition-all ${
                   officeTarget === "ng"
@@ -121,10 +125,14 @@ export function ContactForm() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#10264B] mb-1 uppercase">
+              <label htmlFor="contact-fullName" className="block text-xs font-semibold text-[#10264B] mb-1 uppercase">
                 Your Name *
               </label>
               <input
+                id="contact-fullName"
+                autoComplete="name"
+                aria-invalid={Boolean(errors.fullName) || undefined}
+                aria-describedby={errors.fullName ? "contact-fullName-error" : undefined}
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
@@ -132,15 +140,19 @@ export function ContactForm() {
                 className="w-full px-4 py-3 rounded-xl border border-[#DCE2EB] bg-[#F5F7FB] transition-colors focus:bg-white text-sm text-[#10264B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1246C8]"
               />
               {errors.fullName && (
-                <p className="text-[11px] text-red-600 mt-1">{errors.fullName}</p>
+                <p id="contact-fullName-error" className="text-[11px] text-red-600 mt-1">{errors.fullName}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#10264B] mb-1 uppercase">
+              <label htmlFor="contact-email" className="block text-xs font-semibold text-[#10264B] mb-1 uppercase">
                 Email Address *
               </label>
               <input
+                id="contact-email"
+                autoComplete="email"
+                aria-invalid={Boolean(errors.email) || undefined}
+                aria-describedby={errors.email ? "contact-email-error" : undefined}
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -148,17 +160,21 @@ export function ContactForm() {
                 className="w-full px-4 py-3 rounded-xl border border-[#DCE2EB] bg-[#F5F7FB] transition-colors focus:bg-white text-sm text-[#10264B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1246C8]"
               />
               {errors.email && (
-                <p className="text-[11px] text-red-600 mt-1">{errors.email}</p>
+                <p id="contact-email-error" className="text-[11px] text-red-600 mt-1">{errors.email}</p>
               )}
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#10264B] mb-1 uppercase">
+              <label htmlFor="contact-phone" className="block text-xs font-semibold text-[#10264B] mb-1 uppercase">
                 Telephone Number *
               </label>
               <input
+                id="contact-phone"
+                autoComplete="tel"
+                aria-invalid={Boolean(errors.phone) || undefined}
+                aria-describedby={errors.phone ? "contact-phone-error" : undefined}
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -166,15 +182,16 @@ export function ContactForm() {
                 className="w-full px-4 py-3 rounded-xl border border-[#DCE2EB] bg-[#F5F7FB] transition-colors focus:bg-white text-sm text-[#10264B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1246C8]"
               />
               {errors.phone && (
-                <p className="text-[11px] text-red-600 mt-1">{errors.phone}</p>
+                <p id="contact-phone-error" className="text-[11px] text-red-600 mt-1">{errors.phone}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#10264B] mb-1 uppercase">
+              <label htmlFor="contact-subject" className="block text-xs font-semibold text-[#10264B] mb-1 uppercase">
                 Inquiry Topic
               </label>
               <select
+                id="contact-subject"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl border border-[#DCE2EB] bg-[#F5F7FB] transition-colors focus:bg-white text-sm text-[#10264B] bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1246C8]"
@@ -189,10 +206,13 @@ export function ContactForm() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#10264B] mb-1 uppercase">
+            <label htmlFor="contact-message" className="block text-xs font-semibold text-[#10264B] mb-1 uppercase">
               Message / Inquiries *
             </label>
             <textarea
+              id="contact-message"
+              aria-invalid={Boolean(errors.message) || undefined}
+              aria-describedby={errors.message ? "contact-message-error" : undefined}
               rows={4}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -200,7 +220,7 @@ export function ContactForm() {
               className="w-full px-4 py-3 rounded-xl border border-[#DCE2EB] bg-[#F5F7FB] transition-colors focus:bg-white text-sm text-[#10264B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1246C8]"
             />
             {errors.message && (
-              <p className="text-[11px] text-red-600 mt-1">{errors.message}</p>
+              <p id="contact-message-error" className="text-[11px] text-red-600 mt-1">{errors.message}</p>
             )}
           </div>
 
@@ -213,8 +233,8 @@ export function ContactForm() {
             </p>
           )}
 
-          <div className="flex items-center justify-between gap-4 pt-2">
-            <span className="text-[11px] text-[#53647C]">
+          <div className="flex flex-col-reverse gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
+            <span className="break-all text-[11px] text-[#53647C]">
               DIRECT DESK: {siteConfig.primaryEmail}
             </span>
             <PrimaryButton type="submit" arrow disabled={isSending} className="pr-3">

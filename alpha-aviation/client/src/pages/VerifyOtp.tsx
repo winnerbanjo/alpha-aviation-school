@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +20,7 @@ type OTPPurpose = "enrollment" | "admin_login";
 export function VerifyOtp() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuthStore();
   const { toast } = useToast();
 
@@ -43,11 +44,13 @@ export function VerifyOtp() {
   useEffect(() => {
     const purposeParam = searchParams.get("purpose") as OTPPurpose;
     const emailParam = searchParams.get("email");
-    const tempTokenParam = searchParams.get("tempToken");
+    // Secrets arrive in router state so they never appear in the URL.
+    const secrets = (location.state ?? {}) as { password?: string; tempToken?: string };
+    const tempTokenParam = secrets.tempToken;
     const firstNameParam = searchParams.get("firstName");
     const lastNameParam = searchParams.get("lastName");
     const phoneParam = searchParams.get("phone");
-    const passwordParam = searchParams.get("password");
+    const passwordParam = secrets.password;
     const coursesParam = searchParams.get("courses");
 
     if (purposeParam && (purposeParam === "enrollment" || purposeParam === "admin_login")) {
@@ -68,7 +71,7 @@ export function VerifyOtp() {
         console.error("Failed to parse courses");
       }
     }
-  }, [searchParams]);
+  }, [searchParams, location.state]);
 
   // Timer countdown
   useEffect(() => {

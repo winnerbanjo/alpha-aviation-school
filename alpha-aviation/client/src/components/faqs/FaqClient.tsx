@@ -34,7 +34,8 @@ export function FaqClient({ faqs }: FaqClientProps) {
       <div className="p-6 rounded-stage border border-[#DCE2EB] bg-white shadow-subtle space-y-4">
         <div className="relative">
           <input
-            type="text"
+            type="search"
+            aria-label="Search frequently asked questions"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search questions by keyword (e.g. tuition, IATA, GDS, online, requirements)..."

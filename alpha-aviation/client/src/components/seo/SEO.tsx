@@ -16,12 +16,12 @@ const BASE_URL = "https://www.aslaviationschool.co";
 const SITE_NAME = "Alpha Step Links Aviation School";
 const DEFAULT_IMAGE = "/social-preview.jpg";
 const DEFAULT_DESCRIPTION =
-  "Alpha Step Links Aviation School offers certified aviation training, IATA-aligned curricula, cabin crew courses, air ticketing, and international internship pathways in Nigeria, UK, and Canada.";
+  "Alpha Step Links Aviation School offers IATA-aligned training in air ticketing, customer service, hospitality, travel agency operations, visa processing, hotel management and tourism marketing, with international internship pathways.";
 
 export function SEO({
   title,
   description = DEFAULT_DESCRIPTION,
-  keywords = "aviation school, cabin crew training, air ticketing, travel agency, aviation courses",
+  keywords = "aviation school, air ticketing, GDS training, travel agency, aviation courses",
   image = DEFAULT_IMAGE,
   url = BASE_URL,
   type = "website",
@@ -72,8 +72,8 @@ export function HomeSEO() {
   return (
     <SEO
       title={undefined}
-      description={`${SITE_NAME} - Certified aviation training institution in Nigeria, UK, and Canada. Enroll in cabin crew, air ticketing, travel & tourism programs. IATA-aligned curricula. 500+ graduates.`}
-      keywords="aviation school, aviation training, cabin crew, air ticketing, travel agency, tourism, IATA certified, Nigeria, UK, Canada"
+      description={`${SITE_NAME}: IATA-aligned aviation, travel and hospitality training in Lagos and the UK. Air ticketing, GDS, customer service, travel agency operations, visa processing and tourism programmes.`}
+      keywords="aviation school, aviation training, air ticketing, GDS, travel agency, tourism, IATA-aligned, Nigeria, UK"
       url="/"
     />
   );
@@ -105,7 +105,7 @@ export function EnrollSEO() {
   return (
     <SEO
       title="Enroll Now"
-      description="Enroll in Alpha Step Links Aviation School today. Secure your spot in our certified aviation training programs and start your career in aviation."
+      description="Enroll at Alpha Step Links Aviation School. Create your student account, choose up to four programmes and start your career in aviation and travel."
       keywords="enroll aviation school, aviation training enrollment, join aviation course"
       url="/enroll"
     />

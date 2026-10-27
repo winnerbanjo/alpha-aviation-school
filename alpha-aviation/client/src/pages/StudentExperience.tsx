@@ -154,7 +154,7 @@ export function StudentExperience() {
             description="Choose intensive weekday immersion or the executive weekend schedule."
             align="center"
           />
-          <div className="mx-auto grid max-w-5xl gap-5 md:grid-cols-2">
+          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-5 md:grid-cols-2">
             {tracks.map((t, i) => (
               <div key={t.code} data-reveal style={revealDelay(i * 120)}>
                 <article
@@ -203,7 +203,7 @@ export function StudentExperience() {
               </p>
             </div>
             <div data-reveal="mask" className="relative aspect-[16/10] overflow-hidden rounded-stage shadow-float lg:col-span-7">
-              <img src="/images/campus/graduants.jpg" alt="ASL Aviation School graduates" className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+              <img src="/graduants.jpg" alt="ASL Aviation School graduates" className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
             </div>
           </div>
         </Container>

@@ -9,6 +9,7 @@ import {
 } from "@/lib/phone";
 
 interface PhoneNumberInputProps {
+  id?: string;
   value: string;
   onChange: (value: string) => void;
   disabled?: boolean;
@@ -19,6 +20,7 @@ interface PhoneNumberInputProps {
 }
 
 export function PhoneNumberInput({
+  id,
   value,
   onChange,
   disabled = false,
@@ -63,6 +65,7 @@ export function PhoneNumberInput({
         ))}
       </select>
       <input
+        id={id}
         type="tel"
         value={nationalNumber}
         onChange={handleNumberChange}
