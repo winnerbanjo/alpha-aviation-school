@@ -2,7 +2,7 @@ export interface Program {
   id: string;
   slug: string;
   title: string;
-  category: "Ticketing & Operations" | "Hospitality & Passenger Services" | "Travel & Agency Management" | "Retailing & Documentation";
+  category: "Ticketing & Operations" | "Hospitality & Passenger Services" | "Travel & Agency Management" | "Visa & Documentation";
   shortDescription: string;
   description: string;
   duration: string;
@@ -58,7 +58,7 @@ export const programsData: Program[] = [
       "Corporate Travel Desk Manager",
       "Airport Sales Desk Executive",
     ],
-    certificationNote: "Curriculum aligned with IATA Foundation standards. Students complete practical terminal assessment before receiving their ASL certificate of completion.",
+    certificationNote: "Curriculum aligned with IATA Foundation standards. Students complete practical terminal assessment before receiving their Alpha Step Links Aviation School Certificate of Completion.",
     faqItems: [
       {
         question: "Which Global Distribution Systems are covered?",
@@ -109,7 +109,7 @@ export const programsData: Program[] = [
       "VIP Airline Lounge Representative",
       "Airline Service Recovery Specialist",
     ],
-    certificationNote: "Includes practical voice modulation, de-escalation drills, and grooming standards evaluation leading to the ASL Certificate in Aviation Customer Care.",
+    certificationNote: "Includes practical voice modulation, de-escalation drills, and grooming standards evaluation leading to the Alpha Step Links Aviation School Certificate of Completion.",
     faqItems: [
       {
         question: "Does this course help with cabin crew interviews?",
@@ -218,7 +218,7 @@ export const programsData: Program[] = [
     id: "visa-processing",
     slug: "visa-processing",
     title: "Visa Processing & Documentation",
-    category: "Retailing & Documentation",
+    category: "Visa & Documentation",
     shortDescription: "Specialized training in embassy documentation, biometric verification, immigration requirements, and consular protocols.",
     description: "A precision-focused training program addressing one of the most critical segments of the international travel industry: cross-border documentation. Learn verification procedures, embassy compliance rules, and risk reduction for international traveler dossiers.",
     duration: "4 weeks",
@@ -317,7 +317,7 @@ export const programsData: Program[] = [
     id: "tourism-marketing",
     slug: "tourism-marketing",
     title: "Tourism Marketing & Entrepreneurship",
-    category: "Retailing & Documentation",
+    category: "Travel & Agency Management",
     shortDescription: "Strategic destination marketing, digital travel retailing, and commercial venture setup in global tourism.",
     description: "Transform passion for travel into a resilient commercial enterprise. This course covers destination branding, social selling for travel products, influencer partnerships, tour packaging economics, and entrepreneurship fundamentals.",
     duration: "4 weeks",

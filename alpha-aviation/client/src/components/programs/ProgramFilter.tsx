@@ -53,7 +53,7 @@ export function ProgramFilter({ programs }: ProgramFilterProps) {
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search GDS, ticketing, cabin crew…"
+              placeholder="Search GDS, ticketing, visa…"
               className="w-full rounded-full border border-transparent bg-[#F5F7FB] py-3 pl-11 pr-4 text-sm text-[#10264B] placeholder-[#53647C] transition-colors focus:border-[#1246C8] focus:bg-white focus:outline-none"
             />
           </label>

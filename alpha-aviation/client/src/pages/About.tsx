@@ -143,7 +143,7 @@ export function About() {
         <Container>
           <div className="grid items-center gap-12 lg:grid-cols-12">
             <div data-reveal="scale" className="relative aspect-[4/3] overflow-hidden rounded-stage shadow-float lg:col-span-5">
-              <img src="/aviation-academy-story.png" alt="Alpha Step Links aviation academy story illustration" className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+              <img src="/aviation-academy-story.png" alt="Alpha Step Links Aviation School story illustration" className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
             </div>
             <div className="lg:col-span-7">
               <span data-reveal className="eyebrow text-[#1246C8]">Transparency statement</span>

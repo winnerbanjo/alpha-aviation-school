@@ -31,7 +31,7 @@ export function SEO({
 }: SEOProps) {
   const fullTitle = title
     ? `${title} | ${SITE_NAME}`
-    : `${SITE_NAME} | Premium Aviation Training`;
+    : `${SITE_NAME} | Premium Aviation Training in the UK & Nigeria`;
 
   const fullUrl = url.startsWith("http") ? url : `${BASE_URL}${url}`;
   const fullImage = image.startsWith("http") ? image : `${BASE_URL}${image}`;
@@ -51,7 +51,7 @@ export function SEO({
       <meta property="og:description" content={description} />
       <meta property="og:image" content={fullImage} />
       <meta property="og:site_name" content={SITE_NAME} />
-      <meta property="og:locale" content="en_US" />
+      <meta property="og:locale" content="en_GB" />
       {publishedTime && <meta property="article:published_time" content={publishedTime} />}
       {author && <meta property="article:author" content={author} />}
 
@@ -72,7 +72,6 @@ export function HomeSEO() {
   return (
     <SEO
       title={undefined}
-      description={`${SITE_NAME}: IATA-aligned aviation, travel and hospitality training in Lagos and the UK. Air ticketing, GDS, customer service, travel agency operations, visa processing and tourism programmes.`}
       keywords="aviation school, aviation training, air ticketing, GDS, travel agency, tourism, IATA-aligned, Nigeria, UK"
       url="/"
     />
@@ -83,7 +82,7 @@ export function AboutSEO() {
   return (
     <SEO
       title="About Us"
-      description="Learn about Alpha Step Links Aviation School - our mission, vision, and commitment to youth empowerment and international aviation training excellence."
+      description="Learn about Alpha Step Links Aviation School — our mission, vision, and commitment to youth empowerment and international aviation training excellence."
       keywords="about aviation school, our mission, aviation training Nigeria, youth empowerment, aviation professionals"
       url="/about"
     />
@@ -94,7 +93,7 @@ export function CoursesSEO() {
   return (
     <SEO
       title="Programs & Courses"
-      description="Explore our aviation training programs: Air Ticketing, Customer Service, Hospitality & Tourism, Travel Agency Operations, Visa Processing, and Tourism Marketing."
+      description="Explore our seven four-week programs: Air Ticketing & Reservation Management, Customer Service, Hospitality & Tourism, Travel Agency Operations, Visa Processing, Hotel & Front Office Management, and Tourism Marketing."
       keywords="aviation courses, air ticketing, customer service, hospitality, tourism, travel agency, visa processing, aviation programs"
       url="/courses"
     />
@@ -128,7 +127,7 @@ export function ContactSEO() {
   return (
     <SEO
       title="Contact Us"
-      description="Get in touch with Alpha Step Links Aviation School. Visit us in Nigeria, UK, or Canada. Call, email, or send a message today."
+      description="Get in touch with Alpha Step Links Aviation School. Visit our Lagos training centre or UK headquarters in Ruislip, or call, email or send a message today."
       keywords="contact aviation school, aviation training contact, visit us"
       url="/contact"
     />

@@ -517,7 +517,7 @@ export function useAdminData() {
 
   const handleInvite = () => {
     const message = encodeURIComponent(
-      "Welcome to Alpha Step Links Aviation School! 🛫\n\nComplete your enrollment here: https://alphasteplinks.com/enroll\n\nWe offer world-class aviation training programs designed to launch your career. Join us today and take the first step towards your aviation dreams!"
+      "Welcome to Alpha Step Links Aviation School! 🛫\n\nComplete your enrollment here: https://www.aslaviationschool.co/enroll\n\nWe offer world-class aviation training programs designed to launch your career. Join us today and take the first step towards your aviation dreams!"
     );
     const whatsappUrl = `https://wa.me/?text=${message}`;
     window.open(whatsappUrl, "_blank");

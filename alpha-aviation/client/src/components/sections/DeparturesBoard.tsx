@@ -11,7 +11,7 @@ const shortCategory: Record<string, string> = {
   "Ticketing & Operations": "Ticketing",
   "Hospitality & Passenger Services": "Hospitality",
   "Travel & Agency Management": "Travel",
-  "Retailing & Documentation": "Documentation",
+  "Visa & Documentation": "Documentation",
 };
 
 export function DeparturesBoard() {

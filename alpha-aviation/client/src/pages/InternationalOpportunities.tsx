@@ -47,7 +47,7 @@ const codes = [
 export function InternationalOpportunities() {
   return (
     <div className="flex flex-col">
-      <SEO title="International Opportunities & Global Corridors" description="Discover the international reach of Alpha Step Links Aviation School across the UK, Nigeria, and Canada. IATA-aligned global curricula, cross-border pathways, and academic governance." url="/international-opportunities" />
+      <SEO title="International Opportunities & Global Corridors" description="Discover the international reach of Alpha Step Links Aviation School: UK headquarters in Ruislip, practical training in Lagos and study-pathway advice for Canada and the UK. IATA-aligned curricula and cross-border career pathways." url="/international-opportunities" />
       <PageHero
         breadcrumbs={[{ label: "International Opportunities" }]}
         eyebrow="Cross-border perspectives"

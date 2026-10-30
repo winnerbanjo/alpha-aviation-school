@@ -169,7 +169,7 @@ export function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10"
-                  placeholder="name@academy.com"
+                  placeholder="name@example.com"
                   required
                   autoComplete="email"
                 />
@@ -217,7 +217,7 @@ export function Login() {
 
             <div className="mt-10 space-y-3 border-t border-[#DCE2EB] pt-6 text-center">
               <p className="text-sm text-[#53647C]">
-                {isAgentLogin ? "New partner?" : "New to the academy?"}{" "}
+                {isAgentLogin ? "New partner?" : "New to the school?"}{" "}
                 <Link
                   to={isAgentLogin ? "/agent/register" : "/enroll"}
                   className="font-semibold text-[#1246C8] underline-offset-4 transition-colors hover:text-[#10264B] hover:underline"

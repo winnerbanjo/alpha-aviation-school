@@ -33,7 +33,7 @@ const pillars = [
     body: "Each core four-week course is ₦150,000, with a ₦538,000 package for any four courses. No hidden exam fees, no unverified placement guarantees and no pressure tactics.",
     chips: ["₦150,000 per course", "No hidden surcharges"],
     image: "/images/generated/academy-story.webp",
-    alt: "Aviation academy building and training aircraft",
+    alt: "Aviation school building and training aircraft",
   },
 ];
 

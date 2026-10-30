@@ -1,15 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import type { Student, StudentStatus, UserFormData } from "@/hooks/useAdminData";
+import { COURSE_CATALOG } from "@/data/courseCatalog";
 
-const courses = [
-  "Aviation Fundamentals & Strategy",
-  "Elite Cabin Crew & Safety Operations",
-  "Travel & Tourism Management",
-  "Airline Customer Service & Passenger Handling",
-  "Aviation Safety & Security Awareness",
-  "Ticketing & Reservation Systems (GDS Training)",
-];
+const courses: string[] = COURSE_CATALOG.map((course) => course.title);
 
 interface AdminUserModalProps {
   isOpen: boolean;
@@ -110,6 +104,10 @@ export function AdminUserModal({
                 <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.16em] text-[#53647C]">Enrolled Course</label>
                 <select value={userFormData.enrolledCourse} onChange={(e) => setUserFormData((prev) => ({ ...prev, enrolledCourse: e.target.value }))} className="w-full rounded-xl border border-[#DCE2EB] bg-white px-4 py-3 text-sm text-[#172B49] outline-none transition placeholder:text-[#8C9AB0] focus:border-[#1246C8] focus:ring-4 focus:ring-[#1246C8]/10">
                   <option value="">Not assigned</option>
+                  {/* Keep a legacy course title selectable so editing an older record doesn't silently clear it */}
+                  {userFormData.enrolledCourse && !courses.includes(userFormData.enrolledCourse) && (
+                    <option value={userFormData.enrolledCourse}>{userFormData.enrolledCourse} (legacy)</option>
+                  )}
                   {courses.map((course) => (
                     <option key={course} value={course}>{course}</option>
                   ))}

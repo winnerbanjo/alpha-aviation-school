@@ -22,13 +22,13 @@ export const allFaqs: FAQItem[] = [
     id: "faq-3",
     category: "Curriculum & IATA",
     question: "Are your curricula aligned with international industry standards?",
-    answer: "Yes. Our courses in Air Ticketing & Reservation, Travel Agency Operations, and Passenger Services are structured in accordance with IATA (International Air Transport Association) foundational frameworks, standard ICAO airline codes, and live Global Distribution System (GDS) command architectures.",
+    answer: "Yes. Our courses in Air Ticketing & Reservation Management, Travel Agency Operations, and Customer Service & Communication in Aviation are structured in accordance with IATA (International Air Transport Association) foundational frameworks, standard ICAO airline codes, and live Global Distribution System (GDS) command architectures.",
   },
   {
     id: "faq-4",
     category: "Curriculum & IATA",
     question: "What certificate do I receive upon graduation?",
-    answer: "Upon successful completion of all course modules, practical GDS terminal evaluations, and final assessments, graduates are awarded the official Certificate of Professional Completion from Alpha Step Links Aviation School. Certificates can be verified directly through our academic records office.",
+    answer: "Upon successful completion of all course modules, practical GDS terminal evaluations, and final assessments, graduates are awarded a Certificate of Completion from Alpha Step Links Aviation School. Each certificate carries a verification code that anyone can check on our certificate verification page.",
   },
   {
     id: "faq-5",
@@ -40,12 +40,12 @@ export const allFaqs: FAQItem[] = [
     id: "faq-6",
     category: "Tuition & Fees",
     question: "How does the International 4-Course Bundle work?",
-    answer: "Students who choose any 4 programs (such as Air Ticketing, Customer Service, Travel Agency Operations, and Visa Documentation) receive our discounted bundle tuition of ₦538,000 (regular price ₦600,000), saving ₦62,000. This multi-disciplinary track is ideal for candidates targeting international airline recruitment or agency entrepreneurship.",
+    answer: "Students who choose any 4 programs (such as Air Ticketing, Customer Service, Travel Agency Operations, and Visa Processing) receive our discounted bundle tuition of ₦538,000 (regular price ₦600,000), saving ₦62,000. This multi-disciplinary track is ideal for candidates targeting international airline recruitment or agency entrepreneurship.",
   },
   {
     id: "faq-7",
     category: "International Pathways",
-    question: "How are the UK, Nigerian, and Canadian locations connected?",
+    question: "How do the UK and Nigeria locations work together?",
     answer: "Alpha Step Links operates its group corporate headquarters in Ruislip, Greater London, United Kingdom, and its primary classroom and simulation facilities in Ilasamaja, Lagos, Nigeria. We provide academic and career advisory for students planning to pursue advanced aviation or tourism qualifications in Canada and the UK.",
   },
   {

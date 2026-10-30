@@ -37,7 +37,7 @@ const seedDatabase = async () => {
       role: 'student',
       firstName: 'John',
       lastName: 'Doe',
-      enrolledCourse: 'Aviation Fundamentals & Strategy',
+      enrolledCourse: 'Air Ticketing & Reservation Management',
       paymentStatus: 'Pending',
       amountDue: 5000,
       enrollmentDate: new Date('2024-01-15')
@@ -52,7 +52,7 @@ const seedDatabase = async () => {
       role: 'student',
       firstName: 'Jane',
       lastName: 'Smith',
-      enrolledCourse: 'Elite Cabin Crew & Safety Operations',
+      enrolledCourse: 'Customer Service & Communication in Aviation',
       paymentStatus: 'Pending',
       amountDue: 7500,
       enrollmentDate: new Date('2024-02-01')
@@ -67,7 +67,7 @@ const seedDatabase = async () => {
       role: 'student',
       firstName: 'Michael',
       lastName: 'Johnson',
-      enrolledCourse: 'Travel & Tourism Management',
+      enrolledCourse: 'Hospitality & Tourism Management',
       paymentStatus: 'Paid',
       amountDue: 0,
       enrollmentDate: new Date('2024-01-20')
@@ -82,7 +82,7 @@ const seedDatabase = async () => {
       role: 'student',
       firstName: 'Sarah',
       lastName: 'Williams',
-      enrolledCourse: 'Airline Customer Service & Passenger Handling',
+      enrolledCourse: 'Travel Agency Operations',
       paymentStatus: 'Pending',
       amountDue: 6000,
       enrollmentDate: new Date('2024-02-10')
@@ -97,7 +97,7 @@ const seedDatabase = async () => {
       role: 'student',
       firstName: 'David',
       lastName: 'Brown',
-      enrolledCourse: 'Aviation Safety & Security Awareness',
+      enrolledCourse: 'Visa Processing & Documentation',
       paymentStatus: 'Pending',
       amountDue: 5500,
       enrollmentDate: new Date('2024-02-15')

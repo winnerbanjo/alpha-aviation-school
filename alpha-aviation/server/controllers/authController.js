@@ -328,7 +328,7 @@ exports.register = async (req, res, next) => {
     try {
       await sendMail({
         to: normalizedEmail,
-        subject: "Verify Your Email - Alpha Step Links Aviation School",
+        subject: "Verify Your Email — Alpha Step Links Aviation School",
         text: `Hello ${firstName || "Student"},\n\nYour verification code is: ${otp}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request this, please ignore this email.`,
         html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; padding: 40px 0;">
@@ -508,7 +508,7 @@ exports.verifyEnrollmentOTP = async (req, res, next) => {
             </tr>
             <tr>
               <td style="padding: 40px 40px 20px 40px;">
-                <h2 style="color: #0f172a; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Welcome to the Academy</h2>
+                <h2 style="color: #0f172a; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Welcome to Alpha Step Links Aviation School</h2>
                 <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">Hello ${user.firstName},</p>
                 <p style="color: #475569; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">Your enrollment has been successfully registered. Your official Student ID is <strong>${studentIdNumber}</strong>.</p>
                 <div style="background-color: #f1f5f9; padding: 24px; border-radius: 8px; margin-bottom: 32px;">
@@ -991,7 +991,7 @@ exports.resendAdminOTP = async (req, res, next) => {
     try {
       await sendMail({
         to: email,
-        subject: "New Verification Code - Alpha Step Links Aviation School",
+        subject: "New Verification Code — Alpha Step Links Aviation School",
         text: `Your new verification code is: ${otp}\n\nThis code will expire in 5 minutes.`,
         html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; padding: 40px 0;">
