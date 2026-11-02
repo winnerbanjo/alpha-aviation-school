@@ -11,20 +11,19 @@ interface BrandLogoProps {
 /*
  * Lockup geometry, in the master logo's own 680×190 coordinate space
  * (measured from the rendered artwork):
- *   emblem ink    x 21–168.5; solid base to y 143, corner tips at y 146,
- *                 only the book-spine point continues to y 148.5
- *   wordmark ink  x 195.3–643, caps y 79.5–118.5 (cap height 39);
- *                 the "L" of LINKS ends at x 531.8
+ *   emblem ink    x 20–170, y 36.6–153.4 (flat feet of the A)
+ *   wordmark ink  x 194–644, caps y 81.2–118.2 (cap height 37);
+ *                 the "L" of LINKS ends at x 532.1
  * Descriptor rules:
- *   - cap height = ½ the wordmark cap (Inter 600, 26u)
- *   - baseline on the emblem's optical base (corner tips), not the spine point
+ *   - cap height ≈ ½ the wordmark cap (Inter 600, 26u)
+ *   - baseline on the emblem's base (the feet of the A)
  *   - left ink flush with the wordmark "A"; tracking fitted so the final "L"
  *     of SCHOOL ends exactly under the "L" of LINKS
  * Units are artwork units, so the descriptor scales exactly with the logo.
  */
 const LOCKUP = {
-  x: 195,
-  baseline: 147,
+  x: 194,
+  baseline: 153.4,
   fontSize: 26,
   tracking: 0.287, // em
   weight: 600,
